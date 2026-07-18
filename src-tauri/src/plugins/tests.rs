@@ -73,9 +73,9 @@ fn returns_error_for_invalid_manifest() {
 #[test]
 fn plugin_project_dirs_use_nexora_identity() {
     let dirs = plugin_project_dirs().expect("project dirs");
-    let data_dir = dirs.data_dir().to_string_lossy();
+    let data_dir = dirs.data_dir().to_string_lossy().to_lowercase();
 
-    assert!(data_dir.contains("Nexora"));
+    assert!(data_dir.contains("nexora"));
 }
 
 #[tokio::test]
