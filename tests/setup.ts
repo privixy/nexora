@@ -219,7 +219,6 @@ vi.mock("lucide-react", () => ({
   Share2: () => null,
   // CONNECTION_ICON_PACK icons
   Server: () => null,
-  HardDrive: () => null,
   Cloud: () => null,
   CloudCog: () => null,
   ShieldCheck: () => null,
