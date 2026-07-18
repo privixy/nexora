@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Public API surface for Nexora plugin UI extensions.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/privixy/nexora.git",
+    "directory": "packages/plugin-api"
+  },
+  "bugs": {
+    "url": "https://github.com/privixy/nexora/issues"
+  },
+  "homepage": "https://github.com/privixy/nexora/tree/main/packages/plugin-api#readme",
   "keywords": [
     "nexora",
     "plugin",

@@ -34,4 +34,4 @@ pnpm test:rust
 
 ## Reporting issues
 
-Use the issue tracker for reproducible bugs and include steps to reproduce, expected behavior, actual behavior, environment details and relevant logs.
+Use the GitHub issue tracker for reproducible bugs and include steps to reproduce, expected behavior, actual behavior, environment details and relevant logs.

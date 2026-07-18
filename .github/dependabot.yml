@@ -1,0 +1,51 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      npm-dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: npm
+    directory: /packages/plugin-api
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      plugin-api-dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: npm
+    directory: /packages/create-plugin
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      create-plugin-dependencies:
+        patterns:
+          - '*'
+
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      cargo-dependencies:
+        patterns:
+          - '*'

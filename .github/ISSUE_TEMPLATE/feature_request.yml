@@ -1,35 +1,27 @@
-name: 🚀 Feature Proposal
-description: Submit a proposal for a new feature
-title: "[Feat]: "
-labels: ["feature request"]
+name: Feature request
+description: Suggest an improvement for Nexora
+labels:
+  - enhancement
 body:
-  - type: checkboxes
-    id: prerequisites
-    attributes:
-      label: Prerequisites
-      options:
-        - label: I have written a descriptive issue title
-          required: true
-        - label: I have searched existing issues to ensure the feature has not already been requested
-          required: true
   - type: textarea
-    id: proposal
+    id: problem
     attributes:
-      label: 🚀 Feature Proposal
-      description: A clear and concise description of what the feature is.
+      label: Problem
+      description: What problem would this solve?
     validations:
       required: true
   - type: textarea
-    id: motivation
+    id: solution
     attributes:
-      label: Motivation
-      description: The motivation for the proposal.
+      label: Proposed solution
+      description: What would you like to happen?
     validations:
       required: true
   - type: textarea
-    id: example
+    id: alternatives
     attributes:
-      label: Example
-      description: An example for how this feature would be used. Make sure you place example code inside a code (```) block to avoid linking unrelated issues.
-    validations:
-      required: false
+      label: Alternatives considered
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

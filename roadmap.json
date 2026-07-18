@@ -5,7 +5,7 @@
   },
   {
     "label": "Configure Nexora-owned release and support channels",
-    "done": false
+    "done": true
   },
   {
     "label": "Publish Nexora plugin registry entries",

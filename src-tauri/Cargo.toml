@@ -1,8 +1,11 @@
 [package]
 name = "nexora"
-version = "0.15.0"
+version = "1.0.0"
 description = "Nexora - A database manager for developers"
-authors = []
+authors = ["Privixy"]
+license = "Apache-2.0"
+homepage = "https://github.com/privixy/nexora"
+repository = "https://github.com/privixy/nexora"
 edition = "2021"
 rust-version = "1.77.2"
 

@@ -1,49 +1,64 @@
-name: Publish to Snap Store
+name: Snap package
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (without v prefix, e.g. 0.9.5)'
+        description: Snap version to publish
         required: true
+        type: string
+      deb-url:
+        description: URL to the Linux amd64 deb release asset
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snap-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  snap-publish:
-    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
-    runs-on: ubuntu-22.04
+  publish:
+    if: ${{ vars.ENABLE_STORE_PUBLISH == 'true' }}
+    name: Build and publish Snap
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
 
-      - name: Get Release Version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-            echo "ref=v${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-            echo "ref=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
-          fi
+      - name: Resolve release asset
+        id: asset
+        uses: actions/github-script@v9
+        with:
+          script: |
+            if (context.eventName === 'workflow_dispatch') {
+              core.setOutput('version', core.getInput('version', { required: true }))
+              core.setOutput('deb_url', core.getInput('deb-url', { required: true }))
+              return
+            }
+            const release = context.payload.release
+            const tag = release.tag_name.replace(/^v/, '')
+            const asset = release.assets.find((item) => /amd64\.deb$/.test(item.name))
+            if (!asset) core.setFailed('No amd64 .deb asset found on release')
+            core.setOutput('version', tag)
+            core.setOutput('deb_url', asset.browser_download_url)
 
-      - name: Download .deb Artifact
+      - name: Prepare snapcraft source
         run: |
-          wget "https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.version }}/nexora_${{ steps.version.outputs.version }}_amd64.deb" \
-            -O nexora.deb
-
-      - name: Set version in snapcraft.yaml
-        run: |
-          sed -i "s/^version:.*/version: '${{ steps.version.outputs.version }}'/" snap/snapcraft.yaml
+          curl -L '${{ steps.asset.outputs.deb_url }}' -o snap/nexora.deb
+          sed -i "s/^version: .*/version: \"${{ steps.asset.outputs.version }}\"/" snap/snapcraft.yaml
 
       - name: Build snap
-        uses: snapcore/action-build@v1
+        uses: canonical/action-build@v1.3.0
         id: build
+        with:
+          path: snap
 
       - name: Publish snap
-        uses: snapcore/action-publish@v1
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_TOKEN }}
+        uses: canonical/action-publish@v1.2.0
         with:
+          store_login: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
           snap: ${{ steps.build.outputs.snap }}
           release: stable

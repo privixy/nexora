@@ -2,9 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { APP_VERSION } from '@/version';
 
 describe('version', () => {
-  it('should export a version string', () => {
-    expect(typeof APP_VERSION).toBe('string');
-    expect(APP_VERSION).toBeTruthy();
+  it('should export the release version', () => {
+    expect(APP_VERSION).toBe('1.0.0');
   });
 
   it('should follow semantic versioning format', () => {

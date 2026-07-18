@@ -8,7 +8,7 @@ Only the latest released version receives security fixes.
 
 ## Reporting a vulnerability
 
-Do not open a public issue for security problems. Report privately through your preferred private security channel for this repository.
+Do not open a public issue for security problems. Report privately through GitHub Security Advisories for this repository.
 
 ## Scope
 

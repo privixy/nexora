@@ -53,7 +53,7 @@ struct GitHubAsset {
 }
 
 // Constants
-const GITHUB_REPO: &str = "";
+const GITHUB_REPO: &str = "privixy/nexora";
 const CACHE_DURATION_SECS: u64 = 43200; // 12 hours
 /// Returns the installation source: "snap", "aur", or None for direct installs.
 /// Only meaningful on Linux; always returns None on other platforms.
@@ -393,7 +393,7 @@ mod tests {
 
     #[test]
     fn test_github_repo_constant() {
-        assert_eq!(GITHUB_REPO, "");
+        assert_eq!(GITHUB_REPO, "privixy/nexora");
     }
 
     // Cache duration test

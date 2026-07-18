@@ -1,7 +1,17 @@
 {
   "name": "nexora",
   "private": true,
-  "version": "0.15.0",
+  "version": "1.0.0",
+  "description": "Open-source desktop SQL workspace for PostgreSQL, MySQL/MariaDB, SQLite, and plugin-driven database integrations.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/privixy/nexora.git"
+  },
+  "bugs": {
+    "url": "https://github.com/privixy/nexora/issues"
+  },
+  "homepage": "https://github.com/privixy/nexora#readme",
   "type": "module",
   "scripts": {
     "dev": "vite",

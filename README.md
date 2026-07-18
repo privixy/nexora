@@ -4,6 +4,10 @@
 
 # Nexora
 
+[![CI](https://github.com/privixy/nexora/actions/workflows/ci.yml/badge.svg)](https://github.com/privixy/nexora/actions/workflows/ci.yml)
+[![Release](https://github.com/privixy/nexora/actions/workflows/release.yml/badge.svg)](https://github.com/privixy/nexora/actions/workflows/release.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
+
 Nexora is an open-source desktop SQL workspace for PostgreSQL, MySQL/MariaDB, SQLite and plugin-driven database integrations. It is built with React, TypeScript, Tauri and Rust.
 
 ## Features
