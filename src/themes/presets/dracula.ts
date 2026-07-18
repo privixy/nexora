@@ -1,0 +1,96 @@
+import type { Theme } from '../../types/theme';
+
+export const dracula: Theme = {
+  id: 'dracula',
+  name: 'Dracula',
+  author: 'Zeno Rocha',
+  isPreset: true,
+  isReadOnly: true,
+  colors: {
+    bg: {
+      base: '#282a36',
+      elevated: '#44475a',
+      overlay: '#6272a4',
+      input: '#282a36',
+      tooltip: '#44475a',
+    },
+    surface: {
+      primary: '#44475a',
+      secondary: '#6272a4',
+      tertiary: '#6c7290',
+      hover: '#6272a4',
+      active: '#bd93f9',
+      disabled: '#44475a',
+    },
+    text: {
+      primary: '#f8f8f2',
+      secondary: '#cdd4ee',
+      muted: '#b8c0d8',
+      disabled: '#6c7290',
+      accent: '#bd93f9',
+      inverse: '#282a36',
+    },
+    accent: {
+      primary: '#bd93f9',
+      secondary: '#ff79c6',
+      success: '#50fa7b',
+      warning: '#f1fa8c',
+      error: '#ff5555',
+      info: '#8be9fd',
+    },
+    border: {
+      subtle: '#44475a',
+      default: '#6272a4',
+      strong: '#6c7290',
+      focus: '#bd93f9',
+    },
+    semantic: {
+      string: '#f1fa8c',
+      number: '#bd93f9',
+      boolean: '#ff79c6',
+      date: '#50fa7b',
+      null: '#6272a4',
+      primaryKey: '#ffb86c',
+      foreignKey: '#8be9fd',
+      index: '#ff79c6',
+      connectionActive: '#50fa7b',
+      connectionInactive: '#6272a4',
+      modified: '#bd93f9',
+      deleted: '#ff5555',
+      new: '#50fa7b',
+    },
+  },
+  typography: {
+    fontFamily: {
+      base: 'Inter, system-ui, sans-serif',
+      mono: 'Fira Code, Monaco, Consolas, monospace',
+    },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+    },
+  },
+  layout: {
+    borderRadius: {
+      sm: '0.25rem',
+      base: '0.5rem',
+      lg: '0.75rem',
+      xl: '1rem',
+    },
+    spacing: {
+      xs: '0.25rem',
+      sm: '0.5rem',
+      base: '1rem',
+      lg: '1.5rem',
+      xl: '2rem',
+    },
+  },
+  monacoTheme: {
+    base: 'vs-dark',
+    inherit: true,
+    themeName: 'Dracula',
+  },
+};

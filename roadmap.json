@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Rebrand project to Nexora",
+    "done": true
+  },
+  {
+    "label": "Configure Nexora-owned release and support channels",
+    "done": false
+  },
+  {
+    "label": "Publish Nexora plugin registry entries",
+    "done": false
+  }
+]

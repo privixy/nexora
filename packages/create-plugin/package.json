@@ -1,0 +1,47 @@
+{
+  "name": "@nexora/create-plugin",
+  "version": "0.1.1",
+  "description": "Scaffold a new Nexora database driver plugin in seconds.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "nexora",
+    "create-nexora-plugin",
+    "scaffold",
+    "template",
+    "database-plugin",
+    "rust"
+  ],
+  "type": "module",
+  "bin": {
+    "nexora-create-plugin": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "smoke": "tsx scripts/smoke.ts",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+  "dependencies": {
+    "kleur": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

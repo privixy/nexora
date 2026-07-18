@@ -1,0 +1,96 @@
+import type { Theme } from '../../types/theme';
+
+export const solarizedDark: Theme = {
+  id: 'solarized-dark',
+  name: 'Solarized Dark',
+  author: 'Ethan Schoonover',
+  isPreset: true,
+  isReadOnly: true,
+  colors: {
+    bg: {
+      base: '#002b36',
+      elevated: '#073642',
+      overlay: '#586e75',
+      input: '#002b36',
+      tooltip: '#073642',
+    },
+    surface: {
+      primary: '#073642',
+      secondary: '#586e75',
+      tertiary: '#657b83',
+      hover: '#586e75',
+      active: '#268bd2',
+      disabled: '#073642',
+    },
+    text: {
+      primary: '#839496',
+      secondary: '#c6d3d6',
+      muted: '#b0bfc2',
+      disabled: '#657b83',
+      accent: '#268bd2',
+      inverse: '#002b36',
+    },
+    accent: {
+      primary: '#268bd2',
+      secondary: '#6c71c4',
+      success: '#859900',
+      warning: '#b58900',
+      error: '#dc322f',
+      info: '#2aa198',
+    },
+    border: {
+      subtle: '#073642',
+      default: '#586e75',
+      strong: '#657b83',
+      focus: '#268bd2',
+    },
+    semantic: {
+      string: '#b58900',
+      number: '#2aa198',
+      boolean: '#d33682',
+      date: '#859900',
+      null: '#586e75',
+      primaryKey: '#cb4b16',
+      foreignKey: '#268bd2',
+      index: '#d33682',
+      connectionActive: '#859900',
+      connectionInactive: '#586e75',
+      modified: '#268bd2',
+      deleted: '#dc322f',
+      new: '#859900',
+    },
+  },
+  typography: {
+    fontFamily: {
+      base: 'Inter, system-ui, sans-serif',
+      mono: 'Menlo, Consolas, monospace',
+    },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+    },
+  },
+  layout: {
+    borderRadius: {
+      sm: '0.25rem',
+      base: '0.5rem',
+      lg: '0.75rem',
+      xl: '1rem',
+    },
+    spacing: {
+      xs: '0.25rem',
+      sm: '0.5rem',
+      base: '1rem',
+      lg: '1.5rem',
+      xl: '2rem',
+    },
+  },
+  monacoTheme: {
+    base: 'vs-dark',
+    inherit: true,
+    themeName: 'Solarized-dark',
+  },
+};

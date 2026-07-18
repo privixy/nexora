@@ -1,0 +1,96 @@
+import type { Theme } from '../../types/theme';
+
+export const solarizedLight: Theme = {
+  id: 'solarized-light',
+  name: 'Solarized Light',
+  author: 'Ethan Schoonover',
+  isPreset: true,
+  isReadOnly: true,
+  colors: {
+    bg: {
+      base: '#fdf6e3',
+      elevated: '#eee8d5',
+      overlay: '#93a1a1',
+      input: '#fdf6e3',
+      tooltip: '#eee8d5',
+    },
+    surface: {
+      primary: '#eee8d5',
+      secondary: '#93a1a1',
+      tertiary: '#839496',
+      hover: '#93a1a1',
+      active: '#268bd2',
+      disabled: '#eee8d5',
+    },
+    text: {
+      primary: '#657b83',
+      secondary: '#3a5058',
+      muted: '#485e65',
+      disabled: '#839496',
+      accent: '#268bd2',
+      inverse: '#fdf6e3',
+    },
+    accent: {
+      primary: '#268bd2',
+      secondary: '#6c71c4',
+      success: '#859900',
+      warning: '#b58900',
+      error: '#dc322f',
+      info: '#2aa198',
+    },
+    border: {
+      subtle: '#eee8d5',
+      default: '#93a1a1',
+      strong: '#839496',
+      focus: '#268bd2',
+    },
+    semantic: {
+      string: '#b58900',
+      number: '#2aa198',
+      boolean: '#d33682',
+      date: '#859900',
+      null: '#93a1a1',
+      primaryKey: '#cb4b16',
+      foreignKey: '#268bd2',
+      index: '#d33682',
+      connectionActive: '#859900',
+      connectionInactive: '#93a1a1',
+      modified: '#268bd2',
+      deleted: '#dc322f',
+      new: '#859900',
+    },
+  },
+  typography: {
+    fontFamily: {
+      base: 'Inter, system-ui, sans-serif',
+      mono: 'Menlo, Consolas, monospace',
+    },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+    },
+  },
+  layout: {
+    borderRadius: {
+      sm: '0.25rem',
+      base: '0.5rem',
+      lg: '0.75rem',
+      xl: '1rem',
+    },
+    spacing: {
+      xs: '0.25rem',
+      sm: '0.5rem',
+      base: '1rem',
+      lg: '1.5rem',
+      xl: '2rem',
+    },
+  },
+  monacoTheme: {
+    base: 'vs',
+    inherit: true,
+    themeName: 'Solarized-light',
+  },
+};

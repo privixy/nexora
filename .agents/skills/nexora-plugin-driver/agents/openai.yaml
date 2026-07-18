@@ -1,0 +1,7 @@
+interface:
+  display_name: "Nexora Plugin Driver"
+  short_description: "Create Rust database plugins for Nexora."
+  default_prompt: "Use $nexora-plugin-driver to create or update a Rust Nexora database plugin with a modern manifest, modular handlers, tests, and validation."
+
+policy:
+  allow_implicit_invocation: true

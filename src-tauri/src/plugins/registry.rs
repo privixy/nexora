@@ -1,0 +1,84 @@
+use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
+const REGISTRY_URL: &str = "";
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct PluginRegistry {
+    pub schema_version: u32,
+    pub plugins: Vec<RegistryPlugin>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct RegistryPlugin {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub author: String,
+    pub homepage: String,
+    pub latest_version: String,
+    pub releases: Vec<PluginRelease>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct PluginRelease {
+    pub version: String,
+    pub min_nexora_version: Option<String>,
+    pub assets: HashMap<String, String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct RegistryReleaseWithStatus {
+    pub version: String,
+    pub min_nexora_version: Option<String>,
+    pub platform_supported: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct RegistryPluginWithStatus {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub author: String,
+    pub homepage: String,
+    pub latest_version: String,
+    pub releases: Vec<RegistryReleaseWithStatus>,
+    pub installed_version: Option<String>,
+    pub update_available: bool,
+    pub platform_supported: bool,
+}
+
+pub fn get_current_platform() -> String {
+    let os = std::env::consts::OS;
+    let arch = std::env::consts::ARCH;
+    match (os, arch) {
+        ("linux", "x86_64") => "linux-x64".to_string(),
+        ("linux", "aarch64") => "linux-arm64".to_string(),
+        ("macos", "aarch64") => "darwin-arm64".to_string(),
+        ("macos", "x86_64") => "darwin-x64".to_string(),
+        ("windows", "x86_64") => "win-x64".to_string(),
+        _ => format!("{}-{}", os, arch),
+    }
+}
+
+pub async fn fetch_registry(custom_url: Option<&str>) -> Result<PluginRegistry, String> {
+    let url = custom_url.unwrap_or(REGISTRY_URL).trim();
+    if url.is_empty() {
+        return Ok(PluginRegistry {
+            schema_version: 1,
+            plugins: Vec::new(),
+        });
+    }
+
+    let response = reqwest::get(url)
+        .await
+        .map_err(|e| format!("Failed to fetch plugin registry: {}", e))?;
+
+    let registry: PluginRegistry = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse plugin registry: {}", e))?;
+
+    Ok(registry)
+}

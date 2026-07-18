@@ -1,0 +1,17 @@
+name: Publish to Winget
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  winget-publish:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit to Winget
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: Nexora.Nexora
+          installers-regex: '_x64-setup\.exe$'
+          token: ${{ secrets.WINGET_TOKEN }}
