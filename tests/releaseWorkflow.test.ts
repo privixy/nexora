@@ -11,4 +11,13 @@ describe('release workflow', () => {
     expect(workflow).toContain("? '${{ inputs.tag }}'");
     expect(workflow).not.toContain("core.getInput('tag'");
   });
+
+  it('does not pass empty Apple signing secrets to unsigned macOS builds', () => {
+    expect(workflow).not.toContain('APPLE_CERTIFICATE:');
+    expect(workflow).not.toContain('APPLE_CERTIFICATE_PASSWORD:');
+    expect(workflow).not.toContain('APPLE_SIGNING_IDENTITY:');
+    expect(workflow).not.toContain('APPLE_ID:');
+    expect(workflow).not.toContain('APPLE_PASSWORD:');
+    expect(workflow).not.toContain('APPLE_TEAM_ID:');
+  });
 });
