@@ -31,7 +31,7 @@ jobs:
         with:
           script: |
             const tag = context.eventName === 'workflow_dispatch'
-              ? core.getInput('tag', { required: true })
+              ? '${{ inputs.tag }}'
               : context.ref.replace('refs/tags/', '')
             const owner = context.repo.owner
             const repo = context.repo.repo
