@@ -30,11 +30,11 @@ jobs:
       matrix:
         include:
           - platform: macos-latest
-            args: --target universal-apple-darwin --bundles dmg
+            args: '--target universal-apple-darwin --bundles dmg --config {"bundle":{"createUpdaterArtifacts":false}}'
           - platform: ubuntu-latest
-            args: --bundles deb
+            args: '--bundles deb --config {"bundle":{"createUpdaterArtifacts":false}}'
           - platform: windows-latest
-            args: --bundles nsis
+            args: '--bundles nsis --config {"bundle":{"createUpdaterArtifacts":false}}'
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout
