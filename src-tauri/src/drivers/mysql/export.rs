@@ -1,6 +1,6 @@
 use futures::StreamExt;
 use serde_json::Value;
-use sqlx::{AssertSqlSafe, Column, Row};
+use sqlx::{Column, Row};
 
 use crate::models::ConnectionParams;
 use crate::pool_manager::get_mysql_pool;
@@ -25,9 +25,9 @@ where
     // Behind a bastion that rejects prepared statements, stream over the text
     // protocol (COM_QUERY) instead — see `super::force_text_protocol`.
     let mut rows = if super::force_text_protocol(params) {
-        sqlx::raw_sql(AssertSqlSafe(query)).fetch(&pool)
+        sqlx::raw_sql(query).fetch(&pool)
     } else {
-        sqlx::query(AssertSqlSafe(query)).fetch(&pool)
+        sqlx::query(query).fetch(&pool)
     };
     let mut headers: Option<Vec<String>> = None;
 

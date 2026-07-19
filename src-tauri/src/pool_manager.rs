@@ -15,8 +15,7 @@ use rustls::{ClientConfig, Error as TlsError, RootCertStore};
 use rustls_platform_verifier::BuilderVerifierExt;
 use sha2::{Digest, Sha256};
 use sqlx::{
-    sqlite::SqliteConnectOptions, AssertSqlSafe, ConnectOptions, Connection, Executor, MySql, Pool,
-    Sqlite,
+    sqlite::SqliteConnectOptions, ConnectOptions, Connection, Executor, MySql, Pool, Sqlite,
 };
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -291,7 +290,7 @@ async fn build_and_connect_mysql_pool(
         pool_options = pool_options.after_connect(move |conn, _meta| {
             let script = script.clone();
             Box::pin(async move {
-                conn.execute(AssertSqlSafe(script)).await?;
+                conn.execute(script.as_str()).await?;
                 Ok(())
             })
         });
@@ -646,7 +645,7 @@ async fn run_mysql_startup_script(
     let mut conn = options.connect().await.map_err(|e| e.to_string())?;
     let outcome: Result<(), sqlx::Error> = async {
         let mut tx = conn.begin().await?;
-        tx.execute(AssertSqlSafe(script)).await?;
+        tx.execute(script).await?;
         tx.rollback().await
     }
     .await;
@@ -662,7 +661,7 @@ async fn run_sqlite_startup_script(
     let mut conn = options.connect().await.map_err(|e| e.to_string())?;
     let outcome: Result<(), sqlx::Error> = async {
         let mut tx = conn.begin().await?;
-        tx.execute(AssertSqlSafe(script)).await?;
+        tx.execute(script).await?;
         tx.rollback().await
     }
     .await;
@@ -933,7 +932,7 @@ pub async fn get_sqlite_pool_with_id(
         pool_options = pool_options.after_connect(move |conn, _meta| {
             let script = script.clone();
             Box::pin(async move {
-                conn.execute(AssertSqlSafe(script)).await?;
+                conn.execute(script.as_str()).await?;
                 Ok(())
             })
         });

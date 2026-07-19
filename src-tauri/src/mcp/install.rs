@@ -407,11 +407,8 @@ mod tests {
     #[test]
     fn builds_claude_code_manual_command() {
         assert_eq!(
-            build_manual_command("claude_code", "/Applications/Nexora.app/nexora")
-                .as_deref(),
-            Some(
-                "claude mcp add --scope user nexora /Applications/Nexora.app/nexora -- --mcp"
-            )
+            build_manual_command("claude_code", "/Applications/Nexora.app/nexora").as_deref(),
+            Some("claude mcp add --scope user nexora /Applications/Nexora.app/nexora -- --mcp")
         );
     }
 

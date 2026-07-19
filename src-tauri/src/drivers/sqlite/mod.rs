@@ -14,7 +14,7 @@ use crate::models::{
 };
 use crate::pool_manager::get_sqlite_pool;
 use extract::extract_value;
-use sqlx::{AssertSqlSafe, Column, Row};
+use sqlx::{Column, Row};
 
 pub use explain::explain_query;
 
@@ -66,7 +66,7 @@ pub async fn get_columns(
     // Also if 'pk' > 0 and type is INTEGER.
     let query = format!("PRAGMA table_info('{}')", table_name);
 
-    let rows = sqlx::query(AssertSqlSafe(query))
+    let rows = sqlx::query(&query)
         .fetch_all(&pool)
         .await
         .map_err(|e| e.to_string())?;
@@ -121,7 +121,7 @@ pub async fn get_foreign_keys(
     let pool = get_sqlite_pool(params).await?;
 
     let query = format!("PRAGMA foreign_key_list('{}')", table_name);
-    let rows = sqlx::query(AssertSqlSafe(query))
+    let rows = sqlx::query(&query)
         .fetch_all(&pool)
         .await
         .map_err(|e| e.to_string())?;
@@ -158,7 +158,7 @@ pub async fn get_all_columns_batch(
 
     for table_name in table_names {
         let query = format!("PRAGMA table_info('{}')", table_name);
-        let rows = sqlx::query(AssertSqlSafe(query))
+        let rows = sqlx::query(&query)
             .fetch_all(&pool)
             .await
             .map_err(|e| e.to_string())?;
@@ -198,7 +198,7 @@ pub async fn get_all_foreign_keys_batch(
 
     for table_name in table_names {
         let query = format!("PRAGMA foreign_key_list('{}')", table_name);
-        let rows = sqlx::query(AssertSqlSafe(query))
+        let rows = sqlx::query(&query)
             .fetch_all(&pool)
             .await
             .map_err(|e| e.to_string())?;
@@ -235,7 +235,7 @@ pub async fn get_indexes(
     let pool = get_sqlite_pool(params).await?;
 
     let list_query = format!("PRAGMA index_list('{}')", table_name);
-    let indexes = sqlx::query(AssertSqlSafe(list_query))
+    let indexes = sqlx::query(&list_query)
         .fetch_all(&pool)
         .await
         .map_err(|e| e.to_string())?;
@@ -248,7 +248,7 @@ pub async fn get_indexes(
         let origin: String = idx_row.try_get("origin").unwrap_or_default(); // pk for primary key
 
         let info_query = format!("PRAGMA index_info('{}')", name);
-        let info_rows = sqlx::query(AssertSqlSafe(info_query))
+        let info_rows = sqlx::query(&info_query)
             .fetch_all(&pool)
             .await
             .map_err(|e| e.to_string())?;
@@ -517,7 +517,7 @@ async fn exec_on_sqlite_conn(
     if !crate::drivers::common::returns_result_set(query) {
         use sqlx::Executor;
         let exec_result = conn
-            .execute(sqlx::query(AssertSqlSafe(query)))
+            .execute(sqlx::query(&query))
             .await
             .map_err(|e| e.to_string())?;
         return Ok(QueryResult {
@@ -553,7 +553,7 @@ async fn exec_on_sqlite_conn(
     }
 
     // Streaming
-    let mut rows_stream = sqlx::query(AssertSqlSafe(final_query)).fetch(&mut *conn);
+    let mut rows_stream = sqlx::query(&final_query).fetch(&mut *conn);
 
     let mut columns: Vec<String> = Vec::new();
     let mut json_rows = Vec::new();
@@ -685,7 +685,7 @@ pub async fn create_view(
     let pool = get_sqlite_pool(params).await?;
     let escaped_name = escape_identifier(view_name);
     let query = format!("CREATE VIEW \"{}\" AS {}", escaped_name, definition);
-    sqlx::query(AssertSqlSafe(query))
+    sqlx::query(&query)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create view: {}", e))?;
@@ -701,13 +701,13 @@ pub async fn alter_view(
     // SQLite does not support ALTER VIEW, so we must drop and recreate
     let escaped_name = escape_identifier(view_name);
     let drop_query = format!("DROP VIEW IF EXISTS \"{}\"", escaped_name);
-    sqlx::query(AssertSqlSafe(drop_query))
+    sqlx::query(&drop_query)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to drop view: {}", e))?;
 
     let create_query = format!("CREATE VIEW \"{}\" AS {}", escaped_name, definition);
-    sqlx::query(AssertSqlSafe(create_query))
+    sqlx::query(&create_query)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create view: {}", e))?;
@@ -719,7 +719,7 @@ pub async fn drop_view(params: &ConnectionParams, view_name: &str) -> Result<(),
     let pool = get_sqlite_pool(params).await?;
     let escaped_name = escape_identifier(view_name);
     let query = format!("DROP VIEW IF EXISTS \"{}\"", escaped_name);
-    sqlx::query(AssertSqlSafe(query))
+    sqlx::query(&query)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to drop view: {}", e))?;
@@ -734,7 +734,7 @@ pub async fn get_view_columns(
 
     let query = format!("PRAGMA table_info('{}')", view_name);
 
-    let rows = sqlx::query(AssertSqlSafe(query))
+    let rows = sqlx::query(&query)
         .fetch_all(&pool)
         .await
         .map_err(|e| e.to_string())?;
@@ -831,7 +831,7 @@ pub async fn get_trigger_definition(
 
 pub async fn create_trigger(params: &ConnectionParams, trigger_sql: &str) -> Result<(), String> {
     let pool = get_sqlite_pool(params).await?;
-    sqlx::query(AssertSqlSafe(trigger_sql))
+    sqlx::query(&trigger_sql)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create trigger: {}", e))?;
@@ -844,7 +844,7 @@ pub async fn drop_trigger(params: &ConnectionParams, trigger_name: &str) -> Resu
         "DROP TRIGGER IF EXISTS \"{}\"",
         escape_identifier(trigger_name)
     );
-    sqlx::query(AssertSqlSafe(sql))
+    sqlx::query(&sql)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to drop trigger: {}", e))?;

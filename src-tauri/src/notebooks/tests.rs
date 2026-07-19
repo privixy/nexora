@@ -131,10 +131,7 @@ fn legacy_flat_notebook_is_migrated_on_load() {
     assert_eq!(loaded.as_deref(), Some(sample("Legacy").as_str()));
 
     // It moved into the per-connection folder and the flat file is gone.
-    assert!(root
-        .join(CONN)
-        .join("nb_legacy.nexora-notebook")
-        .exists());
+    assert!(root.join(CONN).join("nb_legacy.nexora-notebook").exists());
     assert!(!legacy.exists());
 
     // And it now shows up in the connection's list.

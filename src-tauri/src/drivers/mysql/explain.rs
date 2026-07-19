@@ -1,7 +1,7 @@
 use super::helpers::{mysql_row_str, mysql_row_str_opt};
 use crate::models::{ConnectionParams, ExplainNode, ExplainPlan};
 use crate::pool_manager::get_mysql_pool;
-use sqlx::{AssertSqlSafe, Column, Row};
+use sqlx::{Column, Row};
 
 /// Server capabilities detected via `SELECT VERSION()`.
 struct MysqlCapabilities {
@@ -89,10 +89,10 @@ pub async fn explain_query(
         let analyze_res = if text {
             use sqlx::Executor;
             (&mut *conn)
-                .fetch_all(sqlx::raw_sql(AssertSqlSafe(analyze_sql.as_str())))
+                .fetch_all(sqlx::raw_sql(analyze_sql.as_str()))
                 .await
         } else {
-            sqlx::query(AssertSqlSafe(analyze_sql.as_str()))
+            sqlx::query(analyze_sql.as_str())
                 .fetch_all(&mut *conn)
                 .await
         };
@@ -130,12 +130,10 @@ pub async fn explain_query(
         let maria_res = if text {
             use sqlx::Executor;
             (&mut *conn)
-                .fetch_one(sqlx::raw_sql(AssertSqlSafe(maria_sql.as_str())))
+                .fetch_one(sqlx::raw_sql(maria_sql.as_str()))
                 .await
         } else {
-            sqlx::query(AssertSqlSafe(maria_sql.as_str()))
-                .fetch_one(&mut *conn)
-                .await
+            sqlx::query(maria_sql.as_str()).fetch_one(&mut *conn).await
         };
         if let Ok(row) = maria_res {
             if let Ok(raw_json) = row.try_get::<String, _>(0) {
@@ -174,12 +172,10 @@ pub async fn explain_query(
             let row = if text {
                 use sqlx::Executor;
                 (&mut *conn)
-                    .fetch_one(sqlx::raw_sql(AssertSqlSafe(json_sql.as_str())))
+                    .fetch_one(sqlx::raw_sql(json_sql.as_str()))
                     .await
             } else {
-                sqlx::query(AssertSqlSafe(json_sql.as_str()))
-                    .fetch_one(&mut *conn)
-                    .await
+                sqlx::query(json_sql.as_str()).fetch_one(&mut *conn).await
             }
             .map_err(|e| e.to_string())?;
             row.try_get::<String, _>(0).map_err(|e| e.to_string())
@@ -213,10 +209,10 @@ pub async fn explain_query(
     let rows = if text {
         use sqlx::Executor;
         (&mut *conn)
-            .fetch_all(sqlx::raw_sql(AssertSqlSafe(explain_sql.as_str())))
+            .fetch_all(sqlx::raw_sql(explain_sql.as_str()))
             .await
     } else {
-        sqlx::query(AssertSqlSafe(explain_sql.as_str()))
+        sqlx::query(explain_sql.as_str())
             .fetch_all(&mut *conn)
             .await
     }
@@ -1241,9 +1237,7 @@ fn map_analyze_description(
 fn extract_on_relation(desc: &str) -> Option<String> {
     let pos = desc.find(" on ")?;
     let after = &desc[pos + 4..];
-    let end = after
-        .find(|c: char| c == ' ' || c == '(')
-        .unwrap_or(after.len());
+    let end = after.find([' ', '(']).unwrap_or(after.len());
     let name = after[..end].trim();
     if name.is_empty() {
         None
@@ -1257,9 +1251,7 @@ fn extract_using_index(desc: &str) -> Option<String> {
     let lower = desc.to_lowercase();
     let pos = lower.find(" using ")?;
     let after = &desc[pos + 7..];
-    let end = after
-        .find(|c: char| c == ' ' || c == '(')
-        .unwrap_or(after.len());
+    let end = after.find([' ', '(']).unwrap_or(after.len());
     let name = after[..end].trim();
     if name.is_empty() {
         None
