@@ -1,7 +1,7 @@
 use super::helpers::{mysql_row_str, mysql_row_str_opt};
 use crate::models::{ConnectionParams, ExplainNode, ExplainPlan};
 use crate::pool_manager::get_mysql_pool;
-use sqlx::{Column, Row};
+use sqlx::{AssertSqlSafe, Column, Row};
 
 /// Server capabilities detected via `SELECT VERSION()`.
 struct MysqlCapabilities {
@@ -88,9 +88,13 @@ pub async fn explain_query(
         let analyze_sql = format!("EXPLAIN ANALYZE {}", query);
         let analyze_res = if text {
             use sqlx::Executor;
-            (&mut *conn).fetch_all(sqlx::raw_sql(&analyze_sql)).await
+            (&mut *conn)
+                .fetch_all(sqlx::raw_sql(AssertSqlSafe(analyze_sql.as_str())))
+                .await
         } else {
-            sqlx::query(&analyze_sql).fetch_all(&mut *conn).await
+            sqlx::query(AssertSqlSafe(analyze_sql.as_str()))
+                .fetch_all(&mut *conn)
+                .await
         };
         if let Ok(rows) = analyze_res {
             let mut lines = Vec::new();
@@ -125,9 +129,13 @@ pub async fn explain_query(
         let maria_sql = format!("ANALYZE FORMAT=JSON {}", query);
         let maria_res = if text {
             use sqlx::Executor;
-            (&mut *conn).fetch_one(sqlx::raw_sql(&maria_sql)).await
+            (&mut *conn)
+                .fetch_one(sqlx::raw_sql(AssertSqlSafe(maria_sql.as_str())))
+                .await
         } else {
-            sqlx::query(&maria_sql).fetch_one(&mut *conn).await
+            sqlx::query(AssertSqlSafe(maria_sql.as_str()))
+                .fetch_one(&mut *conn)
+                .await
         };
         if let Ok(row) = maria_res {
             if let Ok(raw_json) = row.try_get::<String, _>(0) {
@@ -165,9 +173,13 @@ pub async fn explain_query(
         let json_result: Result<String, String> = async {
             let row = if text {
                 use sqlx::Executor;
-                (&mut *conn).fetch_one(sqlx::raw_sql(&json_sql)).await
+                (&mut *conn)
+                    .fetch_one(sqlx::raw_sql(AssertSqlSafe(json_sql.as_str())))
+                    .await
             } else {
-                sqlx::query(&json_sql).fetch_one(&mut *conn).await
+                sqlx::query(AssertSqlSafe(json_sql.as_str()))
+                    .fetch_one(&mut *conn)
+                    .await
             }
             .map_err(|e| e.to_string())?;
             row.try_get::<String, _>(0).map_err(|e| e.to_string())
@@ -200,9 +212,13 @@ pub async fn explain_query(
     let explain_sql = format!("EXPLAIN {}", query);
     let rows = if text {
         use sqlx::Executor;
-        (&mut *conn).fetch_all(sqlx::raw_sql(&explain_sql)).await
+        (&mut *conn)
+            .fetch_all(sqlx::raw_sql(AssertSqlSafe(explain_sql.as_str())))
+            .await
     } else {
-        sqlx::query(&explain_sql).fetch_all(&mut *conn).await
+        sqlx::query(AssertSqlSafe(explain_sql.as_str()))
+            .fetch_all(&mut *conn)
+            .await
     }
     .map_err(|e| e.to_string())?;
 

@@ -1,6 +1,6 @@
 use crate::models::{ConnectionParams, ExplainNode, ExplainPlan};
 use crate::pool_manager::get_sqlite_pool;
-use sqlx::Row;
+use sqlx::{AssertSqlSafe, Row};
 
 pub async fn explain_query(params: &ConnectionParams, query: &str) -> Result<ExplainPlan, String> {
     let pool = get_sqlite_pool(params).await?;
@@ -8,7 +8,7 @@ pub async fn explain_query(params: &ConnectionParams, query: &str) -> Result<Exp
 
     let explain_sql = format!("EXPLAIN QUERY PLAN {}", query);
 
-    let rows = sqlx::query(&explain_sql)
+    let rows = sqlx::query(AssertSqlSafe(explain_sql))
         .fetch_all(&mut *conn)
         .await
         .map_err(|e| e.to_string())?;

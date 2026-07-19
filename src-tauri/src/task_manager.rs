@@ -18,8 +18,8 @@ use crate::window_title::format_window_title;
 // ---------------------------------------------------------------------------
 static SYSTEM: Lazy<Mutex<System>> = Lazy::new(|| {
     Mutex::new(System::new_with_specifics(
-        RefreshKind::new().with_processes(
-            ProcessRefreshKind::new()
+        RefreshKind::nothing().with_processes(
+            ProcessRefreshKind::nothing()
                 .with_cpu()
                 .with_disk_usage()
                 .with_memory(),
@@ -97,7 +97,7 @@ fn refresh_and_collect_process_stats(
     sys.refresh_processes_specifics(
         ProcessesToUpdate::All,
         true,
-        ProcessRefreshKind::new()
+        ProcessRefreshKind::nothing()
             .with_cpu()
             .with_disk_usage()
             .with_memory(),
@@ -168,7 +168,7 @@ fn refresh_and_collect_system_stats() -> SystemStats {
     sys.refresh_processes_specifics(
         ProcessesToUpdate::All,
         true,
-        ProcessRefreshKind::new()
+        ProcessRefreshKind::nothing()
             .with_cpu()
             .with_disk_usage()
             .with_memory(),
@@ -258,7 +258,7 @@ fn collect_nexora_children() -> Vec<NexoraChildProcess> {
     sys.refresh_processes_specifics(
         ProcessesToUpdate::All,
         true,
-        ProcessRefreshKind::new().with_cpu().with_memory(),
+        ProcessRefreshKind::nothing().with_cpu().with_memory(),
     );
 
     let self_pid = match get_current_pid() {

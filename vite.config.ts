@@ -22,15 +22,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 8000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'monaco-editor': ['monaco-editor', '@monaco-editor/react'],
-          recharts: ['recharts'],
-          xyflow: ['@xyflow/react', 'dagre'],
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          markdown: ['react-markdown'],
-          table: ['@tanstack/react-table', '@tanstack/react-virtual'],
-          wkx: ['wkx', 'buffer', 'util'],
+        manualChunks(id) {
+          if (id.includes('node_modules/monaco-editor') || id.includes('node_modules/@monaco-editor/react')) return 'monaco-editor'
+          if (id.includes('node_modules/recharts')) return 'recharts'
+          if (id.includes('node_modules/@xyflow/react') || id.includes('node_modules/dagre')) return 'xyflow'
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) return 'react-vendor'
+          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next') || id.includes('node_modules/i18next-browser-languagedetector')) return 'i18n'
+          if (id.includes('node_modules/react-markdown')) return 'markdown'
+          if (id.includes('node_modules/@tanstack/react-table') || id.includes('node_modules/@tanstack/react-virtual')) return 'table'
+          if (id.includes('node_modules/wkx') || id.includes('node_modules/buffer') || id.includes('node_modules/util')) return 'wkx'
         },
       },
     },

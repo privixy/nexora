@@ -146,7 +146,6 @@ export function AiTab() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkKeys();
     loadModels(false);
     invoke<string>("get_system_prompt")

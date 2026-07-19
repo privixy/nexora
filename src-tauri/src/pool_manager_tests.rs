@@ -556,7 +556,7 @@ mod startup_script_tests {
         let file = NamedTempFile::new().expect("temp file");
         let path = file.path().to_str().expect("utf8 path").to_string();
         // Unique connection id keeps this pool out of other tests' cached pools.
-        let conn_id = format!("startup-runs-{}", ulid::Ulid::new());
+        let conn_id = format!("startup-runs-{}", ulid::Ulid::generate());
 
         let params = sqlite_params(
             &path,
@@ -588,7 +588,7 @@ mod startup_script_tests {
     async fn blank_startup_script_is_skipped() {
         let file = NamedTempFile::new().expect("temp file");
         let path = file.path().to_str().expect("utf8 path").to_string();
-        let conn_id = format!("startup-blank-{}", ulid::Ulid::new());
+        let conn_id = format!("startup-blank-{}", ulid::Ulid::generate());
 
         // A whitespace-only script must be treated as absent: if it were run
         // as SQL the connection would fail and `SELECT 1` below would error.
@@ -611,7 +611,7 @@ mod startup_script_tests {
     async fn invalid_startup_script_surfaces_attributed_error() {
         let file = NamedTempFile::new().expect("temp file");
         let path = file.path().to_str().expect("utf8 path").to_string();
-        let conn_id = format!("startup-invalid-{}", ulid::Ulid::new());
+        let conn_id = format!("startup-invalid-{}", ulid::Ulid::generate());
 
         let params = sqlite_params(&path, Some("THIS IS NOT VALID SQL;"));
 

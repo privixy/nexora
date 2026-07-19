@@ -7,7 +7,7 @@ license = "Apache-2.0"
 homepage = "https://github.com/privixy/nexora"
 repository = "https://github.com/privixy/nexora"
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.85"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -41,8 +41,7 @@ chrono-tz = "0.10"
 tauri-plugin-dialog = "2.6.0"
 tauri-plugin-fs = "2.4.5"
 tauri-plugin-notification = "2"
-russh = "0.56"
-russh-keys = "0.49"
+russh = "0.62.2"
 async-trait = "0.1"
 urlencoding = "2.1.3"
 base64 = "0.22.1"

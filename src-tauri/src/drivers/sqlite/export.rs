@@ -1,6 +1,6 @@
 use futures::StreamExt;
 use serde_json::Value;
-use sqlx::{Column, Row};
+use sqlx::{AssertSqlSafe, Column, Row};
 
 use crate::models::ConnectionParams;
 use crate::pool_manager::get_sqlite_pool;
@@ -18,7 +18,7 @@ where
     F: FnMut(&[String], &[Value]) -> Result<(), String> + Send,
 {
     let pool = get_sqlite_pool(params).await?;
-    let mut rows = sqlx::query(query).fetch(&pool);
+    let mut rows = sqlx::query(AssertSqlSafe(query)).fetch(&pool);
     let mut headers: Option<Vec<String>> = None;
 
     while let Some(row_res) = rows.next().await {

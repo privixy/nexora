@@ -201,7 +201,7 @@ export const registerSqlAutocomplete = (
       const simpleDotMatch = qualifiedDotMatch ? null : textUntilPosition.match(/(?:["'`])?([a-zA-Z0-9_]+)(?:["'`])?\.([a-zA-Z0-9_]*)$/);
 
       if (qualifiedDotMatch || simpleDotMatch) {
-        let dotTables: TableInfo[] = [];
+        let dotTables: TableInfo[];
         let partialColumn: string;
 
         if (qualifiedDotMatch) {

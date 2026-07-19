@@ -203,7 +203,6 @@ export function parseClipboardText(text: string): ParsedClipboardData {
   const format = detectFormat(text);
 
   let rawRows: string[][] = [];
-  let hasHeaderRow = true;
   let presetHeaders: string[] | null = null;
 
   if (format === 'tsv') {
@@ -215,7 +214,6 @@ export function parseClipboardText(text: string): ParsedClipboardData {
     if (result) {
       presetHeaders = result.headers;
       rawRows = result.rows;
-      hasHeaderRow = false;
     }
   } else if (format === 'markdown-table') {
     rawRows = parseMarkdown(text);
@@ -236,6 +234,7 @@ export function parseClipboardText(text: string): ParsedClipboardData {
 
   let headers: string[];
   let dataRows: string[][];
+  let hasHeaderRow: boolean;
 
   if (presetHeaders) {
     headers = deduplicateNames(presetHeaders.map((h, i) => sanitizeColumnName(h, i)));

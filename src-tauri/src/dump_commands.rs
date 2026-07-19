@@ -9,7 +9,7 @@ use crate::models::ConnectionParams;
 use crate::pool_manager::{get_mysql_pool, get_postgres_pool, get_sqlite_pool};
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
-use sqlx::Row;
+use sqlx::{AssertSqlSafe, Row};
 use std::fs::File;
 use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 use std::sync::{Arc, Mutex};
@@ -173,7 +173,7 @@ async fn export_table_data(
             use crate::pool_manager::get_mysql_pool; // Returns String (JSON value or "NULL")
 
             let pool = get_mysql_pool(params).await?;
-            let mut rows = sqlx::query(&query).fetch(&pool);
+            let mut rows = sqlx::query(AssertSqlSafe(query.clone())).fetch(&pool);
 
             let mut batch = Vec::new();
             while let Some(row) = rows.try_next().await.map_err(|e| e.to_string())? {
@@ -249,7 +249,7 @@ async fn export_table_data(
             use crate::pool_manager::get_sqlite_pool;
 
             let pool = get_sqlite_pool(params).await?;
-            let mut rows = sqlx::query(&query).fetch(&pool);
+            let mut rows = sqlx::query(AssertSqlSafe(query.clone())).fetch(&pool);
 
             let mut batch = Vec::new();
             while let Some(row) = rows.try_next().await.map_err(|e| e.to_string())? {
@@ -375,7 +375,7 @@ macro_rules! execute_statements_streaming {
 
         while let Some(stmt) = $stream.next_statement()? {
             // Execute statement immediately without batching in memory
-            $executor_macro!(&stmt).await.map_err(|e| {
+            $executor_macro!(stmt).await.map_err(|e| {
                 format!(
                     "Error at statement {}: {}\nQuery: {}",
                     executed + 1,
@@ -493,7 +493,7 @@ pub async fn import_database<R: Runtime>(
 
                 macro_rules! execute_statement {
                     ($stmt:expr) => {
-                        sqlx::query($stmt).execute(&mut *tx)
+                        sqlx::query(AssertSqlSafe($stmt.clone())).execute(&mut *tx)
                     };
                 }
 
@@ -536,7 +536,7 @@ pub async fn import_database<R: Runtime>(
 
                 macro_rules! execute_statement {
                     ($stmt:expr) => {
-                        tx.execute($stmt, &[])
+                        tx.execute($stmt.as_str(), &[])
                     };
                 }
 
@@ -564,7 +564,7 @@ pub async fn import_database<R: Runtime>(
 
                 macro_rules! execute_statement {
                     ($stmt:expr) => {
-                        sqlx::query($stmt).execute(&mut *tx)
+                        sqlx::query(AssertSqlSafe($stmt.clone())).execute(&mut *tx)
                     };
                 }
 

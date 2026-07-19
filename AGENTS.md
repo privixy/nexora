@@ -44,6 +44,8 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Context changes in `src/contexts/FooProvider.tsx` must have tests in `tests/contexts/FooProvider.test.tsx`.
 - Component behavior changes in `src/components/.../Foo.tsx` must have tests in `tests/components/.../Foo.test.tsx`.
 - Page-level UI behavior may be tested through the smallest affected component/context; avoid brittle full-page tests unless the page owns the behavior.
+- Rust tests must not be written inline in production source files. Put Rust tests in sibling `tests.rs` files (or `tests/*.rs` modules) and load them with `#[cfg(test)] mod tests;` only.
+- Do not embed private keys, tokens, credentials, or secret-like fixtures in production source files or test source files. Generate temporary test credentials at runtime or use non-secret structural assertions instead.
 
 ## Directives
 Adhere to the rules defined in the [rules directory](./.rules/):
@@ -57,7 +59,7 @@ Adhere to the rules defined in the [rules directory](./.rules/):
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **nexora** (9537 symbols, 23658 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **nexora** (9537 symbols, 23653 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 

@@ -1,6 +1,6 @@
 use super::extract_value;
 use crate::drivers::common::encode_blob;
-use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::{sqlite::SqlitePoolOptions, AssertSqlSafe};
 
 async fn fetch_single_row(query: &str) -> sqlx::sqlite::SqliteRow {
     let pool = SqlitePoolOptions::new()
@@ -9,7 +9,7 @@ async fn fetch_single_row(query: &str) -> sqlx::sqlite::SqliteRow {
         .await
         .expect("should connect to in-memory sqlite");
 
-    let row = sqlx::query(query)
+    let row = sqlx::query(AssertSqlSafe(query))
         .fetch_one(&pool)
         .await
         .expect("query should return one row");

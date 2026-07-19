@@ -26,7 +26,7 @@ use helpers::{
     escape_identifier, inline_str_placeholders, is_raw_sql_function, is_wkt_geometry,
     mysql_bytes_literal, mysql_row_str, mysql_row_str_opt, mysql_string_literal,
 };
-use sqlx::{Column, Row};
+use sqlx::{AssertSqlSafe, Column, Row};
 use stmt_classify::is_text_protocol_stmt;
 
 /// Whether this connection must avoid the prepared-statement protocol.
@@ -119,11 +119,11 @@ async fn fetch_all_rows(
     use sqlx::Executor;
     if text.enabled {
         let rendered = inline_str_placeholders(sql, binds, text.no_backslash_escapes);
-        pool.fetch_all(sqlx::raw_sql(&rendered))
+        pool.fetch_all(sqlx::raw_sql(AssertSqlSafe(rendered)))
             .await
             .map_err(|e| e.to_string())
     } else {
-        let mut q = sqlx::query(sql);
+        let mut q = sqlx::query(AssertSqlSafe(sql));
         for b in binds {
             q = q.bind(*b);
         }
@@ -141,11 +141,11 @@ async fn fetch_one_row(
     use sqlx::Executor;
     if text.enabled {
         let rendered = inline_str_placeholders(sql, binds, text.no_backslash_escapes);
-        pool.fetch_one(sqlx::raw_sql(&rendered))
+        pool.fetch_one(sqlx::raw_sql(AssertSqlSafe(rendered)))
             .await
             .map_err(|e| e.to_string())
     } else {
-        let mut q = sqlx::query(sql);
+        let mut q = sqlx::query(AssertSqlSafe(sql));
         for b in binds {
             q = q.bind(*b);
         }
@@ -163,11 +163,11 @@ async fn fetch_optional_row(
     use sqlx::Executor;
     if text.enabled {
         let rendered = inline_str_placeholders(sql, binds, text.no_backslash_escapes);
-        pool.fetch_optional(sqlx::raw_sql(&rendered))
+        pool.fetch_optional(sqlx::raw_sql(AssertSqlSafe(rendered)))
             .await
             .map_err(|e| e.to_string())
     } else {
-        let mut q = sqlx::query(sql);
+        let mut q = sqlx::query(AssertSqlSafe(sql));
         for b in binds {
             q = q.bind(*b);
         }
@@ -184,11 +184,11 @@ async fn exec_stmt(
 ) -> Result<sqlx::mysql::MySqlQueryResult, String> {
     use sqlx::Executor;
     if text.enabled {
-        pool.execute(sqlx::raw_sql(sql))
+        pool.execute(sqlx::raw_sql(AssertSqlSafe(sql)))
             .await
             .map_err(|e| e.to_string())
     } else {
-        pool.execute(sqlx::query(sql))
+        pool.execute(sqlx::query(AssertSqlSafe(sql)))
             .await
             .map_err(|e| e.to_string())
     }
@@ -200,7 +200,7 @@ async fn exec_stmt(
 /// [`mysql_fetch_one_with_pk`], [`mysql_execute_with_pk`] and `update_record`'s
 /// `WHERE` clause so the bastion (text) path stays consistent with the bound path.
 fn push_pk_value(
-    qb: &mut sqlx::QueryBuilder<'_, sqlx::MySql>,
+    qb: &mut sqlx::QueryBuilder<sqlx::MySql>,
     val: &serde_json::Value,
     text: TextProto,
 ) -> Result<(), String> {
@@ -614,7 +614,7 @@ async fn mysql_fetch_one_with_pk(
     }
     if text.enabled {
         use sqlx::Executor;
-        pool.fetch_one(sqlx::raw_sql(&qb3.into_sql()))
+        pool.fetch_one(sqlx::raw_sql(qb3.into_sql()))
             .await
             .map_err(|e| e.to_string())
     } else {
@@ -646,7 +646,8 @@ async fn mysql_execute_with_pk(
         first = false;
     }
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_string();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -772,7 +773,8 @@ pub async fn update_record(
     }
 
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_string();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -893,7 +895,8 @@ pub async fn insert_record(
     };
 
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_string();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -960,7 +963,7 @@ pub async fn create_view(
     let pool = get_mysql_pool(params).await?;
     let escaped_name = escape_identifier(view_name);
     let query = format!("CREATE VIEW `{}` AS {}", escaped_name, definition);
-    sqlx::raw_sql(&query)
+    sqlx::raw_sql(AssertSqlSafe(query))
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create view: {}", e))?;
@@ -978,7 +981,7 @@ pub async fn alter_view(
     // `ALTER VIEW` is not supported by MySQL's prepared-statement protocol
     // (server error 1295), so it must go through `raw_sql()` (text protocol)
     // rather than `sqlx::query()`. See `is_text_protocol_stmt` for context.
-    sqlx::raw_sql(&query)
+    sqlx::raw_sql(AssertSqlSafe(query))
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to alter view: {}", e))?;
@@ -992,7 +995,7 @@ pub async fn drop_view(params: &ConnectionParams, view_name: &str) -> Result<(),
     // Routed through `raw_sql()` (text protocol) for consistency with
     // create/alter view, which the prepared-statement protocol rejects
     // with server error 1295.
-    sqlx::raw_sql(&query)
+    sqlx::raw_sql(AssertSqlSafe(query))
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to drop view: {}", e))?;
@@ -1205,7 +1208,7 @@ async fn exec_on_mysql_conn(
     if is_text_protocol_stmt(query) {
         use sqlx::Executor;
         let exec_result = conn
-            .execute(sqlx::raw_sql(query))
+            .execute(sqlx::raw_sql(AssertSqlSafe(query)))
             .await
             .map_err(|e| e.to_string())?;
         return Ok(QueryResult {
@@ -1224,9 +1227,9 @@ async fn exec_on_mysql_conn(
     if !crate::drivers::common::returns_result_set(query) {
         use sqlx::Executor;
         let exec_result = if text.enabled {
-            conn.execute(sqlx::raw_sql(query)).await
+            conn.execute(sqlx::raw_sql(AssertSqlSafe(query))).await
         } else {
-            conn.execute(sqlx::query(query)).await
+            conn.execute(sqlx::query(AssertSqlSafe(query))).await
         }
         .map_err(|e| e.to_string())?;
         return Ok(QueryResult {
@@ -1273,9 +1276,9 @@ async fn exec_on_mysql_conn(
         use futures::stream::StreamExt;
         use sqlx::Executor;
         let mut event_stream = if text.enabled {
-            (&mut *conn).fetch_many(sqlx::raw_sql(&final_query))
+            (&mut *conn).fetch_many(sqlx::raw_sql(AssertSqlSafe(final_query.as_str())))
         } else {
-            (&mut *conn).fetch_many(sqlx::query(&final_query))
+            (&mut *conn).fetch_many(sqlx::query(AssertSqlSafe(final_query.as_str())))
         };
 
         while let Some(result) = event_stream.next().await {
@@ -1474,7 +1477,7 @@ pub async fn create_trigger(
         params
     };
     let pool = get_mysql_pool(use_params).await?;
-    sqlx::raw_sql(trigger_sql)
+    sqlx::raw_sql(AssertSqlSafe(trigger_sql))
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create trigger: {}", e))?;
@@ -1496,7 +1499,7 @@ pub async fn drop_trigger(
         None => format!("`{}`", escape_identifier(trigger_name)),
     };
     let query = format!("DROP TRIGGER IF EXISTS {}", qualified);
-    sqlx::raw_sql(&query)
+    sqlx::raw_sql(AssertSqlSafe(query))
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to drop trigger: {}", e))?;

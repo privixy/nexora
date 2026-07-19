@@ -362,7 +362,6 @@ export function sortAiEvents(
   const decorated = events.map((ev, i) => ({ ev, i }));
   decorated.sort((a, b) => {
     let cmp = 0;
-    let nullCmp = 0;
     switch (field) {
       case "timestamp":
         cmp = a.ev.timestamp.localeCompare(b.ev.timestamp);
@@ -370,20 +369,22 @@ export function sortAiEvents(
       case "tool":
         cmp = a.ev.tool.localeCompare(b.ev.tool);
         break;
-      case "connection":
-        nullCmp = nullsLast(a.ev.connectionName, b.ev.connectionName);
+      case "connection": {
+        const nullCmp = nullsLast(a.ev.connectionName, b.ev.connectionName);
         if (nullCmp !== 0) return nullCmp;
         cmp = (a.ev.connectionName ?? "").localeCompare(
           b.ev.connectionName ?? "",
         );
         break;
-      case "kind":
-        nullCmp = nullsLast(a.ev.queryKind, b.ev.queryKind);
+      }
+      case "kind": {
+        const nullCmp = nullsLast(a.ev.queryKind, b.ev.queryKind);
         if (nullCmp !== 0) return nullCmp;
         cmp =
           (QUERY_KIND_ORDER[a.ev.queryKind as AiQueryKind] ?? 99) -
           (QUERY_KIND_ORDER[b.ev.queryKind as AiQueryKind] ?? 99);
         break;
+      }
       case "duration":
         cmp = a.ev.durationMs - b.ev.durationMs;
         break;

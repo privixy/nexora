@@ -5,8 +5,7 @@
 //! encrypted with AES-256-GCM using a key derived from the user's password
 //! via Argon2id.
 
-use aes_gcm::aead::rand_core::RngCore;
-use aes_gcm::aead::{Aead, KeyInit, OsRng};
+use aes_gcm::aead::{Aead, Generate, KeyInit};
 use aes_gcm::{Aes256Gcm, Nonce};
 use argon2::{Algorithm, Argon2, Params, Version};
 use base64::engine::general_purpose::STANDARD as BASE64;
@@ -18,7 +17,6 @@ mod tests;
 
 pub const ENVELOPE_FORMAT: &str = "nexora-connections-encrypted";
 
-const SALT_LEN: usize = 16;
 const NONCE_LEN: usize = 12;
 // Argon2id parameters: 64 MiB memory, 3 iterations, 1 lane.
 const ARGON2_M_COST: u32 = 65536;
@@ -68,15 +66,19 @@ pub fn encrypt(plaintext: &str, password: &str) -> Result<EncryptedEnvelope, Str
         return Err("Password must not be empty".to_string());
     }
 
-    let mut salt = [0u8; SALT_LEN];
-    OsRng.fill_bytes(&mut salt);
-    let mut nonce_bytes = [0u8; NONCE_LEN];
-    OsRng.fill_bytes(&mut nonce_bytes);
+    let salt = aes_gcm::aead::Key::<Aes256Gcm>::generate();
+    let nonce = Nonce::generate();
 
-    let key = derive_key(password, &salt, ARGON2_M_COST, ARGON2_T_COST, ARGON2_P_COST)?;
+    let key = derive_key(
+        password,
+        salt.as_slice(),
+        ARGON2_M_COST,
+        ARGON2_T_COST,
+        ARGON2_P_COST,
+    )?;
     let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
     let ciphertext = cipher
-        .encrypt(Nonce::from_slice(&nonce_bytes), plaintext.as_bytes())
+        .encrypt(&nonce, plaintext.as_bytes())
         .map_err(|e| format!("Encryption failed: {e}"))?;
 
     Ok(EncryptedEnvelope {
@@ -87,8 +89,8 @@ pub fn encrypt(plaintext: &str, password: &str) -> Result<EncryptedEnvelope, Str
         m_cost: ARGON2_M_COST,
         t_cost: ARGON2_T_COST,
         p_cost: ARGON2_P_COST,
-        salt: BASE64.encode(salt),
-        nonce: BASE64.encode(nonce_bytes),
+        salt: BASE64.encode(salt.as_slice()),
+        nonce: BASE64.encode(nonce.as_slice()),
         ciphertext: BASE64.encode(ciphertext),
     })
 }
@@ -130,7 +132,10 @@ pub fn decrypt(envelope: &EncryptedEnvelope, password: &str) -> Result<String, S
     )?;
     let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
     let plaintext = cipher
-        .decrypt(Nonce::from_slice(&nonce_bytes), ciphertext.as_ref())
+        .decrypt(
+            &Nonce::try_from(&nonce_bytes[..]).map_err(|e| e.to_string())?,
+            ciphertext.as_ref(),
+        )
         .map_err(|_| "Decryption failed: wrong password or corrupted file".to_string())?;
 
     String::from_utf8(plaintext).map_err(|e| format!("Decrypted data is not valid UTF-8: {e}"))
