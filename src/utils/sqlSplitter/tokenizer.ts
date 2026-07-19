@@ -216,21 +216,15 @@ function scanQQuoted(source: string, position: number): Token | null {
   const prevIndex = position - 1;
   if (isIdentBoundary(source, prevIndex)) return null;
 
-  let prefixLength = 0;
   const ch = source[position];
   const next = source[position + 1];
   const third = source[position + 2];
-  if ((ch === 'Q' || ch === 'q') && next === "'") {
-    prefixLength = 2;
-  } else if (
-    (ch === 'N' || ch === 'n') &&
-    (next === 'Q' || next === 'q') &&
-    third === "'"
-  ) {
-    prefixLength = 3;
-  } else {
-    return null;
-  }
+  const prefixLength = (ch === 'Q' || ch === 'q') && next === "'"
+    ? 2
+    : (ch === 'N' || ch === 'n') && (next === 'Q' || next === 'q') && third === "'"
+      ? 3
+      : 0;
+  if (prefixLength === 0) return null;
 
   const delimiterPosition = position + prefixLength;
   if (delimiterPosition >= source.length) return null;

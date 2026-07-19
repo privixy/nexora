@@ -200,7 +200,7 @@ async fn exec_stmt(
 /// [`mysql_fetch_one_with_pk`], [`mysql_execute_with_pk`] and `update_record`'s
 /// `WHERE` clause so the bastion (text) path stays consistent with the bound path.
 fn push_pk_value(
-    qb: &mut sqlx::QueryBuilder<'_, sqlx::MySql>,
+    qb: &mut sqlx::QueryBuilder<sqlx::MySql>,
     val: &serde_json::Value,
     text: TextProto,
 ) -> Result<(), String> {
@@ -614,7 +614,7 @@ async fn mysql_fetch_one_with_pk(
     }
     if text.enabled {
         use sqlx::Executor;
-        pool.fetch_one(sqlx::raw_sql(&qb3.into_sql()))
+        pool.fetch_one(sqlx::raw_sql(qb3.sql()))
             .await
             .map_err(|e| e.to_string())
     } else {
@@ -646,7 +646,8 @@ async fn mysql_execute_with_pk(
         first = false;
     }
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_sql();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -772,7 +773,8 @@ pub async fn update_record(
     }
 
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_sql();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -893,7 +895,8 @@ pub async fn insert_record(
     };
 
     let result = if text.enabled {
-        exec_stmt(&pool, text, &qb.into_sql()).await?
+        let sql = qb.into_sql();
+        exec_stmt(&pool, text, &sql).await?
     } else {
         qb.build().execute(&pool).await.map_err(|e| e.to_string())?
     };
@@ -1273,9 +1276,9 @@ async fn exec_on_mysql_conn(
         use futures::stream::StreamExt;
         use sqlx::Executor;
         let mut event_stream = if text.enabled {
-            (&mut *conn).fetch_many(sqlx::raw_sql(&final_query))
+            (&mut *conn).fetch_many(sqlx::raw_sql(final_query.as_str()))
         } else {
-            (&mut *conn).fetch_many(sqlx::query(&final_query))
+            (&mut *conn).fetch_many(sqlx::query(final_query.as_str()))
         };
 
         while let Some(result) = event_stream.next().await {

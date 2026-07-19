@@ -899,8 +899,7 @@ mod live_pg_temporal_and_uuid_regression {
                 std::env::var("NEXORA_TEST_PG_USER").unwrap_or_else(|_| "postgres".to_string()),
             ),
             password: Some(
-                std::env::var("NEXORA_TEST_PG_PASSWORD")
-                    .unwrap_or_else(|_| "postgres".to_string()),
+                std::env::var("NEXORA_TEST_PG_PASSWORD").unwrap_or_else(|_| "postgres".to_string()),
             ),
             database: DatabaseSelection::Single(
                 std::env::var("NEXORA_TEST_PG_DB").unwrap_or_else(|_| "postgres".to_string()),

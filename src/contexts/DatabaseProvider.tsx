@@ -1017,7 +1017,7 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
           error: errorMsg
         });
         setOpenConnectionIds(prev => prev.filter(id => id !== connectionId));
-        throw new Error(errorMsg);
+        throw new Error(errorMsg, { cause: testError });
       }
 
       // Register for health-check pinging.

@@ -1560,16 +1560,15 @@ export const Editor = () => {
 
     // Get text: selection first, then full editor content, then saved query
     const editor = editorsRef.current[activeTab.id];
-    let text = "";
-    if (editor) {
-      const selection = editor.getSelection();
-      const selectedText = selection && !selection.isEmpty()
-        ? editor.getModel()?.getValueInRange(selection)
-        : undefined;
-      text = (selectedText || editor.getValue()).trim();
-    } else {
-      text = (activeTab.query ?? "").trim();
-    }
+    const text = editor
+      ? (() => {
+        const selection = editor.getSelection();
+        const selectedText = selection && !selection.isEmpty()
+          ? editor.getModel()?.getValueInRange(selection)
+          : undefined;
+        return (selectedText || editor.getValue()).trim();
+      })()
+      : (activeTab.query ?? "").trim();
 
     if (!text) return;
 
@@ -1802,25 +1801,12 @@ export const Editor = () => {
       const currentSort = activeTab.sortClause || "";
       const parts = currentSort.trim().split(/\s+/);
 
-      let newSort = "";
-
       const sortCol = parts[0]?.replace(/^["`]|["`]$/g, "") ?? "";
-
-      // Check if we are currently sorting by this column
-      if (sortCol === colName && parts.length <= 2) {
-        const currentDir = parts[1]?.toUpperCase();
-
-        if (!currentDir || currentDir === "ASC") {
-          // ASC -> DESC
-          newSort = `${formatSqlIdentifier(colName, activeDriver)} DESC`;
-        } else {
-          // DESC -> None (Clear)
-          newSort = "";
-        }
-      } else {
-        // New column -> ASC
-        newSort = `${formatSqlIdentifier(colName, activeDriver)} ASC`;
-      }
+      const newSort = sortCol === colName && parts.length <= 2
+        ? parts[1]?.toUpperCase() === "DESC"
+          ? ""
+          : `${formatSqlIdentifier(colName, activeDriver)} DESC`
+        : `${formatSqlIdentifier(colName, activeDriver)} ASC`;
 
       handleToolbarUpdate(
         activeTab.filterClause || "",

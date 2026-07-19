@@ -83,7 +83,7 @@ pub async fn open_json_viewer_window(
         }
     }
 
-    let session_id = Ulid::new().to_string();
+    let session_id = Ulid::generate().to_string();
     let window_label = format!("json-viewer-{}", session_id);
 
     {

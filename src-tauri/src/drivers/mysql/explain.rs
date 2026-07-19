@@ -88,9 +88,13 @@ pub async fn explain_query(
         let analyze_sql = format!("EXPLAIN ANALYZE {}", query);
         let analyze_res = if text {
             use sqlx::Executor;
-            (&mut *conn).fetch_all(sqlx::raw_sql(&analyze_sql)).await
+            (&mut *conn)
+                .fetch_all(sqlx::raw_sql(analyze_sql.as_str()))
+                .await
         } else {
-            sqlx::query(&analyze_sql).fetch_all(&mut *conn).await
+            sqlx::query(analyze_sql.as_str())
+                .fetch_all(&mut *conn)
+                .await
         };
         if let Ok(rows) = analyze_res {
             let mut lines = Vec::new();
@@ -125,9 +129,11 @@ pub async fn explain_query(
         let maria_sql = format!("ANALYZE FORMAT=JSON {}", query);
         let maria_res = if text {
             use sqlx::Executor;
-            (&mut *conn).fetch_one(sqlx::raw_sql(&maria_sql)).await
+            (&mut *conn)
+                .fetch_one(sqlx::raw_sql(maria_sql.as_str()))
+                .await
         } else {
-            sqlx::query(&maria_sql).fetch_one(&mut *conn).await
+            sqlx::query(maria_sql.as_str()).fetch_one(&mut *conn).await
         };
         if let Ok(row) = maria_res {
             if let Ok(raw_json) = row.try_get::<String, _>(0) {
@@ -165,9 +171,11 @@ pub async fn explain_query(
         let json_result: Result<String, String> = async {
             let row = if text {
                 use sqlx::Executor;
-                (&mut *conn).fetch_one(sqlx::raw_sql(&json_sql)).await
+                (&mut *conn)
+                    .fetch_one(sqlx::raw_sql(json_sql.as_str()))
+                    .await
             } else {
-                sqlx::query(&json_sql).fetch_one(&mut *conn).await
+                sqlx::query(json_sql.as_str()).fetch_one(&mut *conn).await
             }
             .map_err(|e| e.to_string())?;
             row.try_get::<String, _>(0).map_err(|e| e.to_string())
@@ -200,9 +208,13 @@ pub async fn explain_query(
     let explain_sql = format!("EXPLAIN {}", query);
     let rows = if text {
         use sqlx::Executor;
-        (&mut *conn).fetch_all(sqlx::raw_sql(&explain_sql)).await
+        (&mut *conn)
+            .fetch_all(sqlx::raw_sql(explain_sql.as_str()))
+            .await
     } else {
-        sqlx::query(&explain_sql).fetch_all(&mut *conn).await
+        sqlx::query(explain_sql.as_str())
+            .fetch_all(&mut *conn)
+            .await
     }
     .map_err(|e| e.to_string())?;
 
@@ -1225,9 +1237,7 @@ fn map_analyze_description(
 fn extract_on_relation(desc: &str) -> Option<String> {
     let pos = desc.find(" on ")?;
     let after = &desc[pos + 4..];
-    let end = after
-        .find(|c: char| c == ' ' || c == '(')
-        .unwrap_or(after.len());
+    let end = after.find([' ', '(']).unwrap_or(after.len());
     let name = after[..end].trim();
     if name.is_empty() {
         None
@@ -1241,9 +1251,7 @@ fn extract_using_index(desc: &str) -> Option<String> {
     let lower = desc.to_lowercase();
     let pos = lower.find(" using ")?;
     let after = &desc[pos + 7..];
-    let end = after
-        .find(|c: char| c == ' ' || c == '(')
-        .unwrap_or(after.len());
+    let end = after.find([' ', '(']).unwrap_or(after.len());
     let name = after[..end].trim();
     if name.is_empty() {
         None

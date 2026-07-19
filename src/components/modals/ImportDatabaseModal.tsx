@@ -83,7 +83,6 @@ export const ImportDatabaseModal = ({
   useEffect(() => {
     if (!isOpen) {
       // Reset state when modal closes
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsImporting(false);
       setProgress(null);
       setError(null);

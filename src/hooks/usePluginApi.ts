@@ -38,7 +38,7 @@ export function usePluginQuery() {
       } catch (err) {
         const msg = toErrorMessage(err);
         setError(msg);
-        throw new Error(msg);
+        throw new Error(msg, { cause: err });
       } finally {
         setLoading(false);
       }

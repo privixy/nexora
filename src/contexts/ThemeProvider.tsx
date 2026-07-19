@@ -285,7 +285,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     try {
       importedTheme = JSON.parse(themeJson) as Theme;
     } catch (e) {
-      throw new Error(`Invalid theme JSON: ${e instanceof Error ? e.message : String(e)}`);
+      throw new Error(`Invalid theme JSON: ${e instanceof Error ? e.message : String(e)}`, { cause: e });
     }
 
     // Ensure it's marked as custom

@@ -1,7 +1,7 @@
-use async_trait::async_trait;
 use russh::client;
-use russh_keys::key;
+use russh::keys::{self, key::PrivateKeyWithHashAlg};
 use std::collections::HashMap;
+use std::future::Future;
 use std::io::{BufRead, BufReader};
 use std::net::{TcpListener, TcpStream};
 use std::path::Path;
@@ -37,40 +37,49 @@ struct RusshClientHandler {
     ssh_port: u16,
 }
 
-#[async_trait]
 impl client::Handler for RusshClientHandler {
     type Error = russh::Error;
 
-    async fn check_server_key(
+    fn check_server_key(
         &mut self,
-        server_public_key: &key::PublicKey,
-    ) -> Result<bool, Self::Error> {
-        match russh_keys::check_known_hosts(&self.ssh_host, self.ssh_port, server_public_key) {
-            Ok(true) => Ok(true),
-            Ok(false) => {
-                // Host not yet in known_hosts; add it (trust on first use)
-                if let Err(e) =
-                    russh_keys::learn_known_hosts(&self.ssh_host, self.ssh_port, server_public_key)
-                {
-                    eprintln!(
-                        "[SSH Tunnel] Warning: could not save host key to known_hosts: {}",
-                        e
-                    );
-                }
-                Ok(true)
-            }
-            Err(russh_keys::Error::KeyChanged { line }) => {
+        server_public_key: &keys::PublicKey,
+    ) -> impl Future<Output = Result<bool, Self::Error>> + Send {
+        let ssh_host = self.ssh_host.clone();
+        let ssh_port = self.ssh_port;
+        let server_public_key = server_public_key.clone();
+        async move { check_known_host_key(&ssh_host, ssh_port, &server_public_key) }
+    }
+}
+
+fn check_known_host_key(
+    ssh_host: &str,
+    ssh_port: u16,
+    server_public_key: &keys::PublicKey,
+) -> Result<bool, russh::Error> {
+    match keys::check_known_hosts(ssh_host, ssh_port, server_public_key) {
+        Ok(true) => Ok(true),
+        Ok(false) => {
+            if let Err(e) =
+                keys::known_hosts::learn_known_hosts(ssh_host, ssh_port, server_public_key)
+            {
                 eprintln!(
-                    "[SSH Tunnel Error] Host key mismatch at known_hosts line {}; \
-                     possible MITM attack on {}:{}",
-                    line, self.ssh_host, self.ssh_port
+                    "[SSH Tunnel] Warning: could not save host key to known_hosts: {}",
+                    e
                 );
-                Err(russh::Error::KeyChanged { line })
             }
-            Err(e) => {
-                eprintln!("[SSH Tunnel Error] Host key check failed: {}", e);
-                Err(russh::Error::CouldNotReadKey)
-            }
+            Ok(true)
+        }
+        Err(keys::Error::KeyChanged { line }) => {
+            eprintln!(
+                "[SSH Tunnel Error] Host key mismatch at known_hosts line {}; \
+                 possible MITM attack on {}:{}",
+                line, ssh_host, ssh_port
+            );
+            Err(russh::Error::KeyChanged { line })
+        }
+        Err(e) => {
+            eprintln!("[SSH Tunnel Error] Host key check failed: {}", e);
+            Err(russh::Error::CouldNotReadKey)
         }
     }
 }
@@ -399,12 +408,20 @@ impl SshTunnel {
                     let passphrase = ssh_key_passphrase
                         .as_deref()
                         .filter(|p| !p.trim().is_empty());
-                    let key = russh_keys::load_secret_key(Path::new(key_path), passphrase)
+                    let key = keys::load_secret_key(Path::new(key_path), passphrase)
                         .map_err(|e| format!("SSH key auth failed: {}", e))?;
+                    let key = PrivateKeyWithHashAlg::new(
+                        Arc::new(key),
+                        handle
+                            .best_supported_rsa_hash()
+                            .await
+                            .map_err(|e| format!("SSH key auth failed: {}", e))?
+                            .flatten(),
+                    );
 
                     tokio::time::timeout(
                         Duration::from_secs(SSH_AUTH_TIMEOUT_SECS),
-                        handle.authenticate_publickey(&ssh_user, Arc::new(key)),
+                        handle.authenticate_publickey(&ssh_user, key),
                     )
                     .await
                     .map_err(|_| {
@@ -414,6 +431,7 @@ impl SshTunnel {
                         )
                     })?
                     .map_err(|e| format!("SSH key auth failed: {}", e))?
+                    .success()
                 } else if let Some(pwd) = ssh_password.as_deref() {
                     println!(
                         "[SSH Tunnel] Authenticating with password (length: {})",
@@ -435,9 +453,9 @@ impl SshTunnel {
 
                     println!(
                         "[SSH Tunnel] Password authentication result: {}",
-                        auth_result
+                        auth_result.success()
                     );
-                    auth_result
+                    auth_result.success()
                 } else {
                     let err = "No SSH credentials provided for russh".to_string();
                     eprintln!("[SSH Tunnel Error] {}", err);
@@ -693,18 +711,28 @@ async fn test_ssh_connection_russh_async(
     let authenticated = if let Some(key_path) = ssh_key_file.filter(|p| !p.trim().is_empty()) {
         println!("[SSH Test] Authenticating with key file: {}", key_path);
         // Don't filter empty passphrase - if provided, use it even if empty
-        let key = russh_keys::load_secret_key(Path::new(key_path), ssh_key_passphrase)
+        let key = keys::load_secret_key(Path::new(key_path), ssh_key_passphrase)
             .map_err(|e| format!("SSH key authentication failed: {}", e))?;
+        let key = PrivateKeyWithHashAlg::new(
+            Arc::new(key),
+            handle
+                .best_supported_rsa_hash()
+                .await
+                .map_err(|e| format!("SSH key authentication failed: {}", e))?
+                .flatten(),
+        );
         handle
-            .authenticate_publickey(ssh_user, Arc::new(key))
+            .authenticate_publickey(ssh_user, key)
             .await
             .map_err(|e| format!("SSH key authentication failed: {}", e))?
+            .success()
     } else if let Some(pwd) = ssh_password {
         println!("[SSH Test] Authenticating with password");
         handle
             .authenticate_password(ssh_user, pwd)
             .await
             .map_err(|e| format!("SSH password authentication failed: {}", e))?
+            .success()
     } else {
         let err = "No SSH credentials provided for russh".to_string();
         eprintln!("[SSH Test Error] {}", err);
@@ -821,86 +849,4 @@ pub fn should_use_system_ssh(ssh_password: Option<&str>) -> bool {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    mod build_tunnel_key_tests {
-        use super::*;
-
-        #[test]
-        fn test_basic_key_format() {
-            let key = build_tunnel_key("user", "host.example.com", 22, "db.internal", 3306);
-            assert_eq!(key, "user@host.example.com:22:db.internal->3306");
-        }
-
-        #[test]
-        fn test_non_standard_port() {
-            let key = build_tunnel_key("admin", "jump.server", 2222, "localhost", 5432);
-            assert_eq!(key, "admin@jump.server:2222:localhost->5432");
-        }
-
-        #[test]
-        fn test_empty_user() {
-            let key = build_tunnel_key("", "host", 22, "remote", 80);
-            assert_eq!(key, "@host:22:remote->80");
-        }
-    }
-
-    mod should_use_system_ssh_tests {
-        use super::*;
-
-        #[test]
-        fn test_none_password_uses_system() {
-            assert!(should_use_system_ssh(None));
-        }
-
-        #[test]
-        fn test_empty_password_uses_system() {
-            assert!(should_use_system_ssh(Some("")));
-        }
-
-        #[test]
-        fn test_whitespace_password_uses_system() {
-            assert!(should_use_system_ssh(Some("   ")));
-        }
-
-        #[test]
-        fn test_valid_password_uses_russh() {
-            assert!(!should_use_system_ssh(Some("secret")));
-        }
-
-        #[test]
-        fn test_password_with_spaces_uses_russh() {
-            assert!(!should_use_system_ssh(Some("my password")));
-        }
-    }
-
-    mod is_empty_or_whitespace_tests {
-        use super::*;
-
-        #[test]
-        fn test_none_is_empty() {
-            assert!(is_empty_or_whitespace(None));
-        }
-
-        #[test]
-        fn test_empty_string_is_empty() {
-            assert!(is_empty_or_whitespace(Some("")));
-        }
-
-        #[test]
-        fn test_whitespace_is_empty() {
-            assert!(is_empty_or_whitespace(Some("  \t\n  ")));
-        }
-
-        #[test]
-        fn test_content_is_not_empty() {
-            assert!(!is_empty_or_whitespace(Some("content")));
-        }
-
-        #[test]
-        fn test_content_with_whitespace_is_not_empty() {
-            assert!(!is_empty_or_whitespace(Some("  content  ")));
-        }
-    }
-}
+mod tests;

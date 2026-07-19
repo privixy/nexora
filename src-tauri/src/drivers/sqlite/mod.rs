@@ -517,7 +517,7 @@ async fn exec_on_sqlite_conn(
     if !crate::drivers::common::returns_result_set(query) {
         use sqlx::Executor;
         let exec_result = conn
-            .execute(sqlx::query(query))
+            .execute(sqlx::query(&query))
             .await
             .map_err(|e| e.to_string())?;
         return Ok(QueryResult {
@@ -831,7 +831,7 @@ pub async fn get_trigger_definition(
 
 pub async fn create_trigger(params: &ConnectionParams, trigger_sql: &str) -> Result<(), String> {
     let pool = get_sqlite_pool(params).await?;
-    sqlx::query(trigger_sql)
+    sqlx::query(&trigger_sql)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create trigger: {}", e))?;

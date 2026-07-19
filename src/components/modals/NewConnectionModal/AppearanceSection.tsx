@@ -100,7 +100,7 @@ export function AppearanceSection({
         multiple: false,
         filters: [{ name: "Image", extensions: ["png", "jpg", "jpeg", "webp", "svg"] }],
       }).catch((e: unknown) => {
-        throw new Error(`Failed to open file dialog: ${e}`);
+        throw new Error(`Failed to open file dialog: ${e}`, { cause: e });
       });
       if (typeof picked !== "string") return;
       let stored: string;
@@ -110,7 +110,7 @@ export function AppearanceSection({
           sourcePath: picked,
         });
       } catch (e) {
-        throw new Error(`Failed to save icon: ${e}`);
+        throw new Error(`Failed to save icon: ${e}`, { cause: e });
       }
       // Deletion of the previous image is deferred to the parent (save or cancel).
       // This prevents data loss when the user picks multiple images then cancels.

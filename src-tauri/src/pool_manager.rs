@@ -166,7 +166,13 @@ pub(crate) fn build_connection_key(
     match startup_script(params) {
         Some(script) => {
             let digest = Sha256::digest(script.as_bytes());
-            format!("{key}:startup:{digest:x}")
+            format!(
+                "{key}:startup:{}",
+                base64::Engine::encode(
+                    &base64::engine::general_purpose::URL_SAFE_NO_PAD,
+                    digest.as_slice()
+                )
+            )
         }
         None => key,
     }
