@@ -34,6 +34,8 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.
 - Run Rust tests for Rust/backend changes: `pnpm test:rust` or the relevant `cargo test` command in `src-tauri`.
+- MUST run the full CI-equivalent local checks before pushing a branch, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm build:plugin-api`, `pnpm check:plugin-api`, `pnpm build:create-plugin`, `pnpm smoke:create-plugin`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed.
+- MUST NOT push, merge, tag, release, or report completion if any required local check fails. Fix the failure, rerun the failed command, then rerun the full affected check set.
 - If a command fails, fix the issue and rerun it. Do not report a task as done with failing checks.
 - Final response must list the exact test/check commands run.
 
