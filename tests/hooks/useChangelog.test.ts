@@ -10,8 +10,10 @@ describe("useChangelog", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(result.current.entries[0]).toMatchObject({
-      version: "1.0.1",
-      bugFixes: expect.arrayContaining(["Handle imported connection passwords"]),
+      version: "1.0.2",
+      bugFixes: expect.arrayContaining([
+        "Allow saving imported passwords before selecting databases",
+      ]),
     });
     expect(result.current.entries).toEqual(
       expect.arrayContaining([
