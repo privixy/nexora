@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Emitter;
 use tauri::{AppHandle, Manager};
+use tauri_plugin_updater::UpdaterExt;
 
 // Strutture dati
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -252,13 +253,9 @@ pub async fn check_for_updates(app: AppHandle, force: bool) -> Result<UpdateChec
 
 #[tauri::command]
 pub async fn download_and_install_update(app: AppHandle) -> Result<(), String> {
-    // Usa tauri-plugin-updater per gestire il download e installazione
-    use tauri_plugin_updater::UpdaterExt;
-
     let updater = app.updater_builder().build().map_err(|e| e.to_string())?;
 
     if let Some(update) = updater.check().await.map_err(|e| e.to_string())? {
-        // Emetti eventi per aggiornare la UI sul progresso
         let mut downloaded = 0;
 
         update
@@ -274,7 +271,6 @@ pub async fn download_and_install_update(app: AppHandle) -> Result<(), String> {
                     let _ = app.emit("update-progress", progress);
                 },
                 || {
-                    // Pre-installazione: salva stato, chiudi connessioni, etc.
                     let _ = app.emit("update-installing", ());
                 },
             )

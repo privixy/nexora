@@ -77,6 +77,8 @@ pub mod task_manager;
 pub mod theme_commands;
 pub mod theme_models;
 pub mod updater;
+#[cfg(test)]
+pub mod updater_tests;
 pub mod window_title;
 #[cfg(test)]
 pub mod window_title_tests;
@@ -183,6 +185,7 @@ pub fn run() {
     sqlx::any::install_default_drivers();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
