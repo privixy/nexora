@@ -25,6 +25,8 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - For every bug fix, add a test that fails on the old behavior and passes with the fix.
 - For every refactor, add or update tests that prove the public behavior did not change.
 - For UI state bugs, add component or context tests that assert the visible state after the relevant interaction, not just that callbacks were called.
+- For every bug fix, tests MUST cover the complete user-reported workflow, including the action that originally blocks the user and the final action the user expects to perform; do not stop at an intermediate successful callback.
+- For credential/import bugs, tests MUST cover missing credential input, retry/load using the newly entered credential, save without unrelated blocking validation, and the saved backend invocation payload.
 - For database/schema/table behavior, tests must cover the actual context tuple being passed (`connectionId`, `database`, `schema`, `table`) and must include a stale/previous-selection case when applicable.
 - For autocomplete/query execution changes, tests must verify both displayed suggestions and backend invocation parameters.
 - For async loading changes, tests must cover the loading path and the already-loaded path.

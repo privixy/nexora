@@ -380,6 +380,15 @@ export const NewConnectionModal = ({
     initialConnection?.params.password?.trim() ||
       (initialConnection?.params.save_in_keychain === true && hasPasswordValue),
   );
+  const existingDatabases = useMemo(() => {
+    if (!initialConnection?.params.database) return [];
+    return Array.isArray(initialConnection.params.database)
+      ? initialConnection.params.database
+      : [initialConnection.params.database];
+  }, [initialConnection]);
+  const effectiveSelectedDatabases = selectedDatabasesState.length > 0
+    ? selectedDatabasesState
+    : existingDatabases;
 
   // ── plugin slot: connection-modal.connection_content ──
   const slotRegistry = usePluginSlotRegistry();
@@ -645,7 +654,7 @@ export const NewConnectionModal = ({
           setSelectedDatabasesState(db);
           setFormData({ ...params, database: db[0] ?? "" });
         } else {
-          setSelectedDatabasesState([]);
+          setSelectedDatabasesState(db ? [db] : []);
           setFormData({ ...params });
         }
 
@@ -783,7 +792,7 @@ export const NewConnectionModal = ({
       return;
     }
     if (isMultiDb) {
-      if (selectedDatabasesState.length === 0) {
+      if (!initialConnection && selectedDatabasesState.length === 0) {
         setStatus("error");
         setMessage(t("newConnection.noDatabasesSelected"));
         setTestResult("error");
@@ -811,9 +820,11 @@ export const NewConnectionModal = ({
         port: formData.port != null ? Number(formData.port) : undefined,
         k8s_port: effectiveK8sPort,
         database: isMultiDb
-          ? selectedDatabasesState.length === 1
-            ? selectedDatabasesState[0]
-            : selectedDatabasesState
+          ? effectiveSelectedDatabases.length === 0
+            ? (formData.database ?? "")
+            : effectiveSelectedDatabases.length === 1
+              ? effectiveSelectedDatabases[0]
+              : effectiveSelectedDatabases
           : formData.database,
       };
       const appearancePayload =
