@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo-sm.png" width="120" height="120" />
+  <img src="public/banner.png" alt="Repository Logo" width="200" />
 </div>
 
 # Nexora
