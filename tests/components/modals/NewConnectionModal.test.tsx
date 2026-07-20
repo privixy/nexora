@@ -241,6 +241,9 @@ describe("NewConnectionModal imported connection credentials", () => {
       if (command === "get_connection_by_id") {
         return Promise.reject("missing credentials");
       }
+      if (command === "list_databases") {
+        return Promise.resolve(["postgres"]);
+      }
       return Promise.resolve("ok");
     });
     sshMocks.loadSshConnections.mockResolvedValue([]);
@@ -268,6 +271,96 @@ describe("NewConnectionModal imported connection credentials", () => {
 
     expect(passwordInput).toHaveAttribute("type", "password");
     expect(screen.queryByPlaceholderText("••••••••")).not.toBeInTheDocument();
+  });
+
+  it("keeps an imported single database selected so entering a password can be saved", async () => {
+    const onSave = vi.fn();
+    render(
+      <NewConnectionModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onSave={onSave}
+        initialConnection={{
+          id: "imported-1",
+          name: "Imported",
+          params: {
+            driver: "mysql",
+            host: "localhost",
+            port: 5432,
+            username: "develop",
+            database: "postgres",
+            save_in_keychain: false,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.change(
+      await screen.findByPlaceholderText("newConnection.passwordPlaceholder"),
+      { target: { value: "secret" } },
+    );
+    fireEvent.click(screen.getByText("newConnection.save"));
+
+    await waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith(
+        "update_connection",
+        expect.objectContaining({
+          id: "imported-1",
+          params: expect.objectContaining({
+            database: "postgres",
+            password: "secret",
+          }),
+        }),
+      );
+    });
+    expect(
+      screen.queryByText("newConnection.noDatabasesSelected"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("allows saving an entered password before any database can be selected", async () => {
+    driverState.schemas = false;
+    const onSave = vi.fn();
+    render(
+      <NewConnectionModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onSave={onSave}
+        initialConnection={{
+          id: "imported-1",
+          name: "Imported",
+          params: {
+            driver: "mysql",
+            host: "localhost",
+            port: 5432,
+            username: "develop",
+            database: "",
+            save_in_keychain: false,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.change(
+      await screen.findByPlaceholderText("newConnection.passwordPlaceholder"),
+      { target: { value: "secret" } },
+    );
+    fireEvent.click(screen.getByText("newConnection.save"));
+
+    await waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith(
+        "update_connection",
+        expect.objectContaining({
+          id: "imported-1",
+          params: expect.objectContaining({
+            password: "secret",
+          }),
+        }),
+      );
+    });
+    expect(
+      screen.queryByText("newConnection.noDatabasesSelected"),
+    ).not.toBeInTheDocument();
   });
 
   it("clears a stale database-load error after entering the missing password", async () => {

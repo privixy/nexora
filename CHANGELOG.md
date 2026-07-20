@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/privixy/nexora/compare/v1.0.1...v1.0.2) (2026-07-20)
+
+### Bug Fixes
+
+* allow saving imported passwords before selecting databases ([0d43bd5](https://github.com/privixy/nexora/commit/0d43bd551f6bb05a95d352d2dc83dfa15903d8ed))
+
 ## [1.0.1](https://github.com/privixy/nexora/compare/v1.0.0...v1.0.1) (2026-07-20)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 [package]
 name = "nexora"
-version = "1.0.1"
+version = "1.0.2"
 description = "Nexora - A database manager for developers"
 authors = ["Privixy"]
 license = "Apache-2.0"
