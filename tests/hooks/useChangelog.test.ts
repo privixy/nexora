@@ -10,10 +10,8 @@ describe("useChangelog", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(result.current.entries[0]).toMatchObject({
-      version: "1.0.2",
-      bugFixes: expect.arrayContaining([
-        "Allow saving imported passwords before selecting databases",
-      ]),
+      version: "1.0.3",
+      bugFixes: expect.arrayContaining(["Initialize updater plugin"]),
     });
     expect(result.current.entries).toEqual(
       expect.arrayContaining([

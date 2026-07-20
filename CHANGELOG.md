@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/privixy/nexora/compare/v1.0.2...v1.0.3) (2026-07-20)
+
+### Bug Fixes
+
+* initialize updater plugin ([89691dd](https://github.com/privixy/nexora/commit/89691ddf0c25fb53ff4e06f652af636b9c8a537c))
+
 ## [1.0.2](https://github.com/privixy/nexora/compare/v1.0.1...v1.0.2) (2026-07-20)
 
 ### Bug Fixes
