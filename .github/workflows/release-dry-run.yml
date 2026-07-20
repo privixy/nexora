@@ -1,18 +1,20 @@
 name: Release dry run
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
       - .github/workflows/release-dry-run.yml
-      - src-tauri/**
-      - src/**
+      - .github/workflows/release.yml
+      - CHANGELOG.md
       - package.json
+      - src/version.ts
+      - src-tauri/Cargo.toml
+      - src-tauri/Cargo.lock
+      - src-tauri/tauri.conf.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
-      - vite.config.ts
-      - tsconfig*.json
   workflow_dispatch:
 
 permissions:

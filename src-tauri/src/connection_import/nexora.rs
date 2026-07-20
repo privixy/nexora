@@ -56,8 +56,11 @@ pub fn preview(
                 .and_then(|gid| payload.groups.iter().find(|g| &g.id == gid))
                 .map(|g| g.name.clone());
 
-            let has_password =
-                conn.params.password.is_some() || conn.params.save_in_keychain == Some(true);
+            let has_password = conn
+                .params
+                .password
+                .as_deref()
+                .is_some_and(|p| !p.trim().is_empty());
             let has_ssh =
                 conn.params.ssh_enabled == Some(true) || conn.params.ssh_connection_id.is_some();
 
@@ -210,7 +213,10 @@ fn include_group_chains(
 }
 
 #[cfg(test)]
-mod tests {
+mod tests;
+
+#[cfg(test)]
+mod legacy_tests {
     use super::*;
     use crate::models::{ConnectionParams, DatabaseSelection, SshConnection};
 

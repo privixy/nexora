@@ -1,7 +1,7 @@
 {
   "name": "nexora",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Open-source desktop SQL workspace for PostgreSQL, MySQL/MariaDB, SQLite, and plugin-driven database integrations.",
   "license": "Apache-2.0",
   "repository": {

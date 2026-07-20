@@ -10,8 +10,16 @@ describe("useChangelog", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(result.current.entries[0]).toMatchObject({
-      version: "0.15.0",
-      features: expect.arrayContaining(["Rebranded project to Nexora"]),
+      version: "1.0.1",
+      bugFixes: expect.arrayContaining(["Handle imported connection passwords"]),
     });
+    expect(result.current.entries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          version: "0.15.0",
+          features: expect.arrayContaining(["Rebranded project to Nexora"]),
+        }),
+      ]),
+    );
   });
 });
