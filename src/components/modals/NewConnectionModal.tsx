@@ -270,6 +270,7 @@ export const NewConnectionModal = ({
   const [databaseLoadError, setDatabaseLoadError] = useState<string | null>(
     null,
   );
+  const databaseLoadRequestRef = useRef(0);
 
   // ── connection test ──
   const [status, setStatus] = useState<
@@ -374,6 +375,11 @@ export const NewConnectionModal = ({
       defaultValue: "e.g. mysql://user:pass@localhost:3306/db",
     });
   const isMultiDb = isMultiDatabaseCapable(activeDriver?.capabilities);
+  const hasPasswordValue = Boolean(formData.password?.trim());
+  const hasStoredPassword = Boolean(
+    initialConnection?.params.password?.trim() ||
+      (initialConnection?.params.save_in_keychain === true && hasPasswordValue),
+  );
 
   // ── plugin slot: connection-modal.connection_content ──
   const slotRegistry = usePluginSlotRegistry();
@@ -510,6 +516,14 @@ export const NewConnectionModal = ({
     field: keyof ConnectionParams,
     value: string | number | boolean | undefined,
   ) => {
+    if (field === "password") {
+      databaseLoadRequestRef.current += 1;
+      setStatus("idle");
+      setMessage("");
+      setTestResult(null);
+      setLoadingDatabases(false);
+      setDatabaseLoadError(null);
+    }
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -524,6 +538,8 @@ export const NewConnectionModal = ({
       return;
     }
 
+    const requestId = databaseLoadRequestRef.current + 1;
+    databaseLoadRequestRef.current = requestId;
     setLoadingDatabases(true);
     setDatabaseLoadError(null);
     try {
@@ -548,6 +564,7 @@ export const NewConnectionModal = ({
           connection_id: initialConnection?.id,
         },
       });
+      if (requestId !== databaseLoadRequestRef.current) return;
       setAvailableDatabases(databases);
       if (initialConnection) {
         // Pre-select databases already associated with the connection
@@ -568,10 +585,13 @@ export const NewConnectionModal = ({
           : err instanceof Error
             ? err.message
             : t("newConnection.failLoadDatabases");
+      if (requestId !== databaseLoadRequestRef.current) return;
       setDatabaseLoadError(errorMsg);
       setAvailableDatabases([]);
     } finally {
-      setLoadingDatabases(false);
+      if (requestId === databaseLoadRequestRef.current) {
+        setLoadingDatabases(false);
+      }
     }
   };
 
@@ -1062,7 +1082,7 @@ export const NewConnectionModal = ({
               }}
               type="password"
               placeholder={
-                initialConnection && !passwordDirty && !formData.password
+                hasStoredPassword && !passwordDirty && !formData.password
                   ? "••••••••"
                   : t("newConnection.passwordPlaceholder")
               }

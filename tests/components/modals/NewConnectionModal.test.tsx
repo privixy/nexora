@@ -14,6 +14,7 @@ interface MockSelectProps {
 
 const driverState = vi.hoisted(() => ({
   defaultPort: 15432 as number | null,
+  schemas: true,
 }));
 
 const k8sMocks = vi.hoisted(() => ({
@@ -64,6 +65,7 @@ vi.mock("../../../src/hooks/useDrivers", () => ({
           folder_based: false,
           connection_string: true,
           supports_ssl: false,
+          schemas: driverState.schemas,
         },
       },
     ],
@@ -105,9 +107,16 @@ vi.mock("../../../src/components/modals/K8sConnectionsModal", () => ({
   K8sConnectionsModal: () => null,
 }));
 
-function renderModal() {
+type InitialConnection = Parameters<typeof NewConnectionModal>[0]["initialConnection"];
+
+function renderModal(initialConnection?: InitialConnection) {
   return render(
-    <NewConnectionModal isOpen={true} onClose={vi.fn()} onSave={vi.fn()} />,
+    <NewConnectionModal
+      isOpen={true}
+      onClose={vi.fn()}
+      onSave={vi.fn()}
+      initialConnection={initialConnection}
+    />,
   );
 }
 
@@ -150,6 +159,7 @@ describe("NewConnectionModal K8s port defaults", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     driverState.defaultPort = 15432;
+    driverState.schemas = true;
     vi.mocked(invoke).mockResolvedValue("ok");
     sshMocks.loadSshConnections.mockResolvedValue([]);
     k8sMocks.loadK8sConnections.mockResolvedValue([]);
@@ -214,6 +224,150 @@ describe("NewConnectionModal K8s port defaults", () => {
           request: expect.objectContaining({
             params: expect.objectContaining({
               k8s_port: 6543,
+            }),
+          }),
+        }),
+      );
+    });
+  });
+});
+
+describe("NewConnectionModal imported connection credentials", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    driverState.defaultPort = 5432;
+    driverState.schemas = true;
+    vi.mocked(invoke).mockImplementation((command) => {
+      if (command === "get_connection_by_id") {
+        return Promise.reject("missing credentials");
+      }
+      return Promise.resolve("ok");
+    });
+    sshMocks.loadSshConnections.mockResolvedValue([]);
+    k8sMocks.loadK8sConnections.mockResolvedValue([]);
+    k8sMocks.getK8sContexts.mockResolvedValue([]);
+  });
+
+  it("does not show a stored-password placeholder when an imported connection has no password", async () => {
+    renderModal({
+      id: "imported-1",
+      name: "Imported",
+      params: {
+        driver: "mysql",
+        host: "localhost",
+        port: 5432,
+        username: "develop",
+        database: "postgres",
+        save_in_keychain: false,
+      },
+    });
+
+    const passwordInput = await screen.findByPlaceholderText(
+      "newConnection.passwordPlaceholder",
+    );
+
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(screen.queryByPlaceholderText("••••••••")).not.toBeInTheDocument();
+  });
+
+  it("clears a stale database-load error after entering the missing password", async () => {
+    driverState.schemas = false;
+    vi.mocked(invoke).mockImplementation((command) => {
+      if (command === "get_connection_by_id") {
+        return Promise.reject("missing credentials");
+      }
+      if (command === "list_databases") {
+        return Promise.reject("password authentication failed");
+      }
+      return Promise.resolve("ok");
+    });
+
+    renderModal({
+      id: "imported-1",
+      name: "Imported",
+      params: {
+        driver: "mysql",
+        host: "localhost",
+        port: 5432,
+        username: "develop",
+        database: "postgres",
+        save_in_keychain: false,
+      },
+    });
+
+    fireEvent.click(screen.getByText("newConnection.selectDatabases"));
+
+    await waitFor(() => {
+      expect(screen.getByText("password authentication failed")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("newConnection.general"));
+    fireEvent.change(
+      await screen.findByPlaceholderText("newConnection.passwordPlaceholder"),
+      { target: { value: "secret" } },
+    );
+    fireEvent.click(screen.getByText("newConnection.selectDatabases"));
+
+    expect(screen.queryByText("password authentication failed")).not.toBeInTheDocument();
+  });
+
+  it("passes a newly typed password to test connection and load databases", async () => {
+    driverState.schemas = false;
+    vi.mocked(invoke).mockImplementation((command) => {
+      if (command === "get_connection_by_id") {
+        return Promise.reject("missing credentials");
+      }
+      if (command === "list_databases") {
+        return Promise.resolve(["postgres"]);
+      }
+      return Promise.resolve("Connection successful!");
+    });
+
+    renderModal({
+      id: "imported-1",
+      name: "Imported",
+      params: {
+        driver: "mysql",
+        host: "localhost",
+        port: 5432,
+        username: "develop",
+        database: "postgres",
+        save_in_keychain: false,
+      },
+    });
+
+    const passwordInput = await screen.findByPlaceholderText(
+      "newConnection.passwordPlaceholder",
+    );
+    fireEvent.change(passwordInput, { target: { value: "secret" } });
+
+    fireEvent.click(screen.getByText("newConnection.testConnection"));
+
+    await waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith(
+        "test_connection",
+        expect.objectContaining({
+          request: expect.objectContaining({
+            connection_id: "imported-1",
+            params: expect.objectContaining({
+              password: "secret",
+            }),
+          }),
+        }),
+      );
+    });
+
+    fireEvent.click(screen.getByText("newConnection.selectDatabases"));
+    fireEvent.click(screen.getByText("newConnection.loadDatabases"));
+
+    await waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith(
+        "list_databases",
+        expect.objectContaining({
+          request: expect.objectContaining({
+            connection_id: "imported-1",
+            params: expect.objectContaining({
+              password: "secret",
             }),
           }),
         }),
