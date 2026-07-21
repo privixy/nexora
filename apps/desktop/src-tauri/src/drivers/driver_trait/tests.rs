@@ -3,7 +3,7 @@ use std::sync::{Arc, Mutex};
 
 use async_trait::async_trait;
 
-use super::driver_trait::{DatabaseDriver, DriverCapabilities, PluginManifest};
+use super::{DatabaseDriver, DriverCapabilities, PluginManifest};
 use crate::models::{
     BatchStatementResult, ConnectionParams, ForeignKey, Index, QueryResult, RoutineInfo,
     RoutineParameter, TableColumn, TableInfo, TableSchema, ViewInfo,

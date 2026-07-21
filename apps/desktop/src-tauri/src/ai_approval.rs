@@ -302,3 +302,6 @@ pub fn approvals_dir_path() -> PathBuf {
 pub fn new_approval_id() -> String {
     uuid::Uuid::new_v4().to_string()
 }
+
+#[cfg(test)]
+mod tests;

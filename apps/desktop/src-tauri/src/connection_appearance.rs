@@ -241,3 +241,6 @@ pub async fn delete_connection_icon(app: AppHandle, relative_path: String) -> Re
     fs::remove_file(&canon_full).map_err(|e| e.to_string())?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests;

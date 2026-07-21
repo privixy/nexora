@@ -229,3 +229,6 @@ pub(super) fn is_text_protocol_stmt(query: &str) -> bool {
         || is_create_definer_routine
         || is_create_or_replace_routine
 }
+
+#[cfg(test)]
+mod tests;

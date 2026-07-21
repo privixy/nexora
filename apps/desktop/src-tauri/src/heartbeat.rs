@@ -114,3 +114,6 @@ pub fn spawn() {
         }
     });
 }
+
+#[cfg(test)]
+mod tests;

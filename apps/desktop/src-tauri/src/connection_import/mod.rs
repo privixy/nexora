@@ -22,9 +22,6 @@ mod dbeaver;
 mod sequelace;
 mod tableplus;
 
-#[cfg(test)]
-mod importer_tests;
-
 pub use types::{
     ImportEnvelope, ImportedConnection, ImportedCredentials, ImportedSsh, ImportedSsl,
 };
@@ -142,6 +139,8 @@ pub fn resolve_key_path(path: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    mod importers;
 
     #[test]
     fn registry_has_unique_ids() {

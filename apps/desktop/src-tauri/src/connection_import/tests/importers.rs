@@ -6,12 +6,12 @@
 use std::fs;
 use std::path::PathBuf;
 
-use super::beekeeper::BeekeeperImporter;
-use super::datagrip::DataGripImporter;
-use super::dbeaver::DBeaverImporter;
-use super::sequelace::SequelAceImporter;
-use super::tableplus::TablePlusImporter;
-use super::ForeignAppImporter;
+use super::super::beekeeper::BeekeeperImporter;
+use super::super::datagrip::DataGripImporter;
+use super::super::dbeaver::DBeaverImporter;
+use super::super::sequelace::SequelAceImporter;
+use super::super::tableplus::TablePlusImporter;
+use super::super::ForeignAppImporter;
 
 fn write(path: &PathBuf, contents: &str) {
     fs::create_dir_all(path.parent().unwrap()).unwrap();

@@ -1,4 +1,4 @@
-use super::stmt_classify::{find_first_top_level_object_keyword, is_text_protocol_stmt};
+use super::{find_first_top_level_object_keyword, is_text_protocol_stmt};
 
 #[test]
 fn find_first_top_level_object_keyword_skips_current_user_parentheses() {

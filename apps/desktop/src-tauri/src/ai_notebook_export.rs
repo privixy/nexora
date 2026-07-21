@@ -201,3 +201,6 @@ fn shorten(s: &str, max: usize) -> String {
         out
     }
 }
+
+#[cfg(test)]
+mod tests;

@@ -1,15 +1,9 @@
 pub mod ai;
 pub mod ai_activity;
-#[cfg(test)]
-pub mod ai_activity_tests;
 pub mod ai_approval;
-#[cfg(test)]
-pub mod ai_approval_tests;
 pub mod ai_approval_watcher;
 pub mod ai_commands;
 pub mod ai_notebook_export;
-#[cfg(test)]
-pub mod ai_notebook_export_tests;
 pub mod ai_schema_context;
 pub mod askpass;
 pub mod cli;
@@ -17,11 +11,7 @@ pub mod clipboard_import;
 pub mod commands;
 pub mod config;
 pub mod connection_appearance;
-#[cfg(test)]
-pub mod connection_appearance_tests;
 pub mod connection_cache;
-#[cfg(test)]
-pub mod connection_cache_tests;
 pub mod connection_import;
 pub mod connection_import_commands;
 pub mod connection_params;
@@ -42,8 +32,6 @@ pub mod export_import_tests;
 pub mod group_tree_tests;
 pub mod health_check;
 pub mod heartbeat;
-#[cfg(test)]
-pub mod heartbeat_tests;
 pub mod json_viewer;
 pub mod k8s_tunnel;
 pub mod keychain_utils;
@@ -60,8 +48,6 @@ pub mod pool_manager;
 pub mod pool_manager_tests;
 pub mod preferences;
 pub mod query_history;
-#[cfg(test)]
-pub mod query_history_tests;
 pub mod results_window;
 pub mod saved_queries;
 pub mod ssh_tunnel;
@@ -75,8 +61,6 @@ pub mod window_title;
 pub mod drivers {
     pub mod common;
     pub mod driver_trait;
-    #[cfg(test)]
-    pub mod driver_trait_tests;
     pub mod mysql;
     pub mod postgres;
     pub mod registry;

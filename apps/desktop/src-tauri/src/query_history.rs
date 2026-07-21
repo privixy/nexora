@@ -333,3 +333,6 @@ pub async fn remove_history_for_connection<R: Runtime>(
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests;

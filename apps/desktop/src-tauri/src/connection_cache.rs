@@ -55,3 +55,6 @@ impl ConnectionCache {
         *self.entries.lock().unwrap() = None;
     }
 }
+
+#[cfg(test)]
+mod tests;

@@ -9,9 +9,6 @@ mod routines;
 mod stmt_classify;
 
 #[cfg(test)]
-mod stmt_classify_tests;
-
-#[cfg(test)]
 mod tests;
 
 use crate::drivers::common::parse_unsafe_bigint_string;
