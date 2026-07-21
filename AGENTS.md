@@ -21,7 +21,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
 - CI and release commands run from the repository root. Rust caches use `apps/desktop/src-tauri`, Tauri actions set `projectPath: apps/desktop`, and release dry-run triggers own moved desktop version, build, configuration, and icon paths.
 - Validate workflow YAML with the checksum-verified, pinned actionlint v1.7.7 launcher through `pnpm lint:workflows`.
-- Root owns `eslint.config.js`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; all desktop production, configuration, and test paths, including the Tauri crate, live under `apps/desktop/`.
+- Root owns `package.json`, `eslint.config.js`, `pnpm-workspace.yaml`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; all desktop source, assets, tests, manifests, dependencies, app-local configuration, and the Tauri crate live under `apps/desktop/` and must not be reintroduced at root.
 - `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`; root `package.json` is the release version source and synchronizes the desktop package, app source, and Tauri manifests.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.

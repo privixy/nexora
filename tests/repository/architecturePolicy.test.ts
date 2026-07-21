@@ -7,6 +7,7 @@ import { collectViolations, countLines } from "../../scripts/check-architecture.
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json"), "utf8")) as {
+  forbiddenRootDesktopPaths: string[];
   frontendTestRoots: string[];
   forbiddenFrontendTestRoots: string[];
   rootTestExceptionRoots: string[];
@@ -25,6 +26,17 @@ function writeFixture(root: string, file: string, content: string) {
 
 describe("architecture policy", () => {
   it("records current roots and target-protection rules", () => {
+    expect(policy.forbiddenRootDesktopPaths).toEqual([
+      "src",
+      "public",
+      "src-tauri",
+      "index.html",
+      "postcss.config.js",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "tsconfig.app.json",
+      "tsconfig.node.json",
+    ]);
     expect(policy.frontendTestRoots).toEqual([
       "apps/desktop/tests",
       "tests/repository",
@@ -50,6 +62,54 @@ describe("architecture policy", () => {
       "packages/create-plugin/src",
       "packages/create-plugin/templates/rust-driver/src",
     ]);
+  });
+
+  it("rejects every old root desktop policy path", () => {
+    const policyPaths = [
+      ...policy.sourceRoots,
+      ...policy.frontendTestRoots,
+      ...policy.forbiddenFrontendTestRoots,
+      ...policy.rootTestExceptionRoots,
+      ...policy.repositoryTestForbiddenImportRoots,
+      ...policy.rustInlineTestAllowlist,
+      ...Object.keys(policy.fileSizeBaselines),
+    ];
+
+    expect(
+      policyPaths.filter((path) =>
+        ["src", "public", "src-tauri"].some(
+          (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+        ),
+      ),
+    ).toEqual([]);
+  });
+
+  it("reports forbidden root desktop paths", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
+
+    try {
+      mkdirSync(join(tempRoot, "src"));
+      const violations = collectViolations(tempRoot, {
+        forbiddenRootDesktopPaths: ["src"],
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        rootTestExceptionRoots: [],
+        repositoryTestForbiddenImportRoots: [],
+        rustInlineTestAllowlist: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: [],
+      }, {
+        trackedFiles: [],
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toEqual([
+        "src: desktop-owned paths must live under apps/desktop, not repository root",
+      ]);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
   });
 
   it("counts trailing-newline-terminated lines", () => {

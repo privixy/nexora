@@ -18,7 +18,7 @@ All utility functions and testable logic must be placed in `apps/desktop/src/uti
 - ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-Desktop TypeScript tests must be placed in `apps/desktop/tests/`, mirroring `apps/desktop/src/`. Only the four documented colocated frontend tests under `apps/desktop/src/` are temporary compatibility exceptions. Root `tests/repository/` contains non-desktop workspace and release contracts only. Do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/`, mirroring `apps/desktop/src/`. Only the four documented colocated frontend tests under `apps/desktop/src/` are temporary compatibility exceptions. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
 
 ```
 project-root/
@@ -161,7 +161,7 @@ pnpm test --coverage
 Tests are configured in `apps/desktop/vitest.config.ts`:
 - Desktop test files are discovered in `apps/desktop/tests/`
 - Root repository contracts are discovered in `tests/repository/`
-- Setup file: `./tests/setup.ts` relative to `apps/desktop/`
+- Setup file: `apps/desktop/tests/setup.ts` (configured as `./tests/setup.ts` from the desktop package)
 - Environment: `jsdom` for DOM-related tests
 
 ## Workflow Contracts

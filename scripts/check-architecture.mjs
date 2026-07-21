@@ -134,6 +134,12 @@ export function collectViolations(root, policy, inventory = {}) {
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
 
+  for (const path of policy.forbiddenRootDesktopPaths ?? []) {
+    if (existsSync(join(root, path))) {
+      violations.push(`${path}: desktop-owned paths must live under apps/desktop, not repository root`);
+    }
+  }
+
   for (const file of files) {
     const basename = file.split("/").at(-1) ?? file;
     const isTestFile = /\.(test|spec)\.[^.]+$/.test(basename);

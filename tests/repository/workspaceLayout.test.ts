@@ -11,6 +11,17 @@ const desktopPackage = JSON.parse(
   readFileSync(resolve(root, "apps/desktop/package.json"), "utf8"),
 ) as { name: string; private: boolean; version: string };
 const workspace = readFileSync(resolve(root, "pnpm-workspace.yaml"), "utf8");
+const forbiddenRootDesktopPaths = [
+  "src",
+  "public",
+  "src-tauri",
+  "index.html",
+  "postcss.config.js",
+  "vite.config.ts",
+  "vitest.config.ts",
+  "tsconfig.app.json",
+  "tsconfig.node.json",
+];
 
 describe("current workspace layout", () => {
   it("owns frontend source, assets, and app configuration in apps/desktop", () => {
@@ -86,6 +97,19 @@ describe("current workspace layout", () => {
 });
 
 describe("desktop workspace migration", () => {
+  it.each(forbiddenRootDesktopPaths)(
+    "does not keep desktop-owned %s at root",
+    (path) => {
+      expect(existsSync(resolve(root, path))).toBe(false);
+    },
+  );
+
+  it("contains every desktop ownership root", () => {
+    for (const path of ["src", "tests", "public", "src-tauri"]) {
+      expect(existsSync(resolve(root, "apps/desktop", path)), path).toBe(true);
+    }
+  });
+
   it("declares the desktop workspace boundary", () => {
     expect(workspace).toContain("- apps/*");
     expect(desktopPackage).toMatchObject({

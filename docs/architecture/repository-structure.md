@@ -32,7 +32,8 @@ Run `pnpm check:architecture` to enforce `architecture/policy.json`. The checker
 - a ratcheted file exceeds its stored line count;
 - tracked workspace packages depend on another workspace package not listed in `allowedWorkspaceDependencies`;
 - Rust inline test modules are added outside `rustInlineTestAllowlist`;
-- root repository contract tests import desktop-private modules from paths such as `apps/desktop/src/` or `apps/desktop/src-tauri/`.
+- root repository contract tests import desktop-private modules from paths such as `apps/desktop/src/` or `apps/desktop/src-tauri/`;
+- desktop-owned source, assets, tests, manifests, dependencies, app-local configuration, or the Tauri crate are reintroduced at repository-root paths listed in `forbiddenRootDesktopPaths`.
 
 File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. If an allowlisted Rust inline test module is moved to a sibling `tests.rs` file, remove that path from `rustInlineTestAllowlist` in the same change.
 

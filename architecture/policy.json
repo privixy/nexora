@@ -1,4 +1,15 @@
 {
+  "forbiddenRootDesktopPaths": [
+    "src",
+    "public",
+    "src-tauri",
+    "index.html",
+    "postcss.config.js",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "tsconfig.app.json",
+    "tsconfig.node.json"
+  ],
   "sourceRoots": ["apps/desktop/src", "apps/desktop/src-tauri/src", "packages/plugin-api/src", "packages/create-plugin/src", "packages/create-plugin/templates/rust-driver/src"],
   "frontendTestRoots": ["apps/desktop/tests", "tests/repository", "packages/create-plugin/tests"],
   "forbiddenFrontendTestRoots": ["apps/desktop/src"],

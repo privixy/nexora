@@ -1,6 +1,6 @@
 # Rust Rules
 
-1. **Repository Structure:** Follow `docs/architecture/repository-structure.md` for current Rust source/test ownership. The Tauri crate lives under `apps/desktop/src-tauri/`, with production modules in `apps/desktop/src-tauri/src/**` and integration tests in `apps/desktop/src-tauri/tests/**`.
+1. **Repository Structure:** Follow `docs/architecture/repository-structure.md` for current Rust source/test ownership. The complete Tauri crate lives under `apps/desktop/src-tauri/`, with production modules in `apps/desktop/src-tauri/src/**` and integration tests in `apps/desktop/src-tauri/tests/**`; do not reintroduce a root `src-tauri/` crate or manifest.
 2. **Keep `mod.rs` focused:** In `apps/desktop/src-tauri/src/**/mod.rs`, keep public orchestration, exports, and trait implementations. Extract pure helpers, parsers, and driver-specific utilities into dedicated sibling modules.
 3. **Preserve public APIs during refactors:** When moving public functions out of `mod.rs`, re-export them from the parent module with `pub use` so existing call sites keep the same paths.
 4. **Prefer pure helper modules:** Move parsing, identifier escaping, SQL string helpers, and value-conversion logic into focused modules with small, testable functions.

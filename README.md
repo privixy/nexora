@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/banner.png" alt="Repository Logo" width="500" />
+  <img src="apps/desktop/public/banner.png" alt="Repository Logo" width="500" />
 </div>
 
 # Nexora

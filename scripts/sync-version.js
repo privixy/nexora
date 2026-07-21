@@ -39,10 +39,10 @@ cargo = cargo.replace(/^version = ".*"/m, `version = "${newVersion}"`);
 writeFileSync(paths.cargo, cargo);
 console.log("✅ Updated Cargo.toml");
 
-// 4. Update src/version.ts
+// 4. Update apps/desktop/src/version.ts
 const versionContent = `export const APP_VERSION = "${newVersion}";\n`;
 writeFileSync(paths.appVersion, versionContent);
-console.log("✅ Updated src/version.ts");
+console.log("✅ Updated apps/desktop/src/version.ts");
 
 let readme = readFileSync(paths.readme, "utf-8");
 

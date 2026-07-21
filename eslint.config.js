@@ -18,7 +18,7 @@ export default defineConfig([
     "**/dist/**",
     "**/tests/**",
     "**/coverage/**",
-    "**/src-tauri/target/**",
+    "apps/desktop/src-tauri/target/**",
   ]),
   {
     files: ["**/*.{ts,tsx}"],

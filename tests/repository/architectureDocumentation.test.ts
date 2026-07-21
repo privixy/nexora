@@ -17,6 +17,14 @@ describe("living architecture documentation", () => {
     expect(architecture).toContain("## Temporary compatibility exceptions");
     expect(agents).toContain("docs/architecture/repository-structure.md");
     expect(architecture).not.toContain("Existing deep imports");
+    for (const path of [
+      "apps/desktop/src",
+      "apps/desktop/tests",
+      "apps/desktop/src-tauri",
+    ]) {
+      expect(architecture).toContain(path);
+      expect(agents).toContain(path);
+    }
   });
 
   it("documents complete temporary exception ownership", () => {
