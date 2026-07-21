@@ -18,8 +18,8 @@ The desktop workspace migration is complete: the desktop product owns `apps/desk
 
 ## Test ownership
 
-- Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`.
-- Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only.
+- Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; `apps/desktop/tests/repository/` owns desktop contracts that do not mirror one source file.
+- Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only. These tests may inspect repository files but may not import desktop-private modules.
 - Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`.
 
 ## Architecture policy

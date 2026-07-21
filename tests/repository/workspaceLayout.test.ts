@@ -69,6 +69,14 @@ describe("current workspace layout", () => {
         resolve(root, "apps/desktop/tests/releaseDryRunWorkflow.test.ts"),
       ),
     ).toBe(false);
+    expect(
+      existsSync(
+        resolve(root, "apps/desktop/tests/repository/rootOverflow.test.ts"),
+      ),
+    ).toBe(true);
+    expect(existsSync(resolve(root, "apps/desktop/tests/version.test.ts"))).toBe(
+      true,
+    );
 
     const rootEntries = readdirSync(resolve(root, "tests")).sort();
     expect(rootEntries).toEqual(["repository"]);
