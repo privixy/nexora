@@ -18,7 +18,7 @@ All utility functions and testable logic must be placed in `apps/desktop/src/uti
 - ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-Desktop TypeScript tests must be placed in `apps/desktop/tests/`, mirroring `apps/desktop/src/`. Only the four documented colocated frontend tests under `apps/desktop/src/` are temporary compatibility exceptions. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/`, mirroring `apps/desktop/src/`. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
 
 ```
 project-root/

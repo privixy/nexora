@@ -16,12 +16,7 @@
   "rootTestExceptionRoots": ["tests/repository"],
   "repositoryTestImportAliases": { "@": "apps/desktop/src" },
   "repositoryTestForbiddenImportRoots": ["apps/desktop/src", "apps/desktop/src-tauri"],
-  "frontendTestAllowlist": [
-    "apps/desktop/src/components/ConnectionIconImage.test.tsx",
-    "apps/desktop/src/components/SocialLinks.test.tsx",
-    "apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.test.tsx",
-    "apps/desktop/src/utils/driverUI.test.tsx"
-  ],
+  "frontendTestAllowlist": [],
   "rustInlineTestAllowlist": [
     "packages/create-plugin/templates/rust-driver/src/utils/identifiers.rs",
     "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs",

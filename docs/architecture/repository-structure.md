@@ -18,7 +18,7 @@ The desktop workspace migration is complete: the desktop product owns `apps/desk
 
 ## Test ownership
 
-- Current desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; four documented colocated tests remain temporary exceptions under `apps/desktop/src/`.
+- Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`.
 - Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only.
 - Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`.
 
@@ -42,7 +42,6 @@ File-size baselines are maximum current line counts. Do not increase baselines; 
 | Exception | Owner | Reason | Removal phase |
 |---|---|---|---|
 | Root `tests/repository/` | Repository maintainers | Sole documented root test exception for workspace/release contracts; may inspect repository files but must not import desktop-private modules | Permanent repository ownership |
-| Four frontend tests under `apps/desktop/src/` | Frontend maintainers | Existing convention debt | Test normalization |
 | Crate-level Rust `*_tests.rs` | Backend maintainers | Existing convention debt | Test normalization |
 | Rust inline test modules listed in `architecture/policy.json` | Backend maintainers | Existing convention debt | Test normalization |
 | Rust inline test modules in create-plugin templates listed in `architecture/policy.json` | Plugin tooling maintainers | Existing generated template convention debt | Test normalization |

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { getConnectionAccent, getConnectionIcon } from "./driverUI";
-import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "./connectionIconPack";
-import type { SavedConnection } from "../contexts/DatabaseContext";
-import type { PluginManifest } from "../types/plugins";
+import { getConnectionAccent, getConnectionIcon } from "@/utils/driverUI";
+import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "@/utils/connectionIconPack";
+import type { SavedConnection } from "@/contexts/DatabaseContext";
+import type { PluginManifest } from "@/types/plugins";
 
 // Avoid loading the lazy ConnectionIconImage during tests (it pulls Tauri APIs that aren't available in vitest)
-vi.mock("../components/ConnectionIconImage", () => ({
+vi.mock("@/components/ConnectionIconImage", () => ({
   ConnectionIconImage: (props: { path: string; size: number }) =>
     <img data-testid="conn-icon-image" alt="" src={`mock://${props.path}`} width={props.size} height={props.size} />,
 }));

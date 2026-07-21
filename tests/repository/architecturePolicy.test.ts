@@ -43,7 +43,9 @@ describe("architecture policy", () => {
       "tests/repository",
       "packages/create-plugin/tests",
     ]);
+    expect(policy.frontendTestRoots).toContain("apps/desktop/tests");
     expect(policy.forbiddenFrontendTestRoots).toContain("apps/desktop/src");
+    expect(policy.frontendTestAllowlist).toEqual([]);
     expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
     expect(policy.repositoryTestImportAliases).toEqual({ "@": "apps/desktop/src" });
     expect(policy.repositoryTestForbiddenImportRoots).toEqual([

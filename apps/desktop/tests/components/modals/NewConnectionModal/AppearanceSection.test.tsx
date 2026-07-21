@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { AppearanceSection } from "./AppearanceSection";
+import { AppearanceSection } from "@/components/modals/NewConnectionModal/AppearanceSection";
 
 // Mock react-i18next so the section renders predictably regardless of locale files
 vi.mock("react-i18next", () => ({
