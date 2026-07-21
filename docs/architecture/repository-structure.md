@@ -20,7 +20,7 @@ The desktop workspace migration is complete: the desktop product owns `apps/desk
 
 - Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; `apps/desktop/tests/repository/` owns desktop contracts that do not mirror one source file. The named `desktop` Vitest project owns JSDOM setup and coverage of `apps/desktop/src`.
 - Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only. The root Vitest aggregator exposes it as the named `repository` project in Node and composes the desktop project. Repository tests may inspect files but may not import desktop-private modules.
-- Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`.
+- Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`. Five low-risk suites are module-local under `ai_schema_context/`, `connection_window/`, `models/`, `saved_queries/`, and `window_title/`; 16 crate-level peer suites remain as temporary compatibility exceptions.
 
 ## Architecture policy
 
@@ -42,7 +42,7 @@ File-size baselines are maximum current line counts. Do not increase baselines; 
 | Exception | Owner | Reason | Removal phase |
 |---|---|---|---|
 | Root `tests/repository/` | Repository maintainers | Sole documented root test exception for workspace/release contracts; may inspect repository files but must not import desktop-private modules | Permanent repository ownership |
-| Crate-level Rust `*_tests.rs` | Backend maintainers | Existing convention debt | Test normalization |
+| 16 crate-level Rust `*_tests.rs` peer suites | Backend maintainers | Existing convention debt after the first five low-risk suites moved to module-local ownership | Test normalization |
 | Rust inline test modules listed in `architecture/policy.json` | Backend maintainers | Existing convention debt | Test normalization |
 | Rust inline test modules in create-plugin templates listed in `architecture/policy.json` | Plugin tooling maintainers | Existing generated template convention debt | Test normalization |
 | Oversized files listed in `architecture/policy.json` | Owning module maintainers | Guard ratchet baseline | Frontend/backend modularization |

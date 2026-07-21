@@ -11,8 +11,6 @@ pub mod ai_notebook_export;
 #[cfg(test)]
 pub mod ai_notebook_export_tests;
 pub mod ai_schema_context;
-#[cfg(test)]
-pub mod ai_schema_context_tests;
 pub mod askpass;
 pub mod cli;
 pub mod clipboard_import;
@@ -28,8 +26,6 @@ pub mod connection_import;
 pub mod connection_import_commands;
 pub mod connection_params;
 pub mod connection_window;
-#[cfg(test)]
-pub mod connection_window_tests;
 pub mod credential_cache;
 pub mod dump_commands; // Added
 #[cfg(test)]
@@ -55,8 +51,6 @@ pub mod log_commands;
 pub mod logger;
 pub mod mcp;
 pub mod models;
-#[cfg(test)]
-pub mod models_tests;
 pub mod notebooks;
 pub mod paths; // Added
 pub mod persistence;
@@ -70,8 +64,6 @@ pub mod query_history;
 pub mod query_history_tests;
 pub mod results_window;
 pub mod saved_queries;
-#[cfg(test)]
-pub mod saved_queries_tests;
 pub mod ssh_tunnel;
 pub mod task_manager;
 pub mod theme_commands;
@@ -80,8 +72,6 @@ pub mod updater;
 #[cfg(test)]
 pub mod updater_tests;
 pub mod window_title;
-#[cfg(test)]
-pub mod window_title_tests;
 pub mod drivers {
     pub mod common;
     pub mod driver_trait;

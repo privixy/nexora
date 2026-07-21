@@ -78,3 +78,6 @@ pub async fn open_connection_window(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests;

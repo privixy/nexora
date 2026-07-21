@@ -37,7 +37,6 @@
     "apps/desktop/src-tauri/src/connection_import/driver_map.rs",
     "apps/desktop/src-tauri/src/connection_import/mod.rs",
     "apps/desktop/src-tauri/src/connection_params.rs",
-    "apps/desktop/src-tauri/src/connection_window_tests.rs",
     "apps/desktop/src-tauri/src/drivers/postgres/extract/composite.rs",
     "apps/desktop/src-tauri/src/drivers/postgres/extract/enum.rs",
     "apps/desktop/src-tauri/src/drivers/postgres/extract/multi_range.rs",
@@ -53,15 +52,12 @@
     "apps/desktop/src-tauri/src/json_viewer.rs",
     "apps/desktop/src-tauri/src/k8s_tunnel.rs",
     "apps/desktop/src-tauri/src/mcp/install.rs",
-    "apps/desktop/src-tauri/src/models_tests.rs",
     "apps/desktop/src-tauri/src/paths.rs",
     "apps/desktop/src-tauri/src/plugins/driver.rs",
     "apps/desktop/src-tauri/src/pool_manager_tests.rs",
     "apps/desktop/src-tauri/src/query_history_tests.rs",
     "apps/desktop/src-tauri/src/results_window.rs",
-    "apps/desktop/src-tauri/src/saved_queries_tests.rs",
-    "apps/desktop/src-tauri/src/updater.rs",
-    "apps/desktop/src-tauri/src/window_title_tests.rs"
+    "apps/desktop/src-tauri/src/updater.rs"
   ],
   "allowedWorkspaceDependencies": {
     "nexora": [],

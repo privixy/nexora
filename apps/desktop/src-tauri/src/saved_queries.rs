@@ -231,3 +231,6 @@ pub async fn delete_saved_query<R: Runtime>(app: AppHandle<R>, id: String) -> Re
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests;

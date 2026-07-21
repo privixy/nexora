@@ -573,6 +573,9 @@ pub struct DataTypeRegistry {
 }
 
 #[cfg(test)]
+mod tests;
+
+#[cfg(test)]
 mod appearance_tests {
     use super::*;
 

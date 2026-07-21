@@ -6,3 +6,6 @@ pub fn format_window_title(detail: Option<&str>) -> String {
         None => APP_NAME.to_string(),
     }
 }
+
+#[cfg(test)]
+mod tests;

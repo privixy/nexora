@@ -86,3 +86,6 @@ pub fn format_for_prompt(context: &AiSchemaContext, identifier_quote: &str) -> S
 
     lines.join("\n")
 }
+
+#[cfg(test)]
+mod tests;
