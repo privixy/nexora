@@ -63,8 +63,22 @@ describe("current workspace layout", () => {
     expect(rootEntries).toEqual(["repository"]);
   });
 
-  it("keeps the Tauri crate and plugin sync at transitional root paths", () => {
-    expect(existsSync(resolve(root, "src-tauri/Cargo.toml"))).toBe(true);
+  it("owns the complete Tauri crate in apps/desktop", () => {
+    for (const path of [
+      "apps/desktop/src-tauri/Cargo.toml",
+      "apps/desktop/src-tauri/Cargo.lock",
+      "apps/desktop/src-tauri/tauri.conf.json",
+      "apps/desktop/src-tauri/src/lib.rs",
+      "apps/desktop/src-tauri/tests/integration_tests.rs",
+      "apps/desktop/src-tauri/capabilities/default.json",
+      "apps/desktop/src-tauri/icons/icon.png",
+    ]) {
+      expect(existsSync(resolve(root, path)), path).toBe(true);
+    }
+    expect(existsSync(resolve(root, "src-tauri"))).toBe(false);
+  });
+
+  it("keeps plugin sync at its transitional root path", () => {
     expect(existsSync(resolve(root, "src/pluginApi.ts"))).toBe(true);
     expect(existsSync(resolve(root, "src/main.tsx"))).toBe(false);
   });

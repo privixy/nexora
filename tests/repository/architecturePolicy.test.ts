@@ -34,16 +34,18 @@ describe("architecture policy", () => {
     expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
     expect(policy.repositoryTestForbiddenImportRoots).toEqual([
       "apps/desktop/src",
-      "src-tauri",
+      "apps/desktop/src-tauri",
     ]);
-    expect(policy.rustInlineTestAllowlist).toContain("src-tauri/src/commands.rs");
+    expect(policy.rustInlineTestAllowlist).toContain(
+      "apps/desktop/src-tauri/src/commands.rs",
+    );
     expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
     expect(
       policy.fileSizeBaselines["apps/desktop/src/pages/Editor.tsx"],
     ).toBeGreaterThan(0);
     expect(policy.sourceRoots).toEqual([
       "apps/desktop/src",
-      "src-tauri/src",
+      "apps/desktop/src-tauri/src",
       "packages/plugin-api/src",
       "packages/create-plugin/src",
       "packages/create-plugin/templates/rust-driver/src",

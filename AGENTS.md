@@ -19,7 +19,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
 - Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the working private desktop package.
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
-- Root owns `eslint.config.js`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; desktop tests live under `apps/desktop/tests/`, while `src-tauri/` remains transitional until desktop migration Task 5.
+- Root owns `eslint.config.js`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; all desktop production, configuration, and test paths, including the Tauri crate, live under `apps/desktop/`.
 - Root `src/pluginApi.ts` is a temporary compatibility link for the unchanged plugin API sync checker until desktop migration Task 6 updates that path.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
@@ -51,7 +51,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.
-- Run Rust tests for Rust/backend changes: `pnpm test:rust` or the relevant `cargo test` command in `src-tauri`.
+- Run Rust tests for Rust/backend changes: `pnpm test:rust` or the relevant `cargo test` command against `apps/desktop/src-tauri/Cargo.toml`.
 - MUST run the full CI-equivalent local checks before pushing a branch, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm build:plugin-api`, `pnpm check:plugin-api`, `pnpm build:create-plugin`, `pnpm smoke:create-plugin`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed.
 - MUST NOT push, merge, tag, release, or report completion if any required local check fails. Fix the failure, rerun the failed command, then rerun the full affected check set.
 - If a command fails, fix the issue and rerun it. Do not report a task as done with failing checks.

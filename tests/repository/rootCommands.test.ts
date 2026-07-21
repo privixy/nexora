@@ -43,7 +43,9 @@ describe("root command contract", () => {
       "pnpm --filter @nexora/desktop test:coverage",
     );
     expect(pkg.scripts.tauri).toBe("pnpm --filter @nexora/desktop tauri");
-    expect(pkg.scripts["test:rust"]).toBe("cd src-tauri && cargo test");
+    expect(pkg.scripts["test:rust"]).toBe(
+      "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
+    );
   });
 
   it.each([
