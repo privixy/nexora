@@ -17,7 +17,10 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Architecture thresholds are 500 lines for new TypeScript/TSX files and 800 lines for new Rust files; files listed in `architecture/policy.json` are ratcheted to their stored line counts.
 - Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
 - Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
-- Do not describe target paths as usable until the migration that creates and wires them lands.
+- Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the empty private desktop package boundary.
+- Root remains the working desktop package with desktop commands and dependencies; source, tests, assets, app-local configuration, and `src-tauri/` remain at root until desktop migration Tasks 3–5.
+- Contributors must continue running supported commands from the repository root.
+- Do not describe unwired target paths as usable until the migration that creates and wires them lands.
 - Update the architecture document in the same PR when repository paths, dependency rules, test ownership, or compatibility exceptions change.
 - Do not introduce new legacy exceptions.
 
