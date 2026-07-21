@@ -34,7 +34,6 @@ describe("architecture policy", () => {
       "index.html",
       "postcss.config.js",
       "vite.config.ts",
-      "vitest.config.ts",
       "tsconfig.app.json",
       "tsconfig.node.json",
     ]);

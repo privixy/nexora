@@ -41,7 +41,13 @@ describe("root command contract", () => {
     expect(pkg.scripts.dev).toBe("pnpm --filter @nexora/desktop dev");
     expect(pkg.scripts.build).toBe("pnpm --filter @nexora/desktop build");
     expect(pkg.scripts.preview).toBe("pnpm --filter @nexora/desktop preview");
-    expect(pkg.scripts.test).toBe("pnpm --filter @nexora/desktop test");
+    expect(pkg.scripts.test).toBe("vitest --config vitest.config.ts");
+    expect(pkg.scripts["test:repository"]).toBe(
+      "vitest --config vitest.config.ts --project repository",
+    );
+    expect(pkg.scripts["test:desktop"]).toBe(
+      "vitest --config vitest.config.ts --project desktop",
+    );
     expect(pkg.scripts.typecheck).toBe("pnpm --filter @nexora/desktop typecheck");
     expect(pkg.scripts["test:coverage"]).toBe(
       "pnpm --filter @nexora/desktop test:coverage",
@@ -52,17 +58,15 @@ describe("root command contract", () => {
     );
   });
 
-  it.each([
-    ["desktop root paths", ["apps/desktop/tests/version.test.ts", "apps/desktop/tests/layout/rootOverflow.test.ts"]],
-    ["desktop package-relative paths", ["tests/version.test.ts", "tests/layout/rootOverflow.test.ts"]],
-    ["repository paths", ["tests/repository/workspaceLayout.test.ts"]],
-  ])("runs %s through the delegated desktop command", (_, testPaths) => {
-    const packageManager = process.env.npm_execpath;
-    expect(packageManager).toBeTruthy();
-
+  it("runs repository tests through the root aggregator", () => {
     const result = spawnSync(
-      process.execPath,
-      [packageManager!, "test", ...testPaths, "--", "--run"],
+      "pnpm",
+      [
+        "test",
+        "tests/repository/workspaceLayout.test.ts",
+        "--",
+        "--run",
+      ],
       {
         cwd: root,
         env: process.env,
@@ -71,6 +75,12 @@ describe("root command contract", () => {
     );
 
     expect(result.status, result.stderr.toString()).toBe(0);
+  });
+
+  it("keeps Vitest orchestration at the repository root", () => {
+    expect(pkg.devDependencies.vitest).toBe(
+      desktopPackage.devDependencies?.vitest,
+    );
   });
 
   it("keeps lint and its runtime dependencies at the repository root", () => {

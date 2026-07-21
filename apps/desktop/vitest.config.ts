@@ -1,17 +1,10 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import path from "path";
-
-const repoRoot = path.resolve(__dirname, "../..");
-const repositoryTests = path
-  .join(
-    repoRoot,
-    "tests/repository/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-  )
-  .replaceAll(path.sep, "/");
+import path from "node:path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  root: __dirname,
   plugins: [react()],
   resolve: {
     alias: {
@@ -32,19 +25,16 @@ export default defineConfig({
     ],
   },
   test: {
+    name: "desktop",
     globals: true,
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
-    include: [
-      "src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-      "tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-      repositoryTests,
-    ],
+    include: ["tests/**/*.{test.ts,test.tsx}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
       include: ["src/**/*.ts", "src/**/*.tsx"],
-      exclude: ["src/**/*.test.ts", "src/**/*.d.ts", "src/test/**"],
+      exclude: ["src/**/*.d.ts", "src/test/**"],
     },
   },
 });

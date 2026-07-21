@@ -2,7 +2,7 @@
 
 ## Current enforced state
 
-Foundation architecture guards are current and enforced through `pnpm check:architecture`. Workspace discovery includes `apps/*`, and `apps/desktop/package.json` defines the working private `@nexora/desktop` package. All desktop-owned production, configuration, and test paths are current under `apps/desktop/`, including frontend source, tests, assets, dependencies, scripts, app-local Vite/Vitest/TypeScript/PostCSS configuration, and the complete Tauri crate at `apps/desktop/src-tauri/`. Root owns command orchestration, ESLint configuration and runtime dependencies, repository assets, and `tests/repository/` as the sole root test namespace. `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`. Root `package.json` is the release version source of truth and synchronizes `apps/desktop/package.json`, `apps/desktop/src/version.ts`, `apps/desktop/src-tauri/tauri.conf.json`, and `apps/desktop/src-tauri/Cargo.toml`. Contributors continue running commands from the repository root.
+Foundation architecture guards are current and enforced through `pnpm check:architecture`. Workspace discovery includes `apps/*`, and `apps/desktop/package.json` defines the working private `@nexora/desktop` package. Desktop-owned production and test paths are current under `apps/desktop/`, including frontend source, tests, assets, dependencies, scripts, app-local Vite/TypeScript/PostCSS configuration, the named desktop Vitest project with setup and coverage, and the complete Tauri crate at `apps/desktop/src-tauri/`. Root owns command orchestration, the named-project Vitest aggregator and CLI dependency, ESLint configuration and runtime dependencies, repository assets, and `tests/repository/` as the sole root test namespace. `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`. Root `package.json` is the release version source of truth and synchronizes `apps/desktop/package.json`, `apps/desktop/src/version.ts`, `apps/desktop/src-tauri/tauri.conf.json`, and `apps/desktop/src-tauri/Cargo.toml`. Contributors continue running commands from the repository root.
 
 ## Target state
 
@@ -18,8 +18,8 @@ The desktop workspace migration is complete: the desktop product owns `apps/desk
 
 ## Test ownership
 
-- Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; `apps/desktop/tests/repository/` owns desktop contracts that do not mirror one source file.
-- Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only. These tests may inspect repository files but may not import desktop-private modules.
+- Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; `apps/desktop/tests/repository/` owns desktop contracts that do not mirror one source file. The named `desktop` Vitest project owns JSDOM setup and coverage of `apps/desktop/src`.
+- Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only. The root Vitest aggregator exposes it as the named `repository` project in Node and composes the desktop project. Repository tests may inspect files but may not import desktop-private modules.
 - Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`.
 
 ## Architecture policy
@@ -57,7 +57,8 @@ CI and release commands run from the repository root and delegate through root s
 
 Run the narrowest relevant checks first, then run required affected checks from `AGENTS.md`:
 
-- `pnpm test apps/desktop/tests/utils/foo.test.ts apps/desktop/tests/components/bar.test.tsx` or the narrowest applicable test files
+- `pnpm exec vitest run --project repository tests/repository/<file>.test.ts` or `pnpm exec vitest run --project desktop apps/desktop/tests/<mirror>.test.tsx`
+- `pnpm test -- --run`, `pnpm test:repository -- --run`, `pnpm test:desktop -- --run`, and desktop-owned coverage through `pnpm test:coverage` as applicable
 - `pnpm typecheck` after TypeScript changes
 - `pnpm lint` after TypeScript/React changes
 - `pnpm test:rust` or the relevant `cargo test` command against `apps/desktop/src-tauri/Cargo.toml` after Rust/backend changes

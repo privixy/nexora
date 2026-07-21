@@ -18,7 +18,6 @@ const forbiddenRootDesktopPaths = [
   "index.html",
   "postcss.config.js",
   "vite.config.ts",
-  "vitest.config.ts",
   "tsconfig.app.json",
   "tsconfig.node.json",
 ];
@@ -42,7 +41,6 @@ describe("current workspace layout", () => {
       "public",
       "index.html",
       "vite.config.ts",
-      "vitest.config.ts",
       "tsconfig.app.json",
       "tsconfig.node.json",
       "postcss.config.js",

@@ -21,7 +21,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
 - CI and release commands run from the repository root. Rust caches use `apps/desktop/src-tauri`, Tauri actions set `projectPath: apps/desktop`, and release dry-run triggers own moved desktop version, build, configuration, and icon paths.
 - Validate workflow YAML with the checksum-verified, pinned actionlint v1.7.7 launcher through `pnpm lint:workflows`.
-- Root owns `package.json`, `eslint.config.js`, `pnpm-workspace.yaml`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; all desktop source, assets, tests, manifests, dependencies, app-local configuration, and the Tauri crate live under `apps/desktop/` and must not be reintroduced at root.
+- Root owns `package.json`, `eslint.config.js`, `vitest.config.ts`, `pnpm-workspace.yaml`, `pnpm lint`, the six ESLint runtime packages, Vitest orchestration, and `tests/repository/`; the desktop workspace owns its Vitest project, setup, coverage, source, assets, tests, manifests, dependencies, remaining app-local configuration, and Tauri crate.
 - `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`; root `package.json` is the release version source and synchronizes the desktop package, app source, and Tauri manifests.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
@@ -49,7 +49,8 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - For async loading changes, tests must cover the loading path and the already-loaded path.
 
 ## Required Verification Before Reporting Done
-- Run the narrowest relevant test files first, for example `pnpm test apps/desktop/tests/utils/foo.test.ts apps/desktop/tests/components/bar.test.tsx`.
+- Run the narrowest relevant test files first with `pnpm exec vitest run --project repository tests/repository/<file>.test.ts` or `pnpm exec vitest run --project desktop apps/desktop/tests/<mirror>.test.tsx`.
+- Root test commands are `pnpm test -- --run`, `pnpm test:repository -- --run`, `pnpm test:desktop -- --run`, and desktop-owned coverage via `pnpm test:coverage`.
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.

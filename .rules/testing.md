@@ -158,11 +158,19 @@ pnpm test --coverage
 
 ## Configuration
 
-Tests are configured in `apps/desktop/vitest.config.ts`:
-- Desktop test files are discovered in `apps/desktop/tests/`
-- Root repository contracts are discovered in `tests/repository/`
-- Setup file: `apps/desktop/tests/setup.ts` (configured as `./tests/setup.ts` from the desktop package)
-- Environment: `jsdom` for DOM-related tests
+Root `vitest.config.ts` is the repository-owned aggregator with named `repository` and `desktop` projects. The repository project discovers only `tests/repository/**/*.test.ts` in Node. `apps/desktop/vitest.config.ts` owns the desktop project, React plugin, alias, JSDOM environment, `apps/desktop/tests/setup.ts`, desktop-only discovery, and coverage of `apps/desktop/src`.
+
+Use these commands from the repository root:
+
+```bash
+pnpm test -- --run
+pnpm test:repository -- --run
+pnpm test:desktop -- --run
+pnpm test:coverage
+pnpm lint
+pnpm exec vitest run --project repository tests/repository/<file>.test.ts
+pnpm exec vitest run --project desktop apps/desktop/tests/<mirror>.test.tsx
+```
 
 ## Workflow Contracts
 

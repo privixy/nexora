@@ -19,7 +19,9 @@
     "lint": "eslint .",
     "lint:workflows": "node scripts/run-actionlint.mjs",
     "preview": "pnpm --filter @nexora/desktop preview",
-    "test": "pnpm --filter @nexora/desktop test",
+    "test": "vitest --config vitest.config.ts",
+    "test:repository": "vitest --config vitest.config.ts --project repository",
+    "test:desktop": "vitest --config vitest.config.ts --project desktop",
     "check:architecture": "node scripts/check-architecture.mjs",
     "typecheck": "pnpm --filter @nexora/desktop typecheck",
     "test:coverage": "pnpm --filter @nexora/desktop test:coverage",
@@ -41,7 +43,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   },
   "packageManager": "pnpm@10.30.3",
   "pnpm": {
