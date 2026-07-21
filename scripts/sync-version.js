@@ -1,13 +1,16 @@
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
+import { fileURLToPath } from "node:url";
 
 // File paths
+const REPO_ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const paths = {
-  package: resolve("package.json"),
-  tauri: resolve("src-tauri/tauri.conf.json"),
-  cargo: resolve("src-tauri/Cargo.toml"),
-  appVersion: resolve("src/version.ts"),
-  readme: resolve("README.md"),
+  package: resolve(REPO_ROOT, "package.json"),
+  desktopPackage: resolve(REPO_ROOT, "apps/desktop/package.json"),
+  tauri: resolve(REPO_ROOT, "apps/desktop/src-tauri/tauri.conf.json"),
+  cargo: resolve(REPO_ROOT, "apps/desktop/src-tauri/Cargo.toml"),
+  appVersion: resolve(REPO_ROOT, "apps/desktop/src/version.ts"),
+  readme: resolve(REPO_ROOT, "README.md"),
 };
 
 // 1. Read the new version from package.json (already updated by npm version)
@@ -15,6 +18,11 @@ const pkg = JSON.parse(readFileSync(paths.package, "utf-8"));
 const newVersion = pkg.version;
 
 console.log(`🔄 Syncing version to ${newVersion}...`);
+
+const desktopPackage = JSON.parse(readFileSync(paths.desktopPackage, "utf-8"));
+desktopPackage.version = newVersion;
+writeFileSync(paths.desktopPackage, `${JSON.stringify(desktopPackage, null, 2)}\n`);
+console.log("✅ Updated apps/desktop/package.json");
 
 // 2. Update tauri.conf.json
 const tauriConf = JSON.parse(readFileSync(paths.tauri, "utf-8"));

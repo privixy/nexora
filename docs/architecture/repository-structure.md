@@ -2,7 +2,7 @@
 
 ## Current enforced state
 
-Foundation architecture guards are current and enforced through `pnpm check:architecture`. Workspace discovery includes `apps/*`, and `apps/desktop/package.json` defines the working private `@nexora/desktop` package. All desktop-owned production, configuration, and test paths are current under `apps/desktop/`, including frontend source, tests, assets, dependencies, scripts, app-local Vite/Vitest/TypeScript/PostCSS configuration, and the complete Tauri crate at `apps/desktop/src-tauri/`. Root owns command orchestration, ESLint configuration and runtime dependencies, repository assets, and `tests/repository/` as the sole root test namespace. Root `src/pluginApi.ts` is a temporary compatibility link to `apps/desktop/src/pluginApi.ts` so the unchanged plugin API sync checker remains usable until Task 6 updates its path. Contributors continue running commands from the repository root.
+Foundation architecture guards are current and enforced through `pnpm check:architecture`. Workspace discovery includes `apps/*`, and `apps/desktop/package.json` defines the working private `@nexora/desktop` package. All desktop-owned production, configuration, and test paths are current under `apps/desktop/`, including frontend source, tests, assets, dependencies, scripts, app-local Vite/Vitest/TypeScript/PostCSS configuration, and the complete Tauri crate at `apps/desktop/src-tauri/`. Root owns command orchestration, ESLint configuration and runtime dependencies, repository assets, and `tests/repository/` as the sole root test namespace. `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`. Root `package.json` is the release version source of truth and synchronizes `apps/desktop/package.json`, `apps/desktop/src/version.ts`, `apps/desktop/src-tauri/tauri.conf.json`, and `apps/desktop/src-tauri/Cargo.toml`. Contributors continue running commands from the repository root.
 
 ## Target state
 
@@ -40,7 +40,6 @@ File-size baselines are maximum current line counts. Do not increase baselines; 
 
 | Exception | Owner | Reason | Removal phase |
 |---|---|---|---|
-| Root `src/pluginApi.ts` compatibility link | Desktop migration plan | The unchanged plugin API sync checker still resolves its historical host-barrel path | Desktop migration Task 6 |
 | Root `tests/repository/` | Repository maintainers | Sole documented root test exception for workspace/release contracts; may inspect repository files but must not import desktop-private modules | Permanent repository ownership |
 | Four frontend tests under `apps/desktop/src/` | Frontend maintainers | Existing convention debt | Test normalization |
 | Crate-level Rust `*_tests.rs` | Backend maintainers | Existing convention debt | Test normalization |

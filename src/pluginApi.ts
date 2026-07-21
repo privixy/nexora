@@ -1,1 +1,0 @@
-../apps/desktop/src/pluginApi.ts

@@ -78,8 +78,9 @@ describe("current workspace layout", () => {
     expect(existsSync(resolve(root, "src-tauri"))).toBe(false);
   });
 
-  it("keeps plugin sync at its transitional root path", () => {
-    expect(existsSync(resolve(root, "src/pluginApi.ts"))).toBe(true);
+  it("keeps plugin sync at its canonical desktop path", () => {
+    expect(existsSync(resolve(root, "apps/desktop/src/pluginApi.ts"))).toBe(true);
+    expect(existsSync(resolve(root, "src/pluginApi.ts"))).toBe(false);
     expect(existsSync(resolve(root, "src/main.tsx"))).toBe(false);
   });
 });

@@ -30,7 +30,7 @@
     "build:create-plugin": "pnpm --filter @nexora/create-plugin build",
     "smoke:create-plugin": "pnpm --filter @nexora/create-plugin smoke",
     "roadmap": "node scripts/update-roadmap.js",
-    "version": "node scripts/sync-version.js && conventional-changelog -p angular -i CHANGELOG.md -s && git add README.md CHANGELOG.md src-tauri/tauri.conf.json src-tauri/Cargo.toml src-tauri/Cargo.lock src/version.ts"
+    "version": "node scripts/sync-version.js && conventional-changelog -p angular -i CHANGELOG.md -s && git add README.md CHANGELOG.md apps/desktop/package.json apps/desktop/src-tauri/tauri.conf.json apps/desktop/src-tauri/Cargo.toml apps/desktop/src-tauri/Cargo.lock apps/desktop/src/version.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

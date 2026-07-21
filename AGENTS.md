@@ -20,7 +20,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the working private desktop package.
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
 - Root owns `eslint.config.js`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; all desktop production, configuration, and test paths, including the Tauri crate, live under `apps/desktop/`.
-- Root `src/pluginApi.ts` is a temporary compatibility link for the unchanged plugin API sync checker until desktop migration Task 6 updates that path.
+- `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`; root `package.json` is the release version source and synchronizes the desktop package, app source, and Tauri manifests.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
 - Update the architecture document in the same PR when repository paths, dependency rules, test ownership, or compatibility exceptions change.
