@@ -42,3 +42,37 @@
 - Plugin JSON-RPC methods, fallback errors, and response shapes remain unchanged.
 - Frontend SQL and driver-name branching remain unchanged during structural phases.
 - Visible UI, state ownership, serialization, error wording, and timeouts remain unchanged.
+
+## Desktop workspace migration preflight
+
+**Commit:** `bc02503de6c3311b3e7088adc23d89e27fc281c5`
+**Date:** 2026-07-21
+
+### Path inventories
+
+| Inventory | Count | SHA-256 |
+|---|---:|---|
+| `/tmp/nexora-desktop-paths.before` | 831 | `d8178d3af045b37aa454c87c86506db796453f7b4a5892689701ddce48e34893` |
+| `/tmp/nexora-path-references.before` | 865 | `767b43a3d829cdcddfe24e58d68c9c8d1ff6f5851e52fcb6c94e1fb2a1f3f639` |
+
+### Baseline checks
+
+| Command | Result | Notes |
+|---|---|---|
+| `pnpm test -- --run` | PASS | 177 test files passed; 2,930 tests passed. |
+| `pnpm typecheck` | PASS | `tsc --noEmit` completed successfully. |
+| `pnpm lint` | PASS | `eslint .` completed successfully. |
+| `pnpm build:plugin-api` | PASS | Built ESM `dist/index.js` (2.27 KB) and declarations `dist/index.d.ts` (10.22 KB). |
+| `pnpm check:plugin-api` | PASS | `tsx scripts/check-sync.ts` completed successfully. |
+| `pnpm build:create-plugin` | PASS | Built ESM `dist/cli.js` (8.89 KB). |
+| `pnpm smoke:create-plugin` | PASS | Network, file, and network-with-UI templates passed clean `cargo check`; smoke result was OK. |
+| `pnpm build` | PASS | `tsc -b && vite build` completed; Vite reported `build ok`. |
+| `pnpm test:rust` | PASS | Main suite: 943 passed, 0 failed, 1 ignored; integration suite: 9 ignored; zero-test suites passed. Total observed: 943 passed, 10 ignored. |
+| `pnpm check:architecture` | PASS | Printed `[architecture] OK`. |
+
+### GitNexus MCP status
+
+- `npx gitnexus status` initially reported the index stale at commit `4cbe682`; `npx gitnexus analyze` refreshed it to `bc02503` but generated `AGENTS.md` and `CLAUDE.md`, which were restored immediately.
+- The connected MCP reader then reported `Database file version: 42, Current build storage version: 40`. The index was rebuilt with reader-compatible GitNexus `1.6.5`; generated GitNexus skill changes were restored, and status reported the index up to date at `bc02503`.
+- Path-targeted MCP queries for desktop build, desktop tests, Tauri, release, and plugin API synchronization completed without a storage-version error. Results identified the architecture checker and migration documents, Tauri startup/plugin loading, updater/release coverage, and plugin host/runtime flows; build/test configuration scripts themselves are not modeled as precise execution processes.
+- Upstream impact targeting this documentation file returned no graph target and risk `UNKNOWN`; no production symbol is edited by this task.
