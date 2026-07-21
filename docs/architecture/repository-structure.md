@@ -49,6 +49,10 @@ File-size baselines are maximum current line counts. Do not increase baselines; 
 
 Do not introduce new legacy exceptions. Remove existing exceptions only in the planned removal phase or with a same-change architecture update.
 
+## CI and release workflow ownership
+
+CI and release commands run from the repository root and delegate through root scripts. Cargo caches resolve `apps/desktop/src-tauri`, and Tauri build actions set `projectPath: apps/desktop`. The release dry run owns triggers for moved desktop version manifests, Vite configuration, Tauri manifests, and icons while preserving its unsigned bundle arguments and artifact names. Workflow YAML is validated through `pnpm lint:workflows`, a checksum-verified launcher pinned to actionlint v1.7.7.
+
 ## Required verification
 
 Run the narrowest relevant checks first, then run required affected checks from `AGENTS.md`:

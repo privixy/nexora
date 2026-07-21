@@ -109,7 +109,7 @@ jobs:
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2.9.1
         with:
-          workspaces: src-tauri
+          workspaces: apps/desktop/src-tauri
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -121,6 +121,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
+          projectPath: apps/desktop
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: ${{ matrix.args }}
 

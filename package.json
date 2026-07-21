@@ -17,6 +17,7 @@
     "dev": "pnpm --filter @nexora/desktop dev",
     "build": "pnpm --filter @nexora/desktop build",
     "lint": "eslint .",
+    "lint:workflows": "node scripts/run-actionlint.mjs",
     "preview": "pnpm --filter @nexora/desktop preview",
     "test": "pnpm --filter @nexora/desktop test",
     "check:architecture": "node scripts/check-architecture.mjs",

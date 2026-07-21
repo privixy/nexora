@@ -9,10 +9,13 @@ on:
       - .github/workflows/release.yml
       - CHANGELOG.md
       - package.json
-      - src/version.ts
-      - src-tauri/Cargo.toml
-      - src-tauri/Cargo.lock
-      - src-tauri/tauri.conf.json
+      - apps/desktop/package.json
+      - apps/desktop/src/version.ts
+      - apps/desktop/vite.config.ts
+      - apps/desktop/src-tauri/Cargo.toml
+      - apps/desktop/src-tauri/Cargo.lock
+      - apps/desktop/src-tauri/tauri.conf.json
+      - apps/desktop/src-tauri/icons/**
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
   workflow_dispatch:
@@ -80,7 +83,7 @@ jobs:
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2.9.1
         with:
-          workspaces: src-tauri
+          workspaces: apps/desktop/src-tauri
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -88,6 +91,7 @@ jobs:
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@action-v1.0.0
         with:
+          projectPath: apps/desktop
           args: ${{ matrix.args }}
           uploadWorkflowArtifacts: true
           workflowArtifactNamePattern: ${{ runner.os }}-nexora-[artifactName]

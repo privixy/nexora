@@ -20,4 +20,10 @@ describe('release workflow', () => {
     expect(workflow).not.toContain('APPLE_PASSWORD:');
     expect(workflow).not.toContain('APPLE_TEAM_ID:');
   });
+
+  it("builds the moved desktop Tauri project", () => {
+    expect(workflow).toContain("projectPath: apps/desktop");
+    expect(workflow).toContain("workspaces: apps/desktop/src-tauri");
+    expect(workflow).not.toContain("workspaces: src-tauri");
+  });
 });

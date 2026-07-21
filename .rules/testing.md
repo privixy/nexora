@@ -163,3 +163,7 @@ Tests are configured in `apps/desktop/vitest.config.ts`:
 - Root repository contracts are discovered in `tests/repository/`
 - Setup file: `./tests/setup.ts` relative to `apps/desktop/`
 - Environment: `jsdom` for DOM-related tests
+
+## Workflow Contracts
+
+Root `tests/repository/` owns CI and release workflow contracts. Workflow commands remain rooted at the repository, Rust caches use `apps/desktop/src-tauri`, Tauri actions use `projectPath: apps/desktop`, and release dry-run triggers cover moved desktop version, build, configuration, and icon paths. Validate workflow YAML through the checksum-verified actionlint v1.7.7 launcher with `pnpm lint:workflows`.

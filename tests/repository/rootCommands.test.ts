@@ -33,6 +33,10 @@ describe("root command contract", () => {
     expect(pkg.scripts[name]).toBeTruthy();
   });
 
+  it("exposes the pinned workflow lint launcher", () => {
+    expect(pkg.scripts["lint:workflows"]).toBe("node scripts/run-actionlint.mjs");
+  });
+
   it("delegates desktop commands to the desktop workspace", () => {
     expect(pkg.scripts.dev).toBe("pnpm --filter @nexora/desktop dev");
     expect(pkg.scripts.build).toBe("pnpm --filter @nexora/desktop build");

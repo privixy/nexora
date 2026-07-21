@@ -20,4 +20,18 @@ describe('release dry run workflow', () => {
       'args: \'--bundles nsis --config {"bundle":{"createUpdaterArtifacts":false}}\'',
     ]);
   });
+
+  it("triggers and builds from moved desktop paths", () => {
+    for (const path of [
+      "apps/desktop/package.json",
+      "apps/desktop/src/version.ts",
+      "apps/desktop/src-tauri/Cargo.toml",
+      "apps/desktop/src-tauri/Cargo.lock",
+      "apps/desktop/src-tauri/tauri.conf.json",
+    ]) {
+      expect(workflow).toContain(`- ${path}`);
+    }
+    expect(workflow).toContain("projectPath: apps/desktop");
+    expect(workflow).toContain("workspaces: apps/desktop/src-tauri");
+  });
 });
