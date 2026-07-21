@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   useReactTable,
@@ -92,6 +86,8 @@ interface DataGridProps {
   onForeignKeyShowPanel?: (fk: ForeignKey, value: unknown) => void;
   onForeignKeyHidePanel?: () => void;
   connectionId?: string | null;
+  database?: string;
+  schema?: string;
   onRefresh?: () => void;
   pendingChanges?: Record<
     string,
@@ -135,6 +131,8 @@ export const DataGrid = React.memo(
     onForeignKeyShowPanel,
     onForeignKeyHidePanel,
     connectionId,
+    database,
+    schema,
     onRefresh,
     pendingChanges,
     pendingDeletions,
@@ -156,7 +154,7 @@ export const DataGrid = React.memo(
     readonly: readonlyProp,
   }: DataGridProps) => {
     const { t } = useTranslation();
-    const { activeSchema, connections } = useDatabase();
+    const { activeDatabase, activeSchema, connections } = useDatabase();
     const { showAlert } = useAlert();
     const { settings } = useSettings();
     const colorByType = settings.resultColorByType ?? false;
@@ -704,7 +702,10 @@ export const DataGrid = React.memo(
             pkMap: pkMapVal,
             colName,
             newVal: value,
-            ...(activeSchema ? { schema: activeSchema } : {}),
+            ...(database ?? activeDatabase
+              ? { database: database ?? activeDatabase }
+              : {}),
+            ...(schema ?? activeSchema ? { schema: schema ?? activeSchema } : {}),
           });
           if (onRefresh) onRefresh();
         } catch (e) {
@@ -727,6 +728,9 @@ export const DataGrid = React.memo(
       pkIndexMaps,
       pkColumns,
       connectionId,
+      database,
+      schema,
+      activeDatabase,
       activeSchema,
       onRefresh,
       showAlert,

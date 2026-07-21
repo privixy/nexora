@@ -201,6 +201,27 @@ mod tests {
     }
 
     #[test]
+    fn pool_key_changes_when_database_changes_for_saved_connection() {
+        let mut app = mysql_params("required");
+        app.database = DatabaseSelection::Single("app".to_string());
+        let mut audit = app.clone();
+        audit.database = DatabaseSelection::Single("audit".to_string());
+
+        assert_eq!(
+            build_connection_key(&app, Some("conn-1")),
+            "mysql:conn:conn-1:app:ssl:required::::clear:false:pipes:true"
+        );
+        assert_eq!(
+            build_connection_key(&audit, Some("conn-1")),
+            "mysql:conn:conn-1:audit:ssl:required::::clear:false:pipes:true"
+        );
+        assert_ne!(
+            build_connection_key(&app, Some("conn-1")),
+            build_connection_key(&audit, Some("conn-1"))
+        );
+    }
+
+    #[test]
     fn mysql_options_default_force_pipes_as_concat() {
         // Unset => keep sqlx's default behavior (force the sql_mode).
         let params = mysql_params("required");
@@ -549,6 +570,33 @@ mod startup_script_tests {
             startup_script: startup_script.map(ToOwned::to_owned),
             ..Default::default()
         }
+    }
+
+    #[tokio::test]
+    async fn close_pool_with_id_removes_target_and_preserves_unrelated_connection() {
+        let target_file = NamedTempFile::new().expect("target file");
+        let unrelated_file = NamedTempFile::new().expect("unrelated file");
+        let target = sqlite_params(target_file.path().to_str().unwrap(), None);
+        let unrelated = sqlite_params(unrelated_file.path().to_str().unwrap(), None);
+        let target_id = format!("remove-target-{}", ulid::Ulid::generate());
+        let unrelated_id = format!("remove-unrelated-{}", ulid::Ulid::generate());
+        let removed_pool = get_sqlite_pool_with_id(&target, Some(&target_id))
+            .await
+            .unwrap();
+        let preserved_pool = get_sqlite_pool_with_id(&unrelated, Some(&unrelated_id))
+            .await
+            .unwrap();
+
+        close_pool_with_id(&target, Some(&target_id)).await;
+
+        assert!(removed_pool.is_closed());
+        assert!(!preserved_pool.is_closed());
+        let (one,): (i64,) = sqlx::query_as("SELECT 1")
+            .fetch_one(&preserved_pool)
+            .await
+            .unwrap();
+        assert_eq!(one, 1);
+        close_pool_with_id(&unrelated, Some(&unrelated_id)).await;
     }
 
     #[tokio::test]

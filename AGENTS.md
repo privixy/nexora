@@ -11,6 +11,16 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Built-in drivers and plugins may support different feature sets. Implement graceful degradation when a capability is unavailable.
 - Avoid shortcuts that make future drivers difficult to add, such as branching UI logic on `postgres`/`mysql`, reusing table-management capabilities for unrelated DDL, or assuming schemas/databases mean the same thing across engines.
 
+## Repository Architecture
+- `docs/architecture/repository-structure.md` is the canonical source for current enforced paths, target paths, dependency direction, test ownership, temporary compatibility exceptions, and required verification.
+- Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
+- Architecture thresholds are 500 lines for new TypeScript/TSX files and 800 lines for new Rust files; files listed in `architecture/policy.json` are ratcheted to their stored line counts.
+- Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
+- Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
+- Do not describe target paths as usable until the migration that creates and wires them lands.
+- Update the architecture document in the same PR when repository paths, dependency rules, test ownership, or compatibility exceptions change.
+- Do not introduce new legacy exceptions.
+
 ## Implementation Rules
 - Do not make one-off fixes when the bug is caused by unclear state ownership. First identify the source of truth, then route all callers through it.
 - Keep database context (`connectionId`, `database`, `schema`, `table`) explicit. Do not infer database from schema names or UI labels.
@@ -33,6 +43,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 
 ## Required Verification Before Reporting Done
 - Run the narrowest relevant test files first, for example `pnpm test tests/utils/foo.test.ts tests/components/bar.test.tsx`.
+- Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.
 - Run Rust tests for Rust/backend changes: `pnpm test:rust` or the relevant `cargo test` command in `src-tauri`.
@@ -63,25 +74,24 @@ Adhere to the rules defined in the [rules directory](./.rules/):
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **nexora** (9537 symbols, 23653 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **nexora** (14533 symbols, 27994 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
-> Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
+> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
 ## Always Do
 
-- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
-- **MUST run `detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows. For regression review, compare against the default branch: `detect_changes({scope: "compare", base_ref: "main"})`.
+- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
+- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
 - **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
-- When exploring unfamiliar code, use `query({search_query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `context({name: "symbolName"})`.
-- For security review, `explain({target: "fileOrSymbol"})` lists taint findings (source→sink flows; needs `analyze --pdg`).
+- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
+- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
 
 ## Never Do
 
-- NEVER edit a function, class, or method without first running `impact` on it.
+- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
 - NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
-- NEVER rename symbols with find-and-replace — use `rename` which understands the call graph.
-- NEVER commit changes without running `detect_changes()` to check affected scope.
+- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
+- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
 
 ## Resources
 

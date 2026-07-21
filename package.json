@@ -19,6 +19,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
+    "check:architecture": "node scripts/check-architecture.mjs",
     "typecheck": "tsc --noEmit",
     "test:coverage": "vitest run --coverage",
     "test:rust": "cd src-tauri && cargo test",

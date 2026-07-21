@@ -1,6 +1,6 @@
 # Testing Conventions
 
-This document defines the testing conventions and directory structure for the Nexora project.
+This document defines the testing conventions and directory structure for the Nexora project. See `docs/architecture/repository-structure.md` for the canonical current and target repository structure.
 
 ## Directory Structure
 
@@ -18,7 +18,7 @@ All utility functions and testable logic must be placed in `src/utils/` with sim
 - ~~`src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-All test files must be placed in a parallel `tests/` directory that mirrors the structure of `src/`.
+Current TypeScript tests must be placed in the root `tests/` directory that mirrors the structure of `src/`. Only the four documented colocated frontend tests under `src/` are temporary compatibility exceptions. Root `tests/repository/` owns workspace and release contracts only. Do not introduce new legacy exceptions.
 
 ```
 project-root/
@@ -158,6 +158,6 @@ pnpm test --coverage
 ## Configuration
 
 Tests are configured in `vitest.config.ts`:
-- Test files are discovered in `tests/` directory
+- Test files are discovered in the current root `tests/` directory
 - Setup file: `./tests/setup.ts`
 - Environment: `jsdom` for DOM-related tests

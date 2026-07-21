@@ -2142,9 +2142,7 @@ mod tests {
     #[test]
     fn set_connection_appearance_errors_on_missing_id() {
         let mut file = one_conn_file("conn-real", None);
-
         let result = set_appearance_impl(&mut file, "conn-does-not-exist", None);
-
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), "Connection not found");
     }
@@ -2456,6 +2454,7 @@ mod tests {
 
     mod resolve_connection_params_tests {
         use super::*;
+
 
         fn create_ssh_params(
             ssh_host: &str,

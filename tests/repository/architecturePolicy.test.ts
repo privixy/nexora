@@ -1,0 +1,137 @@
+import { describe, expect, it } from "vitest";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { collectViolations, countLines } from "../../scripts/check-architecture.mjs";
+
+const root = process.cwd();
+const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json"), "utf8")) as {
+  frontendTestRoots: string[];
+  forbiddenFrontendTestRoots: string[];
+  rootTestExceptionRoots: string[];
+  repositoryTestForbiddenImportRoots: string[];
+  rustInlineTestAllowlist: string[];
+  allowedWorkspaceDependencies: Record<string, string[]>;
+  fileSizeBaselines: Record<string, number>;
+  sourceRoots: string[];
+};
+
+function writeFixture(root: string, file: string, content: string) {
+  const filePath = join(root, file);
+  mkdirSync(dirname(filePath), { recursive: true });
+  writeFileSync(filePath, content);
+}
+
+describe("architecture policy", () => {
+  it("records current roots and target-protection rules", () => {
+    expect(policy.frontendTestRoots).toContain("tests");
+    expect(policy.forbiddenFrontendTestRoots).toContain("src");
+    expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
+    expect(policy.repositoryTestForbiddenImportRoots).toEqual(["src", "src-tauri"]);
+    expect(policy.rustInlineTestAllowlist).toContain("src-tauri/src/commands.rs");
+    expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
+    expect(policy.fileSizeBaselines["src/pages/Editor.tsx"]).toBeGreaterThan(0);
+    expect(policy.sourceRoots).toEqual([
+      "src",
+      "src-tauri/src",
+      "packages/plugin-api/src",
+      "packages/create-plugin/src",
+      "packages/create-plugin/templates/rust-driver/src",
+    ]);
+  });
+
+  it("counts trailing-newline-terminated lines", () => {
+    expect(countLines("one\ntwo\n")).toBe(2);
+  });
+
+  it("reports architecture policy violations", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
+
+    try {
+      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora", dependencies: { "@nexora/plugin-api": "workspace:*" } }));
+      writeFixture(tempRoot, "packages/plugin-api/package.json", JSON.stringify({ name: "@nexora/plugin-api" }));
+      writeFixture(tempRoot, "src/NewFeature.test.tsx", "test(\"x\", () => undefined);\n");
+      writeFixture(tempRoot, "tests/NewFeature.spec.ts", "test(\"x\", () => undefined);\n");
+      writeFixture(tempRoot, "tests/repository/importsDesktop.test.ts", "import { value } from \"../../src/value\";\n");
+      writeFixture(tempRoot, "tests/repository/helper.ts", "export { value } from \"../../src-tauri/value\";\n");
+      writeFixture(tempRoot, "src/value.ts", "export const value = true;\n");
+      writeFixture(tempRoot, "src/Oversized.ts", `${"line\n".repeat(501)}`);
+      writeFixture(tempRoot, "src/Ratcheted.tsx", "one\ntwo\n");
+      writeFixture(tempRoot, "src-tauri/src/lib.rs", "#[cfg(test)]\nmod tests {\n}\n");
+
+      const fixtureFiles = [
+        "package.json",
+        "packages/plugin-api/package.json",
+        "src/NewFeature.test.tsx",
+        "tests/NewFeature.spec.ts",
+        "tests/repository/importsDesktop.test.ts",
+        "tests/repository/helper.ts",
+        "src/value.ts",
+        "src/Oversized.ts",
+        "src/Ratcheted.tsx",
+        "src-tauri/src/lib.rs",
+      ];
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: ["tests"],
+        forbiddenFrontendTestRoots: ["src"],
+        frontendTestAllowlist: [],
+        rootTestExceptionRoots: ["tests/repository"],
+        repositoryTestForbiddenImportRoots: ["src", "src-tauri"],
+        rustInlineTestAllowlist: [],
+        allowedWorkspaceDependencies: {
+          nexora: [],
+          "@nexora/plugin-api": [],
+        },
+        fileSizeBaselines: {
+          "src/Ratcheted.tsx": 1,
+        },
+        sourceRoots: ["src", "src-tauri/src"],
+      }, {
+        trackedFiles: fixtureFiles,
+        workspacePackageDirectories: [".", "packages/plugin-api"],
+      });
+
+      expect(violations).toContain("src/NewFeature.test.tsx: frontend tests must live under tests unless allowlisted");
+      expect(violations).toContain("tests/NewFeature.spec.ts: rename .spec test files to .test files");
+      expect(violations).toContain("tests/repository/importsDesktop.test.ts: repository tests may inspect files but must not import desktop-private modules from src");
+      expect(violations).toContain("tests/repository/helper.ts: repository tests may inspect files but must not import desktop-private modules from src-tauri");
+      expect(violations).toContain("src/Oversized.ts: 501 lines exceeds soft limit 500; split the file or add a ratcheted baseline with architecture approval");
+      expect(violations).toContain("src/Ratcheted.tsx: 2 lines exceeds ratcheted baseline 1");
+      expect(violations).toContain("src-tauri/src/lib.rs: inline Rust test modules must move to sibling tests.rs or be documented in rustInlineTestAllowlist");
+      expect(violations).toContain("package.json: nexora may not depend on workspace package @nexora/plugin-api");
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("ignores untracked and ignored source files and non-workspace package manifests", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-inventory-"));
+
+    try {
+      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora" }));
+      writeFixture(tempRoot, "src/tracked.ts", "export const tracked = true;\n");
+      writeFixture(tempRoot, "src/untracked.spec.ts", "test(\"x\", () => undefined);\n");
+      writeFixture(tempRoot, "src/ignored.ts", "line\n".repeat(501));
+      writeFixture(tempRoot, "vendor/package.json", JSON.stringify({ name: "vendor", dependencies: { nexora: "workspace:*" } }));
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: ["tests"],
+        forbiddenFrontendTestRoots: ["src"],
+        frontendTestAllowlist: [],
+        rootTestExceptionRoots: ["tests/repository"],
+        repositoryTestForbiddenImportRoots: ["src", "src-tauri"],
+        rustInlineTestAllowlist: [],
+        allowedWorkspaceDependencies: { nexora: [] },
+        fileSizeBaselines: {},
+        sourceRoots: ["src"],
+      }, {
+        trackedFiles: ["package.json", "src/tracked.ts", "vendor/package.json"],
+        workspacePackageDirectories: ["."],
+      });
+
+      expect(violations).toEqual([]);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+});

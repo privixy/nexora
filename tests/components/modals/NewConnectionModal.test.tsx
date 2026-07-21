@@ -66,6 +66,7 @@ vi.mock("../../../src/hooks/useDrivers", () => ({
           connection_string: true,
           supports_ssl: false,
           schemas: driverState.schemas,
+          multiple_databases: !driverState.schemas,
         },
       },
     ],
@@ -341,6 +342,7 @@ describe("NewConnectionModal imported connection credentials", () => {
       />,
     );
 
+    fireEvent.click(screen.getByText("newConnection.general"));
     fireEvent.change(
       await screen.findByPlaceholderText("newConnection.passwordPlaceholder"),
       { target: { value: "secret" } },
@@ -348,19 +350,20 @@ describe("NewConnectionModal imported connection credentials", () => {
     fireEvent.click(screen.getByText("newConnection.save"));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith(
-        "update_connection",
-        expect.objectContaining({
-          id: "imported-1",
-          params: expect.objectContaining({
-            password: "secret",
-          }),
+      expect(invoke).toHaveBeenCalledWith("update_connection", {
+        id: "imported-1",
+        name: "Imported",
+        params: expect.objectContaining({
+          driver: "mysql",
+          host: "localhost",
+          port: 5432,
+          username: "develop",
+          password: "secret",
         }),
-      );
+        detectJsonInTextColumns: null,
+      });
     });
-    expect(
-      screen.queryByText("newConnection.noDatabasesSelected"),
-    ).not.toBeInTheDocument();
+    expect(onSave).toHaveBeenCalled();
   });
 
   it("clears a stale database-load error after entering the missing password", async () => {

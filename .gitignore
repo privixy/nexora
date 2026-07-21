@@ -37,6 +37,8 @@ plugins/**/target
 .superpowers/
 !/docs/
 /docs/*
+!/docs/architecture/
+!/docs/architecture/**
 !/docs/superpowers/
 /docs/superpowers/*
 !/docs/superpowers/specs/
