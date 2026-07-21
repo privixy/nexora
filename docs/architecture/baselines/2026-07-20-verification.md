@@ -76,3 +76,17 @@
 - The connected MCP reader then reported `Database file version: 42, Current build storage version: 40`. The index was rebuilt with reader-compatible GitNexus `1.6.5`; generated GitNexus skill changes were restored, and status reported the index up to date at `bc02503`.
 - Path-targeted MCP queries for desktop build, desktop tests, Tauri, release, and plugin API synchronization completed without a storage-version error. Results identified the architecture checker and migration documents, Tauri startup/plugin loading, updater/release coverage, and plugin host/runtime flows; build/test configuration scripts themselves are not modeled as precise execution processes.
 - Upstream impact targeting this documentation file returned no graph target and risk `UNKNOWN`; no production symbol is edited by this task.
+
+### Task 8 packaging verification
+
+| Command or check | Result | Notes |
+|---|---|---|
+| `pnpm test tests/repository/packagingPaths.test.ts -- --run` | PASS | 1 file and 3 tests passed; AUR, Snap, and Winget retain their released artifact names and avoid obsolete Tauri source paths. This characterization contract passed before configuration changes, as expected. It structurally accepts YAML indentation while requiring Snap's `source: nexora.deb` value and AUR's exact source assignment. |
+| Portable `git ls-files -z -- aur snap .github/workflows` Node source-layout scan from Task 8 | PASS | Tauri references use `apps/desktop/src-tauri` or `projectPath: apps/desktop`; AUR uses `nexora_${{ steps.version.outputs.version }}_amd64.deb` and `./aur/PKGBUILD`, Snap uses `snap/nexora.deb`, and Winget retains the `_x64-setup\\.exe$` matcher. |
+| `pnpm lint:workflows .github/workflows/aur.yml .github/workflows/snap.yml .github/workflows/winget.yml` | PASS | The checksum-verified actionlint v1.7.7 launcher exited 0 with no diagnostics. |
+| Exact four-command Task 8 source-layout block, run verbatim | LIMITATION | The pasted shell block returns overall status 0 because its final AUR command passes, but the third (Snap) command independently exits 1. That check requires an unindented whole line equal to `source: nexora.deb`, while valid current YAML has four-space indentation at `snap/snapcraft.yaml:44`. Both `test -f` commands and the exact AUR line check pass. Store metadata was not changed to satisfy this brittle textual check. |
+| Structural source-layout equivalent in `packagingPaths.test.ts` | PASS | Snap's indented `source: nexora.deb` mapping and AUR's exact `source=("${_pkgname}_${pkgver}_amd64.deb")` assignment are both verified without changing metadata semantics. No store publication or secrets were used. |
+| First concurrent `pnpm test -- --run` | FAIL | 180 files passed and 1 failed; 2 of 2,952 tests timed out at the fixed 5-second limit in `tests/repository/rootCommands.test.ts` while other full checks ran concurrently. |
+| Isolated `pnpm test tests/repository/rootCommands.test.ts -- --run` | PASS | 1 file and all 16 tests passed. |
+| Fresh non-concurrent `pnpm test -- --run` | PASS | 181 files and all 2,952 tests passed. |
+| GitNexus query and upstream impact attempts | UNAVAILABLE | The connected MCP reader reported `Database file version: 42, Current build storage version: 40`; no production symbol or API route is edited by Task 8. |
