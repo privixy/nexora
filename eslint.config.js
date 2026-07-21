@@ -14,7 +14,12 @@ const reactHooksRecommended = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist", "tests", "coverage", "src-tauri/target/**"]),
+  globalIgnores([
+    "**/dist/**",
+    "**/tests/**",
+    "**/coverage/**",
+    "**/src-tauri/target/**",
+  ]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -28,8 +33,8 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/**/*.tsx"],
-    ignores: ["src/utils/**/*.tsx"],
+    files: ["apps/desktop/src/**/*.tsx"],
+    ignores: ["apps/desktop/src/utils/**/*.tsx"],
     extends: [reactRefresh.configs.vite],
   },
 ]);

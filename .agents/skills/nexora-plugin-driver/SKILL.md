@@ -7,7 +7,7 @@ description: "Use when creating or updating a Nexora database driver plugin in R
 
 Use this skill when building or updating a database plugin for Nexora.
 
-The skill is optimized for this repository. Follow `AGENTS.md`, the files in `.rules/`, and the current plugin-system behavior in `src-tauri/src/plugins/` and `src/types/plugins.ts`.
+The skill is optimized for this repository. Follow `AGENTS.md`, the files in `.rules/`, and the current plugin-system behavior in `src-tauri/src/plugins/` and `apps/desktop/src/types/plugins.ts`.
 
 ## Goals
 
@@ -55,7 +55,7 @@ Keep `src/main.rs` thin. It should mostly parse requests, dispatch methods, and 
 
 1. Read the current plugin manifest shape in:
    - `plugins/manifest.schema.json`
-   - `src/types/plugins.ts`
+   - `apps/desktop/src/types/plugins.ts`
    - `src-tauri/src/plugins/manager.rs`
 2. Read the JSON-RPC expectations in:
    - `plugins/PLUGIN_GUIDE.md`
@@ -64,9 +64,9 @@ Keep `src/main.rs` thin. It should mostly parse requests, dispatch methods, and 
 3. Read a built-in driver with broad coverage to understand expected behaviors:
    - `src-tauri/src/drivers/mysql/mod.rs`
 4. Read plugin-loading behavior and modern feature flags in:
-   - `src/hooks/useDrivers.ts`
-   - `src/utils/connectionStringParser.ts`
-   - `src/utils/driverCapabilities.ts`
+   - `apps/desktop/src/hooks/useDrivers.ts`
+   - `apps/desktop/src/utils/connectionStringParser.ts`
+   - `apps/desktop/src/utils/driverCapabilities.ts`
 
 ## Implementation Workflow
 

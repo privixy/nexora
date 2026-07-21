@@ -10,6 +10,33 @@ overrides:
 importers:
 
   .:
+    devDependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.7.0(jiti@2.7.0))
+      conventional-changelog:
+        specifier: ^8.1.0
+        version: 8.1.0(conventional-commits-filter@6.0.1)
+      conventional-changelog-angular:
+        specifier: ^9.2.1
+        version: 9.2.1
+      eslint:
+        specifier: ^10.7.0
+        version: 10.7.0(jiti@2.7.0)
+      eslint-plugin-react-hooks:
+        specifier: ^7.1.1
+        version: 7.1.1(eslint@10.7.0(jiti@2.7.0))
+      eslint-plugin-react-refresh:
+        specifier: ^0.5.3
+        version: 0.5.3(eslint@10.7.0(jiti@2.7.0))
+      globals:
+        specifier: ^17.7.0
+        version: 17.7.0
+      typescript-eslint:
+        specifier: ^8.64.0
+        version: 8.64.0(eslint@10.7.0(jiti@2.7.0))(typescript@5.9.3)
+
+  apps/desktop:
     dependencies:
       '@monaco-editor/react':
         specifier: ^4.7.0
@@ -114,9 +141,6 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
     devDependencies:
-      '@eslint/js':
-        specifier: ^10.0.1
-        version: 10.0.1(eslint@10.7.0(jiti@2.7.0))
       '@tauri-apps/cli':
         specifier: ~2.10.0
         version: 2.10.1
@@ -147,24 +171,6 @@ importers:
       autoprefixer:
         specifier: ^10.5.4
         version: 10.5.4(postcss@8.5.19)
-      conventional-changelog:
-        specifier: ^8.1.0
-        version: 8.1.0(conventional-commits-filter@6.0.1)
-      conventional-changelog-angular:
-        specifier: ^9.2.1
-        version: 9.2.1
-      eslint:
-        specifier: ^10.7.0
-        version: 10.7.0(jiti@2.7.0)
-      eslint-plugin-react-hooks:
-        specifier: ^7.1.1
-        version: 7.1.1(eslint@10.7.0(jiti@2.7.0))
-      eslint-plugin-react-refresh:
-        specifier: ^0.5.3
-        version: 0.5.3(eslint@10.7.0(jiti@2.7.0))
-      globals:
-        specifier: ^17.7.0
-        version: 17.7.0
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1
@@ -177,17 +183,12 @@ importers:
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
-      typescript-eslint:
-        specifier: ^8.64.0
-        version: 8.64.0(eslint@10.7.0(jiti@2.7.0))(typescript@5.9.3)
       vite:
         specifier: ^8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.1)(@vitest/coverage-v8@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1))
-
-  apps/desktop: {}
 
   packages/create-plugin:
     dependencies:

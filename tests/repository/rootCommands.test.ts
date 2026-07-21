@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const pkg = JSON.parse(readFileSync(resolve(process.cwd(), "package.json"), "utf8")) as {
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8")) as {
   scripts: Record<string, string>;
+  devDependencies: Record<string, string>;
+};
+const desktopPackage = JSON.parse(
+  readFileSync(resolve(root, "apps/desktop/package.json"), "utf8"),
+) as {
+  devDependencies?: Record<string, string>;
 };
 
 const required = [
@@ -22,5 +30,33 @@ const required = [
 describe("root command contract", () => {
   it.each(required)("exposes %s from the repository root", (name) => {
     expect(pkg.scripts[name]).toBeTruthy();
+  });
+
+  it("delegates desktop commands to the desktop workspace", () => {
+    expect(pkg.scripts.dev).toBe("pnpm --filter @nexora/desktop dev");
+    expect(pkg.scripts.build).toBe("pnpm --filter @nexora/desktop build");
+    expect(pkg.scripts.preview).toBe("pnpm --filter @nexora/desktop preview");
+    expect(pkg.scripts.test).toBe("pnpm --filter @nexora/desktop test");
+    expect(pkg.scripts.typecheck).toBe("pnpm --filter @nexora/desktop typecheck");
+    expect(pkg.scripts["test:coverage"]).toBe(
+      "pnpm --filter @nexora/desktop test:coverage",
+    );
+    expect(pkg.scripts.tauri).toBe("pnpm --filter @nexora/desktop tauri");
+    expect(pkg.scripts["test:rust"]).toBe("cd src-tauri && cargo test");
+  });
+
+  it("keeps lint and its runtime dependencies at the repository root", () => {
+    expect(pkg.scripts.lint).toBe("eslint .");
+    for (const dependency of [
+      "@eslint/js",
+      "eslint",
+      "eslint-plugin-react-hooks",
+      "eslint-plugin-react-refresh",
+      "globals",
+      "typescript-eslint",
+    ]) {
+      expect(pkg.devDependencies).toHaveProperty(dependency);
+      expect(desktopPackage.devDependencies ?? {}).not.toHaveProperty(dependency);
+    }
   });
 });

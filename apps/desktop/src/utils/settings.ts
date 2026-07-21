@@ -189,5 +189,5 @@ export interface RoadmapItem {
   url?: string;
 }
 
-import roadmapData from '../../roadmap.json';
+import roadmapData from '../../../../roadmap.json';
 export const ROADMAP: readonly RoadmapItem[] = roadmapData;

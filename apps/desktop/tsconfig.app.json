@@ -10,6 +10,11 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "@testing-library/jest-dom/vitest": ["./node_modules/@testing-library/jest-dom/vitest"],
+      "@testing-library/react": ["./node_modules/@testing-library/react"],
+      "vitest": ["./node_modules/vitest"]
+    },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -24,5 +29,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "tests/setup.ts", "tests/components/layout/Accordion.test.tsx", "tests/components/layout/NavItem.test.tsx"]
+  "include": ["src", "../../tests/setup.ts", "../../tests/components/layout/Accordion.test.tsx", "../../tests/components/layout/NavItem.test.tsx"]
 }

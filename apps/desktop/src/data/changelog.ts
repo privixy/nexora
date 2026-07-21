@@ -1,4 +1,4 @@
-import changelogMarkdownRaw from "../../CHANGELOG.md?raw";
+import changelogMarkdownRaw from "../../../../CHANGELOG.md?raw";
 
 export const changelogMarkdown = changelogMarkdownRaw;
 

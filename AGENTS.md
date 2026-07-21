@@ -17,8 +17,10 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Architecture thresholds are 500 lines for new TypeScript/TSX files and 800 lines for new Rust files; files listed in `architecture/policy.json` are ratcheted to their stored line counts.
 - Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
 - Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
-- Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the empty private desktop package boundary.
-- Root remains the working desktop package with desktop commands and dependencies; source, tests, assets, app-local configuration, and `src-tauri/` remain at root until desktop migration Tasks 3–5.
+- Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the working private desktop package.
+- Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
+- Root owns `eslint.config.js`, `pnpm lint`, and the six ESLint runtime packages; tests and `src-tauri/` remain transitional root paths until desktop migration Tasks 4–5.
+- Root `src/pluginApi.ts` is a temporary compatibility link for the unchanged plugin API sync checker until desktop migration Task 6 updates that path.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
 - Update the architecture document in the same PR when repository paths, dependency rules, test ownership, or compatibility exceptions change.
@@ -27,7 +29,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 ## Implementation Rules
 - Do not make one-off fixes when the bug is caused by unclear state ownership. First identify the source of truth, then route all callers through it.
 - Keep database context (`connectionId`, `database`, `schema`, `table`) explicit. Do not infer database from schema names or UI labels.
-- Shared behavior used by more than one component must live in `src/utils/`, `src/hooks/`, or a focused context method, not duplicated inside components.
+- Shared behavior used by more than one component must live in `apps/desktop/src/utils/`, `apps/desktop/src/hooks/`, or a focused context method, not duplicated inside components.
 - Components may own presentation state only. Cross-component state such as active database/schema/table must live in context or a dedicated shared hook.
 - Avoid render-time state updates. Never call `setState` directly during render to sync props; derive state with `useMemo` or update state from event handlers.
 - Do not clear already-loaded UI data when switching active database/schema unless the data is invalid. Preserve stale-but-valid data while new data loads.
@@ -56,11 +58,11 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Final response must list the exact test/check commands run.
 
 ## Test Placement Rules
-- Tests must live under `tests/` mirroring `src/` paths.
-- Utility logic in `src/utils/foo.ts` must have tests in `tests/utils/foo.test.ts`.
-- Hooks in `src/hooks/useFoo.ts` must have tests in `tests/hooks/useFoo.test.ts` when behavior changes.
-- Context changes in `src/contexts/FooProvider.tsx` must have tests in `tests/contexts/FooProvider.test.tsx`.
-- Component behavior changes in `src/components/.../Foo.tsx` must have tests in `tests/components/.../Foo.test.tsx`.
+- Tests must live under `tests/` mirroring `apps/desktop/src/` paths until Task 4 moves desktop tests.
+- Utility logic in `apps/desktop/src/utils/foo.ts` must have tests in `tests/utils/foo.test.ts`.
+- Hooks in `apps/desktop/src/hooks/useFoo.ts` must have tests in `tests/hooks/useFoo.test.ts` when behavior changes.
+- Context changes in `apps/desktop/src/contexts/FooProvider.tsx` must have tests in `tests/contexts/FooProvider.test.tsx`.
+- Component behavior changes in `apps/desktop/src/components/.../Foo.tsx` must have tests in `tests/components/.../Foo.test.tsx`.
 - Page-level UI behavior may be tested through the smallest affected component/context; avoid brittle full-page tests unless the page owns the behavior.
 - Rust tests must not be written inline in production source files. Put Rust tests in sibling `tests.rs` files (or `tests/*.rs` modules) and load them with `#[cfg(test)] mod tests;` only.
 - Do not embed private keys, tokens, credentials, or secret-like fixtures in production source files or test source files. Generate temporary test credentials at runtime or use non-secret structural assertions instead.
@@ -77,7 +79,7 @@ Adhere to the rules defined in the [rules directory](./.rules/):
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **nexora** (14533 symbols, 27994 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **nexora** (14572 symbols, 27055 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

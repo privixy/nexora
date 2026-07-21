@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const rootPackage = JSON.parse(
   readFileSync(resolve(root, "package.json"), "utf8"),
 ) as { private: boolean };
@@ -12,18 +13,45 @@ const desktopPackage = JSON.parse(
 const workspace = readFileSync(resolve(root, "pnpm-workspace.yaml"), "utf8");
 
 describe("current workspace layout", () => {
-  it("keeps the desktop application at the documented current paths", () => {
-    expect(existsSync(resolve(root, "src/main.tsx"))).toBe(true);
+  it("owns frontend source, assets, and app configuration in apps/desktop", () => {
+    for (const path of [
+      "apps/desktop/src/main.tsx",
+      "apps/desktop/public/logo.png",
+      "apps/desktop/index.html",
+      "apps/desktop/vite.config.ts",
+      "apps/desktop/vitest.config.ts",
+      "apps/desktop/tsconfig.app.json",
+      "apps/desktop/tsconfig.node.json",
+      "apps/desktop/postcss.config.js",
+    ]) {
+      expect(existsSync(resolve(root, path)), path).toBe(true);
+    }
+
+    for (const path of [
+      "public",
+      "index.html",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "tsconfig.app.json",
+      "tsconfig.node.json",
+      "postcss.config.js",
+    ]) {
+      expect(existsSync(resolve(root, path)), path).toBe(false);
+    }
+  });
+
+  it("keeps tests, the Tauri crate, and plugin sync at transitional root paths", () => {
     expect(existsSync(resolve(root, "tests/setup.ts"))).toBe(true);
     expect(existsSync(resolve(root, "src-tauri/Cargo.toml"))).toBe(true);
-    expect(existsSync(resolve(root, "vite.config.ts"))).toBe(true);
+    expect(existsSync(resolve(root, "src/pluginApi.ts"))).toBe(true);
+    expect(existsSync(resolve(root, "src/main.tsx"))).toBe(false);
   });
 });
 
 describe("desktop workspace migration", () => {
   it("declares the desktop workspace boundary", () => {
     expect(workspace).toContain("- apps/*");
-    expect(desktopPackage).toEqual({
+    expect(desktopPackage).toMatchObject({
       name: "@nexora/desktop",
       private: true,
       version: "1.0.3",
