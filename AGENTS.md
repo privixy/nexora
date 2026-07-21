@@ -19,7 +19,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
 - Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the working private desktop package.
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
-- Root owns `eslint.config.js`, `pnpm lint`, and the six ESLint runtime packages; tests and `src-tauri/` remain transitional root paths until desktop migration Tasks 4–5.
+- Root owns `eslint.config.js`, `pnpm lint`, the six ESLint runtime packages, and `tests/repository/`; desktop tests live under `apps/desktop/tests/`, while `src-tauri/` remains transitional until desktop migration Task 5.
 - Root `src/pluginApi.ts` is a temporary compatibility link for the unchanged plugin API sync checker until desktop migration Task 6 updates that path.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
@@ -47,7 +47,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - For async loading changes, tests must cover the loading path and the already-loaded path.
 
 ## Required Verification Before Reporting Done
-- Run the narrowest relevant test files first, for example `pnpm test tests/utils/foo.test.ts tests/components/bar.test.tsx`.
+- Run the narrowest relevant test files first, for example `pnpm test apps/desktop/tests/utils/foo.test.ts apps/desktop/tests/components/bar.test.tsx`.
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.
@@ -58,11 +58,11 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Final response must list the exact test/check commands run.
 
 ## Test Placement Rules
-- Tests must live under `tests/` mirroring `apps/desktop/src/` paths until Task 4 moves desktop tests.
-- Utility logic in `apps/desktop/src/utils/foo.ts` must have tests in `tests/utils/foo.test.ts`.
-- Hooks in `apps/desktop/src/hooks/useFoo.ts` must have tests in `tests/hooks/useFoo.test.ts` when behavior changes.
-- Context changes in `apps/desktop/src/contexts/FooProvider.tsx` must have tests in `tests/contexts/FooProvider.test.tsx`.
-- Component behavior changes in `apps/desktop/src/components/.../Foo.tsx` must have tests in `tests/components/.../Foo.test.tsx`.
+- Desktop tests must live under `apps/desktop/tests/` mirroring `apps/desktop/src/`; root `tests/repository/` contains non-desktop repository contracts only.
+- Utility logic in `apps/desktop/src/utils/foo.ts` must have tests in `apps/desktop/tests/utils/foo.test.ts`.
+- Hooks in `apps/desktop/src/hooks/useFoo.ts` must have tests in `apps/desktop/tests/hooks/useFoo.test.ts` when behavior changes.
+- Context changes in `apps/desktop/src/contexts/FooProvider.tsx` must have tests in `apps/desktop/tests/contexts/FooProvider.test.tsx`.
+- Component behavior changes in `apps/desktop/src/components/.../Foo.tsx` must have tests in `apps/desktop/tests/components/.../Foo.test.tsx`.
 - Page-level UI behavior may be tested through the smallest affected component/context; avoid brittle full-page tests unless the page owns the behavior.
 - Rust tests must not be written inline in production source files. Put Rust tests in sibling `tests.rs` files (or `tests/*.rs` modules) and load them with `#[cfg(test)] mod tests;` only.
 - Do not embed private keys, tokens, credentials, or secret-like fixtures in production source files or test source files. Generate temporary test credentials at runtime or use non-secret structural assertions instead.
@@ -79,7 +79,7 @@ Adhere to the rules defined in the [rules directory](./.rules/):
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **nexora** (14572 symbols, 27055 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **nexora** (14584 symbols, 27938 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

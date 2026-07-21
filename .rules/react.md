@@ -1,5 +1,5 @@
 # React Rules
-1. **Repository Structure:** Follow `docs/architecture/repository-structure.md` for current React source/test ownership. Desktop source and app-local frontend configuration live under `apps/desktop/`; tests remain at root until desktop migration Task 4.
+1. **Repository Structure:** Follow `docs/architecture/repository-structure.md` for current React source/test ownership. Desktop source, tests, and app-local frontend configuration live under `apps/desktop/`; root `tests/repository/` contains repository contracts only.
 2. **Root Lint Ownership:** Root owns `eslint.config.js`, `pnpm lint`, and exact runtime packages `@eslint/js`, `eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `globals`, and `typescript-eslint`.
 3. **Exhaustive Deps:** Always provide all dependencies to `useEffect`, `useMemo`, and `useCallback`. If a function is a dependency, ensure it is wrapped in `useCallback` or defined inside the hook.
 4. **Sync State in Effects:** NEVER call `setState` synchronously inside `useEffect`. This triggers unnecessary cascading renders. Use `useMemo` for derived state or initialize state directly if possible.

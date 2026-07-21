@@ -5,32 +5,33 @@ This document defines the testing conventions and directory structure for the Ne
 ## Directory Structure
 
 ### Source Files
-All utility functions and testable logic must be placed in `src/utils/` with simple, descriptive names **without the "Utils" suffix**.
+All utility functions and testable logic must be placed in `apps/desktop/src/utils/` with simple, descriptive names **without the "Utils" suffix**.
 
 **Correct:**
-- `src/utils/dataGrid.ts`
-- `src/utils/contextMenu.ts`
-- `src/utils/sqlGenerator.ts`
-- `src/utils/sql.ts`
+- `apps/desktop/src/utils/dataGrid.ts`
+- `apps/desktop/src/utils/contextMenu.ts`
+- `apps/desktop/src/utils/sqlGenerator.ts`
+- `apps/desktop/src/utils/sql.ts`
 
 **Incorrect:**
-- ~~`src/components/ui/dataGridUtils.ts`~~ (wrong location)
-- ~~`src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
+- ~~`apps/desktop/src/components/ui/dataGridUtils.ts`~~ (wrong location)
+- ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-Current TypeScript tests must be placed in the root `tests/` directory that mirrors the structure of `src/`. Only the four documented colocated frontend tests under `src/` are temporary compatibility exceptions. Root `tests/repository/` owns workspace and release contracts only. Do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/`, mirroring `apps/desktop/src/`. Only the four documented colocated frontend tests under `apps/desktop/src/` are temporary compatibility exceptions. Root `tests/repository/` contains non-desktop workspace and release contracts only. Do not introduce new legacy exceptions.
 
 ```
 project-root/
-├── src/
-│   ├── utils/
+├── apps/desktop/
+│   ├── src/
+│   │   ├── utils/
 │   │   ├── dataGrid.ts
 │   │   ├── contextMenu.ts
 │   │   └── sqlGenerator.ts
 │   └── themes/
 │       ├── colorUtils.ts
 │       └── themeRegistry.ts
-├── tests/
+├── apps/desktop/tests/
 │   ├── setup.ts              # Test setup file
 │   ├── utils/
 │   │   ├── dataGrid.test.ts
@@ -58,13 +59,13 @@ import { splitQueries } from "@/utils/sql";
 ```
 
 ### In Test Files
-Always use relative imports from `tests/` to `src/`:
+Always use relative imports from `apps/desktop/tests/` to `apps/desktop/src/`:
 
 ```typescript
-// Correct - from tests/utils/dataGrid.test.ts
+// Correct - from apps/desktop/tests/utils/dataGrid.test.ts
 import { formatCellValue } from "../../src/utils/dataGrid";
 
-// Correct - from tests/themes/colorUtils.test.ts  
+// Correct - from apps/desktop/tests/themes/colorUtils.test.ts
 import { hexToRgb } from "../../src/themes/colorUtils";
 
 // Incorrect - relative to same directory (would fail after move)
@@ -78,9 +79,9 @@ Test files must follow the pattern: `[filename].test.ts`
 - `dataGrid.ts` → `dataGrid.test.ts`
 - `sqlGenerator.ts` → `sqlGenerator.test.ts`
 
-## What Belongs in `src/utils/`
+## What Belongs in `apps/desktop/src/utils/`
 
-Extract pure, testable logic from components into `src/utils/`:
+Extract pure, testable logic from components into `apps/desktop/src/utils/`:
 
 1. **Data transformation functions** - formatters, parsers, converters
 2. **Calculation functions** - positioning, sorting, filtering logic
@@ -149,7 +150,7 @@ pnpm test
 pnpm test --watch
 
 # Run specific test file
-pnpm test tests/utils/dataGrid.test.ts
+pnpm test apps/desktop/tests/utils/dataGrid.test.ts
 
 # Run with coverage
 pnpm test --coverage
@@ -157,7 +158,8 @@ pnpm test --coverage
 
 ## Configuration
 
-Tests are configured in `vitest.config.ts`:
-- Test files are discovered in the current root `tests/` directory
-- Setup file: `./tests/setup.ts`
+Tests are configured in `apps/desktop/vitest.config.ts`:
+- Desktop test files are discovered in `apps/desktop/tests/`
+- Root repository contracts are discovered in `tests/repository/`
+- Setup file: `./tests/setup.ts` relative to `apps/desktop/`
 - Environment: `jsdom` for DOM-related tests

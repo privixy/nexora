@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -43,6 +44,27 @@ describe("root command contract", () => {
     );
     expect(pkg.scripts.tauri).toBe("pnpm --filter @nexora/desktop tauri");
     expect(pkg.scripts["test:rust"]).toBe("cd src-tauri && cargo test");
+  });
+
+  it.each([
+    ["desktop root paths", ["apps/desktop/tests/version.test.ts", "apps/desktop/tests/layout/rootOverflow.test.ts"]],
+    ["desktop package-relative paths", ["tests/version.test.ts", "tests/layout/rootOverflow.test.ts"]],
+    ["repository paths", ["tests/repository/workspaceLayout.test.ts"]],
+  ])("runs %s through the delegated desktop command", (_, testPaths) => {
+    const packageManager = process.env.npm_execpath;
+    expect(packageManager).toBeTruthy();
+
+    const result = spawnSync(
+      process.execPath,
+      [packageManager!, "test", ...testPaths, "--", "--run"],
+      {
+        cwd: root,
+        env: process.env,
+        stdio: "pipe",
+      },
+    );
+
+    expect(result.status, result.stderr.toString()).toBe(0);
   });
 
   it("keeps lint and its runtime dependencies at the repository root", () => {

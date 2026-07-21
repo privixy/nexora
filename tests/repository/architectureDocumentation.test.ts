@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const architecturePath = resolve(root, "docs/architecture/repository-structure.md");
 const agentsPath = resolve(root, "AGENTS.md");
 

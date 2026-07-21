@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -40,8 +40,30 @@ describe("current workspace layout", () => {
     }
   });
 
-  it("keeps tests, the Tauri crate, and plugin sync at transitional root paths", () => {
-    expect(existsSync(resolve(root, "tests/setup.ts"))).toBe(true);
+  it("separates desktop tests from root repository contracts", () => {
+    expect(existsSync(resolve(root, "apps/desktop/tests/setup.ts"))).toBe(true);
+    expect(existsSync(resolve(root, "apps/desktop/tests/utils"))).toBe(true);
+    expect(existsSync(resolve(root, "tests/repository"))).toBe(true);
+    expect(
+      existsSync(resolve(root, "tests/repository/releaseWorkflow.test.ts")),
+    ).toBe(true);
+    expect(
+      existsSync(resolve(root, "tests/repository/releaseDryRunWorkflow.test.ts")),
+    ).toBe(true);
+    expect(
+      existsSync(resolve(root, "apps/desktop/tests/releaseWorkflow.test.ts")),
+    ).toBe(false);
+    expect(
+      existsSync(
+        resolve(root, "apps/desktop/tests/releaseDryRunWorkflow.test.ts"),
+      ),
+    ).toBe(false);
+
+    const rootEntries = readdirSync(resolve(root, "tests")).sort();
+    expect(rootEntries).toEqual(["repository"]);
+  });
+
+  it("keeps the Tauri crate and plugin sync at transitional root paths", () => {
     expect(existsSync(resolve(root, "src-tauri/Cargo.toml"))).toBe(true);
     expect(existsSync(resolve(root, "src/pluginApi.ts"))).toBe(true);
     expect(existsSync(resolve(root, "src/main.tsx"))).toBe(false);

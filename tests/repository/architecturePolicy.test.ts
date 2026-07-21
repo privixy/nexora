@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { collectViolations, countLines } from "../../scripts/check-architecture.mjs";
 
-const root = process.cwd();
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json"), "utf8")) as {
   frontendTestRoots: string[];
   forbiddenFrontendTestRoots: string[];
@@ -24,15 +25,24 @@ function writeFixture(root: string, file: string, content: string) {
 
 describe("architecture policy", () => {
   it("records current roots and target-protection rules", () => {
-    expect(policy.frontendTestRoots).toContain("tests");
-    expect(policy.forbiddenFrontendTestRoots).toContain("src");
+    expect(policy.frontendTestRoots).toEqual([
+      "apps/desktop/tests",
+      "tests/repository",
+      "packages/create-plugin/tests",
+    ]);
+    expect(policy.forbiddenFrontendTestRoots).toContain("apps/desktop/src");
     expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
-    expect(policy.repositoryTestForbiddenImportRoots).toEqual(["src", "src-tauri"]);
+    expect(policy.repositoryTestForbiddenImportRoots).toEqual([
+      "apps/desktop/src",
+      "src-tauri",
+    ]);
     expect(policy.rustInlineTestAllowlist).toContain("src-tauri/src/commands.rs");
     expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
-    expect(policy.fileSizeBaselines["src/pages/Editor.tsx"]).toBeGreaterThan(0);
+    expect(
+      policy.fileSizeBaselines["apps/desktop/src/pages/Editor.tsx"],
+    ).toBeGreaterThan(0);
     expect(policy.sourceRoots).toEqual([
-      "src",
+      "apps/desktop/src",
       "src-tauri/src",
       "packages/plugin-api/src",
       "packages/create-plugin/src",
