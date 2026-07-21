@@ -14,6 +14,7 @@
   "frontendTestRoots": ["apps/desktop/tests", "tests/repository", "packages/create-plugin/tests"],
   "forbiddenFrontendTestRoots": ["apps/desktop/src"],
   "rootTestExceptionRoots": ["tests/repository"],
+  "repositoryTestImportAliases": { "@": "apps/desktop/src" },
   "repositoryTestForbiddenImportRoots": ["apps/desktop/src", "apps/desktop/src-tauri"],
   "frontendTestAllowlist": [
     "apps/desktop/src/components/ConnectionIconImage.test.tsx",

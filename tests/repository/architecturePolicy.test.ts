@@ -12,6 +12,7 @@ const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json")
   forbiddenFrontendTestRoots: string[];
   rootTestExceptionRoots: string[];
   repositoryTestForbiddenImportRoots: string[];
+  repositoryTestImportAliases: Record<string, string>;
   rustInlineTestAllowlist: string[];
   allowedWorkspaceDependencies: Record<string, string[]>;
   fileSizeBaselines: Record<string, number>;
@@ -44,6 +45,7 @@ describe("architecture policy", () => {
     ]);
     expect(policy.forbiddenFrontendTestRoots).toContain("apps/desktop/src");
     expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
+    expect(policy.repositoryTestImportAliases).toEqual({ "@": "apps/desktop/src" });
     expect(policy.repositoryTestForbiddenImportRoots).toEqual([
       "apps/desktop/src",
       "apps/desktop/src-tauri",
@@ -171,6 +173,48 @@ describe("architecture policy", () => {
       expect(violations).toContain("src/Ratcheted.tsx: 2 lines exceeds ratcheted baseline 1");
       expect(violations).toContain("src-tauri/src/lib.rs: inline Rust test modules must move to sibling tests.rs or be documented in rustInlineTestAllowlist");
       expect(violations).toContain("package.json: nexora may not depend on workspace package @nexora/plugin-api");
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects desktop alias imports from repository tests without flagging package aliases", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
+
+    try {
+      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora" }));
+      writeFixture(
+        tempRoot,
+        "tests/repository/aliases.test.ts",
+        [
+          "im" + 'port "@/utils/database";',
+          "im" + 'port("@/contexts/DatabaseContext");',
+          "ex" + 'port { APP_VERSION } from "@/version";',
+          "im" + 'port "@testing-library/react";',
+        ].join("\n"),
+      );
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: ["tests/repository"],
+        forbiddenFrontendTestRoots: [],
+        frontendTestAllowlist: [],
+        rootTestExceptionRoots: ["tests/repository"],
+        repositoryTestForbiddenImportRoots: ["apps/desktop/src"],
+        repositoryTestImportAliases: { "@": "apps/desktop/src" },
+        rustInlineTestAllowlist: [],
+        allowedWorkspaceDependencies: { nexora: [] },
+        fileSizeBaselines: {},
+        sourceRoots: [],
+      }, {
+        trackedFiles: ["package.json", "tests/repository/aliases.test.ts"],
+        workspacePackageDirectories: ["."],
+      });
+
+      expect(violations).toEqual([
+        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
+        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
+        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
+      ]);
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }

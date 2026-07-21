@@ -6,7 +6,7 @@ Foundation architecture guards are current and enforced through `pnpm check:arch
 
 ## Target state
 
-The desktop product owns `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration. Root owns workspace orchestration, root ESLint, repository assets, and `tests/repository/`. Packages own their source, tests, builds, and public entry points. Desktop source, tests, assets, configuration, dependencies, scripts, and the complete Tauri crate have reached their target paths.
+The desktop workspace migration is complete: the desktop product owns `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration, while root owns workspace orchestration, root ESLint, repository assets, and `tests/repository/`. The next phase is test architecture normalization, which will remove the documented colocated frontend and legacy Rust test-layout exceptions. Later modularization phases will establish the planned frontend feature/shared/platform boundaries and thin Rust command/domain/infrastructure ownership.
 
 ## Dependency direction
 
@@ -32,7 +32,7 @@ Run `pnpm check:architecture` to enforce `architecture/policy.json`. The checker
 - a ratcheted file exceeds its stored line count;
 - tracked workspace packages depend on another workspace package not listed in `allowedWorkspaceDependencies`;
 - Rust inline test modules are added outside `rustInlineTestAllowlist`;
-- root repository contract tests import desktop-private modules from paths such as `apps/desktop/src/` or `apps/desktop/src-tauri/`;
+- root repository contract tests import desktop-private modules from paths such as `apps/desktop/src/` or `apps/desktop/src-tauri/`, including configured desktop aliases such as `@` and `@/…`;
 - desktop-owned source, assets, tests, manifests, dependencies, app-local configuration, or the Tauri crate are reintroduced at repository-root paths listed in `forbiddenRootDesktopPaths`.
 
 File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. If an allowlisted Rust inline test module is moved to a sibling `tests.rs` file, remove that path from `rustInlineTestAllowlist` in the same change.

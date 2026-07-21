@@ -95,13 +95,15 @@ function importSpecifiers(content) {
   return specifiers;
 }
 
-function resolvesToForbiddenRoot(importer, specifier, forbiddenRoot) {
+function resolvesToForbiddenRoot(importer, specifier, forbiddenRoot, importAliases) {
   if (specifier === forbiddenRoot || specifier.startsWith(`${forbiddenRoot}/`)) {
     return true;
   }
 
-  if (specifier === "@" || specifier.startsWith("@/")) {
-    return forbiddenRoot === "src";
+  for (const [alias, target] of Object.entries(importAliases)) {
+    if ((specifier === alias || specifier.startsWith(`${alias}/`)) && isUnderRoot(target, forbiddenRoot)) {
+      return true;
+    }
   }
 
   if (!specifier.startsWith(".")) {
@@ -132,6 +134,7 @@ export function collectViolations(root, policy, inventory = {}) {
   const rustInlineTestAllowlist = new Set(policy.rustInlineTestAllowlist ?? []);
   const repositoryTestRoots = policy.rootTestExceptionRoots ?? [];
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
+  const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
 
   for (const path of policy.forbiddenRootDesktopPaths ?? []) {
@@ -155,7 +158,7 @@ export function collectViolations(root, policy, inventory = {}) {
     if (repositoryTestRoots.some((root) => isUnderRoot(file, root))) {
       const content = readFileSync(join(root, file), "utf8");
       for (const specifier of importSpecifiers(content)) {
-        const forbiddenRoot = repositoryTestForbiddenImportRoots.find((root) => resolvesToForbiddenRoot(file, specifier, root));
+        const forbiddenRoot = repositoryTestForbiddenImportRoots.find((root) => resolvesToForbiddenRoot(file, specifier, root, repositoryTestImportAliases));
         if (forbiddenRoot) {
           violations.push(`${file}: repository tests may inspect files but must not import desktop-private modules from ${forbiddenRoot}`);
         }

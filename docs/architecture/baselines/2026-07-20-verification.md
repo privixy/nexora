@@ -90,3 +90,54 @@
 | Isolated `pnpm test tests/repository/rootCommands.test.ts -- --run` | PASS | 1 file and all 16 tests passed. |
 | Fresh non-concurrent `pnpm test -- --run` | PASS | 181 files and all 2,952 tests passed. |
 | GitNexus query and upstream impact attempts | UNAVAILABLE | The connected MCP reader reported `Database file version: 42, Current build storage version: 40`; no production symbol or API route is edited by Task 8. |
+
+## Desktop workspace migration final gate
+
+**Commit under verification:** `40d1d5d`
+**Phase base:** `b689007`
+**Date:** 2026-07-21
+
+### Tracked layout and inventory comparison
+
+| Command or check | Result | Notes |
+|---|---|---|
+| `git ls-files 'apps/desktop/**' 'tests/**' 'src/**' 'public/**' 'src-tauri/**' 'index.html' 'vite.config.ts' 'vitest.config.ts' 'tsconfig*.json' 'postcss.config.js'` | PASS | 837 paths matched. All desktop paths are under `apps/desktop/**`; the 10 root test paths are all under `tests/repository/**`; no root desktop path matched. |
+| Pre/post tracked-tree inventory against `b689007` | PASS | Tracked files: 977 before and 984 after. `apps/`: 0 before, 827 after; root `src/`: 416 to 0; root `public/`: 13 to 0; root `src-tauri/`: 221 to 0; root `tests/`: 174 to 10; root non-repository tests: 170 to 0; forbidden root desktop paths: 657 to 0. |
+| Preflight `/tmp/nexora-desktop-paths.before` compared with `/tmp/opencode/nexora-desktop-paths.after` | PASS | Before: 831 lines, SHA-256 `d8178d3af045b37aa454c87c86506db796453f7b4a5892689701ddce48e34893`; after: 837 lines, SHA-256 `52989880663e8ad329ed23d9a8d41d07dc7052cf21dfa49ae5e7d356aeae3592`. The no-index stat reports 833 insertions and 827 deletions, reflecting relocation plus final repository contracts. |
+| Preflight `/tmp/nexora-path-references.before` compared with `/tmp/opencode/nexora-path-references.after` | PASS | Before: 865 lines, SHA-256 `767b43a3d829cdcddfe24e58d68c9c8d1ff6f5851e52fcb6c94e1fb2a1f3f639`; after: 869 lines, SHA-256 `6bd0f454613f0a79777bd37f72a62504edc818fac31385acab74b7318c3d5832`. The no-index stat reports 831 insertions and 827 deletions. |
+| `git diff --name-status -M90% b689007..HEAD` and `git diff --numstat -M90% b689007..HEAD` | PASS | 865 entries: 821 renames, 25 modifications, 13 additions, and 6 deletions. Of the renames, 820 are `R100`; `src/utils/settings.ts` to `apps/desktop/src/utils/settings.ts` is `R099` solely because its repository-root roadmap import changed from `../../roadmap.json` to `../../../../roadmap.json`. No production body or assertion rewrite was found. |
+| `git log --oneline b689007..HEAD` | PASS | Exactly nine migration commits were present through `40d1d5d`; commit subjects align with Tasks 1–9 and no Task 10 commit was created. |
+
+### Task 10 verification commands
+
+| Command | Result | Notes |
+|---|---|---|
+| `pnpm test tests/repository -- --run` | PASS | 10 files and 55 tests passed. |
+| `pnpm test apps/desktop/tests/version.test.ts apps/desktop/tests/layout/rootOverflow.test.ts tests/repository/releaseWorkflow.test.ts tests/repository/releaseDryRunWorkflow.test.ts -- --run` | PASS | 4 files and 10 tests passed. |
+| `pnpm check:architecture` | PASS | Printed `[architecture] OK`. |
+| `pnpm test -- --run` | PASS | Final post-documentation rerun: 181 files and 2,965 tests passed. The earlier pre-documentation run passed 181 files and 2,952 tests; the count difference is due to environment-dependent create-plugin smoke fixtures discovered by the desktop test orchestrator, with zero failures in both runs. |
+| `pnpm typecheck` | PASS | Desktop application and Node configuration TypeScript checks exited 0. |
+| `pnpm lint` | PASS | Root-owned `eslint .` exited 0. |
+| `pnpm build:plugin-api` | PASS | Plugin API ESM and declarations built successfully. |
+| `pnpm check:plugin-api` | PASS | Host/package synchronization check exited 0 against `apps/desktop/src/pluginApi.ts`. |
+| `pnpm build:create-plugin` | PASS | Create-plugin CLI built successfully. |
+| `pnpm smoke:create-plugin` | PASS | Network, file, and network-with-UI templates passed smoke validation. |
+| `pnpm build` | PASS | Desktop TypeScript and Vite production build exited 0 and wrote `apps/desktop/dist`. |
+| `pnpm test:rust` | PASS | Main suite: 943 passed, 0 failed, 1 ignored; integration suite: 9 ignored; zero-test suites passed. Total observed: 943 passed, 10 ignored. |
+| `pnpm --filter @nexora/desktop test -- --run` | PASS | 181 files and 2,965 tests passed independently through the desktop package. |
+| `pnpm --filter @nexora/desktop typecheck` | PASS | Workspace-local typecheck exited 0. |
+| `pnpm --filter @nexora/desktop build` | PASS | Workspace-local production build exited 0. |
+| `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml` | PASS | Main suite: 943 passed, 0 failed, 1 ignored; integration suite: 9 ignored; zero-test suites passed. |
+| `pnpm tauri info` | PASS | Tauri resolved the desktop package and crate under `apps/desktop`. |
+| `pnpm tauri build --debug --no-bundle` | PASS | Debug no-bundle build completed successfully. |
+| `pnpm lint:workflows .github/workflows/*.yml` | PASS | Checksum-verified actionlint v1.7.7 exited 0. |
+| `pnpm test tests/repository/packagingPaths.test.ts -- --run` | PASS | 1 file and 3 packaging tests passed. |
+| `pnpm dev -- --host 127.0.0.1` plus HTTP probe | PASS | Root delegated to `@nexora/desktop`; Vite 8.1.5 became ready in 186 ms and the HTTP probe to `127.0.0.1:5173` succeeded before the process was intentionally stopped. The expected stop produced the package-manager lifecycle termination line. |
+| `git status --short`, `git diff --stat`, `git diff --summary`, `git diff --check`, and `git diff --find-renames=90% -- apps/desktop` | PASS | Before Task 10 documentation edits the worktree was clean; no whitespace errors were found. The phase diff against `b689007` was also checked with 90% rename detection as recorded above. |
+
+### GitNexus changed-flow review
+
+- `gitnexus_detect_changes({scope: "compare", base_ref: "main", repo: "nexora"})` was attempted and failed because the connected MCP reader reported `Database file version: 42, Current build storage version: 40`.
+- The documented fallback refresh, `node .gitnexus/run.cjs analyze`, was attempted and failed because the existing LadybugDB FTS index was inconsistent: `FTS index 'file_fts' is inconsistent: document for node offset 898 is missing during delete`.
+- No production symbol is modified by Task 10. Git fallback review used `git diff --name-status -M90% b689007..HEAD`, `git diff --numstat -M90% b689007..HEAD`, `git diff --check b689007..HEAD`, tracked before/after inventories, commit-log inspection, and path-sensitive repository contracts. The observed phase scope is build/test/package/release/path resolution and path-only source/test/crate relocation.
+- Hosted `.github/workflows/release-dry-run.yml` execution is not available from this local gate and remains required before merge or release.
