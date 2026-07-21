@@ -56,6 +56,7 @@
   ],
   "allowedWorkspaceDependencies": {
     "nexora": ["@nexora/plugin-api", "@nexora/create-plugin"],
+    "@nexora/desktop": [],
     "@nexora/plugin-api": [],
     "@nexora/create-plugin": []
   },

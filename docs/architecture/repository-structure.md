@@ -2,11 +2,11 @@
 
 ## Current enforced state
 
-Foundation architecture guards are current and enforced through `pnpm check:architecture`. The desktop application still owns root `src/`, `tests/`, `src-tauri/`, `public/`, and app-local Vite/Vitest/TypeScript/Tauri configuration. Root package scripts remain the supported contributor and CI interface until the desktop migration lands.
+Foundation architecture guards are current and enforced through `pnpm check:architecture`. Workspace discovery includes `apps/*`, and `apps/desktop/package.json` defines the empty private `@nexora/desktop` package boundary. The root package remains the working desktop package and retains all desktop commands and dependencies. Desktop source, tests, assets, `src-tauri/`, and app-local Vite/Vitest/TypeScript/Tauri configuration remain at root until Tasks 3–5 move them. Contributors continue running commands from the repository root.
 
 ## Target state
 
-The desktop product will own `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration. Root will own workspace orchestration and `tests/repository/`. Packages own their source, tests, builds, and public entry points. These target paths are planned destinations only until the migration that creates and wires them lands.
+The desktop product will own `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration. Root will own workspace orchestration and `tests/repository/`. Packages own their source, tests, builds, and public entry points. The desktop package boundary now exists, but its source, tests, assets, configuration, dependencies, and scripts remain planned destinations until Tasks 3–5 create and wire them.
 
 ## Dependency direction
 
@@ -41,7 +41,7 @@ File-size baselines are maximum current line counts. Do not increase baselines; 
 
 | Exception | Owner | Reason | Removal phase |
 |---|---|---|---|
-| Root desktop paths | Desktop maintainers | App has not moved yet | Desktop migration |
+| Root desktop source, tests, assets, configuration, dependencies, and commands | Desktop migration plan | The empty `@nexora/desktop` boundary exists, but root remains the working desktop package | Desktop migration Tasks 3–5 |
 | Root `tests/repository/` | Repository maintainers | Sole documented root test exception for workspace/release contracts; may inspect repository files but must not import desktop-private modules | Permanent repository ownership |
 | Four frontend tests under `src/` | Frontend maintainers | Existing convention debt | Test normalization |
 | Crate-level Rust `*_tests.rs` | Backend maintainers | Existing convention debt | Test normalization |
