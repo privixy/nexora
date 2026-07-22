@@ -14,6 +14,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 ## Repository Architecture
 - `docs/architecture/repository-structure.md` is the canonical source for current enforced paths, target paths, dependency direction, test ownership, temporary compatibility exceptions, and required verification.
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
+- Global frontend provider composition lives in `apps/desktop/src/app/providers.tsx`; preserve its tested provider order, nesting, children placement, global gates/modals, and forwarded props.
 - Architecture thresholds are 500 lines for new TypeScript/TSX files and 800 lines for new Rust files; files listed in `architecture/policy.json` are ratcheted to their stored line counts.
 - Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
 - One-owner desktop frontend tests mirror `apps/desktop/src/` under `apps/desktop/tests/`. Non-mirroring multi-source/contract suites require exact existing-source `frontendTestOwners` metadata; `apps/desktop/tests/repository/` is the desktop-wide contract namespace, and root tests exist only in `tests/repository/` without desktop-private imports. Package tests live under `packages/<package>/tests/`.

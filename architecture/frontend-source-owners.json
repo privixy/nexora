@@ -12,6 +12,12 @@
     "moveTask": 3
   },
   {
+    "source": "apps/desktop/src/app/providers.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/providers.tsx",
+    "moveTask": 4
+  },
+  {
     "source": "apps/desktop/src/components/ConnectionErrorBanner.tsx",
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/components/ConnectionErrorBanner.tsx",

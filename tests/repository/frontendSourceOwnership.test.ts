@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sourceRoot = "apps/desktop/src/";
 const sourceExtensions = /(?:\.d\.ts|\.(?:ts|tsx|css|scss|sass|less|json))$/;
-const inventory = execFileSync("git", ["ls-files", `${sourceRoot}**`], { cwd: root, encoding: "utf8" })
+const inventory = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", `${sourceRoot}**`], { cwd: root, encoding: "utf8" })
   .split("\n")
   .filter((source) => sourceExtensions.test(source))
   .sort();
@@ -35,6 +35,10 @@ describe("frontend source ownership", () => {
     const currentPaths = sourceOwners.map(({ source, destination }) => {
       const sourceExists = existsSync(resolve(root, source));
       const destinationExists = existsSync(resolve(root, destination));
+      if (source === destination) {
+        expect(sourceExists).toBe(true);
+        return source;
+      }
       expect(Number(sourceExists) + Number(destinationExists)).toBe(1);
       return sourceExists ? source : destination;
     }).sort();
@@ -46,8 +50,8 @@ describe("frontend source ownership", () => {
   });
 
   it("freezes the authoritative source inventory", () => {
-    expect(sourceOwners).toHaveLength(412);
-    expect(hash(sourceOwners)).toBe("0d7ba1a3c0726e6b269c9b1c2b44f7d34902813c4ca46861f1c93eff7e40e1f2");
+    expect(sourceOwners).toHaveLength(413);
+    expect(hash(sourceOwners)).toBe("2a3e535761f49bc37c1c1f47f13778d1e474f6527a52b49218c5b59217f5e456");
   });
 
   it("uses explicit rows instead of generated ownership rules", () => {
@@ -56,6 +60,7 @@ describe("frontend source ownership", () => {
   });
 
   it.each([
+    ["apps/desktop/src/app/providers.tsx", "app", "apps/desktop/src/app/providers.tsx", 4],
     ["apps/desktop/src/components/modals/NewConnectionModal.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx", 11],
     ["apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx", 11],
     ["apps/desktop/src/components/modals/TriggerEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx", 10],

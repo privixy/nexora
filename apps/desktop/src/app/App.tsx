@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { MainLayout } from "../components/layout/MainLayout";
-import { ConnectionLayoutProvider } from "../contexts/ConnectionLayoutProvider";
-import { KeybindingsProvider } from "../contexts/KeybindingsProvider";
-import { PluginSlotProvider } from "../contexts/PluginSlotProvider";
-import { PluginModalProvider } from "../contexts/PluginModalProvider";
-import { AlertProvider } from "../contexts/AlertProvider";
 import { Connections } from "../pages/Connections";
 import { Editor } from "../pages/Editor";
 import { McpPage } from "../pages/McpPage";
@@ -16,18 +11,14 @@ import { TaskManagerPage } from "../pages/TaskManagerPage";
 import { VisualExplainPage } from "../pages/VisualExplainPage";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
-import { ConnectionHealthMonitor } from "../components/ConnectionHealthMonitor";
 import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
-import { UpdateNotificationModal } from "../components/modals/UpdateNotificationModal";
-import { WhatsNewModal } from "../components/modals/WhatsNewModal";
-import { AiApprovalGate } from "../components/modals/AiApprovalGate";
-import { SshAskpassGate } from "../components/modals/SshAskpassGate";
 import { useUpdate } from "../hooks/useUpdate";
 import { useChangelog } from "../hooks/useChangelog";
 import { useSettings } from "../hooks/useSettings";
 import { useResultTypeColors } from "../hooks/useResultTypeColors";
 import { APP_VERSION } from "../version";
 import { isVersionAtMost, isVersionNewer } from "../utils/versionCompare";
+import { AppProviders } from "./providers";
 
 const WHATS_NEW_VERSION_KEY = "nexora_last_seen_version";
 
@@ -99,70 +90,53 @@ export function App() {
   }, [isDebugMode]);
 
   return (
-    <>
-      <AlertProvider>
-        <BrowserRouter>
-          <ConnectionHealthMonitor />
-          <KeybindingsProvider>
-            <PluginSlotProvider>
-              <PluginModalProvider>
-                <ConnectionLayoutProvider>
-                  <Routes>
-                    <Route path="/" element={<MainLayout />}>
-                      <Route
-                        index
-                        element={<Navigate to="/connections" replace />}
-                      />
-                      <Route path="connections" element={<Connections />} />
-                      <Route
-                        path="editor"
-                        element={
-                          <EditorErrorBoundary>
-                            <Editor />
-                          </EditorErrorBoundary>
-                        }
-                      />
-                      <Route path="mcp" element={<McpPage />} />
-                      <Route path="settings" element={<Settings />} />
-                    </Route>
-                    <Route
-                      path="/schema-diagram"
-                      element={<SchemaDiagramPage />}
-                    />
-                    <Route path="/task-manager" element={<TaskManagerPage />} />
-                    <Route path="/visual-explain" element={<VisualExplainPage />} />
-                    <Route path="/json-viewer" element={<JsonViewerPage />} />
-                    <Route
-                      path="/results-window"
-                      element={<ResultsWindowPage />}
-                    />
-                  </Routes>
-                </ConnectionLayoutProvider>
-              </PluginModalProvider>
-            </PluginSlotProvider>
-          </KeybindingsProvider>
-        </BrowserRouter>
-      </AlertProvider>
-
-      <UpdateNotificationModal
-        isOpen={!!updateInfo}
-        onClose={dismissUpdate}
-        updateInfo={updateInfo!}
-        isDownloading={isDownloading}
-        downloadProgress={downloadProgress}
-        onDownloadAndInstall={downloadAndInstall}
-        error={updateError}
-      />
-
-      <WhatsNewModal
-        isOpen={isWhatsNewOpen && !isSettingsLoading && settings.showWelcome === false}
-        onClose={dismissWhatsNew}
-        entries={whatsNewEntries}
-        isLoading={isChangelogLoading}
-      />
-
-      <AiApprovalGate />
-      <SshAskpassGate />
-    </>
+    <AppProviders
+      updateNotification={{
+        isOpen: !!updateInfo,
+        onClose: dismissUpdate,
+        updateInfo: updateInfo!,
+        isDownloading,
+        downloadProgress,
+        onDownloadAndInstall: downloadAndInstall,
+        error: updateError,
+      }}
+      whatsNew={{
+        isOpen: isWhatsNewOpen && !isSettingsLoading && settings.showWelcome === false,
+        onClose: dismissWhatsNew,
+        entries: whatsNewEntries,
+        isLoading: isChangelogLoading,
+      }}
+    >
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            index
+            element={<Navigate to="/connections" replace />}
+          />
+          <Route path="connections" element={<Connections />} />
+          <Route
+            path="editor"
+            element={
+              <EditorErrorBoundary>
+                <Editor />
+              </EditorErrorBoundary>
+            }
+          />
+          <Route path="mcp" element={<McpPage />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        <Route
+          path="/schema-diagram"
+          element={<SchemaDiagramPage />}
+        />
+        <Route path="/task-manager" element={<TaskManagerPage />} />
+        <Route path="/visual-explain" element={<VisualExplainPage />} />
+        <Route path="/json-viewer" element={<JsonViewerPage />} />
+        <Route
+          path="/results-window"
+          element={<ResultsWindowPage />}
+        />
+      </Routes>
+    </AppProviders>
   );
 }
