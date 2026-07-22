@@ -19,6 +19,11 @@ import {
   useDangerousQueryGuard,
   DANGEROUS_QUERY_I18N,
 } from "../hooks/useDangerousQueryGuard";
+import { buildExecuteQueryPayload, buildCountQueryPayload } from "../hooks/useQueryExecution";
+import { buildBatchQueryPayload } from "../hooks/useBatchExecution";
+import { buildTableMetadataPayload } from "../hooks/useTableMetadata";
+import { hasPendingRecords } from "../hooks/usePendingRecords";
+import { buildExportQueryPayload } from "../hooks/useQueryExport";
 import { AiQueryModal } from "../../ai";
 import { AiExplainModal } from "../../ai";
 import { AiDropdownButton } from "../../ai";
@@ -613,14 +618,11 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
   }, [activeTab]);
 
   const hasPendingChanges = useMemo(() => {
-    return (
-      (activeTab?.pendingChanges &&
-        Object.keys(activeTab.pendingChanges).length > 0) ||
-      (activeTab?.pendingDeletions &&
-        Object.keys(activeTab.pendingDeletions).length > 0) ||
-      (activeTab?.pendingInsertions &&
-        Object.keys(activeTab.pendingInsertions).length > 0)
-    );
+    return hasPendingRecords({
+      pendingChanges: activeTab?.pendingChanges,
+      pendingDeletions: activeTab?.pendingDeletions,
+      pendingInsertions: activeTab?.pendingInsertions,
+    });
   }, [
     activeTab?.pendingChanges,
     activeTab?.pendingDeletions,
@@ -643,18 +645,18 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       const effectiveSchema = tabSchema ?? activeSchema;
       try {
         const [cols, fks] = await Promise.all([
-          catalogGateway.getColumns<TableColumn[]>({
+          catalogGateway.getColumns<TableColumn[]>(buildTableMetadataPayload({
             connectionId: activeConnectionId,
-            tableName: table,
-            ...(tabDatabase ? { database: tabDatabase } : {}),
-            ...(effectiveSchema ? { schema: effectiveSchema } : {}),
-          }),
-          catalogGateway.getForeignKeys<ForeignKey[]>({
+            table,
+            database: tabDatabase ?? undefined,
+            schema: effectiveSchema ?? undefined,
+          })),
+          catalogGateway.getForeignKeys<ForeignKey[]>(buildTableMetadataPayload({
             connectionId: activeConnectionId,
-            tableName: table,
-            ...(tabDatabase ? { database: tabDatabase } : {}),
-            ...(effectiveSchema ? { schema: effectiveSchema } : {}),
-          }).catch((e) => {
+            table,
+            database: tabDatabase ?? undefined,
+            schema: effectiveSchema ?? undefined,
+          })).catch((e) => {
             console.warn("Failed to fetch foreign keys:", e);
             return [] as ForeignKey[];
           }),
@@ -825,19 +827,18 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       try {
         const start = performance.now();
         // Use settings.resultPageSize for Page Size (pagination), ignoring the "Total Limit" input which is handled in SQL
-        // Fallback to 100 if settings not loaded yet
         const pageSize =
           settings.resultPageSize && settings.resultPageSize > 0
             ? settings.resultPageSize
             : 100;
-        const res = await queryGateway.executeQuery<QueryResult>({
+        const res = await queryGateway.executeQuery<QueryResult>(buildExecuteQueryPayload({
           connectionId: activeConnectionId,
           query: textToRun,
           limit: pageSize,
           page: pageNum,
-          ...(database ? { database } : {}),
-          ...(schema ? { schema } : {}),
-        });
+          database,
+          schema,
+        }));
         const end = performance.now();
 
         // A single statement can return several result sets (e.g. a MySQL
@@ -1097,16 +1098,15 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       const batchStart = performance.now();
       let batchResults: BatchStatementResult[];
       try {
-        batchResults = await queryGateway.executeBatch<BatchStatementResult[]>({
-            connectionId: activeConnectionId,
-            queries: entries.map((e) => e.query),
-            limit: pageSize,
-            page: 1,
-            batchId,
-            ...(database ? { database } : {}),
-            ...(schema ? { schema } : {}),
-          },
-        );
+        batchResults = await queryGateway.executeBatch<BatchStatementResult[]>(buildBatchQueryPayload({
+          connectionId: activeConnectionId,
+          queries: entries.map((e) => e.query),
+          limit: pageSize,
+          page: 1,
+          batchId,
+          database,
+          schema,
+        }));
       } catch (err) {
         unlisten();
         // Batch-level failure (e.g. connection acquisition, cancellation):
@@ -1194,14 +1194,14 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
 
       try {
         const start = performance.now();
-        const res = await queryGateway.executeQuery<QueryResult>({
+        const res = await queryGateway.executeQuery<QueryResult>(buildExecuteQueryPayload({
           connectionId: activeConnectionId,
           query: entry.query,
           limit: pageSize,
           page: pageNum,
-          ...(database ? { database } : {}),
-          ...(schema ? { schema } : {}),
-        });
+          database,
+          schema,
+        }));
         const end = performance.now();
 
         const latestTab = tabsRef.current.find((t) => t.id === targetTabId);
@@ -1272,12 +1272,12 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       try {
         const database = resolveTabDatabase(tab);
         const schema = resolveTabSchema(tab);
-        const total = await queryGateway.countQuery<number>({
+        const total = await queryGateway.countQuery<number>(buildCountQueryPayload({
           connectionId: activeConnectionId,
           query: countTarget,
-          ...(database ? { database } : {}),
-          ...(schema ? { schema } : {}),
-        });
+          database,
+          schema,
+        }));
         const latest = tabsRef.current.find((t) => t.id === tab.id) ?? tab;
         if (!latest.result?.pagination) return;
         updateTab(tab.id, {
@@ -2827,16 +2827,15 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       setExportMenuOpen(false);
 
       const targetDatabase = resolveTabDatabase(activeTab);
-      const databaseParam = targetDatabase ? { database: targetDatabase } : {};
 
-      await dataTransferGateway.exportQueryToFile({
+      await dataTransferGateway.exportQueryToFile(buildExportQueryPayload({
         connectionId: activeConnectionId,
         query,
         filePath,
         format,
         csvDelimiter: format === "csv" ? csvDelimiter : undefined,
-        ...databaseParam,
-      });
+        database: targetDatabase,
+      }));
 
       // Success: update modal state instead of showing toast
       setExportState((prev) => ({

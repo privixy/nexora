@@ -602,7 +602,7 @@
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/features/editor/components/MultiResultPanel.tsx": 599,
     "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx": 713,
-    "apps/desktop/src/features/editor/pages/EditorPage.tsx": 4200,
+    "apps/desktop/src/features/editor/pages/EditorPage.tsx": 4199,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
