@@ -6,6 +6,8 @@ pub use crate::infrastructure::connections::{
     resolve_connection_params_with_id, resolve_k8s_params, TauriConnectionContextResolver,
 };
 
+pub mod config;
+pub use self::config::*;
 mod connection_store;
 pub use connection_store::*;
 mod ssh;
