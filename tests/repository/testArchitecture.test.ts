@@ -68,10 +68,15 @@ describe("test architecture", () => {
       (line) => !line.startsWith("commands::tests::"),
     );
 
-    expect(commandTests).toHaveLength(59);
+    expect(commandTests).toHaveLength(109);
     expect(exportImportTests).toHaveLength(7);
     expect(groupTreeTests).toHaveLength(17);
     expect(unrelatedTests).toEqual([
+      "connection_import_commands::tests::cache_requires_preview_and_removes_secret_envelope_once: test",
+      "connection_import_commands::tests::foreign_preview_and_apply_preserve_one_shot_secret_cache_workflow: test",
+      "connection_import_commands::tests::nexora_preview_and_apply_preserve_load_transform_apply_order: test",
+      "connection_import_commands::tests::source_listing_preserves_availability_then_count_order_and_fields: test",
+      "dump_commands::tests::legacy_dump_import_orchestration_contract_is_preserved: test",
       "dump_commands::tests::test_escape_sql_value: test",
       "dump_commands::tests::test_zip_import_logic: test",
     ]);
@@ -122,15 +127,27 @@ describe("test architecture", () => {
     }
   });
 
-  it("classifies external-infrastructure Rust integration tests", () => {
-    expect(policy.rustIntegrationTests).toEqual({
-      "apps/desktop/src-tauri/tests/database_integration.rs": {
+  it("classifies every Rust integration test and preserves external infrastructure semantics", () => {
+    const integrationTests = execFileSync(
+      "git",
+      ["ls-files", "apps/desktop/src-tauri/tests/*.rs"],
+      { cwd: repoRoot, encoding: "utf8" },
+    )
+      .trim()
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .sort();
+
+    expect(Object.keys(policy.rustIntegrationTests ?? {}).sort()).toEqual(integrationTests);
+    expect(policy.rustIntegrationTests).toHaveProperty(
+      "apps/desktop/src-tauri/tests/database_integration.rs",
+      {
         classification: "external-infrastructure",
         defaultMode: "ignored",
         explicitRun:
           "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored",
       },
-    });
+    );
   });
 
   it("rejects Rust peer-test files", () => {
