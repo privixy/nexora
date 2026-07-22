@@ -4,9 +4,13 @@ import { SidebarDatabaseItem } from "../../../../../src/features/explorer/compon
 import type { DatabaseData } from "../../../../src/features/connections/state/DatabaseContext";
 import type { DriverCapabilities } from "../../../../src/types/plugins";
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
-}));
+vi.mock("react-i18next", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-i18next")>();
+  return {
+    ...actual,
+    useTranslation: () => ({ t: (key: string) => key }),
+  };
+});
 
 vi.mock("lucide-react", async (importOriginal) => {
   const actual = await importOriginal<typeof import("lucide-react")>();

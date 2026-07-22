@@ -18,3 +18,8 @@ export { SchemaModal } from "./components/modals/SchemaModal";
 export { TriggerEditorModal } from "./components/modals/TriggerEditorModal";
 export { ViewEditorModal } from "./components/modals/ViewEditorModal";
 export { useSchemaMetadata } from "./hooks/useSchemaMetadata";
+export { DEFAULT_CREATE_TABLE_TARGET, getCreateTableRefreshPlan } from "./lib/createTable";
+export type { CreateTableTarget } from "./lib/createTable";
+export { formatObjectCount } from "./lib/schema";
+export { groupIndexes } from "./lib/indexes";
+export type { GroupedIndex } from "./lib/indexes";

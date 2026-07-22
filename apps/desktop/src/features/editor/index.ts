@@ -26,3 +26,4 @@ export { useEditor } from "./hooks/useEditor";
 export { useQueryHistory } from "./hooks/useQueryHistory";
 export { useSavedQueries } from "./hooks/useSavedQueries";
 export { EditorSchemaDiagramPage } from "./pages/EditorSchemaDiagramPage";
+export type { SavedQuery } from "./state/SavedQueriesContext";

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { save, open } from "@tauri-apps/plugin-dialog";
 import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
-import { useSettings } from "../../../settings/hooks/useSettings";
+import { useSettings } from "../../../settings";
 import { useAlert } from "../../../../hooks/useAlert";
 import { formatHistoryTime } from "../../../../utils/dateGroups";
 import {
@@ -21,12 +21,10 @@ import {
   loadNotebook,
   createNotebookFromState,
   NOTEBOOKS_CHANGED_EVENT,
-} from "../../../notebooks/lib/notebookStore";
-import {
   serializeNotebook,
   deserializeNotebook,
-} from "../../../notebooks/lib/notebookFile";
-import { exportNotebookToHtml } from "../../../notebooks/lib/notebookHtmlExport";
+  exportNotebookToHtml,
+} from "../../../notebooks";
 import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
 import { ContextMenu, type ContextMenuItem } from "../../../../components/ui/ContextMenu";
 import type { NotebookMetadata } from "../../../../types/notebook";

@@ -4,7 +4,7 @@ import { Search, Trash2, Loader2, Database, AlertTriangle, X } from "lucide-reac
 import { groupByDate, formatHistoryTime } from "../../../../utils/dateGroups";
 import { SqlHighlight } from "../../../../components/ui/SqlHighlight";
 import { formatSqlPreview } from "../../../../utils/sqlHighlight";
-import { useSettings } from "../../../settings/hooks/useSettings";
+import { useSettings } from "../../../settings";
 import type {
   QueryHistoryEntry,
   QueryHistoryRecoveryNotice,

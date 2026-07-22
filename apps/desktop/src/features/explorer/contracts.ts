@@ -19,8 +19,17 @@ export interface QueryHistoryEntry {
   error: string | null;
   database: string | null;
 }
+export interface ExplorerObjectContext {
+  database?: string;
+  schema?: string;
+}
+
+export interface ExplorerTableContext extends ExplorerObjectContext {
+  tableName: string;
+}
+
 export type ContextMenuData =
   | SavedQuery
-  | { tableName: string; database?: string; schema?: string }
-  | (RoutineInfo & { database?: string; schema?: string })
+  | ExplorerTableContext
+  | (RoutineInfo & ExplorerObjectContext)
   | QueryHistoryEntry;

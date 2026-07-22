@@ -15,7 +15,7 @@ import { SidebarColumnItem } from "./SidebarColumnItem";
 import { SidebarIndexList } from "./SidebarIndexList";
 import { dragState } from "../../../../utils/dragState";
 import { areTableItemPropsEqual, getSidebarTableContext } from "../../lib/sidebarTableItem";
-import { groupIndexes } from "../../../schema/lib/indexes";
+import { groupIndexes } from "../../../schema";
 import type { TableColumn, ForeignKey, Index } from "../../../../types/schema";
 import type { ContextMenuData } from "../../../../types/sidebar";
 

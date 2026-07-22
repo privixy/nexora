@@ -10,9 +10,9 @@ import { SlotAnchor } from "../ui/SlotAnchor";
 import { NavItem } from "./sidebar/NavItem";
 import { OpenConnectionItem } from "../../features/connections/components/sidebar/OpenConnectionItem";
 import { ConnectionGroupItem } from "../../features/connections/components/sidebar/ConnectionGroupItem";
-import { ExplorerSidebar, type SidebarTab } from "../../features/explorer/components/ExplorerSidebar";
+import { ExplorerSidebar, type SidebarTab } from "../../features/explorer";
 import { PanelDatabaseProvider } from "./PanelDatabaseProvider";
-import { QuickNavigatorModal } from "../../features/explorer/components/QuickNavigatorModal";
+import { QuickNavigatorModal } from "../../features/explorer";
 import { GenerateSQLModal } from "../modals/GenerateSQLModal";
 import { SchemaModal } from "../../features/schema";
 

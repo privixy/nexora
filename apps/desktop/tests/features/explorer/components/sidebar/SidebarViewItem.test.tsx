@@ -10,28 +10,36 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 // Mock i18n
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
+vi.mock("react-i18next", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-i18next")>();
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string) => key,
+    }),
+  };
+});
 
 // Render lucide icons as identifiable stubs so tests can assert which icon
 // is showing (e.g. Loader2 while refreshing vs Layers otherwise).
-vi.mock("lucide-react", () => ({
-  Eye: () => <span data-testid="icon-Eye" />,
-  Layers: () => <span data-testid="icon-Layers" />,
-  List: () => <span data-testid="icon-List" />,
-  Loader2: () => <span data-testid="icon-Loader2" />,
-  Folder: () => <span data-testid="icon-Folder" />,
-  ChevronDown: () => <span data-testid="icon-ChevronDown" />,
-  ChevronRight: () => <span data-testid="icon-ChevronRight" />,
-  Key: () => <span data-testid="icon-Key" />,
-  Columns: () => <span data-testid="icon-Columns" />,
-  Edit: () => <span data-testid="icon-Edit" />,
-  Copy: () => <span data-testid="icon-Copy" />,
-  Trash2: () => <span data-testid="icon-Trash2" />,
-}));
+vi.mock("lucide-react", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("lucide-react")>();
+  return {
+    ...actual,
+    Eye: () => <span data-testid="icon-Eye" />,
+    Layers: () => <span data-testid="icon-Layers" />,
+    List: () => <span data-testid="icon-List" />,
+    Loader2: () => <span data-testid="icon-Loader2" />,
+    Folder: () => <span data-testid="icon-Folder" />,
+    ChevronDown: () => <span data-testid="icon-ChevronDown" />,
+    ChevronRight: () => <span data-testid="icon-ChevronRight" />,
+    Key: () => <span data-testid="icon-Key" />,
+    Columns: () => <span data-testid="icon-Columns" />,
+    Edit: () => <span data-testid="icon-Edit" />,
+    Copy: () => <span data-testid="icon-Copy" />,
+    Trash2: () => <span data-testid="icon-Trash2" />,
+  };
+});
 
 describe("SidebarViewItem", () => {
   const mockView = { name: "active_users" };

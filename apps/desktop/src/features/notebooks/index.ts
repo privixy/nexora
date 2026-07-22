@@ -23,6 +23,8 @@ export {
   loadNotebook,
   renameNotebook,
 } from "./lib/notebookStore";
+export { deserializeNotebook, serializeNotebook } from "./lib/notebookFile";
+export { exportNotebookToHtml } from "./lib/notebookHtmlExport";
 
 import type { EditorNotebookAdapter } from "../editor";
 import {

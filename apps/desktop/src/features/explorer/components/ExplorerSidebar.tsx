@@ -40,12 +40,12 @@ import {
 import { ask, open } from "@tauri-apps/plugin-dialog";
 import { toErrorMessage } from "../../../utils/errors";
 import { useAlert } from "../../../hooks/useAlert";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import { useDatabase } from "../../connections";
 import { useEditor } from "../../editor";
 import { useSavedQueries } from "../../editor";
 import { useQueryHistory } from "../../editor";
-import type { SavedQuery } from "../../editor/state/SavedQueriesContext";
+import type { SavedQuery } from "../../editor";
 import type { QueryHistoryEntry } from "../../../types/queryHistory";
 import type { NotebookMetadata } from "../../../types/notebook";
 import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
@@ -78,13 +78,13 @@ import { QueryHistorySection } from "./sidebar/QueryHistorySection";
 import { NotebooksSection } from "./sidebar/NotebooksSection";
 import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT } from "../../notebooks";
 import { useConnectionLayoutContext } from "../../../hooks/useConnectionLayoutContext";
-import { useDrivers } from "../../plugins/hooks/useDrivers";
-import { getConnectionAccent } from "../../connections/lib/driverUI";
+import { useDrivers } from "../../plugins";
+import { getConnectionAccent } from "../../connections";
 import type { TableColumn } from "../../../types/schema";
 import type { ContextMenuData } from "../../../types/sidebar";
 import type { RoutineInfo, TriggerInfo } from "../../connections";
 import { groupRoutinesByType } from "../../../utils/routines";
-import { formatObjectCount } from "../../schema/lib/schema";
+import { formatObjectCount } from "../../schema";
 import { groupByDate, formatHistoryTime } from "../../../utils/dateGroups";
 import { SqlHighlight } from "../../../components/ui/SqlHighlight";
 import { isMultiDatabaseCapable } from "../../plugins";
@@ -101,7 +101,7 @@ import {
   DEFAULT_CREATE_TABLE_TARGET,
   getCreateTableRefreshPlan,
   type CreateTableTarget,
-} from "../../schema/lib/createTable";
+} from "../../schema";
 
 export type SidebarTab = "structure" | "favorites" | "history" | "notebooks";
 

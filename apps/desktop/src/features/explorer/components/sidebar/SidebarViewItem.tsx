@@ -12,7 +12,7 @@ import {
 import clsx from "clsx";
 import { SidebarColumnItem } from "./SidebarColumnItem";
 import { SidebarIndexList } from "./SidebarIndexList";
-import { groupIndexes } from "../../../schema/lib/indexes";
+import { groupIndexes } from "../../../schema";
 import type { TableColumn, Index } from "../../../../types/schema";
 import type { ContextMenuData } from "../../../../types/sidebar";
 

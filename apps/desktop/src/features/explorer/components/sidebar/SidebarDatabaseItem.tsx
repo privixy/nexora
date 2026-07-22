@@ -26,7 +26,7 @@ import type { TableColumn } from "../../../../types/schema";
 import type { ContextMenuData } from "../../../../types/sidebar";
 import type { DriverCapabilities } from "../../../../types/plugins";
 import { groupRoutinesByType } from "../../../../utils/routines";
-import { formatObjectCount } from "../../../schema/lib/schema";
+import { formatObjectCount } from "../../../schema";
 import { fuzzyFilter } from "../../../../utils/fuzzy";
 
 interface SidebarDatabaseItemProps {
