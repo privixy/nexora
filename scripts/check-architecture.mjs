@@ -81,15 +81,133 @@ function collectPackageManifests(root, trackedFiles, packageDirectories) {
 
 function hasInlineRustTests(root, file) {
   const content = readFileSync(join(root, file), "utf8");
-  return /^\s*#\[cfg\(test\)\]\s*\n\s*mod\s+tests\s*\{/m.test(content);
+  return /^[ \t]*#\[cfg\(test\)\](?:\s*#\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+tests\s*\{/m.test(content);
+}
+
+function canStartRegex(tokens) {
+  const previous = tokens.at(-1);
+  return !previous
+    || (previous.type === "punctuation" && "([{=,:;!?&|+-*%^~<>".includes(previous.value))
+    || (previous.type === "identifier" && ["case", "delete", "return", "throw", "typeof", "void", "yield"].includes(previous.value));
+}
+
+function sourceTokens(content) {
+  const tokens = [];
+  let index = 0;
+
+  while (index < content.length) {
+    const character = content[index];
+    const next = content[index + 1];
+    if (/\s/.test(character)) {
+      index += 1;
+      continue;
+    }
+    if (character === "/" && next === "/") {
+      index = content.indexOf("\n", index + 2);
+      if (index === -1) break;
+      continue;
+    }
+    if (character === "/" && next === "*") {
+      index = content.indexOf("*/", index + 2);
+      if (index === -1) break;
+      index += 2;
+      continue;
+    }
+    if (character === "/" && canStartRegex(tokens)) {
+      let inCharacterClass = false;
+      index += 1;
+      while (index < content.length) {
+        if (content[index] === "\\" && index + 1 < content.length) {
+          index += 2;
+        } else if (content[index] === "[") {
+          inCharacterClass = true;
+          index += 1;
+        } else if (content[index] === "]") {
+          inCharacterClass = false;
+          index += 1;
+        } else if (content[index] === "/" && !inCharacterClass) {
+          index += 1;
+          while (index < content.length && /[A-Za-z]/.test(content[index])) index += 1;
+          break;
+        } else {
+          index += 1;
+        }
+      }
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      const quote = character;
+      let value = "";
+      index += 1;
+      while (index < content.length) {
+        if (content[index] === "\\" && index + 1 < content.length) {
+          value += content[index + 1];
+          index += 2;
+        } else if (content[index] === quote) {
+          index += 1;
+          break;
+        } else {
+          value += content[index];
+          index += 1;
+        }
+      }
+      tokens.push({ type: "string", value });
+      continue;
+    }
+    if (character === "`") {
+      index += 1;
+      while (index < content.length) {
+        if (content[index] === "\\" && index + 1 < content.length) {
+          index += 2;
+        } else if (content[index] === "`") {
+          index += 1;
+          break;
+        } else {
+          index += 1;
+        }
+      }
+      continue;
+    }
+    if (/[A-Za-z_$]/.test(character)) {
+      let value = character;
+      index += 1;
+      while (index < content.length && /[A-Za-z0-9_$]/.test(content[index])) {
+        value += content[index];
+        index += 1;
+      }
+      tokens.push({ type: "identifier", value });
+      continue;
+    }
+    tokens.push({ type: "punctuation", value: character });
+    index += 1;
+  }
+
+  return tokens;
 }
 
 function importSpecifiers(content) {
+  const tokens = sourceTokens(content);
   const specifiers = [];
-  const importPattern = /\bimport\s+(?:[^"'()]+?\s+from\s+)?["']([^"']+)["']|\bimport\s*\(\s*["']([^"']+)["']\s*\)|\bexport\s+[^"']+?\s+from\s+["']([^"']+)["']/g;
 
-  for (const match of content.matchAll(importPattern)) {
-    specifiers.push(match[1] ?? match[2] ?? match[3]);
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (token.type !== "identifier" || (token.value !== "import" && token.value !== "export")) {
+      continue;
+    }
+    if (token.value === "import" && tokens[index + 1]?.value === "(" && tokens[index + 2]?.type === "string") {
+      specifiers.push(tokens[index + 2].value);
+      continue;
+    }
+    if (token.value === "import" && tokens[index + 1]?.type === "string") {
+      specifiers.push(tokens[index + 1].value);
+      continue;
+    }
+    for (let cursor = index + 1; cursor < tokens.length && tokens[cursor].value !== ";"; cursor += 1) {
+      if (tokens[cursor].value === "from" && tokens[cursor + 1]?.type === "string") {
+        specifiers.push(tokens[cursor + 1].value);
+        break;
+      }
+    }
   }
 
   return specifiers;
@@ -128,7 +246,12 @@ export function collectViolations(root, policy, inventory = {}) {
   const trackedFiles = new Set(inventory.trackedFiles ?? collectTrackedFiles(root));
   const sourceRoots = policy.sourceRoots ?? [];
   const files = [...trackedFiles]
-    .filter((file) => sourceRoots.some((sourceRoot) => isUnderRoot(file, sourceRoot)) || policy.frontendTestRoots.some((testRoot) => isUnderRoot(file, testRoot)))
+    .filter((file) =>
+      sourceRoots.some((sourceRoot) => isUnderRoot(file, sourceRoot))
+      || policy.frontendTestRoots.some((testRoot) => isUnderRoot(file, testRoot))
+      || isUnderRoot(file, "tests")
+      || isUnderRoot(file, "apps/desktop/src-tauri/tests")
+    )
     .sort();
   const frontendTestAllowlist = new Set(policy.frontendTestAllowlist ?? []);
   const rustInlineTestAllowlist = new Set(policy.rustInlineTestAllowlist ?? []);
@@ -139,10 +262,59 @@ export function collectViolations(root, policy, inventory = {}) {
       rustTemplateInlineTestRoots.some((templateRoot) => isUnderRoot(file, templateRoot)),
     ),
   );
-  const repositoryTestRoots = policy.rootTestExceptionRoots ?? [];
+  const repositoryTestRoots = policy.repositoryTestRoots ?? [];
+  const rootTestRoots = policy.rootTestRoots ?? [];
+  const frontendTestOwners = policy.frontendTestOwners ?? {};
+  const rustCrateLevelTestAllowlist = new Set(policy.rustCrateLevelTestAllowlist ?? []);
+  const rustIntegrationTests = policy.rustIntegrationTests ?? {};
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
   const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
+
+  for (const [testFile, owners] of Object.entries(frontendTestOwners)) {
+    const validTestKey = /^apps\/desktop\/tests\/(?!repository\/).+\.test\.(?:ts|tsx)$/.test(testFile);
+    if (!validTestKey) {
+      violations.push(`${testFile}: frontendTestOwners key must be an exact *.test.ts or *.test.tsx file below apps/desktop/tests outside the repository namespace`);
+    }
+    if (!trackedFiles.has(testFile) || !existsSync(join(root, testFile))) {
+      violations.push(`${testFile}: frontendTestOwners entry points to a missing tracked test`);
+    } else if (validTestKey) {
+      const relativeTest = testFile.slice("apps/desktop/tests/".length);
+      const sourceRelative = relativeTest.replace(/\.test(?=\.(?:ts|tsx)$)/, "");
+      const sourceFile = `apps/desktop/src/${sourceRelative}`;
+      if (trackedFiles.has(sourceFile) && existsSync(join(root, sourceFile))) {
+        violations.push(`${testFile}: frontendTestOwners entry is unused because the test already mirrors ${sourceFile}`);
+      }
+    }
+    if (!Array.isArray(owners) || owners.length === 0) {
+      violations.push(`${testFile}: frontendTestOwners must contain a non-empty owner list`);
+      continue;
+    }
+    for (const owner of owners) {
+      if (
+        typeof owner !== "string"
+        || owner.includes("*")
+        || !isUnderRoot(owner, "apps/desktop/src")
+        || !trackedFiles.has(owner)
+        || !existsSync(join(root, owner))
+      ) {
+        violations.push(`${owner}: frontendTestOwners owner must be an exact existing file below apps/desktop/src`);
+      }
+    }
+  }
+
+  for (const [name, entries] of [
+    ["frontendTestAllowlist", frontendTestAllowlist],
+    ["rustInlineTestAllowlist", rustInlineTestAllowlist],
+    ["rustTemplateInlineTestAllowlist", rustTemplateInlineTestAllowlist],
+    ["rustCrateLevelTestAllowlist", rustCrateLevelTestAllowlist],
+  ]) {
+    for (const file of entries) {
+      if (!trackedFiles.has(file) || !existsSync(join(root, file))) {
+        violations.push(`${file}: ${name} entry points to a missing tracked file`);
+      }
+    }
+  }
 
   for (const path of policy.forbiddenRootDesktopPaths ?? []) {
     if (existsSync(join(root, path))) {
@@ -165,7 +337,21 @@ export function collectViolations(root, policy, inventory = {}) {
     }
 
     if (isTestFile && policy.forbiddenFrontendTestRoots.some((root) => isUnderRoot(file, root)) && !frontendTestAllowlist.has(file)) {
-      violations.push(`${file}: frontend tests must live under ${policy.frontendTestRoots.join(" or ")} unless allowlisted`);
+      violations.push(`frontend test must not live in production source: ${file}`);
+    }
+
+    if (isTestFile && isUnderRoot(file, "apps/desktop/tests") && !isUnderRoot(file, "apps/desktop/tests/repository")) {
+      const relativeTest = file.slice("apps/desktop/tests/".length);
+      const sourceRelative = relativeTest.replace(/\.test(?=\.(?:ts|tsx)$)/, "");
+      const sourceFile = `apps/desktop/src/${sourceRelative}`;
+      const mirrorsSource = trackedFiles.has(sourceFile) && existsSync(join(root, sourceFile));
+      if (!mirrorsSource && !Object.hasOwn(frontendTestOwners, file)) {
+        violations.push(`frontend test must mirror desktop source or use an approved repository namespace: ${file}`);
+      }
+    }
+
+    if (isTestFile && isUnderRoot(file, "tests") && !rootTestRoots.some((testRoot) => isUnderRoot(file, testRoot))) {
+      violations.push(`root tests must live under tests/repository: ${file}`);
     }
 
     if (repositoryTestRoots.some((root) => isUnderRoot(file, root))) {
@@ -195,11 +381,39 @@ export function collectViolations(root, policy, inventory = {}) {
 
     if (
       extension === ".rs"
+      && isUnderRoot(file, "apps/desktop/src-tauri/src")
+      && /(?:^|\/)[^/]+_tests\.rs$/.test(file)
+      && !rustCrateLevelTestAllowlist.has(file)
+    ) {
+      violations.push(`crate-level Rust peer test module is forbidden: ${file}`);
+    }
+
+    if (
+      extension === ".rs"
       && hasInlineRustTests(root, file)
       && !rustInlineTestAllowlist.has(file)
       && !rustTemplateInlineTestAllowlist.has(file)
     ) {
-      violations.push(`${file}: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist`);
+      if (isUnderRoot(file, "apps/desktop/src-tauri/src")) {
+        violations.push(`inline Rust test module is forbidden: ${file}`);
+      } else {
+        violations.push(`${file}: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist`);
+      }
+    }
+  }
+
+  for (const file of trackedFiles) {
+    if (
+      /^apps\/desktop\/src-tauri\/tests\/[^/]+\.rs$/.test(file)
+      && !Object.hasOwn(rustIntegrationTests, file)
+    ) {
+      violations.push(`Rust integration test is not classified: ${file}`);
+    }
+  }
+
+  for (const file of Object.keys(rustIntegrationTests)) {
+    if (!trackedFiles.has(file) || !existsSync(join(root, file))) {
+      violations.push(`${file}: rustIntegrationTests entry points to a missing tracked file`);
     }
   }
 

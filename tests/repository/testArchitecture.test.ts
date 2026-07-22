@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (path: string) => readFileSync(resolve(repoRoot, path), "utf8");
 const policy = JSON.parse(read("architecture/policy.json")) as {
+  frontendTestOwners?: Record<string, string[]>;
   rustIntegrationTests?: Record<
     string,
     {
@@ -80,6 +81,45 @@ describe("test architecture", () => {
       ...groupTreeTests,
       ...unrelatedTests,
     ].sort()).toEqual([...listedTests].sort());
+  });
+
+  it("classifies every non-mirroring desktop frontend suite with exact owners", () => {
+    expect(policy.frontendTestOwners).toEqual({
+      "apps/desktop/tests/components/SlotAnchor.test.tsx": [
+        "apps/desktop/src/components/ui/SlotAnchor.tsx",
+        "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+        "apps/desktop/src/contexts/PluginSlotProvider.tsx",
+        "apps/desktop/src/contexts/PluginSlotContext.ts",
+        "apps/desktop/src/contexts/SettingsContext.ts",
+        "apps/desktop/src/types/pluginSlots.ts",
+      ],
+      "apps/desktop/tests/components/layout/sidebar/SidebarTableItem.test.ts": [
+        "apps/desktop/src/utils/sidebarTableItem.ts",
+      ],
+      "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
+        "apps/desktop/src/components/modals/NewConnectionModal.tsx",
+      ],
+      "apps/desktop/tests/contexts/DatabaseProvider.context-tuples.test.tsx": [
+        "apps/desktop/src/contexts/DatabaseProvider.tsx",
+        "apps/desktop/src/contexts/DatabaseContext.ts",
+        "apps/desktop/src/hooks/useDatabase.ts",
+      ],
+      "apps/desktop/tests/utils/minimax.test.ts": [
+        "apps/desktop/src/utils/settings.ts",
+        "apps/desktop/src/utils/settingsUI.ts",
+        "apps/desktop/src/contexts/SettingsContext.ts",
+      ],
+      "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
+        "apps/desktop/src/utils/sqlSplitter/index.ts",
+        "apps/desktop/src/utils/sqlSplitter/splitter.ts",
+        "apps/desktop/src/utils/sqlSplitter/tokenizer.ts",
+      ],
+    });
+    for (const sameNameSuite of ["classify", "splitter", "tokenizer"]) {
+      expect(policy.frontendTestOwners).not.toHaveProperty(
+        `apps/desktop/tests/utils/sqlSplitter/${sameNameSuite}.test.ts`,
+      );
+    }
   });
 
   it("classifies external-infrastructure Rust integration tests", () => {

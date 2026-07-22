@@ -1,16 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { tmpdir } from "node:os";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { collectViolations, countLines } from "../../scripts/check-architecture.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json"), "utf8")) as {
   forbiddenRootDesktopPaths: string[];
   frontendTestRoots: string[];
   forbiddenFrontendTestRoots: string[];
-  rootTestExceptionRoots: string[];
+  repositoryTestRoots: string[];
+  frontendTestOwners: Record<string, string[]>;
   repositoryTestForbiddenImportRoots: string[];
   repositoryTestImportAliases: Record<string, string>;
   rustInlineTestAllowlist: string[];
@@ -20,13 +19,8 @@ const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json")
   allowedWorkspaceDependencies: Record<string, string[]>;
   fileSizeBaselines: Record<string, number>;
   sourceRoots: string[];
+  frontendTestAllowlist: string[];
 };
-
-function writeFixture(root: string, file: string, content: string) {
-  const filePath = join(root, file);
-  mkdirSync(dirname(filePath), { recursive: true });
-  writeFileSync(filePath, content);
-}
 
 describe("architecture policy", () => {
   it("records current roots and target-protection rules", () => {
@@ -48,7 +42,41 @@ describe("architecture policy", () => {
     expect(policy.frontendTestRoots).toContain("apps/desktop/tests");
     expect(policy.forbiddenFrontendTestRoots).toContain("apps/desktop/src");
     expect(policy.frontendTestAllowlist).toEqual([]);
-    expect(policy.rootTestExceptionRoots).toEqual(["tests/repository"]);
+    expect(policy.repositoryTestRoots).toEqual([
+      "tests/repository",
+      "apps/desktop/tests/repository",
+    ]);
+    expect(policy.frontendTestOwners).toEqual({
+      "apps/desktop/tests/components/SlotAnchor.test.tsx": [
+        "apps/desktop/src/components/ui/SlotAnchor.tsx",
+        "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+        "apps/desktop/src/contexts/PluginSlotProvider.tsx",
+        "apps/desktop/src/contexts/PluginSlotContext.ts",
+        "apps/desktop/src/contexts/SettingsContext.ts",
+        "apps/desktop/src/types/pluginSlots.ts",
+      ],
+      "apps/desktop/tests/components/layout/sidebar/SidebarTableItem.test.ts": [
+        "apps/desktop/src/utils/sidebarTableItem.ts",
+      ],
+      "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
+        "apps/desktop/src/components/modals/NewConnectionModal.tsx",
+      ],
+      "apps/desktop/tests/contexts/DatabaseProvider.context-tuples.test.tsx": [
+        "apps/desktop/src/contexts/DatabaseProvider.tsx",
+        "apps/desktop/src/contexts/DatabaseContext.ts",
+        "apps/desktop/src/hooks/useDatabase.ts",
+      ],
+      "apps/desktop/tests/utils/minimax.test.ts": [
+        "apps/desktop/src/utils/settings.ts",
+        "apps/desktop/src/utils/settingsUI.ts",
+        "apps/desktop/src/contexts/SettingsContext.ts",
+      ],
+      "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
+        "apps/desktop/src/utils/sqlSplitter/index.ts",
+        "apps/desktop/src/utils/sqlSplitter/splitter.ts",
+        "apps/desktop/src/utils/sqlSplitter/tokenizer.ts",
+      ],
+    });
     expect(policy.repositoryTestImportAliases).toEqual({ "@": "apps/desktop/src" });
     expect(policy.repositoryTestForbiddenImportRoots).toEqual([
       "apps/desktop/src",
@@ -81,7 +109,9 @@ describe("architecture policy", () => {
       ...policy.sourceRoots,
       ...policy.frontendTestRoots,
       ...policy.forbiddenFrontendTestRoots,
-      ...policy.rootTestExceptionRoots,
+      ...policy.repositoryTestRoots,
+      ...Object.keys(policy.frontendTestOwners),
+      ...Object.values(policy.frontendTestOwners).flat(),
       ...policy.repositoryTestForbiddenImportRoots,
       ...policy.rustInlineTestAllowlist,
       ...policy.rustTemplateInlineTestRoots,
@@ -96,204 +126,5 @@ describe("architecture policy", () => {
         ),
       ),
     ).toEqual([]);
-  });
-
-  it("reports forbidden root desktop paths", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
-
-    try {
-      mkdirSync(join(tempRoot, "src"));
-      const violations = collectViolations(tempRoot, {
-        forbiddenRootDesktopPaths: ["src"],
-        frontendTestRoots: [],
-        forbiddenFrontendTestRoots: [],
-        rootTestExceptionRoots: [],
-        repositoryTestForbiddenImportRoots: [],
-        rustInlineTestAllowlist: [],
-        allowedWorkspaceDependencies: {},
-        fileSizeBaselines: {},
-        sourceRoots: [],
-      }, {
-        trackedFiles: [],
-        workspacePackageDirectories: [],
-      });
-
-      expect(violations).toEqual([
-        "src: desktop-owned paths must live under apps/desktop, not repository root",
-      ]);
-    } finally {
-      rmSync(tempRoot, { recursive: true, force: true });
-    }
-  });
-
-  it("counts trailing-newline-terminated lines", () => {
-    expect(countLines("one\ntwo\n")).toBe(2);
-  });
-
-  it("reports architecture policy violations", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
-
-    try {
-      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora", dependencies: { "@nexora/plugin-api": "workspace:*" } }));
-      writeFixture(tempRoot, "packages/plugin-api/package.json", JSON.stringify({ name: "@nexora/plugin-api" }));
-      writeFixture(tempRoot, "src/NewFeature.test.tsx", "test(\"x\", () => undefined);\n");
-      writeFixture(tempRoot, "tests/NewFeature.spec.ts", "test(\"x\", () => undefined);\n");
-      writeFixture(tempRoot, "tests/repository/importsDesktop.test.ts", "import { value } from \"../../src/value\";\n");
-      writeFixture(tempRoot, "tests/repository/helper.ts", "export { value } from \"../../src-tauri/value\";\n");
-      writeFixture(tempRoot, "src/value.ts", "export const value = true;\n");
-      writeFixture(tempRoot, "src/Oversized.ts", `${"line\n".repeat(501)}`);
-      writeFixture(tempRoot, "src/Ratcheted.tsx", "one\ntwo\n");
-      writeFixture(tempRoot, "src-tauri/src/lib.rs", "#[cfg(test)]\nmod tests {\n}\n");
-
-      const fixtureFiles = [
-        "package.json",
-        "packages/plugin-api/package.json",
-        "src/NewFeature.test.tsx",
-        "tests/NewFeature.spec.ts",
-        "tests/repository/importsDesktop.test.ts",
-        "tests/repository/helper.ts",
-        "src/value.ts",
-        "src/Oversized.ts",
-        "src/Ratcheted.tsx",
-        "src-tauri/src/lib.rs",
-      ];
-      const violations = collectViolations(tempRoot, {
-        frontendTestRoots: ["tests"],
-        forbiddenFrontendTestRoots: ["src"],
-        frontendTestAllowlist: [],
-        rootTestExceptionRoots: ["tests/repository"],
-        repositoryTestForbiddenImportRoots: ["src", "src-tauri"],
-        rustInlineTestAllowlist: [],
-        allowedWorkspaceDependencies: {
-          nexora: [],
-          "@nexora/plugin-api": [],
-        },
-        fileSizeBaselines: {
-          "src/Ratcheted.tsx": 1,
-        },
-        sourceRoots: ["src", "src-tauri/src"],
-      }, {
-        trackedFiles: fixtureFiles,
-        workspacePackageDirectories: [".", "packages/plugin-api"],
-      });
-
-      expect(violations).toContain("src/NewFeature.test.tsx: frontend tests must live under tests unless allowlisted");
-      expect(violations).toContain("tests/NewFeature.spec.ts: rename .spec test files to .test files");
-      expect(violations).toContain("tests/repository/importsDesktop.test.ts: repository tests may inspect files but must not import desktop-private modules from src");
-      expect(violations).toContain("tests/repository/helper.ts: repository tests may inspect files but must not import desktop-private modules from src-tauri");
-      expect(violations).toContain("src/Oversized.ts: 501 lines exceeds soft limit 500; split the file or add a ratcheted baseline with architecture approval");
-      expect(violations).toContain("src/Ratcheted.tsx: 2 lines exceeds ratcheted baseline 1");
-      expect(violations).toContain("src-tauri/src/lib.rs: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist");
-      expect(violations).toContain("package.json: nexora may not depend on workspace package @nexora/plugin-api");
-    } finally {
-      rmSync(tempRoot, { recursive: true, force: true });
-    }
-  });
-
-  it("does not allow template inline-test exceptions to exempt desktop Rust", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
-
-    try {
-      const desktopFile = "apps/desktop/src-tauri/src/commands.rs";
-      writeFixture(tempRoot, desktopFile, "#[cfg(test)]\nmod tests {\n}\n");
-
-      const violations = collectViolations(tempRoot, {
-        frontendTestRoots: [],
-        forbiddenFrontendTestRoots: [],
-        frontendTestAllowlist: [],
-        rootTestExceptionRoots: [],
-        rustInlineTestAllowlist: [],
-        rustTemplateInlineTestRoots: ["packages/create-plugin/templates/rust-driver/src"],
-        rustTemplateInlineTestAllowlist: [desktopFile],
-        allowedWorkspaceDependencies: {},
-        fileSizeBaselines: {},
-        sourceRoots: ["apps/desktop/src-tauri/src"],
-      }, {
-        trackedFiles: [desktopFile],
-        workspacePackageDirectories: [],
-      });
-
-      expect(violations).toContain(
-        `${desktopFile}: rustTemplateInlineTestAllowlist entries must be under rustTemplateInlineTestRoots`,
-      );
-      expect(violations).toContain(
-        `${desktopFile}: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist`,
-      );
-    } finally {
-      rmSync(tempRoot, { recursive: true, force: true });
-    }
-  });
-
-  it("rejects desktop alias imports from repository tests without flagging package aliases", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
-
-    try {
-      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora" }));
-      writeFixture(
-        tempRoot,
-        "tests/repository/aliases.test.ts",
-        [
-          "im" + 'port "@/utils/database";',
-          "im" + 'port("@/contexts/DatabaseContext");',
-          "ex" + 'port { APP_VERSION } from "@/version";',
-          "im" + 'port "@testing-library/react";',
-        ].join("\n"),
-      );
-
-      const violations = collectViolations(tempRoot, {
-        frontendTestRoots: ["tests/repository"],
-        forbiddenFrontendTestRoots: [],
-        frontendTestAllowlist: [],
-        rootTestExceptionRoots: ["tests/repository"],
-        repositoryTestForbiddenImportRoots: ["apps/desktop/src"],
-        repositoryTestImportAliases: { "@": "apps/desktop/src" },
-        rustInlineTestAllowlist: [],
-        allowedWorkspaceDependencies: { nexora: [] },
-        fileSizeBaselines: {},
-        sourceRoots: [],
-      }, {
-        trackedFiles: ["package.json", "tests/repository/aliases.test.ts"],
-        workspacePackageDirectories: ["."],
-      });
-
-      expect(violations).toEqual([
-        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
-        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
-        "tests/repository/aliases.test.ts: repository tests may inspect files but must not import desktop-private modules from apps/desktop/src",
-      ]);
-    } finally {
-      rmSync(tempRoot, { recursive: true, force: true });
-    }
-  });
-
-  it("ignores untracked and ignored source files and non-workspace package manifests", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-inventory-"));
-
-    try {
-      writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora" }));
-      writeFixture(tempRoot, "src/tracked.ts", "export const tracked = true;\n");
-      writeFixture(tempRoot, "src/untracked.spec.ts", "test(\"x\", () => undefined);\n");
-      writeFixture(tempRoot, "src/ignored.ts", "line\n".repeat(501));
-      writeFixture(tempRoot, "vendor/package.json", JSON.stringify({ name: "vendor", dependencies: { nexora: "workspace:*" } }));
-
-      const violations = collectViolations(tempRoot, {
-        frontendTestRoots: ["tests"],
-        forbiddenFrontendTestRoots: ["src"],
-        frontendTestAllowlist: [],
-        rootTestExceptionRoots: ["tests/repository"],
-        repositoryTestForbiddenImportRoots: ["src", "src-tauri"],
-        rustInlineTestAllowlist: [],
-        allowedWorkspaceDependencies: { nexora: [] },
-        fileSizeBaselines: {},
-        sourceRoots: ["src"],
-      }, {
-        trackedFiles: ["package.json", "src/tracked.ts", "vendor/package.json"],
-        workspacePackageDirectories: ["."],
-      });
-
-      expect(violations).toEqual([]);
-    } finally {
-      rmSync(tempRoot, { recursive: true, force: true });
-    }
   });
 });

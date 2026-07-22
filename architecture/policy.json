@@ -12,10 +12,39 @@
   "sourceRoots": ["apps/desktop/src", "apps/desktop/src-tauri/src", "packages/plugin-api/src", "packages/create-plugin/src", "packages/create-plugin/templates/rust-driver/src"],
   "frontendTestRoots": ["apps/desktop/tests", "tests/repository", "packages/create-plugin/tests"],
   "forbiddenFrontendTestRoots": ["apps/desktop/src"],
-  "rootTestExceptionRoots": ["tests/repository"],
   "repositoryTestRoots": ["tests/repository", "apps/desktop/tests/repository"],
   "rootTestRoots": ["tests/repository"],
-  "rootRepositoryTestForbiddenImports": ["apps/desktop/src", "@/"],
+  "frontendTestOwners": {
+    "apps/desktop/tests/components/SlotAnchor.test.tsx": [
+      "apps/desktop/src/components/ui/SlotAnchor.tsx",
+      "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+      "apps/desktop/src/contexts/PluginSlotProvider.tsx",
+      "apps/desktop/src/contexts/PluginSlotContext.ts",
+      "apps/desktop/src/contexts/SettingsContext.ts",
+      "apps/desktop/src/types/pluginSlots.ts"
+    ],
+    "apps/desktop/tests/components/layout/sidebar/SidebarTableItem.test.ts": [
+      "apps/desktop/src/utils/sidebarTableItem.ts"
+    ],
+    "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
+      "apps/desktop/src/components/modals/NewConnectionModal.tsx"
+    ],
+    "apps/desktop/tests/contexts/DatabaseProvider.context-tuples.test.tsx": [
+      "apps/desktop/src/contexts/DatabaseProvider.tsx",
+      "apps/desktop/src/contexts/DatabaseContext.ts",
+      "apps/desktop/src/hooks/useDatabase.ts"
+    ],
+    "apps/desktop/tests/utils/minimax.test.ts": [
+      "apps/desktop/src/utils/settings.ts",
+      "apps/desktop/src/utils/settingsUI.ts",
+      "apps/desktop/src/contexts/SettingsContext.ts"
+    ],
+    "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
+      "apps/desktop/src/utils/sqlSplitter/index.ts",
+      "apps/desktop/src/utils/sqlSplitter/splitter.ts",
+      "apps/desktop/src/utils/sqlSplitter/tokenizer.ts"
+    ]
+  },
   "repositoryTestImportAliases": { "@": "apps/desktop/src" },
   "repositoryTestForbiddenImportRoots": ["apps/desktop/src", "apps/desktop/src-tauri"],
   "frontendTestAllowlist": [],
