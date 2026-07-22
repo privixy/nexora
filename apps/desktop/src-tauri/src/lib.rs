@@ -54,6 +54,7 @@ pub mod updater;
 pub mod window_title;
 
 pub mod drivers {
+    pub mod bootstrap;
     pub mod common;
     pub mod driver_trait;
     pub mod mysql;

@@ -1,7 +1,8 @@
 //! Dispatch-level tests for the MCP tool router, focused on the argument and
 //! connection-resolution error paths of `list_databases`.
 
-use super::*;
+use super::super::router::*;
+use crate::config::AppConfig;
 use serde_json::{json, Map, Value};
 
 /// `list_databases` with no arguments object should surface the JSON-RPC

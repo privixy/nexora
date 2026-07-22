@@ -10,19 +10,10 @@ pub(crate) fn attach_setup(
         let active_ext_drivers =
             crate::config::load_config_internal(&app.handle()).active_external_drivers;
 
-        tauri::async_runtime::block_on(async {
-            crate::drivers::registry::register_driver(crate::drivers::mysql::MysqlDriver::new())
-                .await;
-            crate::drivers::registry::register_driver(
-                crate::drivers::postgres::PostgresDriver::new(),
-            )
-            .await;
-            crate::drivers::registry::register_driver(crate::drivers::sqlite::SqliteDriver::new())
-                .await;
-
-            crate::plugins::manager::load_plugins(&app.handle(), active_ext_drivers.as_deref())
-                .await;
-        });
+        tauri::async_runtime::block_on(crate::drivers::bootstrap::register_all_drivers(|| {
+            let config = crate::config::load_config_internal(&app.handle());
+            (config.plugins.unwrap_or_default(), active_ext_drivers)
+        }));
 
         {
             let config = crate::config::load_config_internal(&app.handle());

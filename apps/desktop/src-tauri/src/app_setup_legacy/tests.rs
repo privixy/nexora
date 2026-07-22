@@ -49,10 +49,9 @@ fn app_setup_legacy_preserves_builder_and_shutdown_order() {
 
     let setup = source.split(".setup(move |app|").nth(1).unwrap();
     let setup_order = [
-        "register_driver(crate::drivers::mysql::MysqlDriver::new())",
-        "register_driver(\n                crate::drivers::postgres::PostgresDriver::new()",
-        "register_driver(crate::drivers::sqlite::SqliteDriver::new())",
-        "crate::plugins::manager::load_plugins",
+        "crate::config::load_config_internal",
+        "crate::drivers::bootstrap::register_all_drivers",
+        "crate::config::load_config_internal",
         "crate::health_check::start_ping_loop",
         "crate::ai_approval_watcher::spawn",
         "crate::heartbeat::spawn",
