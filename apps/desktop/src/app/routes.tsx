@@ -14,6 +14,7 @@ import {
 } from "../features/settings";
 import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";
 import { TaskManagerPage } from "../features/tasks";
+import { createNotebook, NotebookView, renameNotebook } from "../features/notebooks";
 import {
   VisualExplainModal,
   VisualExplainPage,
@@ -76,7 +77,13 @@ export function AppRoutes() {
           path="editor"
           element={
             <EditorErrorBoundary>
-              <EditorPage />
+              <EditorPage
+                notebook={{
+                  render: NotebookView,
+                  create: createNotebook,
+                  rename: renameNotebook,
+                }}
+              />
             </EditorErrorBoundary>
           }
         />

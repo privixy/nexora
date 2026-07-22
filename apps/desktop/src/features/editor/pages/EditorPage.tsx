@@ -3,7 +3,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { reconstructTableQuery } from "../lib/editor";
 import { resolveEditorContext } from "../lib/editorContext";
-import { serializePkKey, buildPkMap } from "../../data-grid/lib/dataGrid";
+import {
+  DataGrid,
+  buildPkMap,
+  generateTempId,
+  initializeNewRow,
+  insertionToBackendData,
+  serializePkKey,
+  validatePendingInsertion,
+} from "../../data-grid";
 import { isMultiDatabaseCapable } from "../../plugins";
 import { isReadonly } from "../../../utils/driverCapabilities";
 import { formatWindowTitle } from "../../../utils/windowTitle";
@@ -11,12 +19,6 @@ import {
   useDangerousQueryGuard,
   DANGEROUS_QUERY_I18N,
 } from "../hooks/useDangerousQueryGuard";
-import {
-  generateTempId,
-  initializeNewRow,
-  validatePendingInsertion,
-  insertionToBackendData,
-} from "../../data-grid/lib/pendingInsertions";
 import { AiQueryModal } from "../../ai";
 import { AiExplainModal } from "../../ai";
 import { AiDropdownButton } from "../../ai";
@@ -59,7 +61,6 @@ import {
 import { invoke } from "@tauri-apps/api/core";
 import { listen, emit } from "@tauri-apps/api/event";
 import { TableToolbar } from "../../../components/ui/TableToolbar";
-import { DataGrid } from "../../data-grid";
 import { MultiResultPanel } from "../components/MultiResultPanel";
 import { ErrorDisplay } from "../../../components/ui/ErrorDisplay";
 import { NewRowModal } from "../../../components/modals/NewRowModal";
@@ -104,18 +105,16 @@ import {
   type ResultsClosedPayload,
 } from "../lib/resultsWindowSync";
 import { SqlEditorWrapper } from "../components/SqlEditorWrapper";
-import { NotebookView } from "../../notebooks";
 import { useSqlAutocompleteRegistration } from "../hooks/useSqlAutocompleteRegistration";
-import { createNotebook, renameNotebook } from "../../notebooks";
 import { type OnMount, type Monaco } from "@monaco-editor/react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../../hooks/useAlert";
 import { useDatabase } from "../../connections";
-import { useDrivers } from "../../plugins/hooks/useDrivers";
-import { getConnectionAccent } from "../../connections/lib/driverUI";
+import { useDrivers } from "../../plugins";
+import { getConnectionAccent } from "../../connections";
 import { useSavedQueries } from "..";
 import { useQueryHistory } from "..";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import { useEditor } from "..";
 import { useConnectionLayoutContext } from "../../../hooks/useConnectionLayoutContext";
 import { useKeybindings } from "../../../hooks/useKeybindings";
@@ -127,7 +126,7 @@ import type {
   TableColumn,
   ForeignKey,
 } from "../../../types/editor";
-import { buildForeignKeyFilterClause } from "../../schema/lib/foreignKeys";
+import { buildForeignKeyFilterClause } from "../../schema";
 import { formatSqlIdentifier } from "../../../utils/identifiers";
 import { RelatedRecordsPanel } from "../../../components/ui/RelatedRecordsPanel";
 import {
@@ -137,6 +136,21 @@ import {
   isFocusedPane,
 } from "../lib/tabScroll";
 import clsx from "clsx";
+
+export interface EditorNotebookRuntime {
+  render: (props: {
+    tab: Tab;
+    updateTab: (id: string, partial: Partial<Tab>) => void;
+    connectionId: string;
+    isActive: boolean;
+  }) => React.ReactNode;
+  create: (title: string, connectionId: string) => Promise<{ notebookId: string }>;
+  rename: (notebookId: string, connectionId: string, title: string) => Promise<void>;
+}
+
+export interface EditorPageProps {
+  notebook: EditorNotebookRuntime;
+}
 
 interface EditorState {
   initialQuery?: string;
@@ -161,7 +175,7 @@ const CHEVRON_SELECT_STYLE: React.CSSProperties = {
   backgroundPosition: "right center",
 };
 
-export const EditorPage = () => {
+export const EditorPage = ({ notebook }: EditorPageProps) => {
   const { t } = useTranslation();
   const {
     activeConnectionId,
@@ -277,11 +291,11 @@ export const EditorPage = () => {
     // Persist the rename to the notebook file too (covers background tabs whose
     // NotebookView isn't mounted to sync the title automatically).
     if (tab.type === "notebook" && tab.notebookId && tab.connectionId) {
-      renameNotebook(tab.notebookId, tab.connectionId, title).catch((e) =>
+      notebook.rename(tab.notebookId, tab.connectionId, title).catch((e) =>
         console.error("Failed to rename notebook:", e),
       );
     }
-  }, [editingTabId, editingTabTitle, updateTab]);
+  }, [editingTabId, editingTabTitle, notebook, updateTab]);
 
   const handleConvertToConsole = useCallback(
     (tabId: string) => {
@@ -3065,7 +3079,7 @@ export const EditorPage = () => {
           onClick={async () => {
             if (!activeConnectionId) return;
             const title = "Notebook";
-            const { notebookId } = await createNotebook(title, activeConnectionId);
+            const { notebookId } = await notebook.create(title, activeConnectionId);
             addTab({
               type: "notebook",
               notebookId,
@@ -3305,12 +3319,12 @@ export const EditorPage = () => {
               style={{ display: isActive ? "flex" : "none" }}
               className="flex-1 flex flex-col min-h-0 overflow-hidden"
             >
-              <NotebookView
-                tab={tab}
-                updateTab={updateTab}
-                connectionId={activeConnectionId || ""}
-                isActive={isActive}
-              />
+              {notebook.render({
+                tab,
+                updateTab,
+                connectionId: activeConnectionId || "",
+                isActive,
+              })}
             </div>
           );
         }

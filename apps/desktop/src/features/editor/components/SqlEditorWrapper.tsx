@@ -1,10 +1,10 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import MonacoEditor, { type OnMount, type BeforeMount } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
-import { useEditorTheme } from "../../settings/hooks/useEditorTheme";
+import { useEditorTheme } from "../../settings";
 import { loadMonacoTheme } from "../../../themes/themeUtils";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import { getFontCSS } from "../../../utils/settings";
 

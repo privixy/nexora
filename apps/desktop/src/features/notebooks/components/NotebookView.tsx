@@ -58,7 +58,7 @@ import {
   createNotebookFromState,
 } from "../../notebooks/lib/notebookStore";
 import { useDatabase } from "../../connections";
-import { useSqlAutocompleteRegistration } from "../../editor/hooks/useSqlAutocompleteRegistration";
+import { useSqlAutocompleteRegistration } from "../../editor";
 import { isMultiDatabaseCapable } from "../../plugins";
 import { useSettings } from "../../settings";
 import { useAlert } from "../../../hooks/useAlert";
@@ -66,7 +66,7 @@ import { useKeybindings } from "../../../hooks/useKeybindings";
 import {
   useDangerousQueryGuard,
   DANGEROUS_QUERY_I18N,
-} from "../../editor/hooks/useDangerousQueryGuard";
+} from "../../editor";
 import { ConfirmModal } from "../../../components/modals/ConfirmModal";
 import { NotebookToolbar } from "./NotebookToolbar";
 import { NotebookHistoryPanel } from "./NotebookHistoryPanel";

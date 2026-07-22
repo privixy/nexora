@@ -48,7 +48,7 @@ import type { NotebookMetadata } from "../../../types/notebook";
 import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
 import { SchemaModal } from "../../schema";
 import { CreateTableModal } from "../../schema";
-import { QueryModal } from "../../editor/components/modals/QueryModal";
+import { QueryModal } from "../../editor";
 import { ModifyColumnModal } from "../../schema";
 import { CreateIndexModal } from "../../schema";
 import { CreateForeignKeyModal } from "../../schema";
@@ -92,7 +92,7 @@ import {
   supportsRenameDatabase,
   supportsTruncateTable,
 } from "../../../utils/driverCapabilities";
-import { newConsoleForDatabase, newConsoleForTable } from "../../editor/lib/newConsole";
+import { newConsoleForDatabase, newConsoleForTable } from "../../editor";
 import {
   DEFAULT_CREATE_TABLE_TARGET,
   getCreateTableRefreshPlan,

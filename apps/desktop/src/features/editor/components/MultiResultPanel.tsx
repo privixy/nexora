@@ -36,7 +36,7 @@ import {
   totalExecutionTime,
   getEntryDisplayLabel,
 } from "../lib/multiResult";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import type { QueryResultEntry } from "../../../types/editor";
 
 interface MultiResultPanelProps {

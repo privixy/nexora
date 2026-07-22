@@ -24,6 +24,8 @@ export { formatObjectCount } from "./lib/schema";
 export { groupIndexes } from "./lib/indexes";
 export type { GroupedIndex } from "./lib/indexes";
 export {
+  buildForeignKeyFilterClause,
   getForeignKeyForPreview,
+  isForeignKeyValueNavigable,
   pickPrimaryForeignKeyByColumn,
 } from "./lib/foreignKeys";

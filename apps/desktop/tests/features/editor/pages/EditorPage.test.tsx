@@ -75,11 +75,13 @@ vi.mock("../../../../src/features/editor/components/SqlEditorWrapper", () => ({
 }));
 
 vi.mock("../../../../src/features/connections", () => ({
+  getConnectionAccent: () => "#3b82f6",
   useDatabase: vi.fn(),
 }));
 
 vi.mock("../../../../src/features/plugins", () => ({
   isMultiDatabaseCapable: () => false,
+  useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
 }));
 
 vi.mock("../../../../src/features/data-grid", () => ({
@@ -137,7 +139,15 @@ vi.mock("../../../../src/features/plugins/hooks/useDrivers", () => ({
 }));
 
 vi.mock("../../../../src/features/settings", () => ({
-  useSettings: () => ({ settings: {} }),
+  useSettings: () => ({
+    settings: {
+      resultPageSize: 50,
+      copyFormat: "csv",
+      csvDelimiter: ",",
+      csvIncludeHeaders: true,
+      aiEnabled: false,
+    },
+  }),
 }));
 
 vi.mock("../../../../src/features/visual-explain", () => ({
@@ -181,7 +191,6 @@ vi.mock("../../../../src/features/editor/hooks/useSqlAutocompleteRegistration", 
 }));
 
 vi.mock("../../../../src/features/editor/query-builder/VisualQueryBuilder", () => ({ VisualQueryBuilder: () => <div /> }));
-vi.mock("../../../../src/features/notebooks/components/NotebookView", () => ({ NotebookView: () => <div /> }));
 vi.mock("../../../../src/features/ai", () => ({
   AiDropdownButton: () => <div />,
   AiQueryModal: () => <div />,
@@ -285,6 +294,12 @@ function createDatabase(overrides: Partial<DatabaseContextType> = {}): DatabaseC
   };
 }
 
+const notebookRuntime = {
+  render: vi.fn(() => <div data-testid="notebook-view" />),
+  create: vi.fn(),
+  rename: vi.fn(),
+};
+
 const baseConsoleTab: Tab = {
   id: "tab-1",
   title: "Console",
@@ -346,7 +361,7 @@ function createStatefulEditor(initialTabs: Tab[]) {
         <DatabaseContext.Provider value={database}>
           <EditorContext.Provider value={editor}>
             <Routes>
-              <Route path="/editor" element={<EditorPage />} />
+              <Route path="/editor" element={<EditorPage notebook={notebookRuntime} />} />
             </Routes>
           </EditorContext.Provider>
         </DatabaseContext.Provider>
@@ -379,20 +394,53 @@ afterEach(() => {
 });
 
 describe("Editor", () => {
+  it("forwards notebook tabs and persistence operations through the injected runtime", async () => {
+    const notebookTab: Tab = {
+      ...baseConsoleTab,
+      id: "notebook-1",
+      title: "Notebook",
+      type: "notebook",
+      notebookId: "saved-notebook",
+    };
+    notebookRuntime.create.mockResolvedValue({ notebookId: "created-notebook" });
+    notebookRuntime.rename.mockResolvedValue(undefined);
+
+    createStatefulEditor([notebookTab]);
+
+    expect(notebookRuntime.render).toHaveBeenCalledWith({
+      tab: notebookTab,
+      updateTab: expect.any(Function),
+      connectionId: "conn-1",
+      isActive: true,
+    });
+
+    fireEvent.doubleClick(screen.getByText("Notebook"));
+    const input = screen.getByDisplayValue("Notebook");
+    fireEvent.change(input, { target: { value: "Renamed notebook" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => expect(notebookRuntime.rename).toHaveBeenCalledWith(
+      "saved-notebook",
+      "conn-1",
+      "Renamed notebook",
+    ));
+    expect(notebookRuntime.rename).toHaveBeenCalledTimes(1);
+  });
+
   it("executes the active query with connection, database, and schema and shows returned rows", async () => {
     createStatefulEditor([baseConsoleTab]);
 
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("execute_query", {
+      expect(invoke).toHaveBeenCalledWith("execute_query", expect.objectContaining({
         connectionId: "conn-1",
         query: "SELECT * FROM users",
         limit: 50,
         page: 1,
         database: "analytics",
         schema: "public",
-      });
+      }));
     });
     expect(await screen.findByText("1:Alice")).toBeInTheDocument();
     expect(screen.getByText(/editor.rowsRetrieved/)).toBeInTheDocument();

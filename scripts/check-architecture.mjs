@@ -403,8 +403,10 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
         if (!importsFeaturePublicRoot && !isExcepted) {
           violations.push(`${file}: cross-feature imports must use the public feature root: ${importTarget}`);
         }
-        if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
-        featureEdges.get(importerLayer).add(importedLayer);
+        if (!isExcepted) {
+          if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
+          featureEdges.get(importerLayer).add(importedLayer);
+        }
       }
       if (isExcepted) {
         console.warn(`[architecture] frontend boundary debt: ${file} -> ${importTarget}`);

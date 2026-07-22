@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { PanelDatabaseProvider } from './PanelDatabaseProvider';
 import { EditorPage, EditorProvider } from '../../features/editor';
-import { editorNotebookAdapter } from '../../features/notebooks';
+import { createNotebook, editorNotebookAdapter, NotebookView, renameNotebook } from '../../features/notebooks';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';
 import { useDatabase } from '../../features/connections';
@@ -97,7 +97,13 @@ export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
             <div className="flex-1 overflow-hidden min-h-0">
               <PanelDatabaseProvider connectionId={connId}>
                 <EditorProvider notebookAdapter={editorNotebookAdapter}>
-                  <EditorPage />
+                  <EditorPage
+                    notebook={{
+                      render: NotebookView,
+                      create: createNotebook,
+                      rename: renameNotebook,
+                    }}
+                  />
                 </EditorProvider>
               </PanelDatabaseProvider>
             </div>

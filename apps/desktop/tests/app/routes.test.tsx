@@ -5,6 +5,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "../../src/app/routes";
 
 const navigateMock = vi.hoisted(() => vi.fn());
+const editorPageMock = vi.hoisted(() => vi.fn());
+const notebookRuntime = vi.hoisted(() => ({
+  NotebookView: vi.fn(),
+  createNotebook: vi.fn(),
+  renameNotebook: vi.fn(),
+}));
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router-dom")>();
@@ -50,8 +56,15 @@ vi.mock("../../src/features/settings", () => ({
   SettingsPage: page("settings"),
   SshTab: page("ssh"),
 }));
-vi.mock("../../src/pages/Editor", () => ({ Editor: page("editor") }));
-vi.mock("../../src/features/editor", () => ({ EditorSchemaDiagramPage: page("schema-diagram") }));
+vi.mock("../../src/features/editor", () => ({
+  EditorPage: (props: unknown) => {
+    editorPageMock(props);
+    return <div data-testid="selected-page">editor</div>;
+  },
+  EditorSchemaDiagramPage: page("schema-diagram"),
+  ResultsWindowPage: page("results-window"),
+}));
+vi.mock("../../src/features/notebooks", () => notebookRuntime);
 vi.mock("../../src/features/mcp", () => ({ McpPage: page("mcp") }));
 vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));
 vi.mock("../../src/features/schema/pages/SchemaDiagramPage", () => ({ SchemaDiagramPage: page("schema-diagram") }));
@@ -61,7 +74,6 @@ vi.mock("../../src/features/visual-explain", () => ({
   VisualExplainPage: page("visual-explain"),
 }));
 vi.mock("../../src/features/data-grid", () => ({ JsonViewerPage: page("json-viewer") }));
-vi.mock("../../src/pages/ResultsWindowPage", () => ({ ResultsWindowPage: page("results-window") }));
 vi.mock("../../src/components/ui/EditorErrorBoundary", () => ({
   EditorErrorBoundary: ({ children }: { children: ReactNode }) => <div data-testid="editor-error-boundary">{children}</div>,
 }));
@@ -101,6 +113,13 @@ describe("AppRoutes", () => {
       expect(screen.queryByTestId("main-layout") !== null).toBe(selections[path].shell);
       if (path === "/editor") {
         expect(screen.getByTestId("editor-error-boundary")).toContainElement(screen.getByTestId("selected-page"));
+        expect(editorPageMock).toHaveBeenCalledWith({
+          notebook: {
+            render: notebookRuntime.NotebookView,
+            create: notebookRuntime.createNotebook,
+            rename: notebookRuntime.renameNotebook,
+          },
+        });
       }
       if (path === "/") {
         await waitFor(() => expect(navigateMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/connections", replace: true })));
