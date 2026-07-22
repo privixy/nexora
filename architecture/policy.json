@@ -61,6 +61,21 @@
       "apps/desktop/src/utils/sqlSplitter/splitter.ts",
       "apps/desktop/src/utils/sqlSplitter/tokenizer.ts"
     ],
+    "apps/desktop/tests/features/schema/rawTauri.test.tsx": [
+      "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/CreateForeignKeyModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/CreateIndexModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/CreateTableModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/ModifyColumnModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/SchemaModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
+      "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
+      "apps/desktop/src/hooks/useDataTypes.ts"
+    ],
+    "apps/desktop/tests/features/settings/publicApi.test.ts": [
+      "apps/desktop/src/features/settings/index.ts"
+    ],
     "apps/desktop/tests/features/plugins/hooks/useDrivers.test.tsx": [
       "apps/desktop/src/features/plugins/hooks/useDrivers.ts"
     ],
