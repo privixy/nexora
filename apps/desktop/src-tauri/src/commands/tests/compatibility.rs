@@ -634,7 +634,7 @@ mod url_encoding_edge_cases {
     }
 }
 
-mod cancellation_state {
+mod cancellation_legacy {
     use crate::commands::{
         cancel_query_impl, register_abort_handle, unregister_abort_handle, QueryCancellationState,
     };

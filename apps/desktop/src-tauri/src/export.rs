@@ -54,10 +54,7 @@ pub async fn cancel_export(
     state: State<'_, ExportCancellationState>,
     connection_id: String,
 ) -> Result<(), String> {
-    let entries = {
-        let mut handles = state.handles.lock().unwrap();
-        handles.remove(&connection_id).unwrap_or_default()
-    };
+    let entries = crate::infrastructure::cancellation::abort_slot(&state.handles, &connection_id);
     for handle in entries {
         handle.abort();
     }

@@ -3,7 +3,6 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager, Runtime, State};
-use tokio::task::AbortHandle;
 use urlencoding::encode;
 use uuid::Uuid;
 
@@ -33,10 +32,7 @@ pub(crate) async fn driver_for(
 const DEFAULT_MYSQL_PORT: u16 = 3306;
 const DEFAULT_POSTGRES_PORT: u16 = 5432;
 
-/// Per-slot collection of abort handles for in-flight cancellable tasks.
-/// Used by `QueryCancellationState`, `ExportCancellationState`, and
-/// `DumpCancellationState`.
-pub(crate) type AbortHandleMap = HashMap<String, Vec<Arc<AbortHandle>>>;
+use crate::infrastructure::cancellation::AbortHandleMap;
 
 /// Tracks abort handles for in-flight queries keyed by connection id. A
 /// slot can hold multiple handles when the UI fires several queries (or
@@ -50,37 +46,6 @@ impl Default for QueryCancellationState {
     fn default() -> Self {
         Self {
             handles: Arc::new(Mutex::new(HashMap::new())),
-        }
-    }
-}
-
-/// Push `handle` into the slot for `key`, first pruning any handles that
-/// have already finished so the Vec does not grow unboundedly across many
-/// sequential queries on the same connection.
-pub(crate) fn register_abort_handle(
-    handles: &Mutex<AbortHandleMap>,
-    key: String,
-    handle: Arc<AbortHandle>,
-) {
-    let mut guard = handles.lock().unwrap();
-    let entry = guard.entry(key).or_default();
-    entry.retain(|h| !h.is_finished());
-    entry.push(handle);
-}
-
-/// Remove the specific handle (matched by Arc identity) that a completing
-/// task registered, so it cannot fire on a future query that happens to
-/// reuse the same slot.
-pub(crate) fn unregister_abort_handle(
-    handles: &Mutex<AbortHandleMap>,
-    key: &str,
-    handle: &Arc<AbortHandle>,
-) {
-    let mut guard = handles.lock().unwrap();
-    if let Some(entry) = guard.get_mut(key) {
-        entry.retain(|h| !Arc::ptr_eq(h, handle));
-        if entry.is_empty() {
-            guard.remove(key);
         }
     }
 }
@@ -818,10 +783,7 @@ pub(crate) fn cancel_query_impl(
     state: &QueryCancellationState,
     connection_id: &str,
 ) -> Result<(), String> {
-    let entries = {
-        let mut handles = state.handles.lock().unwrap();
-        handles.remove(connection_id).unwrap_or_default()
-    };
+    let entries = crate::infrastructure::cancellation::abort_slot(&state.handles, connection_id);
     if entries.is_empty() {
         return Err("No running query found".into());
     }

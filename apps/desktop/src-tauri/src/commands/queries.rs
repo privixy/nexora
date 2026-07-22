@@ -21,6 +21,7 @@ use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
 use super::legacy::*;
+use crate::infrastructure::cancellation::{register_abort_handle, unregister_abort_handle};
 
 #[tauri::command]
 pub async fn cancel_query(

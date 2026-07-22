@@ -35,6 +35,9 @@ pub use keybindings::*;
 mod windows;
 pub use windows::*;
 
+pub(crate) use crate::infrastructure::cancellation::{
+    register_abort_handle, unregister_abort_handle, AbortHandleMap,
+};
 pub use legacy::*;
 
 #[cfg(test)]

@@ -28,6 +28,7 @@ pub mod export;
 pub mod export_crypto;
 pub mod health_check;
 pub mod heartbeat;
+pub mod infrastructure;
 pub mod json_viewer;
 pub mod k8s_tunnel;
 pub mod keychain_utils;

@@ -40,10 +40,7 @@ pub async fn cancel_dump(
     state: State<'_, DumpCancellationState>,
     connection_id: String,
 ) -> Result<(), String> {
-    let entries = {
-        let mut handles = state.handles.lock().unwrap();
-        handles.remove(&connection_id).unwrap_or_default()
-    };
+    let entries = crate::infrastructure::cancellation::abort_slot(&state.handles, &connection_id);
     if entries.is_empty() {
         return Err("No active dump process found".into());
     }
@@ -423,10 +420,7 @@ pub async fn cancel_import(
     connection_id: String,
 ) -> Result<(), String> {
     let key = import_slot_key(&connection_id);
-    let entries = {
-        let mut handles = state.handles.lock().unwrap();
-        handles.remove(&key).unwrap_or_default()
-    };
+    let entries = crate::infrastructure::cancellation::abort_slot(&state.handles, &key);
     if entries.is_empty() {
         return Err("No active import process found".into());
     }
