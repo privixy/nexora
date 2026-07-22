@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, X, Copy, Check, Settings } from "lucide-react";
-import { Modal } from "../ui/Modal";
+import { Modal } from "../../../../components/ui/Modal";
 
 interface PluginStartErrorModalProps {
   isOpen: boolean;

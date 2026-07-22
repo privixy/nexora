@@ -35,8 +35,8 @@
     "apps/desktop/tests/components/SlotAnchor.test.tsx": [
       "apps/desktop/src/components/ui/SlotAnchor.tsx",
       "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
-      "apps/desktop/src/contexts/PluginSlotProvider.tsx",
-      "apps/desktop/src/contexts/PluginSlotContext.ts",
+      "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
+      "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
       "apps/desktop/src/features/settings/state/SettingsContext.ts",
       "apps/desktop/src/types/pluginSlots.ts"
     ],

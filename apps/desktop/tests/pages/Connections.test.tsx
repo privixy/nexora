@@ -4,7 +4,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Connections } from "../../src/pages/Connections";
 import { useDatabase } from "../../src/hooks/useDatabase";
 import { useSettings } from "../../src/features/settings/hooks/useSettings";
-import { useDrivers } from "../../src/hooks/useDrivers";
+import { useDrivers } from "../../src/features/plugins/hooks/useDrivers";
 import { useOpenConnectionInNewWindow } from "../../src/hooks/useOpenConnectionInNewWindow";
 import type { SavedConnection } from "../../src/contexts/DatabaseContext";
 import type { DriverCapabilities, PluginManifest } from "../../src/types/plugins";
@@ -18,7 +18,7 @@ vi.mock("../../src/features/settings/hooks/useSettings", () => ({
   useSettings: vi.fn(),
 }));
 
-vi.mock("../../src/hooks/useDrivers", () => ({
+vi.mock("../../src/features/plugins/hooks/useDrivers", () => ({
   useDrivers: vi.fn(),
 }));
 

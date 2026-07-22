@@ -6,11 +6,11 @@ import i18n from "i18next";
 
 import { PluginSlotContext } from "./PluginSlotContext";
 import type { PluginSlotRegistryType } from "./PluginSlotContext";
-import type { SlotContribution, SlotName, SlotContext } from "../types/pluginSlots";
-import { VALID_SLOTS } from "../types/pluginSlots";
-import type { PluginManifest } from "../types/plugins";
-import * as pluginApi from "../pluginApi";
-import { useSettings } from "../features/settings/hooks/useSettings";
+import type { SlotContribution, SlotName, SlotContext } from "../contracts";
+import { VALID_SLOTS } from "../contracts";
+import type { PluginManifest } from "../contracts";
+import * as pluginApi from "../../../pluginApi";
+import { useSettings } from "../../settings";
 
 interface PluginSlotProviderProps {
   children: React.ReactNode;

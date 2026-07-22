@@ -9,7 +9,7 @@ import {
 import { invoke } from "@tauri-apps/api/core";
 import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useDatabase } from "../../hooks/useDatabase";
-import { useDrivers } from "../../hooks/useDrivers";
+import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import type { ExplainPlan } from "../../types/explain";
 import { isDataModifyingQuery } from "../../utils/explainPlan";
 import { isExplainableQuery } from "../../utils/sql";

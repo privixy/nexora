@@ -296,7 +296,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/PluginSettingsModal.tsx",
+    "importer": "apps/desktop/src/features/plugins/components/modals/PluginSettingsModal.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",
@@ -672,7 +672,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/PluginSlotProvider.tsx",
+    "importer": "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",
@@ -760,7 +760,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useDrivers.ts",
+    "importer": "apps/desktop/src/features/plugins/hooks/useDrivers.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",
@@ -800,7 +800,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/usePluginRegistry.ts",
+    "importer": "apps/desktop/src/features/plugins/hooks/usePluginRegistry.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",

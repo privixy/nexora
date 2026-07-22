@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../features/settings/state/ThemeContext";
 import { DatabaseContext } from "../contexts/DatabaseContext";
 import { SettingsContext } from "../features/settings/state/SettingsContext";
-import { PluginModalContext } from "../contexts/PluginModalContext";
-import type { PluginModalOptions } from "../contexts/PluginModalContext";
+import { PluginModalContext } from "../features/plugins/state/PluginModalContext";
+import type { PluginModalOptions } from "../features/plugins/state/PluginModalContext";
 import { toErrorMessage } from "../utils/errors";
 
 /**

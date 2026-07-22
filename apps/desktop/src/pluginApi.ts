@@ -10,7 +10,7 @@ export { usePluginQuery, usePluginConnection, usePluginToast, usePluginSetting, 
 
 // Types
 export type { SlotComponentProps, SlotContext, SlotName } from "./types/pluginSlots";
-export type { PluginModalOptions } from "./contexts/PluginModalContext";
+export type { PluginModalOptions } from "./features/plugins/state/PluginModalContext";
 
 // Slot registration helper exposed through the Nexora plugin API global.
 export function defineSlot(slot: string, component: unknown): { readonly __slot: string; readonly component: unknown } {

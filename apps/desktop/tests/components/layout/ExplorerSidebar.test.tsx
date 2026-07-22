@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { ExplorerSidebar } from "../../../src/components/layout/ExplorerSidebar";
 import { useDatabase } from "../../../src/hooks/useDatabase";
 import { useEditor } from "../../../src/hooks/useEditor";
-import { useDrivers } from "../../../src/hooks/useDrivers";
+import { useDrivers } from "../../../src/features/plugins/hooks/useDrivers";
 import type { DatabaseContextType } from "../../../src/contexts/DatabaseContext";
 import type { DriverCapabilities } from "../../../src/types/plugins";
 
@@ -17,7 +17,7 @@ vi.mock("../../../src/hooks/useEditor", () => ({
   useEditor: vi.fn(),
 }));
 
-vi.mock("../../../src/hooks/useDrivers", () => ({
+vi.mock("../../../src/features/plugins/hooks/useDrivers", () => ({
   useDrivers: vi.fn(),
 }));
 

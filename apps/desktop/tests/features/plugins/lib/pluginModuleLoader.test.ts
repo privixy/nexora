@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { loadUIExtensionModule, loadPluginUIExtensions } from "../../src/utils/pluginModuleLoader";
-import type { PluginManifest } from "../../src/types/plugins";
-import type { SlotComponentProps } from "../../src/types/pluginSlots";
+import { loadUIExtensionModule, loadPluginUIExtensions } from "../../../../src/features/plugins/lib/pluginModuleLoader";
+import type { PluginManifest } from "../../../../src/types/plugins";
+import type { SlotComponentProps } from "../../../../src/types/pluginSlots";
 
 const DummyComponent = (() => null) as React.FC<SlotComponentProps>;
 

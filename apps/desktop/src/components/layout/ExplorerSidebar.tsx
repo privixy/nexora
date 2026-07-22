@@ -78,7 +78,7 @@ import { QueryHistorySection } from "./sidebar/QueryHistorySection";
 import { NotebooksSection } from "./sidebar/NotebooksSection";
 import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT } from "../../utils/notebookStore";
 import { useConnectionLayoutContext } from "../../hooks/useConnectionLayoutContext";
-import { useDrivers } from "../../hooks/useDrivers";
+import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import { getConnectionAccent } from "../../utils/driverUI";
 import type { TableColumn } from "../../types/schema";
 import type { ContextMenuData } from "../../types/sidebar";

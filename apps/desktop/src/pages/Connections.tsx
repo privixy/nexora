@@ -30,7 +30,7 @@ import {
   AppWindow,
 } from "lucide-react";
 import { useDatabase } from "../hooks/useDatabase";
-import { useDrivers } from "../hooks/useDrivers";
+import { useDrivers } from "../features/plugins/hooks/useDrivers";
 import { useSettings } from "../features/settings/hooks/useSettings";
 import clsx from "clsx";
 import { ContextMenu } from "../components/ui/ContextMenu";

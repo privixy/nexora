@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
-import type { UIExtensionManifestEntry, PluginManifest } from "../types/plugins";
-import type { SlotContribution, SlotComponentProps, SlotName } from "../types/pluginSlots";
-import { VALID_SLOTS } from "../types/pluginSlots";
+import type { UIExtensionManifestEntry, PluginManifest } from "../contracts";
+import type { SlotContribution, SlotComponentProps, SlotName } from "../contracts";
+import { VALID_SLOTS } from "../contracts";
 
 function validateSlotName(slot: string): SlotName | null {
   return VALID_SLOTS.has(slot) ? (slot as SlotName) : null;

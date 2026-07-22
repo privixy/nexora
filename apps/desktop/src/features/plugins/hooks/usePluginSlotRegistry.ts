@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import { PluginSlotContext } from "../contexts/PluginSlotContext";
-import type { PluginSlotRegistryType } from "../contexts/PluginSlotContext";
+import { PluginSlotContext } from "../state/PluginSlotContext";
+import type { PluginSlotRegistryType } from "../state/PluginSlotContext";
 
 export function usePluginSlotRegistry(): PluginSlotRegistryType {
   const context = useContext(PluginSlotContext);

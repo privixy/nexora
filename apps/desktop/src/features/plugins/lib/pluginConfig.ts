@@ -1,5 +1,5 @@
-import type { PluginConfig } from "../features/settings";
-import type { PluginSettingDefinition } from "../types/plugins";
+import type { PluginConfig } from "../../settings";
+import type { PluginSettingDefinition } from "../contracts";
 
 /**
  * Builds a PluginConfig from a raw interpreter string entered by the user.

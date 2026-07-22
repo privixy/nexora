@@ -44,7 +44,7 @@ vi.mock("../../../src/components/ui/Select", () => ({
   ),
 }));
 
-vi.mock("../../../src/hooks/useDrivers", () => ({
+vi.mock("../../../src/features/plugins/hooks/useDrivers", () => ({
   useDrivers: () => ({
     drivers: [{
       id: "mysql",
@@ -69,7 +69,7 @@ vi.mock("../../../src/hooks/useDrivers", () => ({
   }),
 }));
 
-vi.mock("../../../src/hooks/usePluginSlotRegistry", () => ({
+vi.mock("../../../src/features/plugins/hooks/usePluginSlotRegistry", () => ({
   usePluginSlotRegistry: () => ({ getSlotContributions: () => [] }),
 }));
 

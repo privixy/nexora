@@ -8,7 +8,7 @@ import { Editor } from '../../pages/Editor';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';
 import { useDatabase } from '../../hooks/useDatabase';
-import { useDrivers } from '../../hooks/useDrivers';
+import { useDrivers } from '../../features/plugins/hooks/useDrivers';
 import { getConnectionAccent } from '../../utils/driverUI';
 import type { SplitView } from '../../utils/connectionLayout';
 

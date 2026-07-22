@@ -22,7 +22,7 @@ import { useConnectionManager } from "../../hooks/useConnectionManager";
 import { useOpenConnectionInNewWindow } from "../../hooks/useOpenConnectionInNewWindow";
 import { useConnectionLayoutContext } from "../../hooks/useConnectionLayoutContext";
 import { isConnectionGrouped } from "../../utils/connectionLayout";
-import { useDrivers } from "../../hooks/useDrivers";
+import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import { useKeybindings } from "../../hooks/useKeybindings";
 
 export const Sidebar = () => {

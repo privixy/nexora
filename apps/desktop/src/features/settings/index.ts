@@ -30,9 +30,11 @@ export { useUpdate } from "./hooks/useUpdate";
 export { useEditorTheme } from "./hooks/useEditorTheme";
 export { AiActivityPanel } from "./components/AiActivityPanel";
 export {
-  SettingControl,
+  SettingButtonGroup,
+  SettingNumberInput,
   SettingRow,
   SettingSection,
+  SettingSlider,
   SettingToggle,
 } from "./components/SettingControls";
 export { AiApprovalGate } from "./components/AiApprovalGate";

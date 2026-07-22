@@ -5,9 +5,9 @@ import {
   resolvePluginConfig,
   resolveSettingsWithDefaults,
   validateSettings,
-} from "../../src/utils/pluginConfig";
-import type { PluginConfig } from "../../src/features/settings/state/SettingsContext";
-import type { PluginSettingDefinition } from "../../src/types/plugins";
+} from "../../../../src/features/plugins/lib/pluginConfig";
+import type { PluginConfig } from "../../../../src/features/settings/state/SettingsContext";
+import type { PluginSettingDefinition } from "../../../../src/types/plugins";
 
 describe("pluginConfig", () => {
   describe("resolvePluginConfig", () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseAuthor, versionGte } from '../../src/utils/plugins';
+import { parseAuthor, versionGte } from '../../../../src/features/plugins/lib/plugins';
 
 describe('plugins', () => {
   describe('parseAuthor', () => {

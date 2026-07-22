@@ -123,7 +123,7 @@ vi.mock("../../src/hooks/useDangerousQueryGuard", () => ({
   }),
 }));
 
-vi.mock("../../src/hooks/useDrivers", () => ({
+vi.mock("../../src/features/plugins/hooks/useDrivers", () => ({
   useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
 }));
 

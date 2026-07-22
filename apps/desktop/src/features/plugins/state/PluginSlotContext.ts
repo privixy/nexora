@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import type { SlotContribution, SlotName, SlotContext } from "../types/pluginSlots";
+import type { SlotContribution, SlotName, SlotContext } from "../contracts";
 
 export interface PluginSlotRegistryType {
   /** All registered contributions */

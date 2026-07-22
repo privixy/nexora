@@ -24,8 +24,8 @@ const whatsNewModalMock = vi.hoisted(() => vi.fn());
 vi.mock("react-router-dom", () => ({ BrowserRouter: provider("BrowserRouter") }));
 vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
 vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: provider("KeybindingsProvider") }));
-vi.mock("../../src/contexts/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
-vi.mock("../../src/contexts/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
+vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
+vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
 vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
 vi.mock("../../src/components/ConnectionHealthMonitor", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,

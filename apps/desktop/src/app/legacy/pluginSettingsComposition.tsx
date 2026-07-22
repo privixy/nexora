@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { PluginSettingsPage } from "../../components/settings/PluginSettingsPage";
 import { PluginsTab } from "../../components/settings/PluginsTab";
-import { useDrivers } from "../../hooks/useDrivers";
+import { useDrivers } from "../../features/plugins";
 
 export function useLegacyPluginSettingsComposition() {
   const { allDrivers, installedPlugins, refresh } = useDrivers();

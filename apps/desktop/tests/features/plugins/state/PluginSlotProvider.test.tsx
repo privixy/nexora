@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { render, act } from "@testing-library/react";
 import { useContext } from "react";
-import { PluginSlotProvider } from "../../src/contexts/PluginSlotProvider";
-import { PluginSlotContext } from "../../src/contexts/PluginSlotContext";
-import { SettingsContext, DEFAULT_SETTINGS } from "../../src/features/settings/state/SettingsContext";
-import type { PluginSlotRegistryType } from "../../src/contexts/PluginSlotContext";
-import type { SlotContribution, SlotComponentProps } from "../../src/types/pluginSlots";
+import { PluginSlotProvider } from "../../../../src/features/plugins/state/PluginSlotProvider";
+import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
+import { SettingsContext, DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
+import type { PluginSlotRegistryType } from "../../../../src/features/plugins/state/PluginSlotContext";
+import type { SlotContribution, SlotComponentProps } from "../../../../src/types/pluginSlots";
 
 const TestComponent = ({ context: _ctx, pluginId }: SlotComponentProps) => (
   <span data-testid="slot-component">{pluginId}</span>

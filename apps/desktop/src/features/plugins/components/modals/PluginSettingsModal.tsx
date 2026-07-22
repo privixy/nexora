@@ -2,12 +2,12 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Settings, X, FolderOpen, RotateCcw } from "lucide-react";
 import { open } from "@tauri-apps/plugin-dialog";
-import { Modal } from "../ui/Modal";
-import { Select } from "../ui/Select";
-import { SlotAnchor } from "../ui/SlotAnchor";
-import { resolvePluginConfig, getDisplayInterpreter, resolveSettingsWithDefaults, validateSettings } from "../../utils/pluginConfig";
-import type { PluginConfig } from "../../features/settings";
-import type { PluginManifest, PluginSettingDefinition } from "../../types/plugins";
+import { Modal } from "../../../../components/ui/Modal";
+import { Select } from "../../../../components/ui/Select";
+import { SlotAnchor } from "../../../../components/ui/SlotAnchor";
+import { resolvePluginConfig, getDisplayInterpreter, resolveSettingsWithDefaults, validateSettings } from "../../lib/pluginConfig";
+import type { PluginConfig } from "../../../settings";
+import type { PluginManifest, PluginSettingDefinition } from "../../contracts";
 
 interface PluginSettingsModalProps {
   isOpen: boolean;

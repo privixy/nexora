@@ -111,7 +111,7 @@ import { type OnMount, type Monaco } from "@monaco-editor/react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../hooks/useAlert";
 import { useDatabase } from "../hooks/useDatabase";
-import { useDrivers } from "../hooks/useDrivers";
+import { useDrivers } from "../features/plugins/hooks/useDrivers";
 import { getConnectionAccent } from "../utils/driverUI";
 import { useSavedQueries } from "../hooks/useSavedQueries";
 import { useQueryHistory } from "../hooks/useQueryHistory";

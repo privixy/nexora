@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 
-import { PluginSlotContext } from "../../contexts/PluginSlotContext";
+import { PluginSlotContext } from "../../features/plugins/state/PluginSlotContext";
 import { SlotErrorBoundary } from "./SlotErrorBoundary";
 import type { SlotName, SlotContext } from "../../types/pluginSlots";
 

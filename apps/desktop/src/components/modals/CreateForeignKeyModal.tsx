@@ -4,7 +4,7 @@ import { X, Save, Loader2, AlertTriangle, Link } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
 import { SqlPreview } from '../ui/SqlPreview';
 import { useDatabase } from '../../hooks/useDatabase';
-import { useDrivers } from '../../hooks/useDrivers';
+import { useDrivers } from '../../features/plugins/hooks/useDrivers';
 import { Modal } from '../ui/Modal';
 import { supportsCreateForeignKeys, getCapabilitiesForDriver } from '../../utils/driverCapabilities';
 

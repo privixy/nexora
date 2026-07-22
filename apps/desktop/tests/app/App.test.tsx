@@ -26,8 +26,8 @@ function provider(name: string) {
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
 vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: provider("KeybindingsProvider") }));
-vi.mock("../../src/contexts/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
-vi.mock("../../src/contexts/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
+vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
+vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
 vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
 vi.mock("../../src/app/routes", () => ({ AppRoutes: () => <div data-testid="app-routes" /> }));
 vi.mock("../../src/components/ConnectionHealthMonitor", () => ({

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ConfirmModal } from "./ConfirmModal";
+import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
 
 interface PluginRemoveModalProps {
   isOpen: boolean;
