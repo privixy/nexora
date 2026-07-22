@@ -104,6 +104,10 @@ describe("architecture policy", () => {
     ]);
   });
 
+  it("ratchets file-size baselines to current tracked file sizes", () => {
+    expect(policy.fileSizeBaselines["apps/desktop/src-tauri/src/drivers/mysql/mod.rs"]).toBe(2340);
+  });
+
   it("rejects every old root desktop policy path", () => {
     const policyPaths = [
       ...policy.sourceRoots,

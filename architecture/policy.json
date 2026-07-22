@@ -79,7 +79,7 @@
     "apps/desktop/src-tauri/src/config.rs": 783,
     "apps/desktop/src-tauri/src/drivers/driver_trait.rs": 824,
     "apps/desktop/src-tauri/src/drivers/mysql/explain.rs": 1261,
-    "apps/desktop/src-tauri/src/drivers/mysql/mod.rs": 2343,
+    "apps/desktop/src-tauri/src/drivers/mysql/mod.rs": 2340,
     "apps/desktop/src-tauri/src/drivers/mysql/tests.rs": 1048,
     "apps/desktop/src-tauri/src/drivers/postgres/extract/advanced_types.rs": 1547,
     "apps/desktop/src-tauri/src/drivers/postgres/extract/simple/tests.rs": 1397,

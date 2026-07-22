@@ -331,9 +331,14 @@ export function collectViolations(root, policy, inventory = {}) {
   for (const file of files) {
     const basename = file.split("/").at(-1) ?? file;
     const isTestFile = /\.(test|spec)\.[^.]+$/.test(basename);
+    const isConfiguredTestFile = isTestFile
+      && policy.frontendTestRoots.some((testRoot) => isUnderRoot(file, testRoot));
+    const isSupportedTestFile = /\.test\.(?:ts|tsx)$/.test(basename);
 
-    if (/\.spec\.[^.]+$/.test(basename)) {
-      violations.push(`${file}: rename .spec test files to .test files`);
+    if (isConfiguredTestFile && /\.spec\.[^.]+$/.test(basename)) {
+      violations.push(`${file}: .spec test files are forbidden; use .test.ts or .test.tsx`);
+    } else if (isConfiguredTestFile && !isSupportedTestFile) {
+      violations.push(`${file}: unsupported test extension; use .test.ts or .test.tsx`);
     }
 
     if (isTestFile && policy.forbiddenFrontendTestRoots.some((root) => isUnderRoot(file, root)) && !frontendTestAllowlist.has(file)) {

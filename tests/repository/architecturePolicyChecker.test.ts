@@ -93,7 +93,7 @@ describe("architecture policy", () => {
       });
 
       expect(violations).toContain("frontend test must not live in production source: src/NewFeature.test.tsx");
-      expect(violations).toContain("tests/NewFeature.spec.ts: rename .spec test files to .test files");
+      expect(violations).toContain("tests/NewFeature.spec.ts: .spec test files are forbidden; use .test.ts or .test.tsx");
       expect(violations).toContain("tests/repository/importsDesktop.test.ts: repository tests may inspect files but must not import desktop-private modules from src");
       expect(violations).toContain("tests/repository/helper.ts: repository tests may inspect files but must not import desktop-private modules from src-tauri");
       expect(violations).toContain("src/Oversized.ts: 501 lines exceeds soft limit 500; split the file or add a ratcheted baseline with architecture approval");
@@ -200,6 +200,70 @@ describe("architecture policy", () => {
       expect(violations).not.toContain(expect.stringContaining("tests/repository/workspaceLayout.test.ts"));
       expect(violations).not.toContain(expect.stringContaining("apps/desktop/src-tauri/src/foo/tests.rs"));
       expect(violations).not.toContain(expect.stringContaining("apps/desktop/src-tauri/tests/database_integration.rs"));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects unsupported frontend and repository test extensions", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-test-extensions-"));
+
+    try {
+      const supportedFiles = [
+        "apps/desktop/tests/components/Supported.test.ts",
+        "apps/desktop/tests/components/SupportedView.test.tsx",
+        "tests/repository/supported.test.ts",
+      ];
+      const unsupportedFiles = [
+        "apps/desktop/tests/components/Hidden.test.js",
+        "apps/desktop/tests/components/HiddenView.test.jsx",
+        "tests/repository/hidden.test.mjs",
+        "tests/repository/hidden.test.cts",
+      ];
+      const specFiles = ["apps/desktop/tests/components/Hidden.spec.ts", "tests/repository/hidden.spec.tsx", "tests/repository/hidden.spec.js"];
+      for (const file of [...supportedFiles, ...unsupportedFiles, ...specFiles]) {
+        writeFixture(tempRoot, file, "export {};\n");
+      }
+      writeFixture(tempRoot, "apps/desktop/src/components/Supported.ts", "export {};\n");
+      writeFixture(tempRoot, "apps/desktop/src/components/SupportedView.tsx", "export {};\n");
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: ["apps/desktop/tests", "tests/repository"],
+        forbiddenFrontendTestRoots: [],
+        frontendTestAllowlist: [],
+        repositoryTestRoots: ["tests/repository"],
+        frontendTestOwners: {
+          "apps/desktop/tests/components/Supported.test.ts": ["apps/desktop/src/components/Supported.ts"],
+          "apps/desktop/tests/components/SupportedView.test.tsx": ["apps/desktop/src/components/SupportedView.tsx"],
+        },
+        rootTestRoots: ["tests/repository"],
+        repositoryTestForbiddenImportRoots: [],
+        rustInlineTestAllowlist: [],
+        rustCrateLevelTestAllowlist: [],
+        rustIntegrationTests: {},
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src"],
+      }, {
+        trackedFiles: [
+          ...supportedFiles,
+          ...unsupportedFiles,
+          ...specFiles,
+          "apps/desktop/src/components/Supported.ts",
+          "apps/desktop/src/components/SupportedView.tsx",
+        ],
+        workspacePackageDirectories: [],
+      });
+
+      for (const file of unsupportedFiles) {
+        expect(violations).toContain(`${file}: unsupported test extension; use .test.ts or .test.tsx`);
+      }
+      for (const file of specFiles) {
+        expect(violations).toContain(`${file}: .spec test files are forbidden; use .test.ts or .test.tsx`);
+      }
+      for (const file of supportedFiles) {
+        expect(violations).not.toContain(expect.stringContaining(file));
+      }
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }
