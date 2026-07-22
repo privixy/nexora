@@ -1,17 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
-import { MainLayout } from "../components/layout/MainLayout";
-import { Connections } from "../pages/Connections";
-import { Editor } from "../pages/Editor";
-import { McpPage } from "../pages/McpPage";
-import { Settings } from "../pages/Settings";
-import { SchemaDiagramPage } from "../pages/SchemaDiagramPage";
-import { TaskManagerPage } from "../pages/TaskManagerPage";
-import { VisualExplainPage } from "../pages/VisualExplainPage";
-import { JsonViewerPage } from "../pages/JsonViewerPage";
-import { ResultsWindowPage } from "../pages/ResultsWindowPage";
-import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
 import { useUpdate } from "../hooks/useUpdate";
 import { useChangelog } from "../hooks/useChangelog";
 import { useSettings } from "../hooks/useSettings";
@@ -19,6 +7,7 @@ import { useResultTypeColors } from "../hooks/useResultTypeColors";
 import { APP_VERSION } from "../version";
 import { isVersionAtMost, isVersionNewer } from "../utils/versionCompare";
 import { AppProviders } from "./providers";
+import { AppRoutes } from "./routes";
 
 const WHATS_NEW_VERSION_KEY = "nexora_last_seen_version";
 
@@ -107,36 +96,7 @@ export function App() {
         isLoading: isChangelogLoading,
       }}
     >
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            index
-            element={<Navigate to="/connections" replace />}
-          />
-          <Route path="connections" element={<Connections />} />
-          <Route
-            path="editor"
-            element={
-              <EditorErrorBoundary>
-                <Editor />
-              </EditorErrorBoundary>
-            }
-          />
-          <Route path="mcp" element={<McpPage />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route
-          path="/schema-diagram"
-          element={<SchemaDiagramPage />}
-        />
-        <Route path="/task-manager" element={<TaskManagerPage />} />
-        <Route path="/visual-explain" element={<VisualExplainPage />} />
-        <Route path="/json-viewer" element={<JsonViewerPage />} />
-        <Route
-          path="/results-window"
-          element={<ResultsWindowPage />}
-        />
-      </Routes>
+      <AppRoutes />
     </AppProviders>
   );
 }

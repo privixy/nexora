@@ -50,8 +50,8 @@ describe("frontend source ownership", () => {
   });
 
   it("freezes the authoritative source inventory", () => {
-    expect(sourceOwners).toHaveLength(413);
-    expect(hash(sourceOwners)).toBe("2a3e535761f49bc37c1c1f47f13778d1e474f6527a52b49218c5b59217f5e456");
+    expect(sourceOwners).toHaveLength(414);
+    expect(hash(sourceOwners)).toBe("b97589a773064721e5c87481740b5597d0e2c0cd6bf392f6a7be539af04492f6");
   });
 
   it("uses explicit rows instead of generated ownership rules", () => {
@@ -61,6 +61,7 @@ describe("frontend source ownership", () => {
 
   it.each([
     ["apps/desktop/src/app/providers.tsx", "app", "apps/desktop/src/app/providers.tsx", 4],
+    ["apps/desktop/src/app/routes.tsx", "app", "apps/desktop/src/app/routes.tsx", 5],
     ["apps/desktop/src/components/modals/NewConnectionModal.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx", 11],
     ["apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx", 11],
     ["apps/desktop/src/components/modals/TriggerEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx", 10],

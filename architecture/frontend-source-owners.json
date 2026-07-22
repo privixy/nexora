@@ -18,6 +18,12 @@
     "moveTask": 4
   },
   {
+    "source": "apps/desktop/src/app/routes.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/routes.tsx",
+    "moveTask": 5
+  },
+  {
     "source": "apps/desktop/src/components/ConnectionErrorBanner.tsx",
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/components/ConnectionErrorBanner.tsx",
