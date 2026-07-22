@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -66,6 +74,7 @@ const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json")
   rustTemplateInlineTestRoots: string[];
   rustTemplateInlineTestAllowlist: string[];
   rustCrateLevelTestAllowlist: string[];
+  rustLegacyTransferOwners: Record<string, { owner: string; removeAfter: string }>;
   allowedWorkspaceDependencies: Record<string, string[]>;
   fileSizeBaselines: Record<string, number>;
   sourceRoots: string[];
@@ -141,6 +150,20 @@ describe("architecture policy", () => {
       "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs",
     ]);
     expect(policy.rustCrateLevelTestAllowlist).toEqual([]);
+    expect(policy.rustLegacyTransferOwners).toEqual({
+      "apps/desktop/src-tauri/src/export.rs": {
+        owner: "future DatabaseDriver semantic transfer program",
+        removeAfter: "behavior-approved DatabaseDriver export operations",
+      },
+      "apps/desktop/src-tauri/src/dump_commands.rs": {
+        owner: "future DatabaseDriver semantic transfer program",
+        removeAfter: "behavior-approved DatabaseDriver dump and import operations",
+      },
+      "apps/desktop/src-tauri/src/clipboard_import.rs": {
+        owner: "future DatabaseDriver semantic transfer program",
+        removeAfter: "behavior-approved DatabaseDriver clipboard transfer operations",
+      },
+    });
     expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
     expect(
       policy.fileSizeBaselines["apps/desktop/src/pages/Editor.tsx"],
@@ -156,6 +179,38 @@ describe("architecture policy", () => {
 
   it("ratchets file-size baselines to current tracked file sizes", () => {
     expect(policy.fileSizeBaselines["apps/desktop/src-tauri/src/drivers/mysql/mod.rs"]).toBe(2340);
+  });
+
+  it("confines legacy transfer behavior to exact root owners", () => {
+    const rustRoot = resolve(root, "apps/desktop/src-tauri/src");
+    const collectRustFiles = (directory: string): string[] => readdirSync(directory, { withFileTypes: true })
+      .flatMap((entry) => {
+        const path = resolve(directory, entry.name);
+        return entry.isDirectory()
+          ? collectRustFiles(path)
+          : entry.isFile() && entry.name.endsWith(".rs")
+            ? [path]
+            : [];
+      });
+    const forbiddenPatterns = [
+      /\bsqlx::/,
+      /get_(?:mysql|postgres|sqlite)_pool/,
+    ];
+    const protectedRoots = ["commands", "domains", "infrastructure"]
+      .flatMap((directory) => collectRustFiles(resolve(rustRoot, directory)))
+      .filter((file) => !file.includes("/infrastructure/pools/"));
+
+    for (const file of protectedRoots) {
+      const source = readFileSync(file, "utf8");
+      expect(
+        forbiddenPatterns.some((pattern) => pattern.test(source)),
+        `${file} contains legacy transfer behavior`,
+      ).toBe(false);
+    }
+
+    expect(existsSync(resolve(rustRoot, "domains/import_export"))).toBe(false);
+    const driverTrait = readFileSync(resolve(rustRoot, "drivers/driver_trait.rs"), "utf8");
+    expect(driverTrait).not.toMatch(/fn\s+(?:export|dump|import_database|clipboard_import)\b/);
   });
 
   it.each([

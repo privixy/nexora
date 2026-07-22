@@ -3,16 +3,16 @@ use crate::domains::connections::DatabaseContext;
 use crate::drivers::{mysql, postgres, sqlite};
 use crate::dump_utils::{drop_table_if_exists, format_table_ref, insert_into_statement};
 use crate::infrastructure::connections::TauriConnectionContextResolver;
+use crate::infrastructure::import_export::{create_sql_reader, SqlStatementStream};
 use crate::models::ConnectionParams;
 use crate::pool_manager::{get_mysql_pool, get_postgres_pool, get_sqlite_pool};
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 use std::fs::File;
-use std::io::{BufRead, BufReader, BufWriter, Read, Write};
+use std::io::{BufWriter, Write};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Runtime, State};
-use zip::ZipArchive;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DumpOptions {
@@ -302,62 +302,6 @@ pub struct ImportProgress {
     pub current_operation: String,
 }
 
-// Stream-based statement parser that yields statements as they are read
-struct SqlStatementStream<R: BufRead> {
-    reader: R,
-    current_statement: String,
-    line_buffer: String,
-}
-
-impl<R: BufRead> SqlStatementStream<R> {
-    fn new(reader: R) -> Self {
-        Self {
-            reader,
-            current_statement: String::new(),
-            line_buffer: String::new(),
-        }
-    }
-
-    fn next_statement(&mut self) -> Result<Option<String>, String> {
-        loop {
-            self.line_buffer.clear();
-            let bytes_read = self
-                .reader
-                .read_line(&mut self.line_buffer)
-                .map_err(|e| e.to_string())?;
-
-            if bytes_read == 0 {
-                // EOF - return last statement if any
-                if self.current_statement.trim().is_empty() {
-                    return Ok(None);
-                } else {
-                    let stmt = self.current_statement.trim().to_string();
-                    self.current_statement.clear();
-                    return Ok(Some(stmt));
-                }
-            }
-
-            let trimmed = self.line_buffer.trim();
-
-            // Skip comments and empty lines
-            if trimmed.starts_with("--") || trimmed.is_empty() {
-                continue;
-            }
-
-            self.current_statement.push_str(&self.line_buffer);
-
-            // Check if statement is complete
-            if trimmed.ends_with(';') {
-                let stmt = self.current_statement.trim().to_string();
-                self.current_statement.clear();
-                if !stmt.is_empty() {
-                    return Ok(Some(stmt));
-                }
-            }
-        }
-    }
-}
-
 // Helper macro for streaming execution with progress
 macro_rules! execute_statements_streaming {
     ($executor_macro:ident, $stream:expr, $app:expr) => {{
@@ -594,38 +538,6 @@ pub async fn import_database<R: Runtime>(
     match result {
         Ok(res) => res,
         Err(_) => Err("Import cancelled".into()),
-    }
-}
-
-// Creates a BufReader from the file without loading entire content into memory
-// For ZIP files, extracts to a string in memory (limitation of zip crate)
-// For regular SQL files, uses streaming with a large buffer
-fn create_sql_reader(file: File, file_path: &str) -> Result<Box<dyn BufRead + Send>, String> {
-    if file_path.ends_with(".zip") {
-        // For ZIP files, we need to extract the SQL content to memory
-        // The zip crate doesn't support true streaming because by_index requires ownership
-        let mut archive =
-            ZipArchive::new(file).map_err(|e| format!("Failed to open zip: {}", e))?;
-
-        // Find first .sql file and extract content
-        for i in 0..archive.len() {
-            let mut zipped_file = archive.by_index(i).map_err(|e| e.to_string())?;
-            if zipped_file.name().ends_with(".sql") {
-                let mut content = String::new();
-                zipped_file
-                    .read_to_string(&mut content)
-                    .map_err(|e| e.to_string())?;
-
-                // Create a BufReader from the extracted string
-                let cursor = std::io::Cursor::new(content.into_bytes());
-                return Ok(Box::new(BufReader::new(cursor)));
-            }
-        }
-        Err("No .sql file found in zip archive".into())
-    } else {
-        // For regular files, use a buffered reader with larger buffer for efficient streaming
-        let reader = BufReader::with_capacity(8192 * 16, file); // 128KB buffer
-        Ok(Box::new(reader))
     }
 }
 

@@ -1,8 +1,7 @@
-use super::format::{
-    parse_csv_delimiter, value_to_csv_string, ExportFormat, DEFAULT_CSV_DELIMITER,
+use super::{
+    parse_csv_delimiter, value_to_csv_string, CsvSink, ExportFormat, JsonSink, ProgressEmitter,
+    RowSink, DEFAULT_CSV_DELIMITER,
 };
-use super::progress::ProgressEmitter;
-use super::sink::{CsvSink, JsonSink, RowSink};
 use serde_json::{json, Value};
 use std::fs;
 

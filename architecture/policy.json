@@ -128,6 +128,20 @@
     "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs"
   ],
   "rustCrateLevelTestAllowlist": [],
+  "rustLegacyTransferOwners": {
+    "apps/desktop/src-tauri/src/export.rs": {
+      "owner": "future DatabaseDriver semantic transfer program",
+      "removeAfter": "behavior-approved DatabaseDriver export operations"
+    },
+    "apps/desktop/src-tauri/src/dump_commands.rs": {
+      "owner": "future DatabaseDriver semantic transfer program",
+      "removeAfter": "behavior-approved DatabaseDriver dump and import operations"
+    },
+    "apps/desktop/src-tauri/src/clipboard_import.rs": {
+      "owner": "future DatabaseDriver semantic transfer program",
+      "removeAfter": "behavior-approved DatabaseDriver clipboard transfer operations"
+    }
+  },
   "rustIntegrationTests": {
     "apps/desktop/src-tauri/tests/database_integration.rs": {
       "classification": "external-infrastructure",

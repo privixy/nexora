@@ -16,7 +16,12 @@ fn legacy_dump_import_orchestration_contract_is_preserved() {
     assert!(source.contains("drop_table_if_exists"));
     assert!(source.contains("-- Data for table {}"));
     assert!(source.contains("insert_into_statement"));
-    assert!(source.contains("if zipped_file.name().ends_with(\".sql\")"));
+    let reader_source = fs::read_to_string(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/src/infrastructure/import_export/sql_reader.rs"
+    ))
+    .unwrap();
+    assert!(reader_source.contains("if zipped_file.name().ends_with(\".sql\")"));
     assert!(source.contains("Error at statement {}: {}\\nQuery: {}"));
     assert!(source.contains("const PROGRESS_EMIT_INTERVAL: usize = 500"));
     assert!(source.contains("\"Starting import...\".to_string()"));
