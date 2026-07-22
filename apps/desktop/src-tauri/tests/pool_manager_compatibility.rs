@@ -1,10 +1,9 @@
 #![allow(unused_imports)]
 
 use nexora_lib::pool_manager::{
-    close_all_pools, close_pool, close_pool_with_id, get_mysql_pool,
-    get_mysql_pool_for_database, get_mysql_pool_with_id, get_postgres_pool,
-    get_postgres_pool_with_id, get_sqlite_pool, get_sqlite_pool_with_id, has_pool,
-    has_pool_for_database,
+    close_all_pools, close_pool, close_pool_with_id, get_mysql_pool, get_mysql_pool_for_database,
+    get_mysql_pool_with_id, get_postgres_pool, get_postgres_pool_with_id, get_sqlite_pool,
+    get_sqlite_pool_with_id, has_pool, has_pool_for_database,
 };
 
 #[test]
@@ -16,7 +15,6 @@ fn target_pool_modules_exist() {
     let facade = std::fs::read_to_string(root.join("pool_manager.rs")).unwrap();
     assert!(facade.contains("pub use crate::infrastructure::pools::*;"));
     for file in [
-        "mod.rs",
         "key.rs",
         "registry.rs",
         "startup_script.rs",
@@ -25,6 +23,10 @@ fn target_pool_modules_exist() {
         "postgres.rs",
         "sqlite.rs",
     ] {
-        assert!(root.join("infrastructure/pools").join(file).exists());
+        let source = std::fs::read_to_string(root.join("infrastructure/pools").join(file)).unwrap();
+        assert!(
+            !source.trim().is_empty(),
+            "{file} must own focused pool logic"
+        );
     }
 }
