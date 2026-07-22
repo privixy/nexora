@@ -57,7 +57,7 @@ import {
   setNotebookTitle,
   createNotebookFromState,
 } from "../../utils/notebookStore";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { useSqlAutocompleteRegistration } from "../../hooks/useSqlAutocompleteRegistration";
 import { isMultiDatabaseCapable } from "../../features/plugins";
 import { useSettings } from "../../features/settings/hooks/useSettings";

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { fetchConnectionWithCredentials } from "../../src/utils/credentials";
+import { fetchConnectionWithCredentials } from "../../src/features/connections/lib/credentials";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),

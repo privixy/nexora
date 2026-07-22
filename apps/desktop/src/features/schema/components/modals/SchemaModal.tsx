@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Loader2, Key, Table2 } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
-import { useDatabase } from '../../../../hooks/useDatabase';
+import { useDatabase } from '../../../connections';
 import { Modal } from '../../../../components/ui/Modal';
 
 interface TableColumn {

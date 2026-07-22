@@ -16,7 +16,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { TableNodeComponent, type TableNodeData, type ColumnAggregation } from './TableNode';
 import { JoinEdge } from './JoinEdge';
-import { useDatabase } from '../../hooks/useDatabase';
+import { useDatabase } from '../../features/connections';
 import { invoke } from '@tauri-apps/api/core';
 import { dragState } from '../../utils/dragState';
 import { useEditor } from '../../hooks/useEditor';

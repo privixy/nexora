@@ -6,7 +6,7 @@ import {
   getSupportedConnectionStringProtocols,
   type ParsedConnectionString,
   type ConnectionStringDriver,
-} from "../../src/utils/connectionStringParser";
+} from "../../src/features/connections/lib/connectionStringParser";
 
 function createRemoteDriver(
   id: string,

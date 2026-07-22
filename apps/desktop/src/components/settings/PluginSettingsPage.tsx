@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { FolderOpen, Check, RotateCcw } from "lucide-react";
 import { useSettings } from "../../features/settings/hooks/useSettings";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import { SettingSection, SettingRow } from "../../features/settings/components/SettingControls";
 import { Select } from "../ui/Select";
@@ -15,7 +15,7 @@ import {
   resolveSettingsWithDefaults,
   validateSettings,
 } from "../../features/plugins/lib/pluginConfig";
-import { findConnectionsForDrivers } from "../../utils/connectionManager";
+import { findConnectionsForDrivers } from "../../features/connections/lib/connectionManager";
 import type {
   PluginManifest,
   PluginSettingDefinition,

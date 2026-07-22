@@ -8,7 +8,7 @@ import { useAlert } from "../../../../hooks/useAlert";
 import { extractEditableViewDefinition } from "../../../../utils/sql";
 import { formatSql } from "../../../../utils/sqlFormat";
 import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
-import { useDatabase } from "../../../../hooks/useDatabase";
+import { useDatabase } from "../../../connections";
 import { Modal } from "../../../../components/ui/Modal";
 
 interface ViewEditorModalProps {

@@ -9,9 +9,9 @@ import {
   getCardClass,
   type ConnectionParams,
   type DatabaseDriver,
-} from '../../src/utils/connections';
+} from '../../src/features/connections/lib/connections';
 import type { DriverCapabilities } from '../../src/types/plugins';
-import type { SavedConnection } from '../../src/contexts/DatabaseContext';
+import type { SavedConnection } from '../../src/features/connections/state/DatabaseContext';
 
 const makeFileCaps = (): DriverCapabilities => ({
   schemas: false, views: false, routines: false,

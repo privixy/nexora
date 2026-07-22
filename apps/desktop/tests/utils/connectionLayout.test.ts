@@ -5,8 +5,8 @@ import {
   buildPanelDatabaseData,
   canActivateSplit,
   type SplitView,
-} from '../../src/utils/connectionLayout';
-import type { ConnectionData } from '../../src/contexts/DatabaseContext';
+} from '../../src/features/connections/lib/connectionLayout';
+import type { ConnectionData } from '../../src/features/connections/state/DatabaseContext';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

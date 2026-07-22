@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { save } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../hooks/useAlert";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { isMultiDatabaseCapable } from "../../features/plugins";
 import { Modal } from "../ui/Modal";
 import { Loader2, Download, Database, Square, CheckSquare } from "lucide-react";

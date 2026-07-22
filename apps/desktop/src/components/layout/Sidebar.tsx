@@ -2,14 +2,14 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plug2, Settings, Cpu, PanelLeft, Layers, Star, Clock, BookOpen } from "lucide-react";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { useTheme } from "../../features/settings/hooks/useTheme";
 import { SlotAnchor } from "../ui/SlotAnchor";
 
 // Sub-components
 import { NavItem } from "./sidebar/NavItem";
-import { OpenConnectionItem } from "./sidebar/OpenConnectionItem";
-import { ConnectionGroupItem } from "./sidebar/ConnectionGroupItem";
+import { OpenConnectionItem } from "../../features/connections/components/sidebar/OpenConnectionItem";
+import { ConnectionGroupItem } from "../../features/connections/components/sidebar/ConnectionGroupItem";
 import { ExplorerSidebar, type SidebarTab } from "./ExplorerSidebar";
 import { PanelDatabaseProvider } from "./PanelDatabaseProvider";
 import { QuickNavigatorModal } from "../modals/QuickNavigatorModal";
@@ -18,10 +18,10 @@ import { SchemaModal } from "../../features/schema";
 
 // Hooks & Utils
 import { useSidebarResize } from "../../hooks/useSidebarResize";
-import { useConnectionManager } from "../../hooks/useConnectionManager";
-import { useOpenConnectionInNewWindow } from "../../hooks/useOpenConnectionInNewWindow";
+import { useConnectionManager } from "../../features/connections/hooks/useConnectionManager";
+import { useOpenConnectionInNewWindow } from "../../features/connections/hooks/useOpenConnectionInNewWindow";
 import { useConnectionLayoutContext } from "../../hooks/useConnectionLayoutContext";
-import { isConnectionGrouped } from "../../utils/connectionLayout";
+import { isConnectionGrouped } from "../../features/connections/lib/connectionLayout";
 import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import { useKeybindings } from "../../hooks/useKeybindings";
 

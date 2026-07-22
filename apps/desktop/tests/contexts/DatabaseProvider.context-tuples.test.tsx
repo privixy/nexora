@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import React from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { DatabaseProvider } from '../../src/contexts/DatabaseProvider';
-import { useDatabase } from '../../src/hooks/useDatabase';
-import type { DatabaseData, SchemaData } from '../../src/contexts/DatabaseContext';
+import { DatabaseProvider } from '../../src/features/connections/state/DatabaseProvider';
+import { useDatabase } from '../../src/features/connections/hooks/useDatabase';
+import type { DatabaseData, SchemaData } from '../../src/features/connections/state/DatabaseContext';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(() => Promise.resolve(() => {})) }));

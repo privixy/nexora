@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { groupRoutinesByType, type GroupedRoutines } from '../../src/utils/routines';
-import type { RoutineInfo } from '../../src/contexts/DatabaseContext';
+import type { RoutineInfo } from '../../src/features/connections/state/DatabaseContext';
 
 describe('groupRoutinesByType', () => {
   it('should group routines into procedures and functions', () => {

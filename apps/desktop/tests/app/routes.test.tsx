@@ -39,7 +39,7 @@ function page(name: string): ComponentType {
 vi.mock("../../src/components/layout/MainLayout", () => ({
   MainLayout: () => <div data-testid="main-layout"><Outlet /></div>,
 }));
-vi.mock("../../src/pages/Connections", () => ({ Connections: page("connections") }));
+vi.mock("../../src/features/connections/pages/ConnectionsPage", () => ({ Connections: page("connections") }));
 vi.mock("../../src/pages/Editor", () => ({ Editor: page("editor") }));
 vi.mock("../../src/pages/McpPage", () => ({ McpPage: page("mcp") }));
 vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));

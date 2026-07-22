@@ -22,7 +22,7 @@ import { formatSqlIdentifier } from "../../utils/identifiers";
 import { formatSortClause } from "../../utils/tableToolbar";
 import { FilterRow } from "./FilterRow";
 import { SlotAnchor } from "./SlotAnchor";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 
 interface TableToolbarProps {
   initialFilter?: string;

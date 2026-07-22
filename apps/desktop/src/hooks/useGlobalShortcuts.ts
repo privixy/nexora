@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useKeybindings } from "./useKeybindings";
-import { useConnectionManager } from "./useConnectionManager";
+import { useConnectionManager } from "../features/connections/hooks/useConnectionManager";
 
 /**
  * Registers global keyboard shortcuts for navigation.

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Plus, Trash2, Save, Loader2, AlertTriangle } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
-import { useDatabase } from '../../../../hooks/useDatabase';
+import { useDatabase } from '../../../connections';
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDataTypes } from '../../../../hooks/useDataTypes';
 import { Modal } from '../../../../components/ui/Modal';

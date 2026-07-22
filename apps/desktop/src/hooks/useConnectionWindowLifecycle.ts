@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useDatabase } from "./useDatabase";
+import { useDatabase } from "../features/connections";
 
 /** Label prefix used for dedicated single-connection windows. */
 const CONNECTION_WINDOW_PREFIX = "connection-window-";

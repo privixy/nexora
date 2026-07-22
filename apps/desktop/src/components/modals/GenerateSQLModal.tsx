@@ -4,7 +4,7 @@ import clsx from "clsx";
 import {X, Loader2, Copy, Check, FileCode, List, Table2, PenLine, Trash2, Play} from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { useNavigate } from "react-router-dom";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { Modal } from "../ui/Modal";
 import { SqlPreview } from "../ui/SqlPreview";
 import { useAlert } from "../../hooks/useAlert";

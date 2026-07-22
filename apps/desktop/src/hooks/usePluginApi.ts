@@ -5,7 +5,7 @@ import { openUrl as openExternal } from "@tauri-apps/plugin-opener";
 import { useTranslation } from "react-i18next";
 
 import { ThemeContext } from "../features/settings/state/ThemeContext";
-import { DatabaseContext } from "../contexts/DatabaseContext";
+import { DatabaseContext } from "../features/connections/state/DatabaseContext";
 import { SettingsContext } from "../features/settings/state/SettingsContext";
 import { PluginModalContext } from "../features/plugins/state/PluginModalContext";
 import type { PluginModalOptions } from "../features/plugins/state/PluginModalContext";

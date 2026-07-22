@@ -23,7 +23,7 @@ import {
   validateK8sConnection,
   type K8sConnection,
   type K8sConnectionInput,
-} from "../../utils/k8s";
+} from "../../features/connections/lib/k8s";
 import { toErrorMessage } from "../../utils/errors";
 import { Modal } from "../ui/Modal";
 import { Select } from "../ui/Select";

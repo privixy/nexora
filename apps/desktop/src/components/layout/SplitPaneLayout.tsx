@@ -7,10 +7,10 @@ import { EditorProvider } from '../../contexts/EditorProvider';
 import { Editor } from '../../pages/Editor';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';
-import { useDatabase } from '../../hooks/useDatabase';
+import { useDatabase } from '../../features/connections';
 import { useDrivers } from '../../features/plugins/hooks/useDrivers';
-import { getConnectionAccent } from '../../utils/driverUI';
-import type { SplitView } from '../../utils/connectionLayout';
+import { getConnectionAccent } from '../../features/connections/lib/driverUI';
+import type { SplitView } from '../../features/connections/lib/connectionLayout';
 
 export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
   const containerRef = useRef<HTMLDivElement>(null);

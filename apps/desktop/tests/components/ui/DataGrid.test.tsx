@@ -71,7 +71,7 @@ const mockDatabaseContext = vi.hoisted(() => ({
   connections: [] as Array<{ id: string; detect_json_in_text_columns?: boolean }>,
 }));
 
-vi.mock("../../../src/hooks/useDatabase", () => ({
+vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => mockDatabaseContext,
 }));
 

@@ -34,7 +34,10 @@ export default defineConfig([
   },
   {
     files: ["apps/desktop/src/**/*.tsx"],
-    ignores: ["apps/desktop/src/utils/**/*.tsx"],
+    ignores: [
+      "apps/desktop/src/utils/**/*.tsx",
+      "apps/desktop/src/features/connections/lib/driverUI.tsx",
+    ],
     extends: [reactRefresh.configs.vite],
   },
 ]);

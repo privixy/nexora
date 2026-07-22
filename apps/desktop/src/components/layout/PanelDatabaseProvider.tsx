@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { DatabaseContext } from '../../contexts/DatabaseContext';
-import { useDatabase } from '../../hooks/useDatabase';
+import { DatabaseContext } from '../../features/connections/state/DatabaseContext';
+import { useDatabase } from '../../features/connections';
 
 interface Props {
   connectionId: string;

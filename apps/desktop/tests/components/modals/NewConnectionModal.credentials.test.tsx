@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import { NewConnectionModal } from "../../../src/components/modals/NewConnectionModal";
+import { NewConnectionModal } from "../../../src/features/connections/components/NewConnectionModal/NewConnectionModal";
 
 interface MockSelectProps {
   value: string | null;
@@ -73,7 +73,7 @@ vi.mock("../../../src/features/plugins/hooks/usePluginSlotRegistry", () => ({
   usePluginSlotRegistry: () => ({ getSlotContributions: () => [] }),
 }));
 
-vi.mock("../../../src/utils/k8s", () => ({
+vi.mock("../../../src/features/connections/lib/k8s", () => ({
   loadK8sConnections: k8sMocks.loadK8sConnections,
   getK8sContexts: k8sMocks.getK8sContexts,
   getK8sNamespaces: vi.fn(),
@@ -81,7 +81,7 @@ vi.mock("../../../src/utils/k8s", () => ({
   getK8sResourcePorts: vi.fn(),
 }));
 
-vi.mock("../../../src/utils/ssh", () => ({
+vi.mock("../../../src/features/connections/lib/ssh", () => ({
   loadSshConnections: sshMocks.loadSshConnections,
 }));
 

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { SettingSection } from "./SettingControls";
-import { SshConnectionsManager } from "../../../components/ssh/SshConnectionsManager";
+import { SshConnectionsManager } from "../../connections";
 
 export function SshTab() {
   const { t } = useTranslation();

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { EditorProvider } from "../../src/contexts/EditorProvider";
 import { useEditor } from "../../src/hooks/useEditor";
-import { DatabaseContext, type DatabaseContextType } from "../../src/contexts/DatabaseContext";
+import { DatabaseContext, type DatabaseContextType } from "../../src/features/connections/state/DatabaseContext";
 import { invoke } from "@tauri-apps/api/core";
 import React from "react";
 import type { TableSchema } from "../../src/types/editor";

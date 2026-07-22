@@ -3,7 +3,7 @@ import {
   clearAutocompleteCache,
   registerSqlAutocomplete,
 } from '../../src/utils/autocomplete';
-import type { TableInfo } from '../../src/contexts/DatabaseContext';
+import type { TableInfo } from '../../src/features/connections/state/DatabaseContext';
 
 // Mock @tauri-apps/api/core
 vi.mock('@tauri-apps/api/core', () => ({

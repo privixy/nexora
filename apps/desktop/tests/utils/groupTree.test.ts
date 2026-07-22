@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { flattenGroupTree } from "../../src/utils/groupTree";
-import type { ConnectionGroup } from "../../src/contexts/DatabaseContext";
+import { flattenGroupTree } from "../../src/features/connections/lib/groupTree";
+import type { ConnectionGroup } from "../../src/features/connections/state/DatabaseContext";
 
 const g = (
   id: string,

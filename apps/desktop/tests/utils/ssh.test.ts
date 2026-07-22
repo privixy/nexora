@@ -4,7 +4,7 @@ import {
   formatSshConnectionString,
   testSshConnection,
   type SshConnection,
-} from "../../src/utils/ssh";
+} from "../../src/features/connections/lib/ssh";
 
 // Mock Tauri's invoke
 vi.mock("@tauri-apps/api/core", () => ({

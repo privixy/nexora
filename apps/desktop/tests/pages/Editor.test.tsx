@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import React from "react";
 import { Editor } from "../../src/pages/Editor";
-import { DatabaseContext, type DatabaseContextType } from "../../src/contexts/DatabaseContext";
+import { DatabaseContext, type DatabaseContextType } from "../../src/features/connections/state/DatabaseContext";
 import { EditorContext, type EditorContextType } from "../../src/contexts/EditorContext";
 import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../src/types/editor";
 import type { PluginManifest } from "../../src/types/plugins";

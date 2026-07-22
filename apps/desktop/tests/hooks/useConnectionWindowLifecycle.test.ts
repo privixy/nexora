@@ -11,7 +11,7 @@ vi.mock("@tauri-apps/api/window", () => ({
   getCurrentWindow: vi.fn(() => ({ label: windowLabel, close: closeMock })),
 }));
 
-vi.mock("../../src/hooks/useDatabase", () => ({
+vi.mock("../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => ({ globallyOpenConnectionIds: globallyOpen }),
 }));
 

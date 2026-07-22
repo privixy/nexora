@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useConnectionManager } from "./useConnectionManager";
+import { useConnectionManager } from "../features/connections/hooks/useConnectionManager";
 
 /**
  * When the app is launched in a dedicated connection window

@@ -3,13 +3,13 @@ import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { MemoryRouter } from "react-router-dom";
 import { ExplorerSidebar } from "../../../src/components/layout/ExplorerSidebar";
-import { useDatabase } from "../../../src/hooks/useDatabase";
+import { useDatabase } from "../../../src/features/connections/hooks/useDatabase";
 import { useEditor } from "../../../src/hooks/useEditor";
 import { useDrivers } from "../../../src/features/plugins/hooks/useDrivers";
-import type { DatabaseContextType } from "../../../src/contexts/DatabaseContext";
+import type { DatabaseContextType } from "../../../src/features/connections/state/DatabaseContext";
 import type { DriverCapabilities } from "../../../src/types/plugins";
 
-vi.mock("../../../src/hooks/useDatabase", () => ({
+vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: vi.fn(),
 }));
 

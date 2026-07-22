@@ -6,8 +6,8 @@ import {
   getStatusDotClass,
   findConnectionsForDrivers,
   type ConnectionStatus,
-} from '../../src/utils/connectionManager';
-import type { SavedConnection, ConnectionData } from '../../src/contexts/DatabaseContext';
+} from '../../src/features/connections/lib/connectionManager';
+import type { SavedConnection, ConnectionData } from '../../src/features/connections/state/DatabaseContext';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

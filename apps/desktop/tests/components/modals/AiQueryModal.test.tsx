@@ -11,7 +11,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: invokeMock,
 }));
 
-vi.mock("../../../src/hooks/useDatabase", () => ({
+vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => ({
     activeConnectionId: "active-connection",
     activeSchema: "public",

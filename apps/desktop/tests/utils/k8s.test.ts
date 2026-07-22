@@ -13,7 +13,7 @@ import {
   deleteK8sConnection,
   type K8sConnection,
   type K8sConnectionInput,
-} from "../../src/utils/k8s";
+} from "../../src/features/connections/lib/k8s";
 
 // Mock Tauri's invoke
 vi.mock("@tauri-apps/api/core", () => ({

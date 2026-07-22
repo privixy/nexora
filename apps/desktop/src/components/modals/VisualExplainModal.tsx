@@ -8,12 +8,12 @@ import {
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { useSettings } from "../../features/settings/hooks/useSettings";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import type { ExplainPlan } from "../../types/explain";
 import { isDataModifyingQuery } from "../../utils/explainPlan";
 import { isExplainableQuery } from "../../utils/sql";
-import { getConnectionIcon } from "../../utils/driverUI";
+import { getConnectionIcon } from "../../features/connections/lib/driverUI";
 import { Modal } from "../ui/Modal";
 import { VisualExplainView } from "../explain/VisualExplainView";
 import type { ExplainViewMode } from "./visual-explain/ExplainSummaryBar";

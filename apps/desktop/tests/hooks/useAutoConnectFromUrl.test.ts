@@ -11,7 +11,7 @@ vi.mock("react-router-dom", () => ({
   useSearchParams: () => [searchParams] as const,
 }));
 
-vi.mock("../../src/hooks/useConnectionManager", () => ({
+vi.mock("../../src/features/connections/hooks/useConnectionManager", () => ({
   useConnectionManager: () => ({ handleConnect: handleConnectMock }),
 }));
 

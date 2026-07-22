@@ -44,12 +44,12 @@
       "apps/desktop/src/utils/sidebarTableItem.ts"
     ],
     "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
-      "apps/desktop/src/components/modals/NewConnectionModal.tsx"
+      "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx"
     ],
     "apps/desktop/tests/contexts/DatabaseProvider.context-tuples.test.tsx": [
-      "apps/desktop/src/contexts/DatabaseProvider.tsx",
-      "apps/desktop/src/contexts/DatabaseContext.ts",
-      "apps/desktop/src/hooks/useDatabase.ts"
+      "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
+      "apps/desktop/src/features/connections/state/DatabaseContext.ts",
+      "apps/desktop/src/features/connections/hooks/useDatabase.ts"
     ],
     "apps/desktop/tests/utils/minimax.test.ts": [
       "apps/desktop/src/utils/settings.ts",
@@ -135,8 +135,8 @@
         "removeByTask": 12
       },
       {
-        "path": "apps/desktop/src/components/modals/NewConnectionModal.tsx",
-        "importTarget": "../ui/SqlEditorWrapper",
+        "path": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
+        "importTarget": "../../../../components/ui/SqlEditorWrapper",
         "owner": "connections",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
@@ -474,23 +474,17 @@
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
     "apps/desktop/src/components/layout/ExplorerSidebar.tsx": 3174,
     "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx": 549,
-    "apps/desktop/src/components/modals/ImportFromAppModal.tsx": 929,
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
-    "apps/desktop/src/components/modals/NewConnectionModal.tsx": 2409,
     "apps/desktop/src/components/modals/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/components/notebook/NotebookView.tsx": 950,
     "apps/desktop/src/components/settings/PluginsTab.tsx": 1316,
-    "apps/desktop/src/components/ssh/SshConnectionsManager.tsx": 649,
     "apps/desktop/src/components/ui/DataGrid.tsx": 1791,
     "apps/desktop/src/components/ui/DataGridRow.tsx": 770,
     "apps/desktop/src/components/ui/MultiResultPanel.tsx": 599,
     "apps/desktop/src/components/ui/TableToolbar.tsx": 684,
     "apps/desktop/src/components/ui/VisualQueryBuilder.tsx": 713,
-    "apps/desktop/src/contexts/DatabaseProvider.tsx": 1586,
-    "apps/desktop/src/pages/Connections.tsx": 1416,
     "apps/desktop/src/pages/Editor.tsx": 4181,
     "apps/desktop/src/pages/TaskManagerPage.tsx": 664,
-    "apps/desktop/tests/contexts/DatabaseProvider.test.tsx": 951,
     "apps/desktop/tests/contexts/EditorProvider.test.tsx": 634,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/dataGrid.test.ts": 689,
@@ -506,6 +500,12 @@
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,
     "apps/desktop/tests/features/settings/state/ThemeProvider.test.tsx": 651,
     "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501,
-    "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698
+    "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698,
+    "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx": 2409,
+    "apps/desktop/src/features/connections/state/DatabaseProvider.tsx": 1586,
+    "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 929,
+    "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,
+    "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
+    "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951
   }
 }

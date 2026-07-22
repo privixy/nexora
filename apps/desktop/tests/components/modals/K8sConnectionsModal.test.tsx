@@ -55,7 +55,7 @@ vi.mock("../../../src/components/ui/Select", () => ({
   ),
 }));
 
-vi.mock("../../../src/utils/k8s", () => ({
+vi.mock("../../../src/features/connections/lib/k8s", () => ({
   loadK8sConnections: k8sMocks.loadK8sConnections,
   saveK8sConnection: k8sMocks.saveK8sConnection,
   updateK8sConnection: k8sMocks.updateK8sConnection,

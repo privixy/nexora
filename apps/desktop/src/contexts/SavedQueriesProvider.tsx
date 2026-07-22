@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { useDatabase } from '../hooks/useDatabase';
+import { useDatabase } from '../features/connections';
 import { SavedQueriesContext, type SavedQuery } from './SavedQueriesContext';
 
 export const SavedQueriesProvider = ({ children }: { children: ReactNode }) => {

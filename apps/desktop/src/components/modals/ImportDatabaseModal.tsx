@@ -5,7 +5,7 @@ import { listen } from "@tauri-apps/api/event";
 import { useAlert } from "../../hooks/useAlert";
 import { Loader2, Database, X, CheckCircle2, XCircle } from "lucide-react";
 import { formatElapsedTime } from "../../utils/formatTime";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { Modal } from "../ui/Modal";
 
 interface ImportProgress {

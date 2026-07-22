@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import '../index.css';
 import '../i18n/config';
-import { DatabaseProvider } from '../contexts/DatabaseProvider';
+import { DatabaseProvider } from '../features/connections';
 import { SettingsProvider, ThemeProvider, UpdateProvider } from '../features/settings';
 import { SavedQueriesProvider } from '../contexts/SavedQueriesProvider';
 import { QueryHistoryProvider } from '../contexts/QueryHistoryProvider';

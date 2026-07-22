@@ -17,7 +17,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { readText } from '@tauri-apps/plugin-clipboard-manager';
 import { Modal } from '../../../components/ui/Modal';
 import { Select } from '../../../components/ui/Select';
-import { useDatabase } from '../../../hooks/useDatabase';
+import { useDatabase } from '../../connections';
 import { useSettings } from '../../settings';
 import { SchemaEditor, type SchemaColumn } from './ClipboardImport/SchemaEditor';
 import { DataPreview } from '../../../components/modals/ClipboardImport/DataPreview';

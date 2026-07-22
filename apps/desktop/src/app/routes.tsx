@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "../components/layout/MainLayout";
 import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
-import { Connections } from "../pages/Connections";
+import { ConnectionsPage } from "../features/connections";
 import { Editor } from "../pages/Editor";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { McpPage } from "../pages/McpPage";
@@ -22,7 +22,7 @@ export function AppRoutes() {
           index
           element={<Navigate to="/connections" replace />}
         />
-        <Route path="connections" element={<Connections />} />
+        <Route path="connections" element={<ConnectionsPage />} />
         <Route
           path="editor"
           element={

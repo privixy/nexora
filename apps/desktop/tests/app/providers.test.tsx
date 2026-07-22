@@ -27,7 +27,7 @@ vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: 
 vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
 vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
 vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
-vi.mock("../../src/components/ConnectionHealthMonitor", () => ({
+vi.mock("../../src/features/connections/components/ConnectionHealthMonitor", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,
 }));
 vi.mock("../../src/components/modals/UpdateNotificationModal", () => ({

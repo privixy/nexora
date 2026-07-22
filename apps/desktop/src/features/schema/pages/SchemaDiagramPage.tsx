@@ -4,7 +4,7 @@ import { SchemaDiagram } from '../components/SchemaDiagram';
 import { resolveDiagramDatabase, resolveDiagramSchema } from '../lib/schemaDiagram';
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DatabaseProvider } from '../../../contexts/DatabaseProvider';
+import { DatabaseProvider } from '../../connections';
 import { EditorProvider } from '../../../contexts/EditorProvider';
 
 export const SchemaDiagramPage = () => {

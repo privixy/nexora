@@ -25,7 +25,7 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: translate }),
 }));
 
-vi.mock("../../../src/hooks/useDatabase", () => ({
+vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => database,
 }));
 

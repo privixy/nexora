@@ -6,7 +6,7 @@
 
 import type { DriverCapabilities } from "../types/plugins";
 import type { ForeignKey, Index } from "../types/schema";
-import type { DatabaseDriver } from "./connections";
+import type { DatabaseDriver } from "../features/connections/lib/connections";
 
 export type { ForeignKey, Index, DatabaseDriver };
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Save, Loader2, ListTree, AlertTriangle } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
-import { useDatabase } from '../../../../hooks/useDatabase';
+import { useDatabase } from '../../../connections';
 import { Modal } from '../../../../components/ui/Modal';
 
 interface CreateIndexModalProps {

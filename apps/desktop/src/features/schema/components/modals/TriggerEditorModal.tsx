@@ -6,7 +6,7 @@ import { ask } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../../../hooks/useAlert";
 import { Modal } from "../../../../components/ui/Modal";
 import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
-import { useDatabase } from "../../../../hooks/useDatabase";
+import { useDatabase } from "../../../connections";
 import { quoteIdentifier } from "../../../../utils/identifiers";
 
 interface TriggerEditorModalProps {

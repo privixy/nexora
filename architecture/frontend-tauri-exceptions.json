@@ -8,7 +8,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ConnectionHealthMonitor.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ConnectionHealthMonitor.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -16,7 +16,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ConnectionIconImage.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ConnectionIconImage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -24,7 +24,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ConnectionIconImage.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ConnectionIconImage.tsx",
     "importTarget": "@tauri-apps/api/path",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -208,7 +208,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/ImportFromAppModal.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -216,7 +216,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/ImportFromAppModal.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -224,7 +224,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/ImportFromAppModal.tsx",
+    "importer": "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -248,7 +248,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/NewConnectionModal.tsx",
+    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -256,7 +256,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/NewConnectionModal.tsx",
+    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -264,7 +264,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx",
+    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -272,7 +272,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx",
+    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -560,7 +560,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ssh/SshConnectionsManager.tsx",
+    "importer": "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -640,7 +640,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/DatabaseProvider.tsx",
+    "importer": "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -648,7 +648,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/DatabaseProvider.tsx",
+    "importer": "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -768,7 +768,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useOpenConnectionInNewWindow.ts",
+    "importer": "apps/desktop/src/features/connections/hooks/useOpenConnectionInNewWindow.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -840,7 +840,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Connections.tsx",
+    "importer": "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -848,7 +848,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Connections.tsx",
+    "importer": "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -856,7 +856,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Connections.tsx",
+    "importer": "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -952,7 +952,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/credentials.ts",
+    "importer": "apps/desktop/src/features/connections/lib/credentials.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -968,7 +968,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/k8s.ts",
+    "importer": "apps/desktop/src/features/connections/lib/k8s.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
@@ -1000,7 +1000,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/ssh.ts",
+    "importer": "apps/desktop/src/features/connections/lib/ssh.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
     "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",

@@ -56,7 +56,7 @@ import {
   formatDateTime,
 } from "../../utils/dateInput";
 import { RowEditorSidebar } from "./RowEditorSidebar";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import {
   rowsToCSV,
   rowsToCSVWithHeaders,

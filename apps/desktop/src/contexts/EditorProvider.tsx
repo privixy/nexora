@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
 import type { Tab, SchemaCache, TableSchema, QueryResultEntry } from "../types/editor";
 import { EditorContext } from "./EditorContext";
-import { useDatabase } from "../hooks/useDatabase";
+import { useDatabase } from "../features/connections";
 import { invoke } from "@tauri-apps/api/core";
 import {
   generateTabId,

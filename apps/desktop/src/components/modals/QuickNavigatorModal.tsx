@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, X, Table, Eye, Code2, Zap, Database, Play, Copy, Hash, FileText, FileCode } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useDatabase } from "../../hooks/useDatabase";
+import { useDatabase } from "../../features/connections";
 import { useAlert } from "../../hooks/useAlert";
 import { quoteTableRef } from "../../utils/identifiers";
 import { isMultiDatabaseCapable, getDatabaseList } from "../../features/plugins";

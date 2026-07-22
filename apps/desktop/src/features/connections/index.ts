@@ -25,3 +25,12 @@ export type {
   ImportResolution,
   ImportSourceInfo,
 } from "./contracts/import";
+
+export { Connections as ConnectionsPage } from "./pages/ConnectionsPage";
+export { DatabaseProvider } from "./state/DatabaseProvider";
+export { useDatabase } from "./hooks/useDatabase";
+export { NewConnectionModal } from "./components/NewConnectionModal/NewConnectionModal";
+export { ExportConnectionsModal } from "./components/ExportConnectionsModal";
+export { ImportFromAppModal } from "./components/ImportFromAppModal";
+export { getConnectionIcon, getConnectionAccent, getDriverIcon, getDriverColorStyle } from "./lib/driverUI";
+export { SshConnectionsManager } from "./components/SshConnectionsManager";

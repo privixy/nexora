@@ -6,7 +6,7 @@ const createRootMock = vi.fn(() => ({ render: renderMock }));
 
 vi.mock("react-dom/client", () => ({ default: { createRoot: createRootMock } }));
 vi.mock("../../src/app/App", () => ({ App: function App() { return null; } }));
-vi.mock("../../src/contexts/DatabaseProvider", () => ({ DatabaseProvider: function DatabaseProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/features/connections/state/DatabaseProvider", () => ({ DatabaseProvider: function DatabaseProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/features/settings/state/SettingsProvider", () => ({ SettingsProvider: function SettingsProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/contexts/SavedQueriesProvider", () => ({ SavedQueriesProvider: function SavedQueriesProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/contexts/QueryHistoryProvider", () => ({ QueryHistoryProvider: function QueryHistoryProvider({ children }: { children: ReactNode }) { return children; } }));
