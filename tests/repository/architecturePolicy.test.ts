@@ -394,7 +394,7 @@ describe("architecture policy", () => {
 
   it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
     const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
-    expect(inventory).toHaveLength(126);
+    expect(inventory).toHaveLength(122);
     expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
       "characterizationTest",
       "gatewayOrAdapter",
@@ -403,7 +403,7 @@ describe("architecture policy", () => {
       "owner",
       "removeByTask",
     ].join(","))).toBe(true);
-    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(126);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(122);
   });
 
   it("requires direct Tauri inventory ownership and removal task to match staging", () => {
