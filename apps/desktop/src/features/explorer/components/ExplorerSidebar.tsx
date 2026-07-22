@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type SubmitEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { quoteTableRef } from "../../../utils/identifiers";
@@ -32,10 +32,7 @@ import {
   X,
   Star,
   FileInput,
-  Layers,
-  Clock,
   Clipboard,
-  BookOpen,
 } from "lucide-react";
 const { ask, open } = dialogGateway;
 import { toErrorMessage } from "../../../utils/errors";
@@ -49,7 +46,6 @@ import type { SavedQuery } from "../../editor";
 import type { QueryHistoryEntry } from "../../../types/queryHistory";
 import type { NotebookMetadata } from "../../../types/notebook";
 import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
-import { Modal } from "../../../components/ui/Modal";
 import { SchemaModal } from "../../schema";
 import { CreateTableModal } from "../../schema";
 import { QueryModal } from "../../../components/modals/QueryModal";
@@ -102,103 +98,15 @@ import {
   getCreateTableRefreshPlan,
   type CreateTableTarget,
 } from "../../schema";
+import { useExplorerActions } from "../hooks/useExplorerActions";
+import { useExplorerContextMenu } from "../hooks/useExplorerContextMenu";
+import { useExplorerSelection } from "../hooks/useExplorerSelection";
+import { CreateDatabaseModal } from "./CreateDatabaseModal";
+import { ExplorerModals } from "./ExplorerModals";
+import { ExplorerStructure } from "./ExplorerStructure";
+import { ExplorerTabs, type SidebarTab } from "./ExplorerTabs";
 
-export type SidebarTab = "structure" | "favorites" | "history" | "notebooks";
-
-interface CreateDatabaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreate: (database: string) => Promise<void>;
-}
-
-const CreateDatabaseModal = ({ isOpen, onClose, onCreate }: CreateDatabaseModalProps) => {
-  const { t } = useTranslation();
-  const [database, setDatabase] = useState("");
-  const [error, setError] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setDatabase("");
-      setError("");
-      setIsCreating(false);
-    }
-  }, [isOpen]);
-
-  const handleSubmit = async (e: SubmitEvent) => {
-    e.preventDefault();
-    const nextDatabase = database.trim();
-    if (!nextDatabase) {
-      setError(t("sidebar.createDatabasePrompt"));
-      return;
-    }
-
-    setIsCreating(true);
-    setError("");
-    try {
-      await onCreate(nextDatabase);
-      onClose();
-    } catch (e) {
-      console.error(e);
-      setError(t("sidebar.failCreateDatabase") + toErrorMessage(e));
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit} className="bg-elevated border border-strong rounded-xl shadow-2xl w-[480px] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-default bg-base">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-900/30 p-2 rounded-lg">
-              <Database className="text-blue-400" size={20} />
-            </div>
-            <h2 className="text-lg font-semibold text-primary">{t("sidebar.createDatabase")}</h2>
-          </div>
-          <button type="button" onClick={onClose} className="text-secondary hover:text-primary transition-colors">
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs uppercase font-bold text-muted mb-1">{t("sidebar.createDatabasePrompt")}</label>
-            <input
-              value={database}
-              onChange={(e) => {
-                setDatabase(e.target.value);
-                setError("");
-              }}
-              className={`w-full bg-base border rounded-lg px-3 py-2 text-primary focus:border-blue-500 focus:outline-none transition-all font-mono ${!database.trim() && error ? "border-red-500" : "border-strong"}`}
-              placeholder={t("sidebar.createDatabasePrompt")}
-              autoFocus
-            />
-          </div>
-          {error && <div className="text-red-400 text-sm">{error}</div>}
-        </div>
-
-        <div className="p-4 border-t border-default bg-base/50 flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-secondary hover:text-primary hover:bg-surface-secondary rounded transition-colors text-sm"
-          >
-            {t("common.cancel")}
-          </button>
-          <button
-            type="submit"
-            disabled={isCreating}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isCreating && <Loader2 size={14} className="animate-spin" />}
-            {isCreating ? t("common.loading") : t("sidebar.createDatabase")}
-          </button>
-        </div>
-      </form>
-    </Modal>
-  );
-};
+export type { SidebarTab } from "./ExplorerTabs";
 
 interface ExplorerSidebarProps {
   sidebarWidth: number;
@@ -284,14 +192,11 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
   const { splitView, isSplitVisible, explorerConnectionId, setExplorerConnectionId } = useConnectionLayoutContext();
 
-  const [contextMenu, setContextMenu] = useState<{
-    x: number;
-    y: number;
-    type: string;
-    id: string;
-    label: string;
-    data?: ContextMenuData;
-  } | null>(null);
+  const {
+    contextMenu,
+    openContextMenu: handleContextMenu,
+    closeContextMenu,
+  } = useExplorerContextMenu();
   const [schemaModal, setSchemaModal] = useState<{ tableName: string; database?: string; schema?: string } | null>(null);
   const [runRoutineModal, setRunRoutineModal] = useState<{ routine: RoutineInfo; database?: string; schema?: string } | null>(null);
   const [routineDropConfirm, setRoutineDropConfirm] = useState<{ name: string; routineType: string; database?: string; schema?: string } | null>(null);
@@ -351,10 +256,20 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
   } | null>(null);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
   const [isSchemaFilterOpen, setIsSchemaFilterOpen] = useState(false);
-  const [pendingSchemaSelection, setPendingSchemaSelection] = useState<Set<string>>(new Set());
   const [dbFilter, setDbFilter] = useState("");
   const [isDbManagerOpen, setIsDbManagerOpen] = useState(false);
-  const [pendingDbSelection, setPendingDbSelection] = useState<Set<string>>(new Set());
+  const {
+    pendingSchemas: pendingSchemaSelection,
+    pendingDatabases: pendingDbSelection,
+    resetSchemas: setPendingSchemaSelection,
+    resetDatabases: setPendingDbSelection,
+    toggleSchema,
+    toggleDatabase,
+    toggleAllSchemas,
+    toggleAllDatabases,
+    confirmSchemas,
+    confirmDatabases,
+  } = useExplorerSelection();
   const [allAvailableDatabases, setAllAvailableDatabases] = useState<string[]>([]);
   const [isLoadingAllDbs, setIsLoadingAllDbs] = useState(false);
   const [viewEditorModal, setViewEditorModal] = useState<{
@@ -403,15 +318,18 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     setSchemaVersion((v) => v + 1);
   };
 
-  const runQuery = (sql: string, queryName?: string, tableName?: string, preventAutoRun: boolean = false, schema?: string, readOnly?: boolean, database?: string) => {
-    navigate("/editor", {
-      state: { initialQuery: sql, queryName, tableName, preventAutoRun, database, schema, readOnly, targetConnectionId: activeConnectionId },
-    });
-  };
-
-  const runSavedQuery = (sql: string, queryName?: string, database?: string) => {
-    runQuery(sql, queryName, undefined, false, undefined, undefined, database);
-  };
+  const {
+    runQuery,
+    runSavedQuery,
+    selectTable,
+    openTable,
+    openView,
+  } = useExplorerActions({
+    connectionId: activeConnectionId,
+    driver: activeDriver,
+    navigate,
+    setActiveTableContext,
+  });
 
   // Notebook count for the tab badge — kept in sync with the active connection
   // and refreshed whenever notebooks change (save/rename/delete/import).
@@ -488,87 +406,35 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
   }, []);
 
   const handleTableClick = (tableName: string, schema?: string) => {
-    setActiveTableContext(tableName, undefined, schema);
+    selectTable(tableName, undefined, schema);
   };
 
   const handleOpenTable = (tableName: string, schema?: string) => {
-    setActiveTableContext(tableName, undefined, schema);
-    const quotedTable = quoteTableRef(tableName, activeDriver, schema);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedTable}`,
-        tableName: tableName,
-        schema,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+    openTable(tableName, undefined, schema);
   };
 
   const handleViewClick = (viewName: string) => {
     setActiveView(viewName);
   };
 
-  const handleOpenView = (
-    viewName: string,
-    schema?: string,
-    materialized = false,
-  ) => {
-    const quotedView = quoteTableRef(viewName, activeDriver, schema);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedView}`,
-        tableName: viewName,
-        schema,
-        materialized,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+  const handleOpenView = (viewName: string, schema?: string, materialized = false) => {
+    openView(viewName, undefined, schema, materialized);
   };
 
-  // Multi-database: open table/view without qualified prefix — backend receives database context separately.
   const handleOpenDatabaseTable = (tableName: string, database?: string) => {
-    const quotedTable = quoteTableRef(tableName, activeDriver);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedTable}`,
-        tableName,
-        database,
-        title: database ? `${tableName} (${database})` : tableName,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+    openTable(tableName, database);
   };
 
   const handleOpenDatabaseView = (viewName: string, database?: string) => {
-    const quotedView = quoteTableRef(viewName, activeDriver);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedView}`,
-        tableName: viewName,
-        database,
-        title: database ? `${viewName} (${database})` : viewName,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+    openView(viewName, database);
   };
 
   const handleTableContext = (tableName: string, database: string, schema?: string) => {
-    setActiveTableContext(tableName, database, schema);
+    selectTable(tableName, database, schema);
   };
 
   const handleOpenDatabaseSchemaTable = (tableName: string, database: string, schema?: string) => {
-    setActiveTableContext(tableName, database, schema);
-    const quotedTable = quoteTableRef(tableName, activeDriver, schema);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedTable}`,
-        tableName,
-        database,
-        schema,
-        title: `${tableName} (${database})`,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+    openTable(tableName, database, schema);
   };
 
   const handleOpenDatabaseSchemaView = (
@@ -577,18 +443,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     schema?: string,
     materialized = false,
   ) => {
-    const quotedView = quoteTableRef(viewName, activeDriver, schema);
-    navigate("/editor", {
-      state: {
-        initialQuery: `SELECT * FROM ${quotedView}`,
-        tableName: viewName,
-        database,
-        schema,
-        materialized,
-        title: `${viewName} (${database})`,
-        targetConnectionId: activeConnectionId,
-      },
-    });
+    openView(viewName, database, schema, materialized);
   };
 
   const handleRoutineDoubleClick = async (
@@ -691,17 +546,6 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     }
   };
 
-  const handleContextMenu = (
-    e: React.MouseEvent,
-    type: string,
-    id: string,
-    label: string,
-    data?: ContextMenuData,
-  ) => {
-    e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY, type, id, label, data });
-  };
-
   const handleImportDatabase = async (database?: string) => {
     const file = await open({
       filters: [{ name: "SQL / Zip File", extensions: ["sql", "zip"] }],
@@ -744,7 +588,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
         : [];
     const nextDatabases = Array.from(new Set([...baseDatabases, database]));
     setSelectedDatabases(nextDatabases);
-    setPendingDbSelection(new Set(nextDatabases));
+    setPendingDbSelection(nextDatabases);
     await refreshAvailableDatabases();
     await loadDatabaseData(database, undefined, true);
   };
@@ -1034,39 +878,21 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
           </div>
         </div>
 
-        {/* Tab bar */}
-        <div className="flex items-center border-b border-default bg-base px-1">
-          {([
-            { id: "structure" as const, icon: Layers, label: t("sidebar.structure") },
-            { id: "favorites" as const, icon: Star, label: t("sidebar.favorites"), count: queries.length },
-            { id: "history" as const, icon: Clock, label: t("sidebar.queryHistory"), count: historyEntries.length },
-            { id: "notebooks" as const, icon: BookOpen, label: t("sidebar.notebooks.tab"), count: notebookCount },
-          ]).map((tab) => {
-            const isActive = sidebarTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setSidebarTab(tab.id)}
-                className={`flex items-center justify-center gap-1.5 px-2 py-2 text-xs font-medium transition-colors relative min-w-0 ${
-                  isActive ? "flex-1 text-primary" : "shrink-0 text-muted hover:text-secondary"
-                }`}
-                title={`${tab.label}${tab.count !== undefined && tab.count > 0 ? ` (${tab.count})` : ""}`}
-                aria-label={tab.label}
-              >
-                <tab.icon size={14} className="shrink-0" />
-                {isActive && <span className="truncate">{tab.label}</span>}
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span className="shrink-0 rounded-full bg-overlay px-1.5 text-[10px] leading-[1.4] text-muted">
-                    {tab.count}
-                  </span>
-                )}
-                {isActive && (
-                  <div className="absolute bottom-0 left-1 right-1 h-0.5 bg-blue-500 rounded-full" />
-                )}
-              </button>
-            );
-          })}
-        </div>
+        <ExplorerTabs
+          activeTab={sidebarTab}
+          counts={{
+            favorites: queries.length,
+            history: historyEntries.length,
+            notebooks: notebookCount,
+          }}
+          labels={{
+            structure: t("sidebar.structure"),
+            favorites: t("sidebar.favorites"),
+            history: t("sidebar.queryHistory"),
+            notebooks: t("sidebar.notebooks.tab"),
+          }}
+          onChange={setSidebarTab}
+        />
 
         <div ref={sidebarBodyRef} className="flex-1 overflow-y-auto py-2">
           {/* Favorites tab */}
@@ -1193,7 +1019,8 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
           {/* Structure tab */}
           {sidebarTab === "structure" && (
-            (isLoadingTables || isLoadingSchemas) ? (
+            <ExplorerStructure>
+            {(isLoadingTables || isLoadingSchemas) ? (
               <div className="flex items-center justify-center h-20 text-muted gap-2">
                 <Loader2 size={16} className="animate-spin" />
                 <span className="text-sm">{t("sidebar.loadingSchema")}</span>
@@ -1260,13 +1087,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                               <div
                                 key={schemaName}
                                 onClick={() => {
-                                  const next = new Set(pendingSchemaSelection);
-                                  if (isSelected) {
-                                    next.delete(schemaName);
-                                  } else {
-                                    next.add(schemaName);
-                                  }
-                                  setPendingSchemaSelection(next);
+                                  toggleSchema(schemaName);
                                 }}
                                 className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer transition-colors ${
                                   isSelected
@@ -1296,11 +1117,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => {
-                            if (pendingSchemaSelection.size === schemas.length) {
-                              setPendingSchemaSelection(new Set());
-                            } else {
-                              setPendingSchemaSelection(new Set(schemas));
-                            }
+                            toggleAllSchemas(schemas);
                           }}
                           className="text-xs text-blue-500 hover:underline"
                         >
@@ -1311,8 +1128,8 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                         <button
                           onClick={() => {
                             if (pendingSchemaSelection.size > 0) {
-                              setSelectedSchemas(Array.from(pendingSchemaSelection));
-                              setPendingSchemaSelection(new Set());
+                              void confirmSchemas(setSelectedSchemas);
+                              setPendingSchemaSelection([]);
                             }
                           }}
                           disabled={pendingSchemaSelection.size === 0}
@@ -1355,7 +1172,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                           )}
                           <button
                             onClick={() => {
-                              setPendingSchemaSelection(new Set(selectedSchemas));
+                              setPendingSchemaSelection(selectedSchemas);
                               setIsSchemaFilterOpen(!isSchemaFilterOpen);
                             }}
                             className={`p-1 rounded transition-colors mr-1.5 ${
@@ -1380,11 +1197,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   </span>
                                   <button
                                     onClick={() => {
-                                      if (pendingSchemaSelection.size === schemas.length) {
-                                        setPendingSchemaSelection(new Set());
-                                      } else {
-                                        setPendingSchemaSelection(new Set(schemas));
-                                      }
+                                        toggleAllSchemas(schemas);
                                     }}
                                     className="text-xs text-blue-500 hover:underline"
                                   >
@@ -1400,13 +1213,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                       <div
                           key={`${activeConnectionId}:${schemaName}`}
                                         onClick={() => {
-                                          const next = new Set(pendingSchemaSelection);
-                                          if (isSelected) {
-                                            next.delete(schemaName);
-                                          } else {
-                                            next.add(schemaName);
-                                          }
-                                          setPendingSchemaSelection(next);
+                                          toggleSchema(schemaName);
                                         }}
                                         className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer transition-colors ${
                                           isSelected
@@ -1436,7 +1243,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   <button
                                     onClick={() => {
                                       if (pendingSchemaSelection.size > 0) {
-                                        setSelectedSchemas(Array.from(pendingSchemaSelection));
+                                        void confirmSchemas(setSelectedSchemas);
                                       }
                                       setIsSchemaFilterOpen(false);
                                     }}
@@ -1565,7 +1372,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                       <button
                         onClick={async () => {
                           if (!isDbManagerOpen) {
-                            setPendingDbSelection(new Set(selectedDatabases));
+                            setPendingDbSelection(selectedDatabases);
                             setIsLoadingAllDbs(true);
                             try {
                               await refreshAvailableDatabases();
@@ -1597,11 +1404,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                               </span>
                               <button
                                 onClick={() => {
-                                  if (pendingDbSelection.size === allAvailableDatabases.length) {
-                                    setPendingDbSelection(new Set());
-                                  } else {
-                                    setPendingDbSelection(new Set(allAvailableDatabases));
-                                  }
+                                  toggleAllDatabases(allAvailableDatabases);
                                 }}
                                 className="text-xs text-blue-500 hover:underline"
                               >
@@ -1622,13 +1425,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   <div
                       key={`${activeConnectionId}:${dbName}`}
                                     onClick={() => {
-                                      const next = new Set(pendingDbSelection);
-                                      if (isSelected) {
-                                        next.delete(dbName);
-                                      } else {
-                                        next.add(dbName);
-                                      }
-                                      setPendingDbSelection(next);
+                                      toggleDatabase(dbName);
                                     }}
                                     className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer transition-colors ${
                                       isSelected ? "text-primary hover:bg-surface-secondary" : "text-muted hover:bg-surface-secondary"
@@ -1646,7 +1443,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                               <button
                                 onClick={() => {
                                   if (pendingDbSelection.size > 0) {
-                                    setSelectedDatabases(Array.from(pendingDbSelection));
+                                    void confirmDatabases(setSelectedDatabases);
                                   }
                                   setIsDbManagerOpen(false);
                                 }}
@@ -2191,18 +1988,20 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                 </>
               )}
             </>
-            )
+            )}
+            </ExplorerStructure>
           )}
         </div>
       </aside>
 
+      <ExplorerModals>
       {/* Context Menu */}
       {contextMenu && (
         <ContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
           boundaryRight={64 + sidebarWidth}
-          onClose={() => setContextMenu(null)}
+          onClose={closeContextMenu}
           items={
             contextMenu.type === "table"
               ? (() => {
@@ -3169,6 +2968,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
         message={t("routines.dropConfirmMessage", { name: routineDropConfirm?.name ?? "" })}
         onConfirm={handleDropRoutine}
       />
+      </ExplorerModals>
     </>
   );
 };

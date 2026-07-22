@@ -497,7 +497,7 @@
     "apps/desktop/src-tauri/src/mcp/router.rs": 1148,
     "apps/desktop/src-tauri/src/plugins/rpc_driver.rs": 823,
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
-    "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 3174,
+    "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 2974,
     "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx": 549,
     "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx": 603,
