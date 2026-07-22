@@ -7,8 +7,8 @@ import {
   getStatusBadgeColor,
   getStatusColor,
   sortProcesses,
-} from "../../src/utils/taskManager";
-import type { ProcessInfo } from "../../src/utils/taskManager";
+} from "../../../../src/features/tasks/lib/taskManager";
+import type { ProcessInfo } from "../../../../src/features/tasks/lib/taskManager";
 
 const makeProcess = (overrides: Partial<ProcessInfo> = {}): ProcessInfo => ({
   plugin_id: "test-plugin",

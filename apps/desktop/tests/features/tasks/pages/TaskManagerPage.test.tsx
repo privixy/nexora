@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { TaskManagerPage } from "../../src/pages/TaskManagerPage";
-import { useTaskManager } from "../../src/hooks/useTaskManager";
+import { TaskManagerPage } from "../../../../src/features/tasks/pages/TaskManagerPage";
+import { useTaskManager } from "../../../../src/features/tasks/hooks/useTaskManager";
 
-vi.mock("../../src/hooks/useTaskManager", () => ({
+vi.mock("../../../../src/features/tasks/hooks/useTaskManager", () => ({
   useTaskManager: vi.fn(),
 }));
 

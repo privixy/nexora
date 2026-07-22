@@ -6,3 +6,4 @@ export type {
   ProcessSortKey,
   SystemStats,
 } from "./contracts";
+export { TaskManagerPage } from './pages/TaskManagerPage';

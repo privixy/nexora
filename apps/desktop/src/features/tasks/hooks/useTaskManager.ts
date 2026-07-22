@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import type { ProcessInfo, SystemStats } from "../utils/taskManager";
-import { buildProcessRows } from "../utils/taskManager";
+import type { ProcessInfo, SystemStats } from "../lib/taskManager";
+import { buildProcessRows } from "../lib/taskManager";
 
 const POLL_INTERVAL_MS = 2000;
 

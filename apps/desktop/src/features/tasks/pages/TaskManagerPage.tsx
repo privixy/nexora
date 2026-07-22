@@ -29,8 +29,8 @@ import {
   formatMemoryBar,
   getStatusBadgeColor,
   sortProcesses,
-} from "../utils/taskManager";
-import type { ProcessInfo, ProcessSortKey, NexoraSelfStats, ChildProcessInfo, NexoraChildProcess } from "../utils/taskManager";
+} from "../lib/taskManager";
+import type { ProcessInfo, ProcessSortKey, NexoraSelfStats, ChildProcessInfo, NexoraChildProcess } from "../lib/taskManager";
 
 
 // ---------------------------------------------------------------------------

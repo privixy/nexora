@@ -1,4 +1,4 @@
-import type { ProcessInfo, ProcessSortKey } from "../features/tasks";
+import type { ProcessInfo, ProcessSortKey } from "..";
 
 export type {
   ChildProcessInfo,
@@ -7,7 +7,7 @@ export type {
   ProcessInfo,
   ProcessSortKey,
   SystemStats,
-} from "../features/tasks";
+} from "..";
 
 const BYTES_IN_KB = 1024;
 const BYTES_IN_MB = 1024 * 1024;
