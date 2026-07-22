@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import { DataGrid } from "../../../src/components/ui/DataGrid";
-import { TableToolbar } from "../../../src/components/ui/TableToolbar";
-import { reconstructTableQuery } from "../../../src/utils/editor";
-import type { Tab } from "../../../src/types/editor";
-import type { ForeignKey, TableColumn } from "../../../src/types/editor";
+import { DataGrid } from "../../../../src/components/ui/DataGrid";
+import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
+import { reconstructTableQuery } from "../../../../src/utils/editor";
+import type { Tab } from "../../../../src/types/editor";
+import type { ForeignKey, TableColumn } from "../../../../src/types/editor";
 
 class MockResizeObserver {
   observe() {}
@@ -42,7 +42,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-vi.mock("../../../src/components/ui/ContextMenu", () => ({
+vi.mock("../../../../src/components/ui/ContextMenu", () => ({
   ContextMenu: ({ items }: { items: Array<{ label?: string; action?: () => void; disabled?: boolean; separator?: boolean }> }) => (
     <div data-testid="context-menu">
       {items
@@ -56,11 +56,11 @@ vi.mock("../../../src/components/ui/ContextMenu", () => ({
   ),
 }));
 
-vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
+vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { detectJsonInTextColumns: false } }),
 }));
 
-vi.mock("../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
@@ -71,7 +71,10 @@ const mockDatabaseContext = vi.hoisted(() => ({
   connections: [] as Array<{ id: string; detect_json_in_text_columns?: boolean }>,
 }));
 
-vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
+vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
+  useDatabase: () => mockDatabaseContext,
+}));
+vi.mock("../../../../src/features/connections", () => ({
   useDatabase: () => mockDatabaseContext,
 }));
 
