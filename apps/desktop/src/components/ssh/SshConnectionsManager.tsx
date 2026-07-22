@@ -22,7 +22,7 @@ import {
   validateSshConnection,
   type SshConnection,
 } from "../../utils/ssh";
-import type { SavedConnection } from "../../contexts/DatabaseContext";
+import type { SavedConnection } from "../../features/connections";
 import { toErrorMessage } from "../../utils/errors";
 import { ConfirmModal } from "../modals/ConfirmModal";
 import { Select } from "../ui/Select";

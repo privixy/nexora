@@ -50,8 +50,8 @@ describe("frontend source ownership", () => {
   });
 
   it("freezes the authoritative source inventory", () => {
-    expect(sourceOwners).toHaveLength(414);
-    expect(hash(sourceOwners)).toBe("b97589a773064721e5c87481740b5597d0e2c0cd6bf392f6a7be539af04492f6");
+    expect(sourceOwners).toHaveLength(438);
+    expect(hash(sourceOwners)).toBe("476203c2128c4303c0693a327af870cfdd6b32191a41a9dcd3934fc9813b373c");
   });
 
   it("uses explicit rows instead of generated ownership rules", () => {

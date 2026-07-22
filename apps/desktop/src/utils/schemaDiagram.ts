@@ -6,19 +6,14 @@
 /**
  * Connection parameters parsed from URL
  */
-export interface ConnectionParams {
-  connectionId: string | null;
-  connectionName: string;
-  databaseName: string;
-  schema?: string;
-}
+import type { SchemaDiagramRouteParams } from "../features/schema";
 
 /**
  * Parse connection parameters from URL search params
  * @param searchParams - URLSearchParams from React Router
  * @returns Parsed connection parameters
  */
-export function parseConnectionParams(searchParams: URLSearchParams): ConnectionParams {
+export function parseConnectionParams(searchParams: URLSearchParams): SchemaDiagramRouteParams {
   return {
     connectionId: searchParams.get('connectionId'),
     connectionName: searchParams.get('connectionName') || 'Unknown',

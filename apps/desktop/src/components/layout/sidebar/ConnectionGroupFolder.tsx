@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Folder, FolderOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { ConnectionGroup } from "../../../contexts/DatabaseContext";
+import type { ConnectionGroup } from "../../../features/connections";
 import type { ConnectionStatus } from "../../../hooks/useConnectionManager";
 import type { PluginManifest } from "../../../types/plugins";
 import { OpenConnectionItem } from "./OpenConnectionItem";

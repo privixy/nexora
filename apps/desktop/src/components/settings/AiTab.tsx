@@ -16,7 +16,7 @@ import {
 import clsx from "clsx";
 import { useSettings } from "../../hooks/useSettings";
 import { useAlert } from "../../hooks/useAlert";
-import type { AiProvider } from "../../contexts/SettingsContext";
+import type { AiProvider } from "../../features/settings";
 import { getProviderLabel } from "../../utils/settingsUI";
 import { Select } from "../ui/Select";
 import { SettingSection, SettingRow, SettingToggle } from "./SettingControls";

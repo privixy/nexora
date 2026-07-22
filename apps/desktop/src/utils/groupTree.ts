@@ -1,4 +1,4 @@
-import type { ConnectionGroup } from "../contexts/DatabaseContext";
+import type { ConnectionGroup } from "../features/connections";
 
 export interface GroupTreeEntry {
   group: ConnectionGroup;

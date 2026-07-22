@@ -1,4 +1,4 @@
-import type { PluginConfig } from "../contexts/SettingsContext";
+import type { PluginConfig } from "../features/settings";
 import type { PluginSettingDefinition } from "../types/plugins";
 
 /**

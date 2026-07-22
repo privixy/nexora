@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { FileText, Sparkles, TableProperties, Network } from "lucide-react";
-import type { ExplainPlan } from "../../../types/explain";
+import type { ExplainPlan, ExplainViewMode } from "../../../features/visual-explain";
 import { formatTime, formatCost, getMaxCost } from "../../../utils/explainPlan";
 
-export type ExplainViewMode = "graph" | "table" | "raw" | "ai";
+export type { ExplainViewMode } from "../../../features/visual-explain";
 
 interface ExplainSummaryBarProps {
   plan: ExplainPlan | null;

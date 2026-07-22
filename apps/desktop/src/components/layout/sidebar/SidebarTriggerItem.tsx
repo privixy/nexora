@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
 import clsx from "clsx";
-import type { TriggerInfo } from "../../../contexts/DatabaseContext";
+import type { TriggerInfo } from "../../../features/connections";
 import type { ContextMenuData } from "../../../types/sidebar";
 
 interface SidebarTriggerItemProps {

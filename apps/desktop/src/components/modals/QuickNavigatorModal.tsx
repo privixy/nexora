@@ -9,7 +9,7 @@ import { quoteTableRef } from "../../utils/identifiers";
 import { isMultiDatabaseCapable, getDatabaseList } from "../../utils/database";
 import { getNavigatorItems, filterNavigatorItems } from "../../utils/quickNavigator";
 import { newConsoleForTable } from "../../utils/newConsole";
-import type { RoutineInfo, TriggerInfo } from "../../contexts/DatabaseContext";
+import type { RoutineInfo, TriggerInfo } from "../../features/connections";
 
 interface QuickNavigatorModalProps {
   isOpen: boolean;

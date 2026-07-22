@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useDatabase } from "./useDatabase";
-import type { SavedConnection } from "../contexts/DatabaseContext";
+import type { SavedConnection } from "../features/connections";
 
 /**
  * Open a connection in its own dedicated window.

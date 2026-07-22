@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 import { GripVertical, ChevronRight, Folder, FolderOpen, MoreVertical, Plus } from 'lucide-react';
 import clsx from 'clsx';
-import type { ConnectionGroup } from '../../contexts/DatabaseContext';
+import type { ConnectionGroup } from '../../features/connections';
 
 export interface GroupHeaderProps {
   group: ConnectionGroup;

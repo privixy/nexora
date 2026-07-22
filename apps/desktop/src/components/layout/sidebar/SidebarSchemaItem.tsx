@@ -16,7 +16,7 @@ import { SidebarViewItem } from "./SidebarViewItem";
 import { SidebarRoutineItem } from "./SidebarRoutineItem";
 import { SidebarRoutineGroupHeader } from "./SidebarRoutineGroupHeader";
 import { SidebarTriggerItem } from "./SidebarTriggerItem";
-import type { SchemaData, RoutineInfo, TriggerInfo } from "../../../contexts/DatabaseContext";
+import type { SchemaData, RoutineInfo, TriggerInfo } from "../../../features/connections";
 import type { TableColumn } from "../../../types/schema";
 import type { ContextMenuData } from "../../../types/sidebar";
 import { groupRoutinesByType } from "../../../utils/routines";

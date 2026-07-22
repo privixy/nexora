@@ -1,4 +1,4 @@
-import type { RoutineInfo } from "../contexts/DatabaseContext";
+import type { RoutineInfo } from "../features/connections";
 
 export interface GroupedRoutines {
   procedures: RoutineInfo[];

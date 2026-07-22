@@ -2,31 +2,9 @@ import { memo, useState } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { X } from 'lucide-react';
 import clsx from 'clsx';
+import type { ColumnAggregation, TableNodeData } from '../../features/editor';
 
-export interface ColumnAggregation {
-  function?: 'COUNT' | 'SUM' | 'AVG' | 'MIN' | 'MAX' | 'COUNT_DISTINCT';
-  alias?: string;
-  order?: number; // Position in SELECT clause
-}
-
-export interface ColumnAlias {
-  alias?: string;
-  order?: number; // Position in SELECT clause
-}
-
-export interface TableNodeData extends Record<string, unknown> {
-  label: string;
-  database?: string;
-  schema?: string;
-  columns: { name: string; type: string }[];
-  selectedColumns: Record<string, boolean>;
-  columnAggregations: Record<string, ColumnAggregation>;
-  columnAliases: Record<string, ColumnAlias>;
-  onColumnCheck: (column: string, checked: boolean) => void;
-  onColumnAggregation: (column: string, aggregation: ColumnAggregation) => void;
-  onColumnAlias: (column: string, alias: string, order?: number) => void;
-  onDelete?: () => void;
-}
+export type { ColumnAggregation, ColumnAlias, TableNodeData } from '../../features/editor';
 
 export type TableNode = Node<TableNodeData, 'table'>;
 

@@ -2,7 +2,7 @@ import type {
   Settings,
   AppLanguage,
   AiProvider,
-} from "../contexts/SettingsContext";
+} from "../features/settings";
 
 export const FONT_MAP: Record<string, string> = {
   System:

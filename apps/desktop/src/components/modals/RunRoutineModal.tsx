@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { X, Loader2, Play, Variable } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { Modal } from "../ui/Modal";
-import type { RoutineInfo } from "../../contexts/DatabaseContext";
+import type { RoutineInfo } from "../../features/connections";
 import {
   buildRoutineCallArgs,
   isCallParameter,

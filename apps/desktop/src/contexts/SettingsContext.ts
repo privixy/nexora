@@ -1,90 +1,15 @@
 import { createContext } from "react";
-import type { AppLanguage } from "../i18n/config";
+import type { Settings, SettingsContextType } from "../features/settings";
 
-export type { AppLanguage };
-export type CopyFormat = "csv" | "json" | "sql-insert";
-export type AiProvider =
-  | "openai"
-  | "anthropic"
-  | "openrouter"
-  | "ollama"
-  | "custom-openai"
-  | "minimax";
-export type ERDiagramLayout = "LR" | "TB";
-
-export interface PluginConfig {
-  interpreter?: string;
-  settings?: Record<string, unknown>;
-}
-
-export interface Settings {
-  resultPageSize: number; // Changed from queryLimit to match backend config
-  language: AppLanguage;
-  /** IANA timezone name (e.g. "Asia/Tokyo") for rendering timestamps, or "auto" to follow the OS timezone. */
-  displayTimezone?: string;
-  fontFamily: string;
-  fontSize: number;
-  /** Colorize query result cell values by their data type. Default: false. */
-  resultColorByType?: boolean;
-  /** Per-type hex color overrides for result cell values (keys: number, string, date, boolean). */
-  resultTypeColors?: Record<string, string>;
-  /** Keep the result grid's column headers pinned to the top while scrolling. Default: true. */
-  stickyColumnHeaders?: boolean;
-  aiEnabled: boolean;
-  aiProvider: AiProvider | null;
-  aiModel: string | null;
-  aiCustomModels?: Record<string, string[]>;
-  aiOllamaPort?: number;
-  aiCustomOpenaiUrl?: string;
-  aiCustomOpenaiModel?: string;
-  autoCheckUpdatesOnStartup?: boolean;
-  loggingEnabled?: boolean;
-  maxLogEntries?: number;
-  erDiagramDefaultLayout?: ERDiagramLayout;
-  copyFormat?: CopyFormat;
-  csvDelimiter?: string;
-  /** Whether copied CSV output includes a header row. Default: true. */
-  csvIncludeHeaders?: boolean;
-  activeExternalDrivers?: string[];
-  plugins?: Record<string, PluginConfig>;
-  editorTheme?: string;
-  editorFontFamily?: string;
-  editorFontSize?: number;
-  editorLineHeight?: number;
-  editorTabSize?: number;
-  editorWordWrap?: boolean;
-  editorShowLineNumbers?: boolean;
-  editorAcceptSuggestionOnEnter?: boolean;
-  pingInterval?: number;
-  queryHistoryMaxEntries?: number;
-  showWelcome?: boolean;
-  /** Reconnect to the last active connection on startup. Default: true. */
-  autoConnectLastConnection?: boolean;
-  /** Maximize the window on startup. Default: false. */
-  startMaximized?: boolean;
-  // AI / MCP safety
-  aiAuditEnabled?: boolean;
-  aiAuditMaxEntries?: number;
-  aiSessionGapMinutes?: number;
-  mcpReadonlyDefault?: boolean;
-  mcpReadonlyConnections?: string[];
-  mcpApprovalMode?: "off" | "writes_only" | "all";
-  mcpApprovalTimeoutSeconds?: number;
-  mcpPreflightExplain?: boolean;
-  mcpApprovalAlwaysOnTop?: boolean;
-  mcpApprovalNotifySound?: boolean;
-}
-
-export interface SettingsContextType {
-  settings: Settings;
-  updateSetting: <K extends keyof Settings>(
-    key: K,
-    value: Settings[K],
-  ) => Promise<void>;
-  isLoading: boolean;
-  isLanguageReady: boolean;
-  isLanguageSettled: boolean;
-}
+export type {
+  AiProvider,
+  AppLanguage,
+  CopyFormat,
+  ERDiagramLayout,
+  PluginConfig,
+  Settings,
+  SettingsContextType,
+} from "../features/settings";
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,

@@ -6,7 +6,7 @@ import { Modal } from "../ui/Modal";
 import { Select } from "../ui/Select";
 import { SlotAnchor } from "../ui/SlotAnchor";
 import { resolvePluginConfig, getDisplayInterpreter, resolveSettingsWithDefaults, validateSettings } from "../../utils/pluginConfig";
-import type { PluginConfig } from "../../contexts/SettingsContext";
+import type { PluginConfig } from "../../features/settings";
 import type { PluginManifest, PluginSettingDefinition } from "../../types/plugins";
 
 interface PluginSettingsModalProps {

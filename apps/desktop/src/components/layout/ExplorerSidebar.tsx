@@ -82,7 +82,7 @@ import { useDrivers } from "../../hooks/useDrivers";
 import { getConnectionAccent } from "../../utils/driverUI";
 import type { TableColumn } from "../../types/schema";
 import type { ContextMenuData } from "../../types/sidebar";
-import type { RoutineInfo, TriggerInfo } from "../../contexts/DatabaseContext";
+import type { RoutineInfo, TriggerInfo } from "../../features/connections";
 import { groupRoutinesByType } from "../../utils/routines";
 import { formatObjectCount } from "../../utils/schema";
 import { groupByDate, formatHistoryTime } from "../../utils/dateGroups";

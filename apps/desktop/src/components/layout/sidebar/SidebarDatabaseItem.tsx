@@ -21,7 +21,7 @@ import { SidebarRoutineItem } from "./SidebarRoutineItem";
 import { SidebarRoutineGroupHeader } from "./SidebarRoutineGroupHeader";
 import { SidebarTriggerItem } from "./SidebarTriggerItem";
 import { SidebarSchemaItem } from "./SidebarSchemaItem";
-import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../contexts/DatabaseContext";
+import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../features/connections";
 import type { TableColumn } from "../../../types/schema";
 import type { ContextMenuData } from "../../../types/sidebar";
 import type { DriverCapabilities } from "../../../types/plugins";

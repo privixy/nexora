@@ -1260,6 +1260,150 @@
     "moveTask": 40
   },
   {
+    "source": "apps/desktop/src/features/ai/contracts.ts",
+    "owner": "ai",
+    "destination": "apps/desktop/src/features/ai/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/ai/index.ts",
+    "owner": "ai",
+    "destination": "apps/desktop/src/features/ai/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/connections/contracts.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/connections/contracts/import.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/contracts/import.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/connections/index.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/data-grid/contracts.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/data-grid/index.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/editor/contracts.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/editor/index.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/explorer/contracts.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/explorer/index.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/mcp/index.ts",
+    "owner": "mcp",
+    "destination": "apps/desktop/src/features/mcp/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/notebooks/contracts.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/notebooks/index.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/plugins/contracts.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/plugins/index.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/schema/contracts.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/schema/index.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/settings/contracts.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/settings/index.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/tasks/contracts.ts",
+    "owner": "tasks",
+    "destination": "apps/desktop/src/features/tasks/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/tasks/index.ts",
+    "owner": "tasks",
+    "destination": "apps/desktop/src/features/tasks/index.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/visual-explain/contracts.ts",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/contracts.ts",
+    "moveTask": 6
+  },
+  {
+    "source": "apps/desktop/src/features/visual-explain/index.ts",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/index.ts",
+    "moveTask": 6
+  },
+  {
     "source": "apps/desktop/src/hooks/useAiActivity.ts",
     "owner": "settings",
     "destination": "apps/desktop/src/features/settings/hooks/useAiActivity.ts",

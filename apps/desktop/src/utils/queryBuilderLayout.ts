@@ -1,6 +1,6 @@
 import dagre from 'dagre';
 import type { Node, Edge } from '@xyflow/react';
-import type { TableNodeData } from '../components/ui/TableNode';
+import type { TableNodeData } from '../features/editor';
 
 const NODE_WIDTH = 220;
 const ROW_HEIGHT = 24;

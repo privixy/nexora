@@ -6,7 +6,7 @@ import { HexColorPicker, HexColorInput } from "react-colorful";
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode, SkinTonePickerLocation, type EmojiClickData } from "emoji-picker-react";
 import clsx from "clsx";
 import { Check, Sparkles, Grid3x3, Smile, Image as ImageIcon, Pipette, Upload, Trash2 } from "lucide-react";
-import type { ConnectionAppearance, IconOverride } from "../../../contexts/DatabaseContext";
+import type { ConnectionAppearance, IconOverride } from "../../../features/connections";
 import type { PluginManifest } from "../../../types/plugins";
 import { ALL_ICON_NAMES, getLucideIconComponent, camelToKebab } from "../../../utils/connectionIconPack";
 import { getConnectionIcon } from "../../../utils/driverUI";

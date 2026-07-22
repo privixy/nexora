@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import { useTranslation } from "react-i18next";
-import type { ExplainNode } from "../../types/explain";
+import type { ExplainPlanNodeData } from "../../features/visual-explain";
 import {
   getNodeCostStyle,
   formatCost,
@@ -12,13 +12,7 @@ import {
 } from "../../utils/explainPlan";
 import clsx from "clsx";
 
-export interface ExplainPlanNodeData extends Record<string, unknown> {
-  node: ExplainNode;
-  maxCost: number;
-  maxTime: number;
-  hasAnalyzeData: boolean;
-  isSelected: boolean;
-}
+export type { ExplainPlanNodeData } from "../../features/visual-explain";
 
 export type ExplainPlanNodeType = Node<ExplainPlanNodeData, "explainPlan">;
 

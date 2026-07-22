@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Power, Edit, Copy, Trash2 } from 'lucide-react';
-import type { SavedConnection } from '../../contexts/DatabaseContext';
+import type { SavedConnection } from '../../features/connections';
 
 export interface ActionButtonsProps {
   conn: SavedConnection;

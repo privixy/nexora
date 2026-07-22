@@ -6,7 +6,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import type { ExplainPlan } from "../types/explain";
 import { VisualExplainView } from "../components/explain/VisualExplainView";
-import type { ExplainViewMode } from "../components/modals/visual-explain/ExplainSummaryBar";
+import type { ExplainViewMode } from "../features/visual-explain";
 import {
   getExplainFileName,
   parseExplainFileParam,

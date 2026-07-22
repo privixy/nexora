@@ -19,7 +19,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import type { ConnectionAppearance } from "../../contexts/DatabaseContext";
+import type { ConnectionAppearance, ConnectionParams } from "../../features/connections";
 import { AppearanceSection } from "./NewConnectionModal/AppearanceSection";
 import { open } from "@tauri-apps/plugin-dialog";
 import clsx from "clsx";
@@ -48,46 +48,6 @@ import {
   parseConnectionString,
   toConnectionParams,
 } from "../../utils/connectionStringParser";
-
-interface ConnectionParams {
-  driver: string;
-  host?: string;
-  port?: number;
-  username?: string;
-  password?: string;
-  database: string | string[];
-  ssl_mode?: string;
-  ssl_ca?: string;
-  ssl_cert?: string;
-  ssl_key?: string;
-  // MySQL/MariaDB: mysql_clear_password (cleartext) auth plugin (TLS required)
-  enable_cleartext_plugin?: boolean;
-  // MySQL: force PIPES_AS_CONCAT / NO_ENGINE_SUBSTITUTION sql_mode on connect.
-  // Defaults to true; disable for Vitess/PlanetScale which reject altering sql_mode.
-  pipes_as_concat?: boolean;
-  // SSH
-  ssh_enabled?: boolean;
-  ssh_connection_id?: string;
-  // Legacy SSH fields (for backward compatibility)
-  ssh_host?: string;
-  ssh_port?: number;
-  ssh_user?: string;
-  ssh_password?: string;
-  ssh_key_file?: string;
-  ssh_key_passphrase?: string;
-  ssh_allow_passphrase_prompt?: boolean;
-  save_in_keychain?: boolean;
-  // K8s
-  k8s_enabled?: boolean;
-  k8s_connection_id?: string;
-  k8s_context?: string;
-  k8s_namespace?: string;
-  k8s_resource_type?: string;
-  k8s_resource_name?: string;
-  k8s_port?: number;
-  // SQL run on every new connection (e.g. SET / set_config)
-  startup_script?: string;
-}
 
 interface SavedConnection {
   id: string;

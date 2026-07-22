@@ -2,7 +2,7 @@ import type { MouseEvent } from 'react';
 import { Shield, PlugZap, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import type { SavedConnection } from '../../contexts/DatabaseContext';
+import type { SavedConnection } from '../../features/connections';
 import type { PluginManifest } from '../../types/plugins';
 import { useDatabase } from '../../hooks/useDatabase';
 import { getConnectionAccent, getConnectionIcon } from '../../utils/driverUI';

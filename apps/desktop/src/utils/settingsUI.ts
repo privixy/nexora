@@ -3,7 +3,7 @@
  * Extracted from Settings.tsx for testability
  */
 
-import type { AiProvider } from '../contexts/SettingsContext';
+import type { AiProvider } from '../features/settings';
 
 /**
  * Font size bounds

@@ -1,4 +1,4 @@
-import type { ConnectionData } from '../contexts/DatabaseContext';
+import type { ConnectionData } from '../features/connections';
 
 export interface SplitView {
   connectionIds: string[];

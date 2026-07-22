@@ -4,7 +4,7 @@
  */
 
 import type { DriverCapabilities } from "../types/plugins";
-import type { SavedConnection } from "../contexts/DatabaseContext";
+import type { SavedConnection, SingleDatabaseConnectionParams } from "../features/connections";
 import { isLocalDriver } from "./driverCapabilities";
 
 export type DatabaseDriver = string;
@@ -12,34 +12,7 @@ export type DatabaseDriver = string;
 export const BUILTIN_DRIVER_IDS = ["postgres", "mysql", "sqlite"] as const;
 export type BuiltinDriverId = (typeof BUILTIN_DRIVER_IDS)[number];
 
-export interface ConnectionParams {
-  driver: DatabaseDriver;
-  host?: string;
-  database: string;
-  port?: number;
-  username?: string;
-  password?: string;
-  ssh_enabled?: boolean;
-  ssh_connection_id?: string;
-  // Legacy fields (for backward compatibility)
-  ssh_host?: string;
-  ssh_port?: number;
-  ssh_user?: string;
-  ssh_password?: string;
-  ssh_key_file?: string;
-  ssh_key_passphrase?: string;
-  ssh_allow_passphrase_prompt?: boolean;
-  // K8s
-  k8s_enabled?: boolean;
-  k8s_connection_id?: string;
-  k8s_context?: string;
-  k8s_namespace?: string;
-  k8s_resource_type?: string;
-  k8s_resource_name?: string;
-  k8s_port?: number;
-  /** SQL run on every new connection to this data source (e.g. SET / set_config). */
-  startup_script?: string;
-}
+export type ConnectionParams = SingleDatabaseConnectionParams;
 
 /**
  * Format a connection string for display.

@@ -19,7 +19,7 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 import clsx from "clsx";
 import { toErrorMessage } from "../../utils/errors";
 import { useDatabase } from "../../hooks/useDatabase";
-import type { ConnectionGroup } from "../../contexts/DatabaseContext";
+import type { ConnectionGroup } from "../../features/connections";
 import { flattenGroupTree } from "../../utils/groupTree";
 import { Select } from "../ui/Select";
 import { PasswordInput } from "../ui/PasswordInput";

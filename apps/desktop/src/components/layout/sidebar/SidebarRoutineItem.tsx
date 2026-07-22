@@ -10,7 +10,7 @@ import {
   Variable,
 } from "lucide-react";
 import clsx from "clsx";
-import type { RoutineInfo } from "../../../contexts/DatabaseContext";
+import type { RoutineInfo } from "../../../features/connections";
 import type { ContextMenuData } from "../../../types/sidebar";
 
 interface RoutineParameter {

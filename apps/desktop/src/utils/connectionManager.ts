@@ -1,4 +1,4 @@
-import type { SavedConnection, ConnectionData } from '../contexts/DatabaseContext';
+import type { SavedConnection, ConnectionData } from '../features/connections';
 
 export interface ConnectionStatus {
   id: string;
