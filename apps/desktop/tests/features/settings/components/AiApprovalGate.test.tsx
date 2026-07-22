@@ -29,6 +29,12 @@ vi.mock("../../../../src/features/settings/components/AiApprovalModal", () => ({
   ),
 }));
 
+const attentionAdapter = {
+  focusWindowForApproval,
+  notifyApprovalRequest,
+  restoreWindowAlwaysOnTop,
+};
+
 describe("AiApprovalGate", () => {
   const decide = vi.fn();
 
@@ -62,7 +68,12 @@ describe("AiApprovalGate", () => {
         updateSetting: vi.fn(),
       } as never);
 
-    render(<AiApprovalGate />);
+    render(
+      <AiApprovalGate
+        attentionAdapter={attentionAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
 
     await waitFor(() => {
       expect(screen.getByTestId("approval-modal")).toBeInTheDocument();
@@ -99,7 +110,13 @@ describe("AiApprovalGate", () => {
         updateSetting: vi.fn(),
       } as never);
 
-    const { rerender } = render(<AiApprovalGate />);
+    const gate = (
+      <AiApprovalGate
+        attentionAdapter={attentionAdapter}
+        renderExplainPlan={() => null}
+      />
+    );
+    const { rerender } = render(gate);
 
     await waitFor(() => {
       expect(focusWindowForApproval).toHaveBeenCalledWith("approval-1");
@@ -113,7 +130,12 @@ describe("AiApprovalGate", () => {
       decide,
     });
 
-    rerender(<AiApprovalGate />);
+    rerender(
+      <AiApprovalGate
+        attentionAdapter={attentionAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
 
     await waitFor(() => {
       expect(restoreWindowAlwaysOnTop).toHaveBeenCalledWith("approval-1");
@@ -132,7 +154,12 @@ describe("AiApprovalGate", () => {
       updateSetting: vi.fn(),
     } as never);
 
-    render(<AiApprovalGate />);
+    render(
+      <AiApprovalGate
+        attentionAdapter={attentionAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
 
     await waitFor(() => {
       expect(screen.getByTestId("approval-modal")).toBeInTheDocument();
@@ -157,7 +184,12 @@ describe("AiApprovalGate", () => {
       updateSetting: vi.fn(),
     } as never);
 
-    render(<AiApprovalGate />);
+    render(
+      <AiApprovalGate
+        attentionAdapter={attentionAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
 
     await waitFor(() => {
       expect(screen.getByTestId("approval-modal")).toBeInTheDocument();

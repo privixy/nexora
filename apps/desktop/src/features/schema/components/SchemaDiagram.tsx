@@ -21,6 +21,7 @@ import { ContextMenu } from "../../../components/ui/ContextMenu";
 import { useSearchParams } from "react-router-dom";
 import { useSettings } from "../../settings";
 import { DEFAULT_SETTINGS } from "../../settings";
+import type { LoadSchema } from '../contracts';
 
 const nodeTypes = {
   schemaTable: SchemaTableNodeComponent,
@@ -77,12 +78,7 @@ const getLayoutedElements = (
 
 interface SchemaDiagramContentProps {
   connectionId: string;
-  getSchema: (
-    connectionId: string,
-    schemaVersion?: number,
-    schema?: string,
-    database?: string,
-  ) => Promise<import("../../editor").TableSchema[]>;
+  getSchema: LoadSchema;
   refreshTrigger: number;
   schema?: string;
   database?: string;

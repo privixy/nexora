@@ -11,7 +11,7 @@ import { ResultsWindowPage } from "../pages/ResultsWindowPage";
 import { SettingsPage, SshTab } from "../features/settings";
 import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";
 import { TaskManagerPage } from "../pages/TaskManagerPage";
-import { VisualExplainPage } from "../pages/VisualExplainPage";
+import { VisualExplainPage } from "../features/visual-explain";
 
 export function AppRoutes() {
   const { allDrivers, installedPlugins, refresh } = useDrivers();

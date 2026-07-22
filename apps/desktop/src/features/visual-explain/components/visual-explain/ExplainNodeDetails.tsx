@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import type { ExplainNode } from "../../../types/explain";
-import { formatCost, formatRows, formatTime } from "../../../utils/explainPlan";
+import type { ExplainNode } from "../../contracts";
+import { formatCost, formatRows, formatTime } from "../../lib/explainPlan";
 
 interface ExplainNodeDetailsProps {
   node: ExplainNode | null;

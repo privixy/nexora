@@ -9,7 +9,7 @@ import {
   getRowEstimateRatio,
   formatTime,
   formatRows,
-} from "../../utils/explainPlan";
+} from "../../features/visual-explain/lib/explainPlan";
 import clsx from "clsx";
 
 export type { ExplainPlanNodeData } from "../../features/visual-explain";

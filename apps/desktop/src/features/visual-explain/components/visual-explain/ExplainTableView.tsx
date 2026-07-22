@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronRight, ChevronDown } from "lucide-react";
 import clsx from "clsx";
-import type { ExplainNode, ExplainPlan } from "../../../types/explain";
+import type { ExplainNode, ExplainPlan } from "../../contracts";
 import {
   findExplainNode,
   formatCost,
@@ -10,7 +10,7 @@ import {
   formatRows,
   formatTime,
   getRowEstimateRatio,
-} from "../../../utils/explainPlan";
+} from "../../lib/explainPlan";
 import { ExplainNodeDetails } from "./ExplainNodeDetails";
 
 interface ExplainTableViewProps {

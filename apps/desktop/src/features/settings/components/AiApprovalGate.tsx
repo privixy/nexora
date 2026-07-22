@@ -2,17 +2,27 @@ import { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { usePendingApprovals } from "../hooks/useAiActivity";
 import { useSettings } from "../hooks/useSettings";
-import {
-  focusWindowForApproval,
-  notifyApprovalRequest,
-  restoreWindowAlwaysOnTop,
-} from "../../mcp/lib/mcpApprovalAttention";
+import type { ApprovalExplainPlanRenderer } from "../contracts";
 import { AiApprovalModal } from "./AiApprovalModal";
+
+export interface ApprovalAttentionAdapter {
+  focusWindowForApproval(approvalId: string): Promise<void>;
+  notifyApprovalRequest(content: { title: string; body: string }): Promise<void>;
+  restoreWindowAlwaysOnTop(approvalId: string | null): Promise<void>;
+}
+
+interface AiApprovalGateProps {
+  attentionAdapter: ApprovalAttentionAdapter;
+  renderExplainPlan: ApprovalExplainPlanRenderer;
+}
 
 /// Listens for `ai://pending_approval` events emitted by the file watcher
 /// and presents one approval modal at a time. Mounted once at the App
 /// level, so it shows over any current page.
-export function AiApprovalGate() {
+export function AiApprovalGate({
+  attentionAdapter,
+  renderExplainPlan,
+}: AiApprovalGateProps) {
   const { t } = useTranslation();
   const {
     settings,
@@ -26,9 +36,9 @@ export function AiApprovalGate() {
   const approvalRunIdRef = useRef(0);
 
   const restoreWindowState = useCallback(async () => {
-    await restoreWindowAlwaysOnTop(attentionApprovalIdRef.current);
+    await attentionAdapter.restoreWindowAlwaysOnTop(attentionApprovalIdRef.current);
     attentionApprovalIdRef.current = null;
-  }, []);
+  }, [attentionAdapter]);
 
   useEffect(() => {
     const runId = ++approvalRunIdRef.current;
@@ -49,7 +59,7 @@ export function AiApprovalGate() {
     void (async () => {
       if (bringToFront && attentionApprovalIdRef.current !== currentApprovalId) {
         attentionApprovalIdRef.current = currentApprovalId;
-        await focusWindowForApproval(currentApprovalId);
+        await attentionAdapter.focusWindowForApproval(currentApprovalId);
       } else if (!bringToFront && attentionApprovalIdRef.current) {
         await restoreWindowState();
       }
@@ -60,7 +70,7 @@ export function AiApprovalGate() {
         notifiedApprovalIdRef.current = currentApprovalId;
         const title = t("aiApproval.notificationTitle");
         const body = t("aiApproval.notificationBody");
-        await notifyApprovalRequest({ title, body });
+        await attentionAdapter.notifyApprovalRequest({ title, body });
       }
     })();
   }, [currentApprovalId, isSettingsLoading, restoreWindowState, settings.mcpApprovalAlwaysOnTop, settings.mcpApprovalNotifySound, t]);
@@ -87,6 +97,7 @@ export function AiApprovalGate() {
   return (
     <AiApprovalModal
       approval={current}
+      renderExplainPlan={renderExplainPlan}
       onApprove={(editedQuery) =>
         decide({
           approvalId: current.id,

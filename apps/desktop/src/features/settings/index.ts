@@ -11,6 +11,9 @@ export type {
   AppLanguage,
   ApprovalDecisionKind,
   ApprovalDecisionPayload,
+  ApprovalExplainPlanRenderer,
+  ApprovalExplainPlanRenderProps,
+  ApprovalExplainViewMode,
   CopyFormat,
   ERDiagramLayout,
   McpApprovalMode,
@@ -41,3 +44,4 @@ export {
   SettingToggle,
 } from "./components/SettingControls";
 export { AiApprovalGate } from "./components/AiApprovalGate";
+export type { ApprovalAttentionAdapter } from './components/AiApprovalGate';

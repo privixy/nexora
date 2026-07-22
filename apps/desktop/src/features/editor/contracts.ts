@@ -1,5 +1,5 @@
 import type { Edge, Node } from "@xyflow/react";
-import type { ForeignKey } from "../schema";
+import type { ForeignKey, SchemaTable } from "../schema";
 import type { DatabaseContextTuple } from "../connections";
 
 export interface Pagination {
@@ -17,11 +17,7 @@ export interface TableColumn {
   default_value?: string;
   character_maximum_length?: number;
 }
-export interface TableSchema {
-  name: string;
-  columns: TableColumn[];
-  foreign_keys: ForeignKey[];
-}
+export type TableSchema = SchemaTable;
 export interface SchemaCache {
   data: TableSchema[];
   version: number;

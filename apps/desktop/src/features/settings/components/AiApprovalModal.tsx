@@ -7,8 +7,10 @@ import { loadMonacoTheme } from "../../../themes/themeUtils";
 import type { ExplainPlan } from "../../../types/explain";
 import type { PendingApproval } from "../contracts/aiActivity";
 import { QueryKindBadge } from "./ai-activity/QueryKindBadge";
-import { VisualExplainView } from "../../../components/explain/VisualExplainView";
-import type { ExplainViewMode } from "../../../components/modals/visual-explain/ExplainSummaryBar";
+import type {
+  ApprovalExplainPlanRenderer,
+  ApprovalExplainViewMode,
+} from "../contracts";
 import { isDestructiveApproval } from "../lib/aiActivity";
 
 interface AiApprovalModalProps {
@@ -16,6 +18,7 @@ interface AiApprovalModalProps {
   onApprove: (editedQuery?: string) => Promise<void> | void;
   onDeny: (reason?: string) => Promise<void> | void;
   onClose: () => void;
+  renderExplainPlan: ApprovalExplainPlanRenderer;
 }
 
 export function AiApprovalModal({
@@ -23,6 +26,7 @@ export function AiApprovalModal({
   onApprove,
   onDeny,
   onClose,
+  renderExplainPlan,
 }: AiApprovalModalProps) {
   const { t } = useTranslation();
   const editorTheme = useEditorTheme();
@@ -30,7 +34,7 @@ export function AiApprovalModal({
   const [editedQuery, setEditedQuery] = useState(approval.query);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [viewMode, setViewMode] = useState<ExplainViewMode>("graph");
+  const [viewMode, setViewMode] = useState<ApprovalExplainViewMode>("graph");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [planExpanded, setPlanExpanded] = useState(false);
 
@@ -190,16 +194,13 @@ export function AiApprovalModal({
             </div>
             {explainPlan ? (
               <div className="rounded-lg border border-default bg-base h-[360px] overflow-hidden">
-                <VisualExplainView
-                  plan={explainPlan}
-                  isLoading={false}
-                  error={null}
-                  viewMode={viewMode}
-                  onViewModeChange={setViewMode}
-                  selectedNodeId={selectedNodeId}
-                  onSelectNode={setSelectedNodeId}
-                  aiEnabled={false}
-                />
+                {renderExplainPlan({
+                  plan: explainPlan,
+                  viewMode,
+                  onViewModeChange: setViewMode,
+                  selectedNodeId,
+                  onSelectNode: setSelectedNodeId,
+                })}
               </div>
             ) : (
               <div className="rounded-lg border border-default bg-base p-4 text-xs text-muted">
@@ -281,16 +282,13 @@ export function AiApprovalModal({
               </button>
             </div>
             <div className="flex-1 min-h-0 bg-base">
-              <VisualExplainView
-                plan={explainPlan}
-                isLoading={false}
-                error={null}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-                selectedNodeId={selectedNodeId}
-                onSelectNode={setSelectedNodeId}
-                aiEnabled={false}
-              />
+              {renderExplainPlan({
+                plan: explainPlan,
+                viewMode,
+                onViewModeChange: setViewMode,
+                selectedNodeId,
+                onSelectNode: setSelectedNodeId,
+              })}
             </div>
           </div>
         </div>

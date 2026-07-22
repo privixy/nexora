@@ -14,8 +14,8 @@ import {
   getMaxTime,
   getRowEstimateRatio,
   isDataModifyingQuery,
-} from "../../src/utils/explainPlan";
-import type { ExplainNode, ExplainPlan } from "../../src/types/explain";
+} from "../../../../src/features/visual-explain/lib/explainPlan";
+import type { ExplainNode, ExplainPlan } from "../../../../src/features/visual-explain";
 
 // ---------------------------------------------------------------------------
 // Helpers

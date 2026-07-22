@@ -35,7 +35,7 @@ import { StatusBadge } from "./StatusBadge";
 import { QueryKindBadge } from "./QueryKindBadge";
 import { EventDetailModal } from "./EventDetailModal";
 import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
-import { VisualExplainModal } from "../../../../components/modals/VisualExplainModal";
+import { VisualExplainModal } from "../../../visual-explain";
 import { Select } from "../../../../components/ui/Select";
 
 interface ExplainTarget {

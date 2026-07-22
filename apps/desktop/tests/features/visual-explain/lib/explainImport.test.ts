@@ -3,7 +3,7 @@ import {
   getExplainFileName,
   parseExplainFileParam,
   looksLikePostgresExplainJson,
-} from "../../src/utils/explainImport";
+} from "../../../../src/features/visual-explain/lib/explainImport";
 
 describe("explainImport", () => {
   describe("getExplainFileName", () => {

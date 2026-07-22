@@ -7,15 +7,15 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { useDatabase } from "../../features/connections";
-import { useDrivers } from "../../features/plugins/hooks/useDrivers";
-import type { ExplainPlan } from "../../types/explain";
-import { isDataModifyingQuery } from "../../utils/explainPlan";
-import { isExplainableQuery } from "../../features/visual-explain";
-import { getConnectionIcon } from "../../features/connections/lib/driverUI";
-import { Modal } from "../ui/Modal";
-import { VisualExplainView } from "../explain/VisualExplainView";
+import { useSettings } from "../../settings/hooks/useSettings";
+import { useDatabase } from "../../connections";
+import { useDrivers } from "../../plugins/hooks/useDrivers";
+import type { ExplainPlan } from "../contracts";
+import { isDataModifyingQuery } from "../lib/explainPlan";
+import { isExplainableQuery } from "..";
+import { getConnectionIcon } from "../../connections/lib/driverUI";
+import { Modal } from "../../../components/ui/Modal";
+import { VisualExplainView } from "./VisualExplainView";
 import type { ExplainViewMode } from "./visual-explain/ExplainSummaryBar";
 
 interface VisualExplainModalProps {

@@ -5,9 +5,9 @@ import { resolveDiagramDatabase, resolveDiagramSchema } from '../lib/schemaDiagr
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DatabaseProvider } from '../../connections';
-import type { EditorContextType } from '../../editor';
+import type { LoadSchema } from '../contracts';
 
-export const SchemaDiagramPage = ({ getSchema }: { getSchema: EditorContextType["getSchema"] }) => {
+export const SchemaDiagramPage = ({ getSchema }: { getSchema: LoadSchema }) => {
   const { t } = useTranslation();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);

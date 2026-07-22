@@ -19,6 +19,17 @@ export interface Index {
   is_primary: boolean;
   seq_in_index?: number;
 }
+export interface SchemaTable {
+  name: string;
+  columns: TableColumn[];
+  foreign_keys: ForeignKey[];
+}
+export type LoadSchema = (
+  connectionId: string,
+  schemaVersion?: number,
+  schema?: string,
+  database?: string,
+) => Promise<SchemaTable[]>;
 export interface SchemaDiagramRouteParams {
   connectionId: string | null;
   connectionName: string;

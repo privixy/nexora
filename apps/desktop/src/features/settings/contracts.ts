@@ -1,7 +1,20 @@
+import type { ReactNode } from "react";
 import type { AppLanguage } from "../../i18n/config";
+import type { ExplainPlan } from "../../types/explain";
 
 export type { AppLanguage };
 export type CopyFormat = "csv" | "json" | "sql-insert";
+export type ApprovalExplainViewMode = "graph" | "table" | "raw" | "ai";
+export interface ApprovalExplainPlanRenderProps {
+  plan: ExplainPlan;
+  viewMode: ApprovalExplainViewMode;
+  onViewModeChange: (mode: ApprovalExplainViewMode) => void;
+  selectedNodeId: string | null;
+  onSelectNode: (id: string | null) => void;
+}
+export type ApprovalExplainPlanRenderer = (
+  props: ApprovalExplainPlanRenderProps,
+) => ReactNode;
 export type AiProvider =
   | "openai"
   | "anthropic"

@@ -1,5 +1,5 @@
 import type { Node, Edge } from "@xyflow/react";
-import type { ExplainNode, ExplainPlan, ExplainPlanNodeData } from "../features/visual-explain";
+import type { ExplainNode, ExplainPlan, ExplainPlanNodeData } from "../contracts";
 import dagre from "dagre";
 
 // ---------------------------------------------------------------------------

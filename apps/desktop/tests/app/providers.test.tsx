@@ -24,6 +24,7 @@ function provider(name: string) {
 const updateNotificationModalMock = vi.hoisted(() => vi.fn());
 const whatsNewModalMock = vi.hoisted(() => vi.fn());
 const editorProviderMock = vi.hoisted(() => vi.fn());
+const aiApprovalGateMock = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({ BrowserRouter: provider("BrowserRouter") }));
 vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
@@ -54,7 +55,14 @@ vi.mock("../../src/components/modals/WhatsNewModal", () => ({
     return <div data-testid="whats-new-modal" />;
   },
 }));
-vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
+vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({
+  AiApprovalGate: (props: { attentionAdapter: unknown; renderExplainPlan: unknown }) => {
+    aiApprovalGateMock(props);
+    return <div data-testid="ai-approval-gate" />;
+  },
+}));
+vi.mock("../../src/features/mcp", () => ({ mcpApprovalAttentionAdapter: { focusWindowForApproval: vi.fn() } }));
+vi.mock("../../src/features/visual-explain", () => ({ ApprovalExplainPlanView: vi.fn() }));
 vi.mock("../../src/components/modals/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
 
 describe("AppProviders", () => {
@@ -99,6 +107,10 @@ describe("AppProviders", () => {
     expect(actualOrder).toEqual(providerNames);
     expect(child.parentElement).toHaveAttribute("data-provider", "EditorProvider");
     expect(editorProviderMock).toHaveBeenCalledWith(expect.any(Object));
+    expect(aiApprovalGateMock).toHaveBeenCalledWith({
+      attentionAdapter: expect.any(Object),
+      renderExplainPlan: expect.any(Function),
+    });
     expect(screen.getByTestId("connection-health-monitor").parentElement).toHaveAttribute("data-provider", "BrowserRouter");
     expect(screen.getByTestId("connection-health-monitor").compareDocumentPosition(child)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(updateNotificationModalMock).toHaveBeenCalledWith({

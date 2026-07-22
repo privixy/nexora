@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Network } from "lucide-react";
 import { AiQueryModal } from "../../../components/modals/AiQueryModal";
 import { AiExplainModal } from "../../../components/modals/AiExplainModal";
-import { VisualExplainModal } from "../../../components/modals/VisualExplainModal";
+import { VisualExplainModal } from "../../visual-explain";
 import { AiDropdownButton } from "../../../components/ui/AiDropdownButton";
 
 interface NotebookAiButtonsProps {

@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import { FileJson, FolderOpen, Loader2, RefreshCw } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import type { ExplainPlan } from "../types/explain";
-import { VisualExplainView } from "../components/explain/VisualExplainView";
-import type { ExplainViewMode } from "../features/visual-explain";
+import type { ExplainPlan } from "../contracts";
+import { VisualExplainView } from "../components/VisualExplainView";
+import type { ExplainViewMode } from "..";
 import {
   getExplainFileName,
   parseExplainFileParam,
-} from "../utils/explainImport";
-import { parseVisualExplainDeepLink } from "../features/settings/lib/aiActivity";
-import { useSettings } from "../features/settings/hooks/useSettings";
+} from "../lib/explainImport";
+import { parseVisualExplainDeepLink } from "../../settings/lib/aiActivity";
+import { useSettings } from "../../settings/hooks/useSettings";
 
 export interface VisualExplainPageProps {
   /// When provided, render in embedded mode: skip the page header, use the

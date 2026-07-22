@@ -20,7 +20,7 @@ import {
 import { AiQueryModal } from "../components/modals/AiQueryModal";
 import { AiExplainModal } from "../components/modals/AiExplainModal";
 import { AiDropdownButton } from "../components/ui/AiDropdownButton";
-import { VisualExplainModal } from "../components/modals/VisualExplainModal";
+import { VisualExplainModal } from "../features/visual-explain";
 import {
   Play,
   Plus,

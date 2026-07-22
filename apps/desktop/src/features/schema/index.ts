@@ -1,4 +1,11 @@
-export type { ForeignKey, Index, SchemaDiagramRouteParams, TableColumn } from "./contracts";
+export type {
+  ForeignKey,
+  Index,
+  LoadSchema,
+  SchemaDiagramRouteParams,
+  SchemaTable,
+  TableColumn,
+} from './contracts';
 
 export { SchemaDiagramPage } from "./pages/SchemaDiagramPage";
 export { ClipboardImportModal } from "./components/ClipboardImportModal";

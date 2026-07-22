@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2, Sparkles } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../../features/settings/hooks/useSettings";
-import { getAiExplanationLanguage } from "../../../i18n/language";
-import type { ExplainPlan } from "../../../types/explain";
+import { useSettings } from "../../../settings/hooks/useSettings";
+import { getAiExplanationLanguage } from "../../../../i18n/language";
+import type { ExplainPlan } from "../../contracts";
 
 interface ExplainAiAnalysisProps {
   plan: ExplainPlan;

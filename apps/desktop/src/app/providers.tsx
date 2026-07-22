@@ -3,6 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import { ConnectionHealthMonitor } from "../features/connections";
 import { EditorProvider, QueryHistoryProvider, SavedQueriesProvider } from "../features/editor";
 import { AiApprovalGate } from "../features/settings";
+import { mcpApprovalAttentionAdapter } from '../features/mcp';
+import { ApprovalExplainPlanView } from '../features/visual-explain/components/ApprovalExplainPlanView';
 import { SshAskpassGate } from "../components/modals/SshAskpassGate";
 import { UpdateNotificationModal } from "../components/modals/UpdateNotificationModal";
 import { WhatsNewModal } from "../components/modals/WhatsNewModal";
@@ -49,7 +51,10 @@ export function AppProviders({ children, updateNotification, whatsNew }: AppProv
 
       <WhatsNewModal {...whatsNew} />
 
-      <AiApprovalGate />
+      <AiApprovalGate
+        attentionAdapter={mcpApprovalAttentionAdapter}
+        renderExplainPlan={(props) => <ApprovalExplainPlanView {...props} />}
+      />
       <SshAskpassGate />
     </>
   );
