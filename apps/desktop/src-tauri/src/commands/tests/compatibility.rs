@@ -1,5 +1,6 @@
-use super::*;
-use crate::models::DatabaseSelection;
+use crate::commands::legacy::*;
+use crate::commands::*;
+use crate::models::*;
 
 fn base_params() -> ConnectionParams {
     ConnectionParams {
@@ -158,8 +159,7 @@ fn test_resolve_password_prefers_request() {
 fn test_resolve_password_from_keychain() {
     let params = base_params();
     let saved = saved_conn("id1", None, true);
-    let result =
-        resolve_test_connection_password(&params, Some(&saved), |_| Ok("kc".to_string()));
+    let result = resolve_test_connection_password(&params, Some(&saved), |_| Ok("kc".to_string()));
     assert_eq!(result, Some("kc".to_string()));
 }
 
@@ -167,8 +167,7 @@ fn test_resolve_password_from_keychain() {
 fn test_resolve_password_from_saved_when_not_keychain() {
     let params = base_params();
     let saved = saved_conn("id1", Some("stored"), false);
-    let result =
-        resolve_test_connection_password(&params, Some(&saved), |_| Ok("kc".to_string()));
+    let result = resolve_test_connection_password(&params, Some(&saved), |_| Ok("kc".to_string()));
     assert_eq!(result, Some("stored".to_string()));
 }
 
@@ -176,8 +175,7 @@ fn test_resolve_password_from_saved_when_not_keychain() {
 fn test_resolve_password_fallback_to_saved_when_keychain_empty() {
     let params = base_params();
     let saved = saved_conn("id1", Some("stored"), true);
-    let result =
-        resolve_test_connection_password(&params, Some(&saved), |_| Ok("  ".to_string()));
+    let result = resolve_test_connection_password(&params, Some(&saved), |_| Ok("  ".to_string()));
     assert_eq!(result, Some("stored".to_string()));
 }
 
@@ -256,8 +254,7 @@ mod build_connection_url_tests {
     #[tokio::test]
     async fn test_default_ports() {
         let mysql_params = create_params("mysql", "localhost", None, "root", None, "testdb");
-        let pg_params =
-            create_params("postgres", "localhost", None, "postgres", None, "testdb");
+        let pg_params = create_params("postgres", "localhost", None, "postgres", None, "testdb");
 
         let mysql_url = build_connection_url(&mysql_params).await.unwrap();
         let pg_url = build_connection_url(&pg_params).await.unwrap();
@@ -301,11 +298,7 @@ mod resolve_ssh_password_tests {
     use super::*;
     use crate::models::SshConnection;
 
-    fn create_ssh_conn(
-        id: &str,
-        password: Option<&str>,
-        save_in_keychain: bool,
-    ) -> SshConnection {
+    fn create_ssh_conn(id: &str, password: Option<&str>, save_in_keychain: bool) -> SshConnection {
         SshConnection {
             id: id.to_string(),
             name: "Test".to_string(),
@@ -453,7 +446,6 @@ mod is_empty_or_whitespace_tests {
 
 mod resolve_connection_params_tests {
     use super::*;
-
 
     fn create_ssh_params(
         ssh_host: &str,
@@ -643,9 +635,8 @@ mod url_encoding_edge_cases {
 }
 
 mod cancellation_state {
-    use super::super::{
-        cancel_query_impl, register_abort_handle, unregister_abort_handle,
-        QueryCancellationState,
+    use crate::commands::{
+        cancel_query_impl, register_abort_handle, unregister_abort_handle, QueryCancellationState,
     };
     use std::sync::Arc;
     use std::time::Duration;
@@ -990,6 +981,3 @@ fn cascade_delete_subgroup_leaves_parent_and_other_subgroups_alone() {
         vec!["c1".to_string(), "c4".to_string()],
     );
 }
-
-mod export_import;
-mod group_tree;

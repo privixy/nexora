@@ -123,8 +123,7 @@ fn test_export_preserves_nested_group_hierarchy() {
     let deserialized: ExportPayload = serde_json::from_str(&json).unwrap();
 
     // Same set of ids
-    let original_ids: std::collections::HashSet<_> =
-        tree.iter().map(|g| g.id.clone()).collect();
+    let original_ids: std::collections::HashSet<_> = tree.iter().map(|g| g.id.clone()).collect();
     let new_ids: std::collections::HashSet<_> =
         deserialized.groups.iter().map(|g| g.id.clone()).collect();
     assert_eq!(original_ids, new_ids);

@@ -138,6 +138,11 @@
       "classification": "source-contract",
       "defaultMode": "enabled",
       "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test tauri_command_contract"
+    },
+    "apps/desktop/src-tauri/tests/command_module_compatibility.rs": {
+      "classification": "public-api-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test command_module_compatibility"
     }
   },
   "allowedWorkspaceDependencies": {

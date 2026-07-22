@@ -1,0 +1,186 @@
+use std::collections::HashMap;
+use std::fs;
+use std::path::PathBuf;
+use std::sync::{Arc, Mutex};
+use tauri::{AppHandle, Emitter, Manager, Runtime, State};
+use tokio::task::AbortHandle;
+use urlencoding::encode;
+use uuid::Uuid;
+
+use crate::connection_params::apply_database_override;
+use crate::credential_cache;
+use crate::keychain_utils;
+use crate::models::{
+    BatchStatementResult, ColumnDefinition, ConnectionGroup, ConnectionParams, ConnectionsFile,
+    ExplainPlan, ExportPayload, ForeignKey, Index, K8sConnection, K8sConnectionInput, QueryResult,
+    RoutineInfo, RoutineParameter, SavedConnection, SshConnection, SshConnectionInput,
+    SshTestParams, TableColumn, TableInfo, TestConnectionRequest, TriggerInfo,
+};
+use crate::persistence;
+use crate::ssh_tunnel::{get_tunnels, SshTunnel};
+use crate::window_title::format_window_title;
+
+use super::legacy::*;
+
+#[tauri::command]
+pub async fn test_connection<R: Runtime>(
+    app: AppHandle<R>,
+    request: TestConnectionRequest,
+) -> Result<String, String> {
+    log::info!(
+        "Testing connection to database: {}",
+        request.params.database
+    );
+
+    let mut expanded_params = expand_ssh_connection_params(&app, &request.params).await?;
+    expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
+
+    if request.params.password.is_none() && expanded_params.password.is_none() {
+        let saved_conn = match &request.connection_id {
+            Some(id) => find_connection_by_id(&app, id).ok(),
+            None => None,
+        };
+        expanded_params.password =
+            resolve_test_connection_password(&request.params, saved_conn.as_ref(), |conn_id| {
+                keychain_utils::get_db_password(conn_id, "")
+            });
+    }
+
+    let resolved_params = if let Some(conn_id) = &request.connection_id {
+        resolve_connection_params_with_id(&expanded_params, conn_id)?
+    } else {
+        resolve_connection_params(&expanded_params)?
+    };
+    log::debug!(
+        "Test connection params: Host={:?}, Port={:?}",
+        resolved_params.host,
+        resolved_params.port
+    );
+
+    let drv = driver_for(&resolved_params.driver).await?;
+
+    // For file-based drivers, verify the database file exists before attempting connection
+    if drv.manifest().capabilities.file_based {
+        let db_path = std::path::Path::new(resolved_params.database.primary());
+        if !db_path.exists() {
+            return Err(format!(
+                "Database file not found: {}",
+                resolved_params.database
+            ));
+        }
+    }
+
+    drv.test_connection(&resolved_params).await?;
+
+    log::info!(
+        "Connection test successful for database: {}",
+        request.params.database
+    );
+    Ok("Connection successful!".to_string())
+}
+
+#[tauri::command]
+pub async fn list_databases<R: Runtime>(
+    app: AppHandle<R>,
+    request: TestConnectionRequest,
+) -> Result<Vec<String>, String> {
+    let mut expanded_params = expand_ssh_connection_params(&app, &request.params).await?;
+    expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
+
+    if request.params.password.is_none() && expanded_params.password.is_none() {
+        let saved_conn = match &request.connection_id {
+            Some(id) => find_connection_by_id(&app, id).ok(),
+            None => None,
+        };
+        expanded_params.password =
+            resolve_test_connection_password(&request.params, saved_conn.as_ref(), |conn_id| {
+                keychain_utils::get_db_password(conn_id, "")
+            });
+    }
+
+    let resolved_params = if let Some(conn_id) = &request.connection_id {
+        resolve_connection_params_with_id(&expanded_params, conn_id)?
+    } else {
+        resolve_connection_params(&expanded_params)?
+    };
+
+    #[cfg(debug_assertions)]
+    log::debug!(
+        "[List Databases] Resolved Params: Host={:?}, Port={:?}, Username={:?}",
+        resolved_params.host,
+        resolved_params.port,
+        resolved_params.username,
+    );
+
+    let drv = driver_for(&resolved_params.driver).await?;
+    drv.get_databases(&resolved_params).await
+}
+
+#[tauri::command]
+pub async fn register_active_connection<R: Runtime>(app: AppHandle<R>, connection_id: String) {
+    crate::health_check::register_connection(connection_id).await;
+    // Broadcast so every window learns this connection is now open.
+    crate::health_check::emit_active_changed(&app).await;
+}
+
+#[tauri::command]
+pub async fn get_active_connections() -> Vec<String> {
+    crate::health_check::active_connections().await
+}
+
+#[tauri::command]
+pub async fn disconnect_connection<R: Runtime>(
+    app: AppHandle<R>,
+    connection_id: String,
+) -> Result<(), String> {
+    log::info!("Disconnecting from connection: {}", connection_id);
+
+    // Unregister from health check before closing the pool.
+    crate::health_check::unregister_connection(&connection_id).await;
+
+    let saved_conn = find_connection_by_id(&app, &connection_id)?;
+    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
+    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
+    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
+
+    // Close the connection pool
+    crate::pool_manager::close_pool_with_id(&params, Some(&connection_id)).await;
+
+    // Broadcast so every window learns this connection is now closed.
+    crate::health_check::emit_active_changed(&app).await;
+
+    log::info!(
+        "Successfully disconnected from connection: {}",
+        connection_id
+    );
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn get_server_now<R: Runtime>(
+    app: AppHandle<R>,
+    connection_id: String,
+) -> Result<String, String> {
+    let saved_conn = find_connection_by_id(&app, &connection_id)?;
+    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
+    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
+    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
+
+    let query = match saved_conn.params.driver.as_str() {
+        "sqlite" => "SELECT datetime('now', 'localtime')",
+        _ => "SELECT NOW()",
+    };
+
+    let drv = driver_for(&saved_conn.params.driver).await?;
+    let result = drv.execute_query(&params, query, Some(1), 1, None).await?;
+
+    result
+        .rows
+        .first()
+        .and_then(|row| row.first())
+        .map(|v| match v {
+            serde_json::Value::String(s) => s.clone(),
+            other => other.to_string(),
+        })
+        .ok_or_else(|| "No timestamp returned from server".to_string())
+}
