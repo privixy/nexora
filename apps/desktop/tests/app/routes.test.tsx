@@ -40,6 +40,12 @@ vi.mock("../../src/components/layout/MainLayout", () => ({
   MainLayout: () => <div data-testid="main-layout"><Outlet /></div>,
 }));
 vi.mock("../../src/features/connections/pages/ConnectionsPage", () => ({ Connections: page("connections") }));
+vi.mock("../../src/features/plugins", () => ({
+  PluginSettingsPage: page("plugin-settings"),
+  PluginsTab: page("plugins"),
+  useDrivers: () => ({ allDrivers: [], installedPlugins: [], refresh: vi.fn() }),
+}));
+vi.mock("../../src/features/settings", () => ({ SettingsPage: page("settings") }));
 vi.mock("../../src/pages/Editor", () => ({ Editor: page("editor") }));
 vi.mock("../../src/pages/McpPage", () => ({ McpPage: page("mcp") }));
 vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));

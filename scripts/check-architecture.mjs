@@ -237,6 +237,18 @@ function featureName(file, sourceRoot) {
   return match?.[1];
 }
 
+function featureLayer(file, sourceRoot) {
+  const feature = featureName(file, sourceRoot);
+  if (feature !== "plugins") return feature;
+  if (
+    isUnderRoot(file, `${sourceRoot}/features/plugins/components`)
+    || file === `${sourceRoot}/features/plugins/hooks/usePluginApi.ts`
+  ) {
+    return "plugins-ui";
+  }
+  return "plugins-core";
+}
+
 function isFeaturePublicRoot(resolved, importedFeature, sourceRoot) {
   if (!resolved || !importedFeature) return false;
   const normalized = resolved.replace(/\.(?:ts|tsx)$/, "");
@@ -345,6 +357,11 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
 
   for (const file of sourceFiles) {
     const importerFeature = featureName(file, sourceRoot);
+    const importerLayer = featureLayer(file, sourceRoot);
+    if (importerLayer === "plugins-ui") {
+      if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
+      featureEdges.get(importerLayer).add("plugins-core");
+    }
     const content = readFileSync(join(root, file), "utf8");
     for (const importTarget of importSpecifiers(content)) {
       if (importTarget === undefined) {
@@ -353,6 +370,7 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
       }
       const resolved = resolveSourceImport(file, importTarget, sourceRoot);
       const importedFeature = resolved ? featureName(resolved, sourceRoot) : undefined;
+      const importedLayer = resolved ? featureLayer(resolved, sourceRoot) : undefined;
       const importsFeaturePublicRoot = isFeaturePublicRoot(resolved, importedFeature, sourceRoot);
       const isExcepted = exceptions.some((exception) => exceptionMatches(exception, file, importTarget));
       const isTauri = importTarget.startsWith("@tauri-apps/");
@@ -382,8 +400,8 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
         if (!importsFeaturePublicRoot && !isExcepted) {
           violations.push(`${file}: cross-feature imports must use the public feature root: ${importTarget}`);
         }
-        if (!featureEdges.has(importerFeature)) featureEdges.set(importerFeature, new Set());
-        featureEdges.get(importerFeature).add(importedFeature);
+        if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
+        featureEdges.get(importerLayer).add(importedLayer);
       }
       if (isExcepted) {
         console.warn(`[architecture] frontend boundary debt: ${file} -> ${importTarget}`);

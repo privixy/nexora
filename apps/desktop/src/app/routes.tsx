@@ -1,19 +1,44 @@
+import type { ComponentProps } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "../components/layout/MainLayout";
 import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
-import { ConnectionsPage } from "../features/connections";
+import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
 import { Editor } from "../pages/Editor";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { McpPage } from "../pages/McpPage";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
 import { SchemaDiagramPage } from "../features/schema";
-import { SettingsPage } from "../features/settings";
+import { SettingsPage, SshTab } from "../features/settings";
+import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";
 import { TaskManagerPage } from "../pages/TaskManagerPage";
 import { VisualExplainPage } from "../pages/VisualExplainPage";
-import { useLegacyPluginSettingsComposition } from "./legacy/pluginSettingsComposition";
 
 export function AppRoutes() {
-  const pluginSettingsComposition = useLegacyPluginSettingsComposition();
+  const { allDrivers, installedPlugins, refresh } = useDrivers();
+  const pluginTabs = new Map<string, { id: string; name: string }>();
+
+  for (const driver of allDrivers) {
+    if (driver.is_builtin && (driver.settings?.length ?? 0) === 0) continue;
+    pluginTabs.set(driver.id, { id: driver.id, name: driver.name });
+  }
+
+  for (const plugin of installedPlugins) {
+    pluginTabs.set(plugin.id, { id: plugin.id, name: plugin.name });
+  }
+
+  const pluginSettingsComposition = {
+    pluginTabs: Array.from(pluginTabs.values()),
+    onPluginsChanged: refresh,
+    renderPluginTab: (props: ComponentProps<typeof PluginsTab>) => (
+      <PluginsTab {...props} />
+    ),
+    renderPluginSettings: (pluginId: string) => (
+      <PluginSettingsPage key={pluginId} pluginId={pluginId} />
+    ),
+    renderSshTab: () => (
+      <SshTab renderConnectionsManager={() => <SshConnectionsManager />} />
+    ),
+  };
 
   return (
     <Routes>

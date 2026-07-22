@@ -91,6 +91,14 @@ vi.mock("../../../../src/components/settings/PluginSettingsPage", () => ({
 }));
 
 describe("Settings page", () => {
+  it("renders the injected SSH settings composition", async () => {
+    render(<SettingsPage renderSshTab={() => <div>ssh composition</div>} />);
+
+    fireEvent.click(screen.getByText("sshConnections.title"));
+
+    expect(screen.getByText("ssh composition")).toBeInTheDocument();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
 

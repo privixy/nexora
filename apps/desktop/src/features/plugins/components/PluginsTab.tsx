@@ -29,19 +29,18 @@ import {
   Search,
 } from "lucide-react";
 import clsx from "clsx";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { useDrivers } from "../../features/plugins/hooks/useDrivers";
-import { usePluginRegistry } from "../../features/plugins/hooks/usePluginRegistry";
-import { useDatabase } from "../../features/connections";
-import { parseAuthor, versionGte } from "../../features/plugins/lib/plugins";
-import { removePluginConfig } from "../../features/plugins/lib/pluginConfig";
-import { findConnectionsForDrivers } from "../../features/connections/lib/connectionManager";
-import { APP_VERSION } from "../../version";
-import type { PluginManifest } from "../../types/plugins";
-import { PluginInstallErrorModal } from "../../features/plugins/components/modals/PluginInstallErrorModal";
-import { PluginRemoveModal } from "../../features/plugins/components/modals/PluginRemoveModal";
-import { PluginStartErrorModal } from "../../features/plugins/components/modals/PluginStartErrorModal";
-import { SlotAnchor } from "../ui/SlotAnchor";
+import { useSettings } from "../../settings";
+import { useDrivers } from "../hooks/useDrivers";
+import { usePluginRegistry } from "../hooks/usePluginRegistry";
+import { findConnectionsForDrivers, useDatabase } from "../../connections";
+import { parseAuthor, versionGte } from "../lib/plugins";
+import { removePluginConfig } from "../lib/pluginConfig";
+import { APP_VERSION } from "../../../version";
+import type { PluginManifest } from "../contracts";
+import { PluginInstallErrorModal } from "./modals/PluginInstallErrorModal";
+import { PluginRemoveModal } from "./modals/PluginRemoveModal";
+import { PluginStartErrorModal } from "./modals/PluginStartErrorModal";
+import { SlotAnchor } from "../../../components/ui/SlotAnchor";
 
 /* ── Types ── */
 

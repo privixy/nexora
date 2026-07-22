@@ -21,7 +21,6 @@ import { LocalizationTab } from "../components/LocalizationTab";
 import { AiTab } from "../components/AiTab";
 import { LogsTab } from "../components/LogsTab";
 import { ShortcutsTab } from "../components/ShortcutsTab";
-import { SshTab } from "../components/SshTab";
 import { AiActivityPanel } from "../components/AiActivityPanel";
 import { InfoTab } from "../components/InfoTab";
 import { useSettings } from "../hooks/useSettings";
@@ -58,6 +57,7 @@ interface SettingsPageProps {
     onPluginsChanged: (change: PluginSidebarChange) => void;
   }) => React.ReactNode;
   renderPluginSettings?: (pluginId: string) => React.ReactNode;
+  renderSshTab?: () => React.ReactNode;
 }
 
 const TAB_ITEMS: Array<{
@@ -79,7 +79,6 @@ const TAB_ITEMS: Array<{
 
 const TAB_COMPONENTS: Partial<Record<SettingsTab, React.ComponentType>> = {
   general: GeneralTab,
-  ssh: SshTab,
   appearance: AppearanceTab,
   localization: LocalizationTab,
   ai: AiTab,
@@ -94,6 +93,7 @@ export const SettingsPage = ({
   onPluginsChanged,
   renderPluginTab,
   renderPluginSettings,
+  renderSshTab,
 }: SettingsPageProps) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
@@ -239,6 +239,8 @@ export const SettingsPage = ({
             <div className="max-w-5xl mx-auto p-8">
           {activePluginId ? (
             renderPluginSettings?.(activePluginId)
+          ) : activeTab === "ssh" ? (
+            renderSshTab?.()
           ) : activeTab === "plugins" ? (
             renderPluginTab?.({
               onOpenPluginSettings: (pluginId) =>

@@ -496,7 +496,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/PluginSettingsPage.tsx",
+    "importer": "apps/desktop/src/features/plugins/components/PluginSettingsPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -504,7 +504,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/PluginSettingsPage.tsx",
+    "importer": "apps/desktop/src/features/plugins/components/PluginSettingsPage.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -512,7 +512,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/PluginsTab.tsx",
+    "importer": "apps/desktop/src/features/plugins/components/PluginsTab.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -520,7 +520,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/PluginsTab.tsx",
+    "importer": "apps/desktop/src/features/plugins/components/PluginsTab.tsx",
     "importTarget": "@tauri-apps/plugin-opener",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -776,7 +776,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/usePluginApi.ts",
+    "importer": "apps/desktop/src/features/plugins/hooks/usePluginApi.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",
@@ -784,7 +784,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/usePluginApi.ts",
+    "importer": "apps/desktop/src/features/plugins/hooks/usePluginApi.ts",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",
@@ -792,7 +792,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/usePluginApi.ts",
+    "importer": "apps/desktop/src/features/plugins/hooks/usePluginApi.ts",
     "importTarget": "@tauri-apps/plugin-opener",
     "owner": "plugins",
     "characterizationTest": "apps/desktop/tests/features/plugins/rawTauri.test.tsx",

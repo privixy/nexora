@@ -21,6 +21,18 @@ export { useDrivers } from "./hooks/useDrivers";
 export { usePluginRegistry } from "./hooks/usePluginRegistry";
 export { usePluginSlotRegistry } from "./hooks/usePluginSlotRegistry";
 export {
+  openUrl,
+  usePluginConnection,
+  usePluginModal,
+  usePluginQuery,
+  usePluginSetting,
+  usePluginTheme,
+  usePluginToast,
+  usePluginTranslation,
+} from "./hooks/usePluginApi";
+export { PluginSettingsPage } from "./components/PluginSettingsPage";
+export { PluginsTab } from "./components/PluginsTab";
+export {
   getDatabaseList,
   getEffectiveDatabase,
   isMultiDatabaseCapable,

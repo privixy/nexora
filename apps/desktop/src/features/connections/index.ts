@@ -34,3 +34,6 @@ export { ExportConnectionsModal } from "./components/ExportConnectionsModal";
 export { ImportFromAppModal } from "./components/ImportFromAppModal";
 export { getConnectionIcon, getConnectionAccent, getDriverIcon, getDriverColorStyle } from "./lib/driverUI";
 export { SshConnectionsManager } from "./components/SshConnectionsManager";
+export { ConnectionHealthMonitor } from "./components/ConnectionHealthMonitor";
+export { DatabaseContext } from "./state/DatabaseContext";
+export { findConnectionsForDrivers } from "./lib/connectionManager";

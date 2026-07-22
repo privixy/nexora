@@ -93,6 +93,30 @@
       "apps/desktop/src/platform/tauri/pathAdapter.ts",
       "apps/desktop/src/platform/tauri/updaterAdapter.ts"
     ],
+    "apps/desktop/tests/utils/connectionLayout.test.ts": [
+      "apps/desktop/src/features/connections/lib/connectionLayout.ts"
+    ],
+    "apps/desktop/tests/utils/connectionManager.test.ts": [
+      "apps/desktop/src/features/connections/lib/connectionManager.ts"
+    ],
+    "apps/desktop/tests/utils/connectionStringParser.test.ts": [
+      "apps/desktop/src/features/connections/lib/connectionStringParser.ts"
+    ],
+    "apps/desktop/tests/utils/connections.test.ts": [
+      "apps/desktop/src/features/connections/lib/connections.ts"
+    ],
+    "apps/desktop/tests/utils/credentials.test.ts": [
+      "apps/desktop/src/features/connections/lib/credentials.ts"
+    ],
+    "apps/desktop/tests/utils/groupTree.test.ts": [
+      "apps/desktop/src/features/connections/lib/groupTree.ts"
+    ],
+    "apps/desktop/tests/utils/k8s.test.ts": [
+      "apps/desktop/src/features/connections/lib/k8s.ts"
+    ],
+    "apps/desktop/tests/utils/ssh.test.ts": [
+      "apps/desktop/src/features/connections/lib/ssh.ts"
+    ],
     "apps/desktop/tests/utils/createTable.test.ts": [
       "apps/desktop/src/features/schema/lib/createTable.ts"
     ],
@@ -119,20 +143,6 @@
         "owner": "schema",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
-      },
-      {
-        "path": "apps/desktop/src/app/legacy/pluginSettingsComposition.tsx",
-        "importTarget": "../../components/settings/PluginSettingsPage",
-        "owner": "app",
-        "reason": "Legacy plugin settings composition retained until plugin UI publication",
-        "removeByTask": 12
-      },
-      {
-        "path": "apps/desktop/src/app/legacy/pluginSettingsComposition.tsx",
-        "importTarget": "../../components/settings/PluginsTab",
-        "owner": "app",
-        "reason": "Legacy plugin settings composition retained until plugin UI publication",
-        "removeByTask": 12
       },
       {
         "path": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
@@ -477,7 +487,7 @@
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/components/modals/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/components/notebook/NotebookView.tsx": 950,
-    "apps/desktop/src/components/settings/PluginsTab.tsx": 1316,
+    "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/components/ui/DataGrid.tsx": 1791,
     "apps/desktop/src/components/ui/DataGridRow.tsx": 770,
     "apps/desktop/src/components/ui/MultiResultPanel.tsx": 599,

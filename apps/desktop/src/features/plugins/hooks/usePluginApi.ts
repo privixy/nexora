@@ -4,12 +4,11 @@ import { message } from "@tauri-apps/plugin-dialog";
 import { openUrl as openExternal } from "@tauri-apps/plugin-opener";
 import { useTranslation } from "react-i18next";
 
-import { ThemeContext } from "../features/settings/state/ThemeContext";
-import { DatabaseContext } from "../features/connections/state/DatabaseContext";
-import { SettingsContext } from "../features/settings/state/SettingsContext";
-import { PluginModalContext } from "../features/plugins/state/PluginModalContext";
-import type { PluginModalOptions } from "../features/plugins/state/PluginModalContext";
-import { toErrorMessage } from "../utils/errors";
+import { ThemeContext, SettingsContext } from "../../settings";
+import { DatabaseContext } from "../../connections";
+import { PluginModalContext } from "../state/PluginModalContext";
+import type { PluginModalOptions } from "../state/PluginModalContext";
+import { toErrorMessage } from "../../../utils/errors";
 
 /**
  * Hook for plugin components to execute read-only database queries.

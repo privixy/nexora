@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { SettingSection } from "./SettingControls";
-import { SshConnectionsManager } from "../../connections";
+interface SshTabProps {
+  renderConnectionsManager?: () => React.ReactNode;
+}
 
-export function SshTab() {
+export function SshTab({ renderConnectionsManager }: SshTabProps) {
   const { t } = useTranslation();
 
   return (
@@ -11,7 +13,7 @@ export function SshTab() {
         title={t("sshConnections.title")}
         description={t("sshConnections.manageDesc")}
       >
-        <SshConnectionsManager />
+        {renderConnectionsManager?.()}
       </SettingSection>
     </div>
   );
