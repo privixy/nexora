@@ -164,7 +164,7 @@ vi.mock("../../src/hooks/useSqlAutocompleteRegistration", () => ({
 }));
 
 vi.mock("../../src/components/ui/VisualQueryBuilder", () => ({ VisualQueryBuilder: () => <div /> }));
-vi.mock("../../src/components/notebook/NotebookView", () => ({ NotebookView: () => <div /> }));
+vi.mock("../../src/features/notebooks/components/NotebookView", () => ({ NotebookView: () => <div /> }));
 vi.mock("../../src/components/ui/AiDropdownButton", () => ({ AiDropdownButton: () => <div /> }));
 vi.mock("../../src/components/modals/AiQueryModal", () => ({ AiQueryModal: () => <div /> }));
 vi.mock("../../src/components/modals/AiExplainModal", () => ({ AiExplainModal: () => <div /> }));

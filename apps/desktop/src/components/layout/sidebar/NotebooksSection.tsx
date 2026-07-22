@@ -21,12 +21,12 @@ import {
   loadNotebook,
   createNotebookFromState,
   NOTEBOOKS_CHANGED_EVENT,
-} from "../../../utils/notebookStore";
+} from "../../../features/notebooks/lib/notebookStore";
 import {
   serializeNotebook,
   deserializeNotebook,
-} from "../../../utils/notebookFile";
-import { exportNotebookToHtml } from "../../../utils/notebookHtmlExport";
+} from "../../../features/notebooks/lib/notebookFile";
+import { exportNotebookToHtml } from "../../../features/notebooks/lib/notebookHtmlExport";
 import { ConfirmModal } from "../../modals/ConfirmModal";
 import { ContextMenu, type ContextMenuItem } from "../../ui/ContextMenu";
 import type { NotebookMetadata } from "../../../types/notebook";

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { PanelDatabaseProvider } from './PanelDatabaseProvider';
 import { EditorProvider } from '../../features/editor';
-import { legacyEditorNotebookAdapter } from '../../app/editorNotebookAdapter';
+import { editorNotebookAdapter } from '../../features/notebooks';
 import { Editor } from '../../pages/Editor';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';
@@ -97,7 +97,7 @@ export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
             {/* Editor */}
             <div className="flex-1 overflow-hidden min-h-0">
               <PanelDatabaseProvider connectionId={connId}>
-                <EditorProvider notebookAdapter={legacyEditorNotebookAdapter}>
+                <EditorProvider notebookAdapter={editorNotebookAdapter}>
                   <Editor />
                 </EditorProvider>
               </PanelDatabaseProvider>

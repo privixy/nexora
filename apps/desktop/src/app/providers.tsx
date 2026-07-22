@@ -10,7 +10,7 @@ import { AlertProvider } from "../contexts/AlertProvider";
 import { ConnectionLayoutProvider } from "../contexts/ConnectionLayoutProvider";
 import { KeybindingsProvider } from "../contexts/KeybindingsProvider";
 import { PluginModalProvider, PluginSlotProvider } from "../features/plugins";
-import { legacyEditorNotebookAdapter } from "./editorNotebookAdapter";
+import { editorNotebookAdapter } from "../features/notebooks";
 
 type UpdateNotificationProps = Parameters<typeof UpdateNotificationModal>[0];
 type WhatsNewProps = Parameters<typeof WhatsNewModal>[0];
@@ -33,7 +33,7 @@ export function AppProviders({ children, updateNotification, whatsNew }: AppProv
                 <ConnectionLayoutProvider>
                   <SavedQueriesProvider>
                     <QueryHistoryProvider>
-                      <EditorProvider notebookAdapter={legacyEditorNotebookAdapter}>
+                      <EditorProvider notebookAdapter={editorNotebookAdapter}>
                         {children}
                       </EditorProvider>
                     </QueryHistoryProvider>

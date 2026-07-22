@@ -384,7 +384,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/CellNameAiButton.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/CellNameAiButton.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -392,7 +392,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/NotebookOutline.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/NotebookOutline.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -400,7 +400,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/NotebookView.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/NotebookView.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -408,7 +408,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/NotebookView.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/NotebookView.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -416,7 +416,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/NotebookView.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/NotebookView.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -424,7 +424,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/ResultToolbar.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/ResultToolbar.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -432,7 +432,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/notebook/ResultToolbar.tsx",
+    "importer": "apps/desktop/src/features/notebooks/components/ResultToolbar.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
@@ -960,7 +960,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/notebookStore.ts",
+    "importer": "apps/desktop/src/features/notebooks/lib/notebookStore.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "notebooks",
     "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",

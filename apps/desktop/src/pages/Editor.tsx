@@ -104,9 +104,9 @@ import {
   type ResultsClosedPayload,
 } from "../utils/resultsWindowSync";
 import { SqlEditorWrapper } from "../components/ui/SqlEditorWrapper";
-import { NotebookView } from "../components/notebook/NotebookView";
+import { NotebookView } from "../features/notebooks";
 import { useSqlAutocompleteRegistration } from "../hooks/useSqlAutocompleteRegistration";
-import { createNotebook, renameNotebook } from "../utils/notebookStore";
+import { createNotebook, renameNotebook } from "../features/notebooks";
 import { type OnMount, type Monaco } from "@monaco-editor/react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../hooks/useAlert";

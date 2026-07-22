@@ -76,7 +76,7 @@ import { SidebarDatabaseItem } from "./sidebar/SidebarDatabaseItem";
 import { SidebarTriggerItem } from "./sidebar/SidebarTriggerItem";
 import { QueryHistorySection } from "./sidebar/QueryHistorySection";
 import { NotebooksSection } from "./sidebar/NotebooksSection";
-import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT } from "../../utils/notebookStore";
+import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT } from "../../features/notebooks";
 import { useConnectionLayoutContext } from "../../hooks/useConnectionLayoutContext";
 import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import { getConnectionAccent } from "../../features/connections/lib/driverUI";

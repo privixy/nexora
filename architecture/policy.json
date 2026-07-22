@@ -489,7 +489,6 @@
     "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx": 549,
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/components/modals/QuickNavigatorModal.tsx": 530,
-    "apps/desktop/src/components/notebook/NotebookView.tsx": 950,
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/components/ui/DataGrid.tsx": 1791,
     "apps/desktop/src/components/ui/DataGridRow.tsx": 770,
@@ -519,6 +518,7 @@
     "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,
     "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
     "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951,
-    "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 790
+    "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 790,
+    "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 950
   }
 }

@@ -20,7 +20,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
 }));
 
-vi.mock("../../../../src/utils/notebookStore", () => notebookStoreMocks);
+vi.mock("../../../../src/features/notebooks/lib/notebookStore", () => notebookStoreMocks);
 vi.mock("../../../../src/utils/editor", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../../../src/utils/editor")>()),
   loadEditorPreferences: editorUtilsMocks.loadEditorPreferences,
