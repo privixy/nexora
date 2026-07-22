@@ -492,7 +492,7 @@ mod postgres_tls_connector_tests {
         let file_path = temp_dir.join("test_verify_ca_ca.pem");
         {
             // Write a minimal valid PEM certificate block for testing
-            let cert_pem = include_bytes!("../../tests/test_ca.pem");
+            let cert_pem = include_bytes!("../../../tests/test_ca.pem");
             let mut file = std::fs::File::create(&file_path).unwrap();
             file.write_all(cert_pem).unwrap();
         }
