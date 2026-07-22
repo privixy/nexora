@@ -552,54 +552,6 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
-    "importTarget": "@tauri-apps/plugin-dialog",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
-    "importTarget": "@tauri-apps/plugin-fs",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/fileGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
-    "importTarget": "@tauri-apps/api/event",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/events.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/data-grid/components/JsonInput.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
     "importer": "apps/desktop/src/components/ui/MultiResultPanel.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
@@ -776,14 +728,6 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useReferencedRecord.ts",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
     "importer": "apps/desktop/src/hooks/useSshAskpass.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
@@ -853,22 +797,6 @@
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/data-grid/pages/JsonViewerPage.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/recordGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/data-grid/pages/JsonViewerPage.tsx",
-    "importTarget": "@tauri-apps/api/window",
-    "owner": "data-grid",
-    "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/windowGateway.ts",
     "removeByTask": 39
   },
   {

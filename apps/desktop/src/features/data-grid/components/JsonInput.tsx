@@ -11,7 +11,7 @@ import {
   WrapText,
   X,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { windowGateway } from "../../../platform/tauri";
 import {
   formatJsonForEditor,
   parseJsonEditorValue,
@@ -156,7 +156,7 @@ export const JsonInput: React.FC<JsonInputProps> = ({
 
   const handleExpandToWindow = useCallback(async () => {
     try {
-      await invoke<string>("open_json_viewer_window", {
+      await windowGateway.openJsonViewer<string>({
         value: expandValue,
         originalValue: originalValue ?? expandValue,
         colName: "",

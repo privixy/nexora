@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { invoke } from "@tauri-apps/api/core";
+import { listenTauri, recordGateway, windowGateway } from "../../../../src/platform/tauri";
 import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
 import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
 import { reconstructTableQuery } from "../../../../src/utils/editor";
@@ -78,12 +78,15 @@ vi.mock("../../../../src/features/connections", () => ({
   useDatabase: () => mockDatabaseContext,
 }));
 
-vi.mock("@tauri-apps/api/event", () => ({
-  listen: vi.fn(() => Promise.resolve(vi.fn())),
-}));
-
-vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(),
+vi.mock("../../../../src/platform/tauri", () => ({
+  listenTauri: vi.fn(() => Promise.resolve(vi.fn())),
+  recordGateway: {
+    getServerNow: vi.fn(),
+    updateRecord: vi.fn(),
+  },
+  windowGateway: {
+    openJsonViewer: vi.fn(),
+  },
 }));
 
 vi.mock("@tanstack/react-virtual", () => ({
@@ -140,7 +143,9 @@ describe("DataGrid operations", () => {
     mockDatabaseContext.activeSchema = "reporting";
     mockDatabaseContext.activeDriver = "postgres";
     mockDatabaseContext.connections = [];
-    (invoke as Mock).mockResolvedValue(undefined);
+    (recordGateway.updateRecord as Mock).mockResolvedValue(undefined);
+    (windowGateway.openJsonViewer as Mock).mockResolvedValue("session-1");
+    (listenTauri as Mock).mockResolvedValue(vi.fn());
   });
 
   it("shows referenced record preview from the visible foreign-key cell with the referenced-record payload", () => {
@@ -266,7 +271,7 @@ describe("DataGrid operations", () => {
     fireEvent.keyDown(input, { key: "Enter" });
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("update_record", {
+      expect(recordGateway.updateRecord).toHaveBeenCalledWith({
         connectionId: "conn-1",
         table: "users",
         pkMap: { id: 1 },

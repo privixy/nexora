@@ -42,6 +42,18 @@ describe("Tauri gateway contracts", () => {
   it("preserves window command wrappers", async () => {
     await windowGateway.setWindowTitle({ title: "Nexora" });
     expect(invoke).toHaveBeenCalledWith("set_window_title", { title: "Nexora" });
+    await windowGateway.openJsonViewer({ value: { a: 1 }, originalValue: null });
+    expect(invoke).toHaveBeenCalledWith("open_json_viewer_window", {
+      value: { a: 1 },
+      originalValue: null,
+    });
+    await windowGateway.getJsonViewerSession({ sessionId: "session-1" });
+    expect(invoke).toHaveBeenCalledWith("get_json_viewer_session", { sessionId: "session-1" });
+    await windowGateway.completeJsonViewerSession({ sessionId: "session-1", value: { a: 2 } });
+    expect(invoke).toHaveBeenCalledWith("complete_json_viewer_session", {
+      sessionId: "session-1",
+      value: { a: 2 },
+    });
   });
 
   it("forwards catalog, query, and record payloads unchanged", async () => {
@@ -56,6 +68,8 @@ describe("Tauri gateway contracts", () => {
     expect(invoke).toHaveBeenCalledWith("update_record", payload);
     await recordGateway.deleteRecord(payload);
     expect(invoke).toHaveBeenCalledWith("delete_record", payload);
+    await recordGateway.getServerNow({ connectionId: "id" });
+    expect(invoke).toHaveBeenCalledWith("get_server_now", { connectionId: "id" });
   });
 
   it("preserves gateway rejection identity", async () => {

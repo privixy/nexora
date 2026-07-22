@@ -10,4 +10,7 @@ export const recordGateway = {
   deleteRecord<T>(payload: Record<string, unknown>) {
     return invokeTauri<T>("delete_record", payload);
   },
+  getServerNow<T>(payload: { connectionId: string }) {
+    return invokeTauri<T>("get_server_now", payload);
+  },
 };

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { windowGateway } from "../../../../src/platform/tauri";
 
 interface CodeEditorMockProps {
   value: string;
@@ -16,6 +17,12 @@ interface TreeViewMockProps {
 
 const codeProps: { current: CodeEditorMockProps | null } = { current: null };
 const treeProps: { current: TreeViewMockProps | null } = { current: null };
+
+vi.mock("../../../../src/platform/tauri", () => ({
+  windowGateway: {
+    openJsonViewer: vi.fn(),
+  },
+}));
 
 vi.mock("../../../../src/components/ui/CellCodeEditor", () => ({
   CellCodeEditor: (props: CodeEditorMockProps) => {
@@ -51,6 +58,23 @@ describe("JsonInput", () => {
   beforeEach(() => {
     codeProps.current = null;
     treeProps.current = null;
+  });
+
+  it("opens the JSON viewer through the window gateway", async () => {
+    render(<JsonInput value={{ a: 1 }} onChange={vi.fn()} />);
+
+    fireEvent.click(screen.getByTitle("jsonInput.expand"));
+
+    await waitFor(() => {
+      expect(windowGateway.openJsonViewer).toHaveBeenCalledWith({
+        value: { a: 1 },
+        originalValue: { a: 1 },
+        colName: "",
+        rowLabel: null,
+        readOnly: false,
+        cellKey: null,
+      });
+    });
   });
 
   it("renders Code mode by default", () => {

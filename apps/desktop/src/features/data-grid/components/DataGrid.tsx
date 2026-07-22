@@ -27,8 +27,7 @@ import {
   ExternalLink,
   PanelBottomOpen,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { listenTauri, recordGateway, windowGateway } from "../../../platform/tauri";
 import { useAlert } from "../../../hooks/useAlert";
 import {
   USE_DEFAULT_SENTINEL,
@@ -332,7 +331,7 @@ export const DataGrid = React.memo(
               cellKey = `pk:${serialized}:${colName}`;
             }
           }
-          const sessionId = await invoke<string>("open_json_viewer_window", {
+          const sessionId = await windowGateway.openJsonViewer<string>({
             value,
             originalValue,
             colName,
@@ -354,10 +353,9 @@ export const DataGrid = React.memo(
     );
 
     useEffect(() => {
-      const unlistenPromise = listen<{ session_id: string; value: unknown }>(
+      const unlistenPromise = listenTauri<{ session_id: string; value: unknown }>(
         "json-viewer:saved",
-        (event) => {
-          const { session_id, value } = event.payload;
+        ({ session_id, value }) => {
           const session = pendingJsonSessions.current.get(session_id);
           if (!session) return;
           pendingJsonSessions.current.delete(session_id);
@@ -696,7 +694,7 @@ export const DataGrid = React.memo(
 
         // Legacy immediate update
         try {
-          await invoke("update_record", {
+          await recordGateway.updateRecord({
             connectionId,
             table: tableName,
             pkMap: pkMapVal,
@@ -1142,7 +1140,7 @@ export const DataGrid = React.memo(
       if (!dateMode) return;
 
       setContextMenu(null);
-      invoke<string>("get_server_now", { connectionId })
+      recordGateway.getServerNow<string>({ connectionId })
         .then((raw) => {
           const formatted = formatDateTime(parseDateTime(raw), dateMode);
           if (isInsertion && onPendingInsertionChange && mergedRow?.tempId) {

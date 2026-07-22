@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { windowGateway } from "../../../platform/tauri";
 import { FileJson } from "lucide-react";
 import { JsonInput } from "../components/JsonInput";
 
@@ -24,7 +23,7 @@ export const JsonViewerPage = () => {
 
   useEffect(() => {
     if (!sessionId) return;
-    invoke<SessionDto>("get_json_viewer_session", { sessionId })
+    windowGateway.getJsonViewerSession<SessionDto>({ sessionId })
       .then((data) => {
         setSession(data);
         setCurrentValue(data.value);
@@ -33,12 +32,12 @@ export const JsonViewerPage = () => {
   }, [sessionId]);
 
   const handleClose = useCallback(async () => {
-    await getCurrentWindow().close();
+    await windowGateway.getCurrentWindow().close();
   }, []);
 
   const handleSave = useCallback(async () => {
     try {
-      await invoke("complete_json_viewer_session", {
+      await windowGateway.completeJsonViewerSession({
         sessionId,
         value: currentValue,
       });
@@ -46,7 +45,7 @@ export const JsonViewerPage = () => {
       setError(String(e));
       return;
     }
-    await getCurrentWindow().close();
+    await windowGateway.getCurrentWindow().close();
   }, [sessionId, currentValue]);
 
   useEffect(() => {
