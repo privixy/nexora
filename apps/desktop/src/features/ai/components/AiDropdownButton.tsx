@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles, BookOpen, ChevronUp } from "lucide-react";
-
-interface AiDropdownButtonProps {
-  onGenerate: () => void;
-  onExplain: () => void;
-  disableAll?: boolean;
-  disableExplain?: boolean;
-  compact?: boolean;
-}
+import type { AiDropdownButtonProps } from '../contracts';
 
 export function AiDropdownButton({
   onGenerate,

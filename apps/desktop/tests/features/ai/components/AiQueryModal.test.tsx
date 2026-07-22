@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AiQueryModal } from "../../../src/components/modals/AiQueryModal";
+import { AiQueryModal } from "../../../../src/features/ai/components/AiQueryModal";
 
 const { invokeMock } = vi.hoisted(() => ({
   invokeMock: vi.fn(),
@@ -11,14 +11,14 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: invokeMock,
 }));
 
-vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
+vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => ({
     activeConnectionId: "active-connection",
     activeSchema: "public",
   }),
 }));
 
-vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
+vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
       aiProvider: "custom-openai",
@@ -27,7 +27,7 @@ vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
   }),
 }));
 
-vi.mock("../../../src/components/ui/Modal", () => ({
+vi.mock("../../../../src/components/ui/Modal", () => ({
   Modal: ({
     isOpen,
     children,

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Network } from "lucide-react";
-import { AiQueryModal } from "../../../components/modals/AiQueryModal";
-import { AiExplainModal } from "../../../components/modals/AiExplainModal";
+import { AiQueryModal } from "../../ai";
+import { AiExplainModal } from "../../ai";
 import { VisualExplainModal } from "../../visual-explain";
-import { AiDropdownButton } from "../../../components/ui/AiDropdownButton";
+import { AiDropdownButton } from "../../ai";
 
 interface NotebookAiButtonsProps {
   content: string;

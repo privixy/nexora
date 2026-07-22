@@ -1,17 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { X, Sparkles, Loader2 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useDatabase } from "../../features/connections";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { Modal } from "../ui/Modal";
-
-interface AiQueryModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onInsert: (sql: string) => void;
-  connectionId?: string;
-  schema?: string;
-}
+import { useDatabase } from "../../connections";
+import { useSettings } from "../../settings/hooks/useSettings";
+import { Modal } from "../../../components/ui/Modal";
+import type { AiQueryModalProps } from '../contracts';
 
 interface SchemaLoadState {
   key: string;

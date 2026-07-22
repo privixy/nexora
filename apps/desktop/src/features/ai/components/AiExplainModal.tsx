@@ -1,19 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Loader2, BookOpen } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
-import { getAiExplanationLanguage } from "../../i18n/language";
-import { Modal } from "../ui/Modal";
+import { useSettings } from "../../settings/hooks/useSettings";
+import { useEditorTheme } from "../../settings/hooks/useEditorTheme";
+import { getAiExplanationLanguage } from "../../../i18n/language";
+import { Modal } from "../../../components/ui/Modal";
 import MonacoEditor, { type BeforeMount } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";
-import { loadMonacoTheme } from "../../themes/themeUtils";
-
-interface AiExplainModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  query: string;
-}
+import { loadMonacoTheme } from "../../../themes/themeUtils";
+import type { AiExplainModalProps } from '../contracts';
 
 export const AiExplainModal = ({ isOpen, onClose, query }: AiExplainModalProps) => {
   const { settings } = useSettings();

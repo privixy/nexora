@@ -17,9 +17,9 @@ import {
   validatePendingInsertion,
   insertionToBackendData,
 } from "../utils/pendingInsertions";
-import { AiQueryModal } from "../components/modals/AiQueryModal";
-import { AiExplainModal } from "../components/modals/AiExplainModal";
-import { AiDropdownButton } from "../components/ui/AiDropdownButton";
+import { AiQueryModal } from "../features/ai";
+import { AiExplainModal } from "../features/ai";
+import { AiDropdownButton } from "../features/ai";
 import { VisualExplainModal } from "../features/visual-explain";
 import {
   Play,

@@ -165,9 +165,9 @@ vi.mock("../../src/hooks/useSqlAutocompleteRegistration", () => ({
 
 vi.mock("../../src/components/ui/VisualQueryBuilder", () => ({ VisualQueryBuilder: () => <div /> }));
 vi.mock("../../src/features/notebooks/components/NotebookView", () => ({ NotebookView: () => <div /> }));
-vi.mock("../../src/components/ui/AiDropdownButton", () => ({ AiDropdownButton: () => <div /> }));
-vi.mock("../../src/components/modals/AiQueryModal", () => ({ AiQueryModal: () => <div /> }));
-vi.mock("../../src/components/modals/AiExplainModal", () => ({ AiExplainModal: () => <div /> }));
+vi.mock("../../src/features/ai", () => ({ AiDropdownButton: () => <div /> }));
+vi.mock("../../src/features/ai", () => ({ AiQueryModal: () => <div /> }));
+vi.mock("../../src/features/ai", () => ({ AiExplainModal: () => <div /> }));
 vi.mock("../../src/components/modals/VisualExplainModal", () => ({ VisualExplainModal: () => <div /> }));
 vi.mock("../../src/components/modals/ExportProgressModal", () => ({ ExportProgressModal: () => <div /> }));
 vi.mock("../../src/components/modals/QueryModal", () => ({ QueryModal: () => <div /> }));
