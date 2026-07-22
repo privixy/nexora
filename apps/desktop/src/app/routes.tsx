@@ -4,10 +4,10 @@ import { MainLayout } from "../components/layout/MainLayout";
 import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
 import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
 import { Editor } from "../pages/Editor";
+import { EditorSchemaDiagramPage } from "../features/editor";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { McpPage } from "../pages/McpPage";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
-import { SchemaDiagramPage } from "../features/schema";
 import { SettingsPage, SshTab } from "../features/settings";
 import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";
 import { TaskManagerPage } from "../pages/TaskManagerPage";
@@ -64,7 +64,7 @@ export function AppRoutes() {
       </Route>
       <Route
         path="/schema-diagram"
-        element={<SchemaDiagramPage />}
+        element={<EditorSchemaDiagramPage />}
       />
       <Route path="/task-manager" element={<TaskManagerPage />} />
       <Route path="/visual-explain" element={<VisualExplainPage />} />

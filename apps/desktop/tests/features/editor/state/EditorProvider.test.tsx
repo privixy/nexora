@@ -5,7 +5,7 @@ import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
 import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
 import { invoke } from "@tauri-apps/api/core";
 import React from "react";
-import type { TableSchema } from "../../../../src/types/editor";
+import type { EditorNotebookAdapter, TableSchema } from "../../../../src/features/editor";
 
 const notebookStoreMocks = vi.hoisted(() => ({
   createNotebookFromState: vi.fn(),
@@ -66,9 +66,17 @@ describe("EditorProvider", () => {
     );
   });
 
+  const createNotebookAdapter = (): EditorNotebookAdapter => ({
+    loadNotebooks: vi.fn().mockResolvedValue([]),
+    openNotebook: vi.fn().mockResolvedValue(undefined),
+    migrateLegacyNotebook: notebookStoreMocks.createNotebookFromState,
+    flush: notebookStoreMocks.flushAllPendingSaves,
+  });
+
   const createWrapper = (
     activeConnectionId: string | null = "conn-1",
     overrides: Partial<DatabaseContextType> = {},
+    notebookAdapter = createNotebookAdapter(),
   ) => {
     return ({ children }: { children: React.ReactNode }) =>
       React.createElement(
@@ -92,7 +100,7 @@ describe("EditorProvider", () => {
             ...overrides,
           },
         },
-        React.createElement(EditorProvider, null, children),
+        React.createElement(EditorProvider, { notebookAdapter }, children),
       );
   };
 
@@ -156,6 +164,11 @@ describe("EditorProvider", () => {
 
   it("loads, migrates, and persists notebook tabs in order", async () => {
     const legacyState = { cells: [], stopOnError: true };
+    const notebookAdapter = createNotebookAdapter();
+    vi.mocked(notebookAdapter.migrateLegacyNotebook).mockResolvedValue({
+      id: "migrated-notebook",
+      title: "Legacy notebook",
+    });
     editorUtilsMocks.loadEditorPreferences.mockResolvedValue({
       tabs: [
         {
@@ -176,16 +189,20 @@ describe("EditorProvider", () => {
       activeTabId: "legacy-notebook-tab",
     });
 
-    const wrapper = createWrapper("conn-1");
+    const wrapper = createWrapper(
+      "conn-1",
+      { activeDatabase: "analytics", activeSchema: "public" },
+      notebookAdapter,
+    );
     const { result } = renderHook(() => useEditor(), { wrapper });
 
     await waitFor(() => expect(result.current.tabs).toHaveLength(2));
 
-    expect(notebookStoreMocks.createNotebookFromState).toHaveBeenCalledWith(
-      "Legacy notebook",
-      legacyState,
-      "conn-1",
-    );
+    expect(notebookAdapter.migrateLegacyNotebook).toHaveBeenCalledWith(legacyState, {
+      connectionId: "conn-1",
+      database: "analytics",
+      schema: "public",
+    });
     expect(result.current.tabs[1]).toMatchObject({
       id: "legacy-notebook-tab",
       notebookId: "migrated-notebook",
@@ -195,7 +212,7 @@ describe("EditorProvider", () => {
     await waitFor(() => {
       expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "save_editor_preferences")).toBe(true);
     });
-    expect(notebookStoreMocks.createNotebookFromState.mock.invocationCallOrder[0]).toBeLessThan(
+    expect(vi.mocked(notebookAdapter.migrateLegacyNotebook).mock.invocationCallOrder[0]).toBeLessThan(
       vi.mocked(invoke).mock.invocationCallOrder[
         vi.mocked(invoke).mock.calls.findIndex(([command]) => command === "save_editor_preferences")
       ],
@@ -203,7 +220,12 @@ describe("EditorProvider", () => {
   });
 
   it("opens or focuses notebook tabs after the active connection finishes loading", async () => {
-    const wrapper = createWrapper("conn-1");
+    const notebookAdapter = createNotebookAdapter();
+    const wrapper = createWrapper(
+      "conn-1",
+      { activeDatabase: "analytics", activeSchema: "public" },
+      notebookAdapter,
+    );
     const { result } = renderHook(() => useEditor(), { wrapper });
 
     await waitFor(() => expect(result.current.tabs).toHaveLength(1));
@@ -217,21 +239,28 @@ describe("EditorProvider", () => {
     expect(result.current.tabs).toHaveLength(2);
     expect(result.current.activeTabId).toBe(notebookTabId);
     expect(result.current.activeTab).toMatchObject({ notebookId: "notebook-1", title: "Notebook one" });
+    expect(notebookAdapter.openNotebook).toHaveBeenCalledTimes(2);
+    expect(notebookAdapter.openNotebook).toHaveBeenNthCalledWith(1, "notebook-1", {
+      connectionId: "conn-1",
+      database: "analytics",
+      schema: "public",
+    });
   });
 
   it("flushes pending notebook saves on beforeunload and removes the listener on unmount", () => {
     const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
-    const wrapper = createWrapper("conn-1");
+    const notebookAdapter = createNotebookAdapter();
+    const wrapper = createWrapper("conn-1", {}, notebookAdapter);
     const { unmount } = renderHook(() => useEditor(), { wrapper });
 
     window.dispatchEvent(new Event("beforeunload"));
-    expect(notebookStoreMocks.flushAllPendingSaves).toHaveBeenCalledOnce();
+    expect(notebookAdapter.flush).toHaveBeenCalledWith("conn-1");
 
     unmount();
     expect(removeEventListenerSpy).toHaveBeenCalledWith("beforeunload", expect.any(Function));
 
     window.dispatchEvent(new Event("beforeunload"));
-    expect(notebookStoreMocks.flushAllPendingSaves).toHaveBeenCalledOnce();
+    expect(notebookAdapter.flush).toHaveBeenCalledOnce();
   });
 
   it("does not persist tabs until preference loading has completed", async () => {

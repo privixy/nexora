@@ -14,7 +14,6 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import dagre from "dagre";
-import { useEditor } from "../../../features/editor/hooks/useEditor";
 import { SchemaTableNodeComponent } from "./SchemaTableNode";
 import { Loader2, ArrowLeftRight, ArrowUpDown, Maximize2, Focus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -78,6 +77,12 @@ const getLayoutedElements = (
 
 interface SchemaDiagramContentProps {
   connectionId: string;
+  getSchema: (
+    connectionId: string,
+    schemaVersion?: number,
+    schema?: string,
+    database?: string,
+  ) => Promise<import("../../editor").TableSchema[]>;
   refreshTrigger: number;
   schema?: string;
   database?: string;
@@ -90,7 +95,6 @@ const SchemaDiagramContent = ({
   database,
 }: SchemaDiagramContentProps) => {
   const { t } = useTranslation();
-  const { getSchema } = useEditor();
   const { settings } = useSettings();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -263,8 +267,10 @@ const SchemaDiagramContent = ({
       isMounted = false;
     };
   }, [
-    connectionId,
-    refreshTrigger,
+  connectionId,
+  getSchema,
+  refreshTrigger,
+
     getSchema,
     fitView,
     setNodes,
@@ -447,6 +453,7 @@ const SchemaDiagramContent = ({
 
 interface SchemaDiagramProps {
   connectionId: string;
+  getSchema: SchemaDiagramContentProps["getSchema"];
   refreshTrigger: number;
   schema?: string;
   database?: string;
@@ -454,6 +461,7 @@ interface SchemaDiagramProps {
 
 export const SchemaDiagram = ({
   connectionId,
+  getSchema,
   refreshTrigger,
   schema,
   database,
@@ -461,6 +469,7 @@ export const SchemaDiagram = ({
   <ReactFlowProvider>
     <SchemaDiagramContent
       connectionId={connectionId}
+      getSchema={getSchema}
       refreshTrigger={refreshTrigger}
       schema={schema}
       database={database}

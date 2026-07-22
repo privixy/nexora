@@ -5,9 +5,9 @@ import { resolveDiagramDatabase, resolveDiagramSchema } from '../lib/schemaDiagr
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DatabaseProvider } from '../../connections';
-import { EditorProvider } from '../../../features/editor/state/EditorProvider';
+import type { EditorContextType } from '../../editor';
 
-export const SchemaDiagramPage = () => {
+export const SchemaDiagramPage = ({ getSchema }: { getSchema: EditorContextType["getSchema"] }) => {
   const { t } = useTranslation();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -64,7 +64,6 @@ export const SchemaDiagramPage = () => {
 
   return (
     <DatabaseProvider>
-      <EditorProvider>
         <div className="w-screen h-screen flex flex-col bg-base">
           {/* Minimal Header */}
           <div className="h-12 bg-elevated border-b border-default flex items-center justify-between px-4 shrink-0">
@@ -102,10 +101,9 @@ export const SchemaDiagramPage = () => {
 
           {/* Diagram Canvas */}
           <div className="flex-1 overflow-hidden">
-            <SchemaDiagram connectionId={connectionId} refreshTrigger={refreshTrigger} schema={effectiveSchema} database={effectiveDatabase} />
+            <SchemaDiagram connectionId={connectionId} getSchema={getSchema} refreshTrigger={refreshTrigger} schema={effectiveSchema} database={effectiveDatabase} />
           </div>
         </div>
-      </EditorProvider>
     </DatabaseProvider>
   );
 };

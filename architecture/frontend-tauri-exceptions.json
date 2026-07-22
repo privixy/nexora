@@ -624,7 +624,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/EditorProvider.tsx",
+    "importer": "apps/desktop/src/features/editor/state/EditorProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -648,7 +648,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/QueryHistoryProvider.tsx",
+    "importer": "apps/desktop/src/features/editor/state/QueryHistoryProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -656,7 +656,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/SavedQueriesProvider.tsx",
+    "importer": "apps/desktop/src/features/editor/state/SavedQueriesProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",

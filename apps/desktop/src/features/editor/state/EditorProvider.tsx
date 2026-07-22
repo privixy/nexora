@@ -1,6 +1,12 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
-import type { Tab, SchemaCache, TableSchema, QueryResultEntry } from "../contracts";
+import type {
+  EditorNotebookAdapter,
+  Tab,
+  SchemaCache,
+  TableSchema,
+  QueryResultEntry,
+} from "../contracts";
 import { EditorContext } from "./EditorContext";
 import { useDatabase } from "../../connections";
 import { invoke } from "@tauri-apps/api/core";
@@ -22,14 +28,14 @@ import {
   shouldUseCachedSchema,
   createSchemaCacheEntry,
 } from "../../../utils/editor";
-import {
-  createNotebookFromState,
-  evictFromCache,
-  flushAllPendingSaves,
-} from "../../../utils/notebookStore";
-
-export const EditorProvider = ({ children }: { children: ReactNode }) => {
-  const { activeConnectionId } = useDatabase();
+export const EditorProvider = ({
+  children,
+  notebookAdapter,
+}: {
+  children: ReactNode;
+  notebookAdapter: EditorNotebookAdapter;
+}) => {
+  const { activeConnectionId, activeDatabase, activeSchema } = useDatabase();
   const [tabs, setTabs] = useState<Tab[]>([]);
   const [activeTabIds, setActiveTabIds] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -66,12 +72,12 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         for (const tab of loadedTabs) {
           if (tab.type === "notebook" && tab.notebookState && !tab.notebookId) {
             try {
-              const { notebookId } = await createNotebookFromState(
-                tab.title,
-                tab.notebookState,
-                activeConnectionId,
-              );
-              tab.notebookId = notebookId;
+              const notebook = await notebookAdapter.migrateLegacyNotebook(tab.notebookState, {
+                connectionId: activeConnectionId,
+                ...(activeDatabase ? { database: activeDatabase } : {}),
+                ...(activeSchema ? { schema: activeSchema } : {}),
+              });
+              tab.notebookId = notebook.id;
               tab.notebookState = undefined;
             } catch (e) {
               console.error("Failed to migrate notebook tab:", e);
@@ -120,7 +126,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
     };
 
     loadPreferences();
-  }, [activeConnectionId]);
+  }, [activeConnectionId, activeDatabase, activeSchema, notebookAdapter]);
 
   const createInitialTab = useCallback(
     (partial?: Partial<Tab>): Tab => {
@@ -132,11 +138,11 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
   // Flush all pending notebook saves on app close
   useEffect(() => {
     const handleBeforeUnload = () => {
-      flushAllPendingSaves();
+      if (activeConnectionId) notebookAdapter.flush(activeConnectionId);
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+  }, [activeConnectionId, notebookAdapter]);
 
   // Save tabs to file storage when they change
   useEffect(() => {
@@ -217,10 +223,15 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
   const openNotebook = useCallback(
     (connectionId: string, notebookId: string, title: string) => {
+      void notebookAdapter.openNotebook(notebookId, {
+        connectionId,
+        ...(activeDatabase ? { database: activeDatabase } : {}),
+        ...(activeSchema ? { schema: activeSchema } : {}),
+      });
       pendingNotebookRef.current = { connectionId, notebookId, title };
       resolvePendingNotebook();
     },
-    [resolvePendingNotebook],
+    [activeDatabase, activeSchema, notebookAdapter, resolvePendingNotebook],
   );
 
   // Complete a deferred cross-connection notebook open once the connection's
@@ -233,8 +244,8 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
     (id: string) => {
       // Flush and evict notebook cache for the closed tab
       const closedTab = tabsRef.current.find((t) => t.id === id);
-      if (closedTab?.notebookId) {
-        evictFromCache(closedTab.notebookId);
+      if (closedTab?.notebookId && activeConnectionId) {
+        void notebookAdapter.flush(activeConnectionId);
       }
 
       setTabs((prev) => {
@@ -258,7 +269,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
         return newTabs;
       });
     },
-    [activeConnectionId, activeTabId],
+    [activeConnectionId, activeTabId, notebookAdapter],
   );
 
   const closeAllTabs = useCallback(() => {

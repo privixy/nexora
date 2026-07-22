@@ -498,7 +498,6 @@
     "apps/desktop/src/components/ui/VisualQueryBuilder.tsx": 713,
     "apps/desktop/src/pages/Editor.tsx": 4181,
     "apps/desktop/src/pages/TaskManagerPage.tsx": 664,
-    "apps/desktop/tests/contexts/EditorProvider.test.tsx": 634,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/dataGrid.test.ts": 689,
     "apps/desktop/tests/utils/editor.test.ts": 1019,
@@ -519,6 +518,7 @@
     "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 929,
     "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,
     "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
-    "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951
+    "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951,
+    "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 790
   }
 }

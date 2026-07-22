@@ -47,6 +47,7 @@ vi.mock("../../src/features/plugins", () => ({
 }));
 vi.mock("../../src/features/settings", () => ({ SettingsPage: page("settings") }));
 vi.mock("../../src/pages/Editor", () => ({ Editor: page("editor") }));
+vi.mock("../../src/features/editor", () => ({ EditorSchemaDiagramPage: page("schema-diagram") }));
 vi.mock("../../src/pages/McpPage", () => ({ McpPage: page("mcp") }));
 vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));
 vi.mock("../../src/features/schema/pages/SchemaDiagramPage", () => ({ SchemaDiagramPage: page("schema-diagram") }));

@@ -19,7 +19,7 @@ import { JoinEdge } from './JoinEdge';
 import { useDatabase } from '../../features/connections';
 import { invoke } from '@tauri-apps/api/core';
 import { dragState } from '../../utils/dragState';
-import { useEditor } from '../../features/editor/hooks/useEditor';
+import { useEditor } from '../../features/editor';
 import { Filter, SortAsc, Group, Hash, X, Plus } from 'lucide-react';
 import { generateVisualQuerySQL, type WhereCondition, type OrderByClause } from '../../utils/visualQuery';
 

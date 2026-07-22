@@ -3,7 +3,8 @@ import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { PanelDatabaseProvider } from './PanelDatabaseProvider';
-import { EditorProvider } from '../../features/editor/state/EditorProvider';
+import { EditorProvider } from '../../features/editor';
+import { legacyEditorNotebookAdapter } from '../../app/editorNotebookAdapter';
 import { Editor } from '../../pages/Editor';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';
@@ -96,7 +97,7 @@ export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
             {/* Editor */}
             <div className="flex-1 overflow-hidden min-h-0">
               <PanelDatabaseProvider connectionId={connId}>
-                <EditorProvider>
+                <EditorProvider notebookAdapter={legacyEditorNotebookAdapter}>
                   <Editor />
                 </EditorProvider>
               </PanelDatabaseProvider>

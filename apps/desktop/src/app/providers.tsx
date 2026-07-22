@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ConnectionHealthMonitor } from "../features/connections";
+import { EditorProvider, QueryHistoryProvider, SavedQueriesProvider } from "../features/editor";
 import { AiApprovalGate } from "../features/settings";
 import { SshAskpassGate } from "../components/modals/SshAskpassGate";
 import { UpdateNotificationModal } from "../components/modals/UpdateNotificationModal";
@@ -9,6 +10,7 @@ import { AlertProvider } from "../contexts/AlertProvider";
 import { ConnectionLayoutProvider } from "../contexts/ConnectionLayoutProvider";
 import { KeybindingsProvider } from "../contexts/KeybindingsProvider";
 import { PluginModalProvider, PluginSlotProvider } from "../features/plugins";
+import { legacyEditorNotebookAdapter } from "./editorNotebookAdapter";
 
 type UpdateNotificationProps = Parameters<typeof UpdateNotificationModal>[0];
 type WhatsNewProps = Parameters<typeof WhatsNewModal>[0];
@@ -28,7 +30,15 @@ export function AppProviders({ children, updateNotification, whatsNew }: AppProv
           <KeybindingsProvider>
             <PluginSlotProvider>
               <PluginModalProvider>
-                <ConnectionLayoutProvider>{children}</ConnectionLayoutProvider>
+                <ConnectionLayoutProvider>
+                  <SavedQueriesProvider>
+                    <QueryHistoryProvider>
+                      <EditorProvider notebookAdapter={legacyEditorNotebookAdapter}>
+                        {children}
+                      </EditorProvider>
+                    </QueryHistoryProvider>
+                  </SavedQueriesProvider>
+                </ConnectionLayoutProvider>
               </PluginModalProvider>
             </PluginSlotProvider>
           </KeybindingsProvider>

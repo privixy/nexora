@@ -10,6 +10,9 @@ const providerNames = [
   "PluginSlotProvider",
   "PluginModalProvider",
   "ConnectionLayoutProvider",
+  "SavedQueriesProvider",
+  "QueryHistoryProvider",
+  "EditorProvider",
 ] as const;
 
 function provider(name: string) {
@@ -20,6 +23,7 @@ function provider(name: string) {
 
 const updateNotificationModalMock = vi.hoisted(() => vi.fn());
 const whatsNewModalMock = vi.hoisted(() => vi.fn());
+const editorProviderMock = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({ BrowserRouter: provider("BrowserRouter") }));
 vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
@@ -27,6 +31,14 @@ vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: 
 vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
 vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
 vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
+vi.mock("../../src/features/editor", () => ({
+  EditorProvider: ({ children, notebookAdapter }: { children: ReactNode; notebookAdapter: unknown }) => {
+    editorProviderMock(notebookAdapter);
+    return <div data-provider="EditorProvider">{children}</div>;
+  },
+  QueryHistoryProvider: provider("QueryHistoryProvider"),
+  SavedQueriesProvider: provider("SavedQueriesProvider"),
+}));
 vi.mock("../../src/features/connections/components/ConnectionHealthMonitor", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,
 }));
@@ -85,7 +97,8 @@ describe("AppProviders", () => {
     }
 
     expect(actualOrder).toEqual(providerNames);
-    expect(child.parentElement).toHaveAttribute("data-provider", "ConnectionLayoutProvider");
+    expect(child.parentElement).toHaveAttribute("data-provider", "EditorProvider");
+    expect(editorProviderMock).toHaveBeenCalledWith(expect.any(Object));
     expect(screen.getByTestId("connection-health-monitor").parentElement).toHaveAttribute("data-provider", "BrowserRouter");
     expect(screen.getByTestId("connection-health-monitor").compareDocumentPosition(child)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(updateNotificationModalMock).toHaveBeenCalledWith({
