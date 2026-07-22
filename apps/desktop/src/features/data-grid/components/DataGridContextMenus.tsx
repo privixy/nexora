@@ -18,7 +18,7 @@ import { SlotAnchor } from "../../../components/ui/SlotAnchor";
 import { getDateInputMode } from "../../../utils/dateInput";
 import { isJsonColumn } from "../../../utils/json";
 import { supportsEmptyString } from "../../../utils/text";
-import { getForeignKeyForPreview } from "../../schema/lib/foreignKeys";
+import { getForeignKeyForPreview } from "../../schema";
 import type { ForeignKey } from "../../../types/editor";
 import type { MergedRow } from "../lib/dataGrid";
 

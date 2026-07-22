@@ -20,7 +20,7 @@ import {
 } from "../../../utils/columnTypes";
 import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
 import { isLongTextCellTarget, truncateCellPreview } from "../../../utils/text";
-import { getForeignKeyForPreview } from "../../schema/lib/foreignKeys";
+import { getForeignKeyForPreview } from "../../schema";
 import { getDateInputMode } from "../../../utils/dateInput";
 import { renderDefaultCellContent } from "../lib/dataGridCell";
 import { GeometryInput } from "../../../components/ui/GeometryInput";

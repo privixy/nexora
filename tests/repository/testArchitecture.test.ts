@@ -100,6 +100,8 @@ describe("test architecture", () => {
       ],
       "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
         "apps/desktop/src/features/data-grid/index.ts",
+        "apps/desktop/src/features/schema/index.ts",
+        "apps/desktop/src/features/settings/index.ts",
       ],
       "apps/desktop/tests/features/explorer/components/ExplorerSidebarContext.test.tsx": [
         "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",

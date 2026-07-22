@@ -18,11 +18,11 @@ import {
   serializePkKey,
   type MergedRow,
 } from "../lib/dataGrid";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import { isGeometricType, formatGeometricValue } from "../../../utils/geometry";
 import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
 import { isJsonColumn, isJsonContent } from "../../../utils/json";
-import { pickPrimaryForeignKeyByColumn } from "../../schema/lib/foreignKeys";
+import { pickPrimaryForeignKeyByColumn } from "../../schema";
 import {
   getDateInputMode,
   parseDateTime,

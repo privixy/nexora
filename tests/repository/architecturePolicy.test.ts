@@ -114,6 +114,11 @@ describe("architecture policy", () => {
       "apps/desktop/src/features/settings/state/SettingsContext.ts",
         "apps/desktop/src/types/pluginSlots.ts",
       ],
+      "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
+        "apps/desktop/src/features/data-grid/index.ts",
+        "apps/desktop/src/features/schema/index.ts",
+        "apps/desktop/src/features/settings/index.ts",
+      ],
       "apps/desktop/tests/features/explorer/lib/sidebarTableItemProps.test.ts": [
         "apps/desktop/src/features/explorer/lib/sidebarTableItem.ts",
       ],

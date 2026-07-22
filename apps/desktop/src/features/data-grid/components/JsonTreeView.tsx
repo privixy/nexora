@@ -9,7 +9,7 @@ import {
   type JsonData,
   type Theme as JerTheme,
 } from "json-edit-react";
-import { ThemeContext } from "../../settings/state/ThemeContext";
+import { ThemeContext } from "../../settings";
 import type { Theme } from "../../../types/theme";
 
 export interface JsonTreeViewProps {

@@ -23,3 +23,7 @@ export type { CreateTableTarget } from "./lib/createTable";
 export { formatObjectCount } from "./lib/schema";
 export { groupIndexes } from "./lib/indexes";
 export type { GroupedIndex } from "./lib/indexes";
+export {
+  getForeignKeyForPreview,
+  pickPrimaryForeignKeyByColumn,
+} from "./lib/foreignKeys";

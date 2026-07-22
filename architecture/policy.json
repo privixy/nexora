@@ -75,7 +75,9 @@
       "apps/desktop/src/features/settings/index.ts"
     ],
     "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
-      "apps/desktop/src/features/data-grid/index.ts"
+      "apps/desktop/src/features/data-grid/index.ts",
+      "apps/desktop/src/features/schema/index.ts",
+      "apps/desktop/src/features/settings/index.ts"
     ],
     "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx": [
       "apps/desktop/src/features/visual-explain/components/visual-explain/ExplainAiAnalysis.tsx"
