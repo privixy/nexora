@@ -16,7 +16,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Architecture thresholds are 500 lines for new TypeScript/TSX files and 800 lines for new Rust files; files listed in `architecture/policy.json` are ratcheted to their stored line counts.
 - Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
-- Remove Rust inline-test allowlist entries from `architecture/policy.json` in the same change that moves them to sibling `tests.rs` files; the planned removal phase is Test normalization.
+- Desktop Rust has no inline-test or peer-suite exceptions. Checked-in create-plugin Rust templates retain two exact package-owned inline suites under `rustTemplateInlineTestAllowlist`, restricted to `rustTemplateInlineTestRoots`, until the package/tooling plan changes generated output.
 - Workspace discovery includes `apps/*`, and `apps/desktop/package.json` is the working private desktop package.
 - Desktop frontend source, assets, dependencies, scripts, and app-local configuration live under `apps/desktop/`; root commands delegate to that package.
 - CI and release commands run from the repository root. Rust caches use `apps/desktop/src-tauri`, Tauri actions set `projectPath: apps/desktop`, and release dry-run triggers own moved desktop version, build, configuration, and icon paths.

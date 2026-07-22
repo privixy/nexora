@@ -14,6 +14,9 @@ const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json")
   repositoryTestForbiddenImportRoots: string[];
   repositoryTestImportAliases: Record<string, string>;
   rustInlineTestAllowlist: string[];
+  rustTemplateInlineTestRoots: string[];
+  rustTemplateInlineTestAllowlist: string[];
+  rustCrateLevelTestAllowlist: string[];
   allowedWorkspaceDependencies: Record<string, string[]>;
   fileSizeBaselines: Record<string, number>;
   sourceRoots: string[];
@@ -51,9 +54,15 @@ describe("architecture policy", () => {
       "apps/desktop/src",
       "apps/desktop/src-tauri",
     ]);
-    expect(policy.rustInlineTestAllowlist).toContain(
-      "apps/desktop/src-tauri/src/commands.rs",
-    );
+    expect(policy.rustInlineTestAllowlist).toEqual([]);
+    expect(policy.rustTemplateInlineTestRoots).toEqual([
+      "packages/create-plugin/templates/rust-driver/src",
+    ]);
+    expect(policy.rustTemplateInlineTestAllowlist).toEqual([
+      "packages/create-plugin/templates/rust-driver/src/utils/identifiers.rs",
+      "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs",
+    ]);
+    expect(policy.rustCrateLevelTestAllowlist).toEqual([]);
     expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
     expect(
       policy.fileSizeBaselines["apps/desktop/src/pages/Editor.tsx"],
@@ -75,6 +84,8 @@ describe("architecture policy", () => {
       ...policy.rootTestExceptionRoots,
       ...policy.repositoryTestForbiddenImportRoots,
       ...policy.rustInlineTestAllowlist,
+      ...policy.rustTemplateInlineTestRoots,
+      ...policy.rustTemplateInlineTestAllowlist,
       ...Object.keys(policy.fileSizeBaselines),
     ];
 
@@ -172,8 +183,42 @@ describe("architecture policy", () => {
       expect(violations).toContain("tests/repository/helper.ts: repository tests may inspect files but must not import desktop-private modules from src-tauri");
       expect(violations).toContain("src/Oversized.ts: 501 lines exceeds soft limit 500; split the file or add a ratcheted baseline with architecture approval");
       expect(violations).toContain("src/Ratcheted.tsx: 2 lines exceeds ratcheted baseline 1");
-      expect(violations).toContain("src-tauri/src/lib.rs: inline Rust test modules must move to sibling tests.rs or be documented in rustInlineTestAllowlist");
+      expect(violations).toContain("src-tauri/src/lib.rs: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist");
       expect(violations).toContain("package.json: nexora may not depend on workspace package @nexora/plugin-api");
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("does not allow template inline-test exceptions to exempt desktop Rust", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
+
+    try {
+      const desktopFile = "apps/desktop/src-tauri/src/commands.rs";
+      writeFixture(tempRoot, desktopFile, "#[cfg(test)]\nmod tests {\n}\n");
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        frontendTestAllowlist: [],
+        rootTestExceptionRoots: [],
+        rustInlineTestAllowlist: [],
+        rustTemplateInlineTestRoots: ["packages/create-plugin/templates/rust-driver/src"],
+        rustTemplateInlineTestAllowlist: [desktopFile],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+      }, {
+        trackedFiles: [desktopFile],
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toContain(
+        `${desktopFile}: rustTemplateInlineTestAllowlist entries must be under rustTemplateInlineTestRoots`,
+      );
+      expect(violations).toContain(
+        `${desktopFile}: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist`,
+      );
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }

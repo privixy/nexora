@@ -6,10 +6,7 @@ import { describe, expect, it } from "vitest";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (path: string) => readFileSync(resolve(repoRoot, path), "utf8");
-const expectedRustPeerTests = [
-  "apps/desktop/src-tauri/src/export_import_tests.rs",
-  "apps/desktop/src-tauri/src/group_tree_tests.rs",
-];
+const expectedRustPeerTests: string[] = [];
 
 describe("test architecture", () => {
   it("keeps root tests in the repository namespace", () => {
@@ -28,7 +25,54 @@ describe("test architecture", () => {
     expect(config).not.toContain('src/**/*.{test,spec}');
   });
 
-  it("keeps the exact temporary Rust peer-test inventory", () => {
+  it("keeps command test inventories disjoint", () => {
+    const listedTests = execFileSync(
+      "cargo",
+      [
+        "test",
+        "--manifest-path",
+        "apps/desktop/src-tauri/Cargo.toml",
+        "commands::tests::",
+        "--",
+        "--list",
+      ],
+      { cwd: repoRoot, encoding: "utf8" },
+    )
+      .split(/\r?\n/)
+      .filter((line) => line.endsWith(": test"));
+
+    const exportImportTests = listedTests.filter((line) =>
+      line.startsWith("commands::tests::export_import::"),
+    );
+    const groupTreeTests = listedTests.filter((line) =>
+      line.startsWith("commands::tests::group_tree::"),
+    );
+    const commandTests = listedTests.filter(
+      (line) =>
+        line.startsWith("commands::tests::") &&
+        !line.startsWith("commands::tests::export_import::") &&
+        !line.startsWith("commands::tests::group_tree::"),
+    );
+    const unrelatedTests = listedTests.filter(
+      (line) => !line.startsWith("commands::tests::"),
+    );
+
+    expect(commandTests).toHaveLength(59);
+    expect(exportImportTests).toHaveLength(7);
+    expect(groupTreeTests).toHaveLength(17);
+    expect(unrelatedTests).toEqual([
+      "dump_commands::tests::test_escape_sql_value: test",
+      "dump_commands::tests::test_zip_import_logic: test",
+    ]);
+    expect([
+      ...commandTests,
+      ...exportImportTests,
+      ...groupTreeTests,
+      ...unrelatedTests,
+    ].sort()).toEqual([...listedTests].sort());
+  });
+
+  it("rejects Rust peer-test files", () => {
     const rustPeerTests = execFileSync(
       "git",
       [

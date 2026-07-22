@@ -7,4 +7,4 @@
 5. **Separate Rust tests from implementation:** When a newly extracted module has non-trivial tests, place them in a sibling `tests.rs` file (or `tests/*.rs` when the module grows further) and load them with `#[cfg(test)] mod tests;`.
 6. **Test extracted helpers directly:** Every extracted pure helper or parser should have unit tests covering nominal cases, edge cases, and unsupported inputs when relevant.
 7. **Avoid behavioural refactors mixed with structural refactors:** When reorganizing Rust files, keep function signatures and runtime behaviour stable unless the task explicitly asks for behaviour changes.
-8. **Legacy Exceptions:** Do not introduce new crate-level `*_tests.rs`, inline Rust test modules, or other legacy structure exceptions.
+8. **Legacy Exceptions:** Do not introduce new crate-level `*_tests.rs`, inline Rust test modules, or other legacy structure exceptions. Desktop Rust has no peer or inline-test exceptions; the two exact create-plugin template inline suites are package-owned generated-template classifications, not desktop exceptions.

@@ -132,6 +132,13 @@ export function collectViolations(root, policy, inventory = {}) {
     .sort();
   const frontendTestAllowlist = new Set(policy.frontendTestAllowlist ?? []);
   const rustInlineTestAllowlist = new Set(policy.rustInlineTestAllowlist ?? []);
+  const rustTemplateInlineTestRoots = policy.rustTemplateInlineTestRoots ?? [];
+  const rustTemplateInlineTestEntries = policy.rustTemplateInlineTestAllowlist ?? [];
+  const rustTemplateInlineTestAllowlist = new Set(
+    rustTemplateInlineTestEntries.filter((file) =>
+      rustTemplateInlineTestRoots.some((templateRoot) => isUnderRoot(file, templateRoot)),
+    ),
+  );
   const repositoryTestRoots = policy.rootTestExceptionRoots ?? [];
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
   const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
@@ -140,6 +147,12 @@ export function collectViolations(root, policy, inventory = {}) {
   for (const path of policy.forbiddenRootDesktopPaths ?? []) {
     if (existsSync(join(root, path))) {
       violations.push(`${path}: desktop-owned paths must live under apps/desktop, not repository root`);
+    }
+  }
+
+  for (const file of rustTemplateInlineTestEntries) {
+    if (!rustTemplateInlineTestRoots.some((templateRoot) => isUnderRoot(file, templateRoot))) {
+      violations.push(`${file}: rustTemplateInlineTestAllowlist entries must be under rustTemplateInlineTestRoots`);
     }
   }
 
@@ -180,8 +193,13 @@ export function collectViolations(root, policy, inventory = {}) {
       }
     }
 
-    if (extension === ".rs" && hasInlineRustTests(root, file) && !rustInlineTestAllowlist.has(file)) {
-      violations.push(`${file}: inline Rust test modules must move to sibling tests.rs or be documented in rustInlineTestAllowlist`);
+    if (
+      extension === ".rs"
+      && hasInlineRustTests(root, file)
+      && !rustInlineTestAllowlist.has(file)
+      && !rustTemplateInlineTestAllowlist.has(file)
+    ) {
+      violations.push(`${file}: inline Rust test modules must move to sibling tests.rs or be documented in the owning inline-test allowlist`);
     }
   }
 

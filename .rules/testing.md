@@ -18,7 +18,7 @@ All utility functions and testable logic must be placed in `apps/desktop/src/uti
 - ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-Desktop TypeScript tests must be placed in `apps/desktop/tests/`, normally mirroring `apps/desktop/src/`. Desktop contracts that do not map to one source file belong in `apps/desktop/tests/repository/`. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/`, normally mirroring `apps/desktop/src/`. Desktop contracts that do not map to one source file belong in `apps/desktop/tests/repository/`. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Desktop Rust unit tests are module-local with no peer or inline-test exceptions. The two exact create-plugin template inline suites remain package-owned generated-template classifications. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
 
 ```
 project-root/

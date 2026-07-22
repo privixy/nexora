@@ -22,10 +22,6 @@ pub mod dump_utils;
 pub mod explain_import;
 pub mod export;
 pub mod export_crypto;
-#[cfg(test)]
-pub mod export_import_tests;
-#[cfg(test)]
-pub mod group_tree_tests;
 pub mod health_check;
 pub mod heartbeat;
 pub mod json_viewer;
