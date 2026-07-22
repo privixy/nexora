@@ -22,6 +22,16 @@ describe("Tauri gateway contracts", () => {
     expect(invoke).toHaveBeenCalledWith("test_connection", { params, connection_id: undefined });
     await connectionGateway.getConnections();
     expect(invoke).toHaveBeenCalledWith("get_connections");
+    await connectionGateway.listDatabases({ request: { params, connection_id: undefined } });
+    expect(invoke).toHaveBeenCalledWith("list_databases", { request: { params, connection_id: undefined } });
+    await connectionGateway.saveConnection({ name: "name", params, detectJsonInTextColumns: null });
+    expect(invoke).toHaveBeenCalledWith("save_connection", { name: "name", params, detectJsonInTextColumns: null });
+    await connectionGateway.updateSavedConnection({ id: "id", name: "name", params, detectJsonInTextColumns: null });
+    expect(invoke).toHaveBeenCalledWith("update_connection", { id: "id", name: "name", params, detectJsonInTextColumns: null });
+    await connectionGateway.setConnectionAppearance({ id: "id", appearance: null });
+    expect(invoke).toHaveBeenCalledWith("set_connection_appearance", { id: "id", appearance: null });
+    await connectionGateway.deleteConnectionIcon({ relativePath: "icon.png" });
+    expect(invoke).toHaveBeenCalledWith("delete_connection_icon", { relativePath: "icon.png" });
   });
 
   it("forwards catalog, query, and record payloads unchanged", async () => {

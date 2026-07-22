@@ -13,15 +13,14 @@ import {
   Square,
   Plug,
   Info,
-  Eye,
-  EyeOff,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../../platform/tauri";
 import type { ConnectionAppearance, ConnectionParams } from "../..";
 import { AppearanceSection } from "./AppearanceSection";
-import { open } from "@tauri-apps/plugin-dialog";
+import { FieldInput } from "./FieldInput";
+import { dialogGateway } from "../../../../platform/tauri";
 import clsx from "clsx";
 import { SshConnectionsModal } from "../../../../components/modals/SshConnectionsModal";
 import { K8sConnectionsModal } from "../../../../components/modals/K8sConnectionsModal";
@@ -63,62 +62,6 @@ interface NewConnectionModalProps {
   onSave?: () => void;
   initialConnection?: SavedConnection | null;
 }
-
-const FieldInput = ({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-  autoFocus,
-  className,
-}: {
-  label: string;
-  value: string | number | undefined;
-  onChange: (v: string) => void;
-  type?: string;
-  placeholder?: string;
-  autoFocus?: boolean;
-  className?: string;
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const isPassword = type === "password";
-
-  return (
-    <div className={clsx("flex flex-col gap-1", className)}>
-      <label className="text-[10px] uppercase font-semibold tracking-wider text-muted">
-        {label}
-      </label>
-      <div className="relative group">
-        <input
-          type={isPassword ? (showPassword ? "text" : "password") : type}
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          autoFocus={autoFocus}
-          autoCorrect="off"
-          autoCapitalize="off"
-          autoComplete="off"
-          spellCheck={false}
-          className={clsx(
-            "w-full px-3 py-2 bg-base border border-strong rounded-md text-sm text-primary placeholder:text-muted placeholder:italic focus:border-blue-500 focus:outline-none transition-colors",
-            isPassword && "pr-10"
-          )}
-        />
-        {isPassword && (
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted hover:text-primary transition-colors focus:outline-none"
-            tabIndex={-1}
-          >
-            {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
 
 export const NewConnectionModal = ({
   isOpen,
@@ -296,7 +239,7 @@ export const NewConnectionModal = ({
       const original = originalImagePath.current;
       const toDelete = uploadedPathsRef.current.filter(p => p !== original);
       toDelete.forEach(p =>
-        invoke("delete_connection_icon", { relativePath: p }).catch(() => {})
+        connectionGateway.deleteConnectionIcon({ relativePath: p }).catch(() => {})
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -527,7 +470,7 @@ export const NewConnectionModal = ({
         ...listParamsBase,
         k8s_port: resolveK8sPort(listParamsBase),
       };
-      const databases = await invoke<string[]>("list_databases", {
+      const databases = await connectionGateway.listDatabases<string[]>({
         request: {
           params: { ...listParams },
           connection_id: initialConnection?.id,
@@ -709,7 +652,7 @@ export const NewConnectionModal = ({
             (typeof formData.database === "string" ? formData.database : ""))
           : formData.database,
       };
-      const result = await invoke<string>("test_connection", {
+      const result = await connectionGateway.testConnection({
         request: {
           params: { ...testParams },
           connection_id: initialConnection?.id,
@@ -793,24 +736,24 @@ export const NewConnectionModal = ({
       if (initialConnection) {
         if (!params.password?.trim()) delete params.password;
         if (!params.ssh_password?.trim()) delete params.ssh_password;
-        await invoke("update_connection", {
+        await connectionGateway.updateSavedConnection({
           id: initialConnection.id,
           name,
           params,
           detectJsonInTextColumns: detectJsonInTextColumns ? true : null,
         });
-        await invoke("set_connection_appearance", {
+        await connectionGateway.setConnectionAppearance({
           id: initialConnection.id,
           appearance: appearancePayload ?? null,
         });
       } else {
-        const saved = await invoke<{ id: string }>("save_connection", {
+        const saved = await connectionGateway.saveConnection<{ id: string }>({
           name,
           params,
           detectJsonInTextColumns: detectJsonInTextColumns ? true : null,
         });
         if (appearancePayload) {
-          await invoke("set_connection_appearance", {
+          await connectionGateway.setConnectionAppearance({
             id: saved.id,
             appearance: appearancePayload,
           });
@@ -830,7 +773,7 @@ export const NewConnectionModal = ({
         toDelete.push(original);
       }
       await Promise.all(toDelete.map(p =>
-        invoke("delete_connection_icon", { relativePath: p }).catch(() => {})
+        connectionGateway.deleteConnectionIcon({ relativePath: p }).catch(() => {})
       ));
       uploadedPathsRef.current = [];
 
@@ -947,7 +890,7 @@ export const NewConnectionModal = ({
             <button
               type="button"
               onClick={async () => {
-                const selected = await open({
+                const selected = await dialogGateway.open({
                   multiple: false,
                   directory: activeDriver.capabilities.folder_based,
                 });
@@ -1462,7 +1405,7 @@ export const NewConnectionModal = ({
               <button
                 type="button"
                 onClick={async () => {
-                  const selected = await open({
+                  const selected = await dialogGateway.open({
                     multiple: false,
                     directory: false,
                     filters: [
@@ -1500,7 +1443,7 @@ export const NewConnectionModal = ({
               <button
                 type="button"
                 onClick={async () => {
-                  const selected = await open({
+                  const selected = await dialogGateway.open({
                     multiple: false,
                     directory: false,
                     filters: [
@@ -1538,7 +1481,7 @@ export const NewConnectionModal = ({
               <button
                 type="button"
                 onClick={async () => {
-                  const selected = await open({
+                  const selected = await dialogGateway.open({
                     multiple: false,
                     directory: false,
                     filters: [

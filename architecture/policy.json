@@ -79,6 +79,9 @@
     "apps/desktop/tests/features/plugins/hooks/useDrivers.test.tsx": [
       "apps/desktop/src/features/plugins/hooks/useDrivers.ts"
     ],
+    "apps/desktop/tests/features/plugins/hooks/usePluginApi.test.tsx": [
+      "apps/desktop/src/features/plugins/hooks/usePluginApi.ts"
+    ],
     "apps/desktop/tests/platform/tauri/gatewayContracts.test.ts": [
       "apps/desktop/src/platform/tauri/catalogGateway.ts",
       "apps/desktop/src/platform/tauri/connectionGateway.ts",
@@ -511,7 +514,7 @@
     "apps/desktop/tests/features/settings/state/ThemeProvider.test.tsx": 651,
     "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501,
     "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698,
-    "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx": 2409,
+    "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx": 2312,
     "apps/desktop/src/features/connections/state/DatabaseProvider.tsx": 1586,
     "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 929,
     "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,

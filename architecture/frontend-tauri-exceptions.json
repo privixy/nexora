@@ -248,22 +248,6 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "connections",
-    "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/connectionGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
-    "importTarget": "@tauri-apps/plugin-dialog",
-    "owner": "connections",
-    "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
-  },
-  {
     "importer": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "connections",
