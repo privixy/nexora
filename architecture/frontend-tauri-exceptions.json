@@ -552,6 +552,30 @@
     "removeByTask": 39
   },
   {
+    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
+    "importTarget": "@tauri-apps/api/core",
+    "owner": "editor",
+    "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/queryGateway.ts",
+    "removeByTask": 39
+  },
+  {
+    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
+    "importTarget": "@tauri-apps/plugin-dialog",
+    "owner": "editor",
+    "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
+    "removeByTask": 39
+  },
+  {
+    "importer": "apps/desktop/src/components/ui/BlobInput.tsx",
+    "importTarget": "@tauri-apps/plugin-fs",
+    "owner": "editor",
+    "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/fileGateway.ts",
+    "removeByTask": 39
+  },
+  {
     "importer": "apps/desktop/src/components/ui/MultiResultPanel.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
@@ -661,6 +685,14 @@
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/events.ts",
+    "removeByTask": 39
+  },
+  {
+    "importer": "apps/desktop/src/hooks/useReferencedRecord.ts",
+    "importTarget": "@tauri-apps/api/core",
+    "owner": "editor",
+    "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/queryGateway.ts",
     "removeByTask": 39
   },
   {

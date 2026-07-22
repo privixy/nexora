@@ -399,7 +399,7 @@ describe("architecture policy", () => {
 
   it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
     const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
-    expect(inventory).toHaveLength(113);
+    expect(inventory).toHaveLength(117);
     expect(inventory.filter((row) => (row as { removeByTask?: number }).removeByTask === 32)).toHaveLength(14);
     expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
       "characterizationTest",
@@ -409,7 +409,30 @@ describe("architecture policy", () => {
       "owner",
       "removeByTask",
     ].join(","))).toBe(true);
-    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(113);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(117);
+  });
+
+  it("keeps exact existing editor data-grid Tauri debt planned for Task 39", () => {
+    const inventory = JSON.parse(
+      readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8"),
+    ) as Array<Record<string, unknown>>;
+    const expectedRows = [
+      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/api/core", "apps/desktop/src/platform/tauri/queryGateway.ts"],
+      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/plugin-dialog", "apps/desktop/src/platform/tauri/dialogGateway.ts"],
+      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/plugin-fs", "apps/desktop/src/platform/tauri/fileGateway.ts"],
+      ["apps/desktop/src/hooks/useReferencedRecord.ts", "@tauri-apps/api/core", "apps/desktop/src/platform/tauri/queryGateway.ts"],
+    ];
+
+    for (const [importer, importTarget, gatewayOrAdapter] of expectedRows) {
+      expect(inventory).toContainEqual({
+        importer,
+        importTarget,
+        owner: "editor",
+        characterizationTest: "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+        gatewayOrAdapter,
+        removeByTask: 39,
+      });
+    }
   });
 
   it("requires direct Tauri inventory ownership and removal task to match staging", () => {
