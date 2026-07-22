@@ -6,7 +6,7 @@ import {
   focusWindowForApproval,
   notifyApprovalRequest,
   restoreWindowAlwaysOnTop,
-} from "../../../utils/mcpApprovalAttention";
+} from "../../mcp/lib/mcpApprovalAttention";
 import { AiApprovalModal } from "./AiApprovalModal";
 
 /// Listens for `ai://pending_approval` events emitted by the file watcher

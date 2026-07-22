@@ -944,7 +944,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/mcpApprovalAttention.ts",
+    "importer": "apps/desktop/src/features/mcp/lib/mcpApprovalAttention.ts",
     "importTarget": "@tauri-apps/api/window",
     "owner": "mcp",
     "characterizationTest": "apps/desktop/tests/features/mcp/pages/McpPage.test.tsx",
@@ -952,7 +952,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/mcpApprovalAttention.ts",
+    "importer": "apps/desktop/src/features/mcp/lib/mcpApprovalAttention.ts",
     "importTarget": "@tauri-apps/plugin-notification",
     "owner": "mcp",
     "characterizationTest": "apps/desktop/tests/features/mcp/pages/McpPage.test.tsx",
