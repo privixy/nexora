@@ -399,8 +399,8 @@ describe("architecture policy", () => {
 
   it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
     const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
-    expect(inventory).toHaveLength(117);
-    expect(inventory.filter((row) => (row as { removeByTask?: number }).removeByTask === 32)).toHaveLength(14);
+    expect(inventory).toHaveLength(103);
+    expect(inventory.filter((row) => (row as { removeByTask?: number }).removeByTask === 32)).toHaveLength(0);
     expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
       "characterizationTest",
       "gatewayOrAdapter",
@@ -409,10 +409,10 @@ describe("architecture policy", () => {
       "owner",
       "removeByTask",
     ].join(","))).toBe(true);
-    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(117);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(103);
   });
 
-  it("keeps exact existing editor data-grid Tauri debt planned for Task 39", () => {
+  it("keeps exact existing data-grid Tauri debt planned for Task 39", () => {
     const inventory = JSON.parse(
       readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8"),
     ) as Array<Record<string, unknown>>;
@@ -427,8 +427,8 @@ describe("architecture policy", () => {
       expect(inventory).toContainEqual({
         importer,
         importTarget,
-        owner: "editor",
-        characterizationTest: "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+        owner: "data-grid",
+        characterizationTest: "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
         gatewayOrAdapter,
         removeByTask: 39,
       });

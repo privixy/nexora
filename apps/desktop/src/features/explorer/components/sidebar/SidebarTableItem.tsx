@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
+import { dataTransferGateway } from "../../../../platform/tauri";
+
+const invoke = dataTransferGateway.invoke;
 import {
   Table as TableIcon,
   Loader2,

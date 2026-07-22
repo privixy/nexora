@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { ask } from "@tauri-apps/plugin-dialog";
+import { dataTransferGateway, dialogGateway } from "../../../../platform/tauri";
+
+const invoke = dataTransferGateway.invoke;
+const { ask } = dialogGateway;
 import { useAlert } from "../../../../hooks/useAlert";
 import { Key, Columns, Edit, Copy, Trash2 } from "lucide-react";
 import clsx from "clsx";

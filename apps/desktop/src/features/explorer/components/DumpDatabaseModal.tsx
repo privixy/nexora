@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { save } from "@tauri-apps/plugin-dialog";
+import { dataTransferGateway, dialogGateway } from "../../../platform/tauri";
+
+const invoke = dataTransferGateway.invoke;
+const { save } = dialogGateway;
 import { useAlert } from "../../../hooks/useAlert";
 import { useDatabase } from "../../connections";
 import { isMultiDatabaseCapable } from "../../plugins";

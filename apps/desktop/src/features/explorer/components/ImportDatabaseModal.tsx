@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { dataTransferGateway, listenTauri } from "../../../platform/tauri";
+
+const invoke = dataTransferGateway.invoke;
 import { useAlert } from "../../../hooks/useAlert";
 import { Loader2, Database, X, CheckCircle2, XCircle } from "lucide-react";
 import { formatElapsedTime } from "../../../utils/formatTime";
@@ -96,8 +97,8 @@ export const ImportDatabaseModal = ({
     startImport();
 
     // Listen to progress events
-    const unlisten = listen<ImportProgress>("import_progress", (event) => {
-      setProgress(event.payload);
+    const unlisten = listenTauri<ImportProgress>("import_progress", (payload) => {
+      setProgress(payload);
     });
 
     return () => {

@@ -1,8 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
-import { ask, open, save } from "@tauri-apps/plugin-dialog";
+import { dataTransferGateway, dialogGateway, fileGateway, listenTauri } from "../../../../src/platform/tauri";
 import { MemoryRouter } from "react-router-dom";
 import { ExplorerSidebar } from "../../../../src/features/explorer/components/ExplorerSidebar";
 import { useDatabase } from "../../../../src/features/connections/hooks/useDatabase";
@@ -119,10 +117,21 @@ vi.mock("../../../../src/features/explorer/components/sidebar/SidebarSchemaItem"
   ),
 }));
 
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
-vi.mock("@tauri-apps/api/event", () => ({ listen: vi.fn() }));
-vi.mock("@tauri-apps/plugin-dialog", () => ({ ask: vi.fn(), open: vi.fn(), save: vi.fn() }));
-vi.mock("@tauri-apps/plugin-fs", () => ({ readTextFile: vi.fn(), writeTextFile: vi.fn() }));
+vi.mock("../../../../src/platform/tauri", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../../../src/platform/tauri")>();
+  return {
+    ...actual,
+    dataTransferGateway: { invoke: vi.fn() },
+    dialogGateway: { ask: vi.fn(), open: vi.fn(), save: vi.fn() },
+    fileGateway: { readTextFile: vi.fn(), writeTextFile: vi.fn() },
+    listenTauri: vi.fn(),
+  };
+});
+
+const invoke = dataTransferGateway.invoke;
+const { ask, open, save } = dialogGateway;
+const { readTextFile, writeTextFile } = fileGateway;
+const listen = listenTauri;
 vi.mock("lucide-react", async (importOriginal) => {
   const actual = await importOriginal<typeof import("lucide-react")>();
   const Icon = () => null;
@@ -534,55 +543,49 @@ describe("ExplorerSidebar", () => {
       schema: "reporting",
     }));
   });
-
-  it("pins raw explorer importer families and data-transfer payload shapes", async () => {
-    const core = await import("@tauri-apps/api/core");
-    const events = await import("@tauri-apps/api/event");
-    const dialogs = await import("@tauri-apps/plugin-dialog");
-    const files = await import("@tauri-apps/plugin-fs");
-
-    await core.invoke("get_columns", {
+  it("pins explorer gateway families and data-transfer payload shapes", async () => {
+    await dataTransferGateway.invoke("get_columns", {
       connectionId: "conn-1",
       tableName: "orders",
       database: "analytics",
       schema: "reporting",
     });
-    await core.invoke("get_view_columns", {
+    await dataTransferGateway.invoke("get_view_columns", {
       connectionId: "conn-1",
       viewName: "order_totals",
       database: "analytics",
       schema: "reporting",
     });
-    await core.invoke("get_routine_parameters", {
+    await dataTransferGateway.invoke("get_routine_parameters", {
       connectionId: "conn-1",
       routineName: "refresh_orders",
       database: "analytics",
       schema: "reporting",
     });
-    await core.invoke("execute_query", {
+    await dataTransferGateway.invoke("execute_query", {
       connectionId: "conn-1",
       query: 'ALTER TABLE "reporting"."orders" DROP COLUMN "obsolete"',
       database: "analytics",
       schema: "reporting",
     });
-    await core.invoke("dump_database", {
+    await dataTransferGateway.invoke("dump_database", {
       connectionId: "conn-1",
       filePath: "/tmp/dump.sql",
       options: { structure: true, data: true, tables: ["orders"] },
       database: "analytics",
       schema: "reporting",
     });
-    await core.invoke("import_database", {
+    await dataTransferGateway.invoke("import_database", {
       connectionId: "conn-1",
       filePath: "/tmp/import.sql",
       schema: "reporting",
     });
-    await events.listen("import_progress", vi.fn());
-    await dialogs.ask("confirm", { title: "Import", kind: "warning" });
-    await dialogs.open({ filters: [{ name: "SQL", extensions: ["sql"] }] });
-    await dialogs.save({ defaultPath: "dump.sql" });
-    await files.readTextFile("/tmp/notebook.json");
-    await files.writeTextFile("/tmp/notebook.json", "{}");
+    await listenTauri("import_progress", vi.fn());
+    await dialogGateway.ask("confirm", { title: "Import", kind: "warning" });
+    await dialogGateway.open({ filters: [{ name: "SQL", extensions: ["sql"] }] });
+    await dialogGateway.save({ defaultPath: "dump.sql" });
+    await fileGateway.readTextFile("/tmp/notebook.json");
+    await fileGateway.writeTextFile("/tmp/notebook.json", "{}");
 
     expect(invoke).toHaveBeenCalledWith("import_database", {
       connectionId: "conn-1",
@@ -594,10 +597,6 @@ describe("ExplorerSidebar", () => {
       expect.objectContaining({ database: expect.anything() }),
     );
     expect(listen).toHaveBeenCalledWith("import_progress", expect.any(Function));
-    expect(ask).toHaveBeenCalled();
-    expect(open).toHaveBeenCalled();
-    expect(save).toHaveBeenCalled();
-    expect(files.readTextFile).toHaveBeenCalled();
-    expect(files.writeTextFile).toHaveBeenCalled();
+    expect([ask, open, save, readTextFile, writeTextFile].every((mock) => mock.mock.calls.length > 0)).toBe(true);
   });
 });

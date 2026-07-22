@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, X, Table, Eye, Code2, Zap, Database, Play, Copy, Hash, FileText, FileCode } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { dataTransferGateway } from "../../../platform/tauri";
 import { useDatabase } from "../../connections";
 import { useAlert } from "../../../hooks/useAlert";
 import { quoteTableRef } from "../../../utils/identifiers";
@@ -194,7 +194,7 @@ export const QuickNavigatorModal = ({ isOpen, onClose, onGenerateSql, onInspect 
       }
     } else if (type === "routine") {
       try {
-        const definition = await invoke<string>("get_routine_definition", {
+        const definition = await dataTransferGateway.invoke<string>("get_routine_definition", {
           connectionId: activeConnectionId,
           routineName: name,
           routineType: (item.item as RoutineInfo).routine_type,
@@ -220,7 +220,7 @@ export const QuickNavigatorModal = ({ isOpen, onClose, onGenerateSql, onInspect 
       }
     } else if (type === "trigger") {
       try {
-        const definition = await invoke<string>("get_trigger_definition", {
+        const definition = await dataTransferGateway.invoke<string>("get_trigger_definition", {
           connectionId: activeConnectionId,
           triggerName: name,
           tableName: (item.item as TriggerInfo).table_name,

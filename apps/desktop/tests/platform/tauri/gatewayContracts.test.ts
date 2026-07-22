@@ -3,12 +3,19 @@ import { invoke } from "@tauri-apps/api/core";
 import {
   catalogGateway,
   connectionGateway,
+  dataTransferGateway,
+  fileGateway,
   queryGateway,
   recordGateway,
   windowGateway,
 } from "../../../src/platform/tauri";
+import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
+vi.mock("@tauri-apps/plugin-fs", () => ({
+  readTextFile: vi.fn(),
+  writeTextFile: vi.fn(),
+}));
 
 describe("Tauri gateway contracts", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -70,6 +77,20 @@ describe("Tauri gateway contracts", () => {
     expect(invoke).toHaveBeenCalledWith("delete_record", payload);
     await recordGateway.getServerNow({ connectionId: "id" });
     expect(invoke).toHaveBeenCalledWith("get_server_now", { connectionId: "id" });
+  });
+
+  it("forwards explorer commands and files unchanged", async () => {
+    const payload = { connectionId: "id", database: "db", schema: "public" };
+    await dataTransferGateway.invoke("create_schema", payload);
+    expect(invoke).toHaveBeenCalledWith("create_schema", payload);
+    await dataTransferGateway.dumpDatabase(payload);
+    expect(invoke).toHaveBeenCalledWith("dump_database", payload);
+    await dataTransferGateway.importDatabase(payload);
+    expect(invoke).toHaveBeenCalledWith("import_database", payload);
+    await fileGateway.readTextFile("notebook.json");
+    expect(readTextFile).toHaveBeenCalledWith("notebook.json");
+    await fileGateway.writeTextFile("notebook.json", "{}");
+    expect(writeTextFile).toHaveBeenCalledWith("notebook.json", "{}");
   });
 
   it("preserves gateway rejection identity", async () => {

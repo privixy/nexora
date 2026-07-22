@@ -11,8 +11,10 @@ import {
   Upload,
   FileCode,
 } from "lucide-react";
-import { save, open } from "@tauri-apps/plugin-dialog";
-import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
+import { dialogGateway, fileGateway } from "../../../../platform/tauri";
+
+const { save, open } = dialogGateway;
+const { writeTextFile, readTextFile } = fileGateway;
 import { useSettings } from "../../../settings";
 import { useAlert } from "../../../../hooks/useAlert";
 import { formatHistoryTime } from "../../../../utils/dateGroups";

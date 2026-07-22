@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { quoteTableRef } from "../../../utils/identifiers";
-import { invoke } from "@tauri-apps/api/core";
+import { dataTransferGateway, dialogGateway } from "../../../platform/tauri";
 import {
   Database,
   Plus,
@@ -37,7 +37,7 @@ import {
   Clipboard,
   BookOpen,
 } from "lucide-react";
-import { ask, open } from "@tauri-apps/plugin-dialog";
+const { ask, open } = dialogGateway;
 import { toErrorMessage } from "../../../utils/errors";
 import { useAlert } from "../../../hooks/useAlert";
 import { useSettings } from "../../settings";
@@ -597,7 +597,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     database?: string,
   ) => {
     try {
-      const definition = await invoke<string>("get_routine_definition", {
+      const definition = await dataTransferGateway.invoke<string>("get_routine_definition", {
         connectionId: activeConnectionId,
         routineName: routine.name,
         routineType: routine.routine_type,
@@ -624,7 +624,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
   const handleNewRoutine = async (routineType: string) => {
     try {
-      const template = await invoke<string>("get_routine_create_template", {
+      const template = await dataTransferGateway.invoke<string>("get_routine_create_template", {
         connectionId: activeConnectionId,
         routineType,
         ...(activeSchema ? { schema: activeSchema } : {}),
@@ -645,7 +645,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     const { name, routineType, database, schema } = routineDropConfirm;
     setRoutineDropConfirm(null);
     try {
-      await invoke("drop_routine", {
+      await dataTransferGateway.invoke("drop_routine", {
         connectionId: activeConnectionId,
         routineName: name,
         routineType,
@@ -666,7 +666,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     database?: string,
   ) => {
     try {
-      const definition = await invoke<string>("get_trigger_definition", {
+      const definition = await dataTransferGateway.invoke<string>("get_trigger_definition", {
         connectionId: activeConnectionId,
         triggerName: trigger.name,
         tableName: trigger.table_name,
@@ -718,7 +718,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
   const loadAvailableDatabases = async () => {
     if (!activeConnectionId) return [];
-    const all = await invoke<string[]>("get_available_databases", { connectionId: activeConnectionId });
+    const all = await dataTransferGateway.invoke<string[]>("get_available_databases", { connectionId: activeConnectionId });
     setAllAvailableDatabases(all);
     return all;
   };
@@ -733,7 +733,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
   const createDatabase = async (database: string) => {
     if (!activeConnectionId || !supportsCreateDatabase(activeCapabilities)) return;
-    await invoke("create_database", {
+    await dataTransferGateway.invoke("create_database", {
       connectionId: activeConnectionId,
       database,
     });
@@ -759,7 +759,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     const schema = window.prompt(t("sidebar.createSchemaPrompt"))?.trim();
     if (!schema) return;
     try {
-      await invoke("create_schema", {
+      await dataTransferGateway.invoke("create_schema", {
         connectionId: activeConnectionId,
         schema,
         ...(database ? { database } : {}),
@@ -784,7 +784,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     const nextName = window.prompt(t("sidebar.renameDatabasePrompt", { database }), database)?.trim();
     if (!nextName || nextName === database) return;
     try {
-      await invoke("rename_database", {
+      await dataTransferGateway.invoke("rename_database", {
         connectionId: activeConnectionId,
         database,
         newName: nextName,
@@ -802,7 +802,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     const database = databaseDropConfirm;
     setDatabaseDropConfirm(null);
     try {
-      await invoke("drop_database", {
+      await dataTransferGateway.invoke("drop_database", {
         connectionId: activeConnectionId,
         database,
       });
@@ -820,7 +820,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
     const { tableName, database, schema } = tableTruncateConfirm;
     setTableTruncateConfirm(null);
     try {
-      await invoke("truncate_table", {
+      await dataTransferGateway.invoke("truncate_table", {
         connectionId: activeConnectionId,
         table: tableName,
         ...(database ? { database } : {}),
@@ -968,7 +968,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                       <button
                         onClick={async () => {
                           try {
-                            await invoke("open_er_diagram_window", {
+                            await dataTransferGateway.invoke("open_er_diagram_window", {
                               connectionId: activeConnectionId || "",
                               connectionName: activeConnectionName || "Unknown",
                               databaseName: diagramDatabaseName,
@@ -1007,7 +1007,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                 <button
                   onClick={async () => {
                     try {
-                      await invoke("open_er_diagram_window", {
+                      await dataTransferGateway.invoke("open_er_diagram_window", {
                         connectionId: activeConnectionId || "",
                         connectionName: activeConnectionName || "Unknown",
                         databaseName: diagramDatabaseName,
@@ -1495,7 +1495,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                               )
                             ) {
                               try {
-                                await invoke("drop_index_action", {
+                                await dataTransferGateway.invoke("drop_index_action", {
                                   connectionId: activeConnectionId,
                                   table: t_name,
                                   indexName: name,
@@ -1518,7 +1518,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                               )
                             ) {
                               try {
-                                await invoke("drop_foreign_key_action", {
+                                await dataTransferGateway.invoke("drop_foreign_key_action", {
                                   connectionId: activeConnectionId,
                                   table: t_name,
                                   fkName: name,
@@ -1735,7 +1735,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                           )
                         ) {
                           try {
-                            await invoke("drop_index_action", {
+                            await dataTransferGateway.invoke("drop_index_action", {
                               connectionId: activeConnectionId,
                               table: t_name,
                               indexName: name,
@@ -1759,7 +1759,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                           )
                         ) {
                           try {
-                            await invoke("drop_foreign_key_action", {
+                            await dataTransferGateway.invoke("drop_foreign_key_action", {
                               connectionId: activeConnectionId,
                               table: t_name,
                               fkName: name,
@@ -1793,7 +1793,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                       onImport={activeCapabilities?.no_connection_required !== true ? (db) => handleImportDatabase(db) : undefined}
                       onViewDiagram={activeCapabilities?.no_connection_required !== true ? async (db) => {
                         try {
-                          await invoke("open_er_diagram_window", {
+                          await dataTransferGateway.invoke("open_er_diagram_window", {
                             connectionId: activeConnectionId || "",
                             connectionName: activeConnectionName || "Unknown",
                             databaseName: db,
@@ -1932,7 +1932,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   )
                                 ) {
                                   try {
-                                    await invoke("drop_index_action", {
+                                    await dataTransferGateway.invoke("drop_index_action", {
                                       connectionId: activeConnectionId,
                                       table: t_name,
                                       indexName: name,
@@ -1954,7 +1954,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   )
                                 ) {
                                   try {
-                                    await invoke("drop_foreign_key_action", {
+                                    await dataTransferGateway.invoke("drop_foreign_key_action", {
                                       connectionId: activeConnectionId,
                                       table: t_name,
                                       fkName: name,
@@ -2247,7 +2247,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                       icon: Network,
                       action: async () => {
                         try {
-                          await invoke("open_er_diagram_window", {
+                          await dataTransferGateway.invoke("open_er_diagram_window", {
                             connectionId: activeConnectionId || "",
                             connectionName: activeConnectionName || "Unknown",
                             databaseName: ctxDatabase ?? diagramDatabaseName,
@@ -2312,7 +2312,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                           )
                         ) {
                           try {
-                            await invoke("drop_table", {
+                            await dataTransferGateway.invoke("drop_table", {
                               connectionId: activeConnectionId,
                               table: tableName,
                               ...(ctxDatabase ? { database: ctxDatabase } : {}),
@@ -2361,7 +2361,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                             )
                           ) {
                             try {
-                              await invoke("drop_index_action", {
+                              await dataTransferGateway.invoke("drop_index_action", {
                                 connectionId: activeConnectionId,
                                 table: t_name,
                                 indexName: contextMenu.id,
@@ -2406,7 +2406,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                 )
                               ) {
                                 try {
-                                  await invoke("drop_foreign_key_action", {
+                                  await dataTransferGateway.invoke("drop_foreign_key_action", {
                                     connectionId: activeConnectionId,
                                     table: t_name,
                                     fkName: contextMenu.id,
@@ -2514,7 +2514,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                     )
                                   ) {
                                     try {
-                                      await invoke("drop_view", {
+                                      await dataTransferGateway.invoke("drop_view", {
                                         connectionId: activeConnectionId,
                                         viewName: contextMenu.id,
                                         ...(viewCtxDatabase ? { database: viewCtxDatabase } : {}),
@@ -2560,7 +2560,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   const mvName = contextMenu.id;
                                   setRefreshingMatView(mvName);
                                   try {
-                                    await invoke("refresh_materialized_view", {
+                                    await dataTransferGateway.invoke("refresh_materialized_view", {
                                       connectionId: activeConnectionId,
                                       viewName: mvName,
                                       ...(mvCtxDatabase ? { database: mvCtxDatabase } : {}),
@@ -2580,7 +2580,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                 icon: FileText,
                                 action: async () => {
                                   try {
-                                    const definition = await invoke<string>("get_materialized_view_definition", {
+                                    const definition = await dataTransferGateway.invoke<string>("get_materialized_view_definition", {
                                       connectionId: activeConnectionId,
                                       viewName: contextMenu.id,
                                       ...(mvCtxDatabase ? { database: mvCtxDatabase } : {}),
@@ -2630,7 +2630,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   icon: FileText,
                                   action: async () => {
                                     try {
-                                      const definition = await invoke<string>("get_routine_definition", {
+                                      const definition = await dataTransferGateway.invoke<string>("get_routine_definition", {
                                         connectionId: activeConnectionId,
                                         routineName: contextMenu.id,
                                         routineType: routineType,
@@ -2652,7 +2652,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   icon: Edit,
                                   action: async () => {
                                     try {
-                                      const script = await invoke<string>("get_routine_edit_script", {
+                                      const script = await dataTransferGateway.invoke<string>("get_routine_edit_script", {
                                         connectionId: activeConnectionId,
                                         routineName: contextMenu.id,
                                         routineType: routineType,
@@ -2715,7 +2715,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                     icon: FileText,
                                     action: async () => {
                                       try {
-                                        const definition = await invoke<string>("get_trigger_definition", {
+                                        const definition = await dataTransferGateway.invoke<string>("get_trigger_definition", {
                                           connectionId: activeConnectionId,
                                           triggerName: contextMenu.id,
                                           tableName: triggerData?.table_name ?? "",
@@ -2763,7 +2763,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                         )
                                       ) {
                                         try {
-                                          await invoke("drop_trigger", {
+                                          await dataTransferGateway.invoke("drop_trigger", {
                                             connectionId: activeConnectionId,
                                             triggerName: contextMenu.id,
                                             tableName: triggerData?.table_name ?? "",
@@ -2805,7 +2805,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
                                   icon: Network,
                                   action: async () => {
                                     try {
-                                      await invoke("open_er_diagram_window", {
+                                      await dataTransferGateway.invoke("open_er_diagram_window", {
                                         connectionId: activeConnectionId || "",
                                         connectionName: activeConnectionName || "Unknown",
                                         databaseName: contextMenu.id,
