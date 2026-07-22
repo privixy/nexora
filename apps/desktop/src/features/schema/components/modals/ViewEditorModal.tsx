@@ -1,9 +1,10 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Eye, AlertCircle, Play, Sparkles } from "lucide-react";
 import type { OnMount } from "@monaco-editor/react";
-import { invoke } from "@tauri-apps/api/core";
-import { ask } from "@tauri-apps/plugin-dialog";
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
+
 import { useAlert } from "../../../../hooks/useAlert";
 import { extractEditableViewDefinition, SqlEditorWrapper } from "../../../editor";
 import { formatSql } from "../../../../utils/sqlFormat";
@@ -52,7 +53,7 @@ export const ViewEditorModal = ({
     setLoading(true);
     setError(null);
     try {
-      const def = await invoke<string>("get_view_definition", {
+      const def = await schemaGateway.invoke<string>("get_view_definition", {
         connectionId,
         viewName: vName,
         ...(database ? { database } : {}),
@@ -98,7 +99,7 @@ export const ViewEditorModal = ({
     setPreviewLoading(true);
     setError(null);
     try {
-      const result = await invoke<{
+      const result = await schemaGateway.invoke<{
         columns: string[];
         rows: unknown[][];
         affected_rows: number;
@@ -138,7 +139,7 @@ export const ViewEditorModal = ({
 
     try {
       if (isNewView) {
-        await invoke("create_view", {
+        await schemaGateway.invoke("create_view", {
           connectionId,
           viewName: name,
           definition,
@@ -149,7 +150,7 @@ export const ViewEditorModal = ({
       } else {
         // Check if definition changed
         if (definition !== originalDefinition) {
-          const confirmed = await ask(
+          const confirmed = await dialogGateway.ask(
             t("views.confirmAlter", { view: name }),
             { title: t("views.alterView"), kind: "warning" }
           );
@@ -159,7 +160,7 @@ export const ViewEditorModal = ({
           }
         }
 
-        await invoke("alter_view", {
+        await schemaGateway.invoke("alter_view", {
           connectionId,
           viewName: name,
           definition,

@@ -1,6 +1,8 @@
+import { coreAdapter } from "../../../platform/tauri/coreAdapter";
+import { pathAdapter } from "../../../platform/tauri/pathAdapter";
 import { useEffect, useRef, useState } from "react";
-import { convertFileSrc } from "@tauri-apps/api/core";
-import { appDataDir, join } from "@tauri-apps/api/path";
+
+
 
 interface Props {
   path: string;       // relative path "connection-icons/foo-abcd.png"
@@ -28,8 +30,8 @@ export function ConnectionIconImage({ path, size, fallback }: Props) {
     let cancelled = false;
     (async () => {
       try {
-        const abs = await join(await appDataDir(), path);
-        if (!cancelled) setSrc(convertFileSrc(abs));
+        const abs = await pathAdapter.join(await pathAdapter.appDataDir(), path);
+        if (!cancelled) setSrc(coreAdapter.convertFileSrc(abs));
       } catch {
         if (!cancelled) setFailed(true);
       }

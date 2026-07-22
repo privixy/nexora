@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { notebookGateway } from "../../../platform/tauri/notebookGateway";
 import type { NotebookMetadata, NotebookState } from "../../../types/notebook";
 import { createDefaultNotebookState } from "./notebook";
 import { serializeNotebook, deserializeNotebook } from "./notebookFile";
@@ -52,7 +52,7 @@ function persist(notebookId: string, content: string): Promise<unknown> {
     console.error(`Cannot save notebook ${notebookId}: unknown connection`);
     return Promise.resolve();
   }
-  return invoke("save_notebook", { connectionId, notebookId, content });
+  return notebookGateway.invoke("save_notebook", { connectionId, notebookId, content });
 }
 
 /** Flush a single pending save immediately. */
@@ -122,7 +122,7 @@ export async function loadNotebook(
   const cached = cache.get(notebookId);
   if (cached) return cached;
 
-  const content = await invoke<string | null>("load_notebook", {
+  const content = await notebookGateway.invoke<string | null>("load_notebook", {
     connectionId,
     notebookId,
   });
@@ -154,7 +154,7 @@ export async function createNotebook(
   cache.set(notebookId, state);
 
   const content = serializeForDisk(notebookId, state);
-  await invoke("create_notebook", { connectionId, notebookId, content });
+  await notebookGateway.invoke("create_notebook", { connectionId, notebookId, content });
   notifyNotebooksChanged();
 
   return { notebookId, state };
@@ -173,7 +173,7 @@ export async function createNotebookFromState(
   cache.set(notebookId, state);
 
   const content = serializeForDisk(notebookId, state);
-  await invoke("create_notebook", { connectionId, notebookId, content });
+  await notebookGateway.invoke("create_notebook", { connectionId, notebookId, content });
   notifyNotebooksChanged();
 
   return { notebookId };
@@ -192,7 +192,7 @@ export async function deleteNotebook(
   cache.delete(notebookId);
   titleCache.delete(notebookId);
   connectionIdCache.delete(notebookId);
-  await invoke("delete_notebook", { connectionId, notebookId });
+  await notebookGateway.invoke("delete_notebook", { connectionId, notebookId });
   notifyNotebooksChanged();
 }
 
@@ -200,7 +200,7 @@ export async function deleteNotebook(
 export async function listNotebooks(
   connectionId: string,
 ): Promise<NotebookMetadata[]> {
-  return invoke<NotebookMetadata[]>("list_notebooks", { connectionId });
+  return notebookGateway.invoke<NotebookMetadata[]>("list_notebooks", { connectionId });
 }
 
 /** Rename a saved notebook. Patches the file (and cache, if currently open). */
@@ -218,7 +218,7 @@ export async function renameNotebook(
     notifyNotebooksChanged();
     return;
   }
-  await invoke("rename_notebook", { connectionId, notebookId, title });
+  await notebookGateway.invoke("rename_notebook", { connectionId, notebookId, title });
   notifyNotebooksChanged();
 }
 

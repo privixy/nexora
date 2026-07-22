@@ -1,3 +1,4 @@
+import { clipboardAdapter } from "../../../platform/tauri/clipboardAdapter";
 import { useState, useEffect, useCallback, useMemo, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,8 +14,8 @@ import {
   Rows,
   Table2,
 } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
-import { readText } from '@tauri-apps/plugin-clipboard-manager';
+import { schemaGateway } from "../../../platform/tauri/schemaGateway";
+
 import { Modal } from '../../../components/ui/Modal';
 import { Select } from '../../../components/ui/Select';
 import { useDatabase } from '../../connections';
@@ -87,7 +88,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
       }));
       if (!activeDriver || inferred.length === 0) return base;
       try {
-        const mapped = await invoke<string[]>('map_inferred_column_types', {
+        const mapped = await schemaGateway.invoke<string[]>('map_inferred_column_types', {
           driver: activeDriver,
           kinds: inferred.map((c) => c.sqlType),
         });
@@ -108,7 +109,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
     setError(null);
     setSuccess(null);
     try {
-      const text = await readText();
+      const text = await clipboardAdapter.readText();
       if (!text || !text.trim()) {
         setError(t('clipboardImport.noData'));
         setParsed(null);
@@ -130,7 +131,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
   const loadTables = useCallback(async () => {
     if (!activeConnectionId) return;
     try {
-      const tables = await invoke<{ name: string }[]>('get_tables', {
+      const tables = await schemaGateway.invoke<{ name: string }[]>('get_tables', {
         connectionId: activeConnectionId,
         ...(activeSchema ? { schema: activeSchema } : {}),
       });
@@ -164,7 +165,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
     let cancelled = false;
     (async () => {
       try {
-        const cols = await invoke<TableColumn[]>('get_columns', {
+        const cols = await schemaGateway.invoke<TableColumn[]>('get_columns', {
           connectionId: activeConnectionId,
           tableName: tableName.trim(),
           schema: activeSchema ?? null,
@@ -234,7 +235,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
     if (!settings.aiProvider || !parsed) return;
     setIsAiLoading(true);
     try {
-      const name = await invoke<string>('suggest_table_name', {
+      const name = await schemaGateway.invoke<string>('suggest_table_name', {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || '',
@@ -302,7 +303,7 @@ export function ClipboardImportModal({ isOpen, onClose, onSuccess }: ClipboardIm
         })
       );
 
-      const result = await invoke<ImportResult>('execute_clipboard_import', {
+      const result = await schemaGateway.invoke<ImportResult>('execute_clipboard_import', {
         req: {
           connection_id: activeConnectionId,
           table_name: tableName.trim(),

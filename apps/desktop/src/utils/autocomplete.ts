@@ -1,5 +1,5 @@
 import type { Monaco } from "@monaco-editor/react";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../platform/tauri/queryGateway";
 import type { TableInfo } from "../features/connections";
 import { formatSqlIdentifier, getQuoteChar, quoteIdentifier } from "./identifiers";
 import { getCurrentStatement, parseTablesFromQuery, type ParsedTableRef } from "./sqlAnalysis";
@@ -61,7 +61,7 @@ const getTableColumns = async (connectionId: string, tableName: string, schema?:
   }
 
   try {
-    const cols = await invoke<Array<{ name: string; data_type: string }>>("get_columns", {
+    const cols = await queryGateway.invoke<Array<{ name: string; data_type: string }>>("get_columns", {
       connectionId,
       tableName,
       ...(database ? { database } : {}),

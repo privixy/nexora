@@ -5,7 +5,7 @@ import type {
   EditorPreferences,
 } from "../../../types/editor";
 import { quoteTableRef } from "../../../utils/identifiers";
-import { queryGateway } from "../../../platform/tauri";
+import { queryGateway } from "../../../platform/tauri/queryGateway";
 import { cleanTabForStorage, restoreTabFromStorage } from "./tabCleaner";
 import {
   filterTabsByConnection,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
-import { queryGateway } from "../../../platform/tauri";
+import { queryGateway } from "../../../platform/tauri/queryGateway";
 import { useDatabase } from "../../connections";
 import {
   QueryHistoryContext,

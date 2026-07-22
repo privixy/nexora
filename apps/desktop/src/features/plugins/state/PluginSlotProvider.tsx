@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import * as React from "react";
 import * as ReactJSXRuntime from "react/jsx-runtime";
-import { invoke } from "@tauri-apps/api/core";
+import { pluginGateway } from "../../../platform/tauri/pluginGateway";
 import i18n from "i18next";
 
 import { PluginSlotContext } from "./PluginSlotContext";
@@ -47,7 +47,7 @@ async function loadPluginTranslations(pluginId: string): Promise<void> {
   for (const lang of langs) {
     if (i18n.hasResourceBundle(lang, pluginId)) continue;
     try {
-      const raw = await invoke<string>("read_plugin_file", {
+      const raw = await pluginGateway.invoke<string>("read_plugin_file", {
         pluginId,
         filePath: `locales/${lang}.json`,
       });
@@ -88,7 +88,7 @@ async function loadExternalPluginContributions(
 
   for (const [modulePath, entries] of byModule) {
     try {
-      const source = await invoke<string>("read_plugin_file", {
+      const source = await pluginGateway.invoke<string>("read_plugin_file", {
         pluginId: manifest.id,
         filePath: modulePath,
       });
@@ -178,7 +178,7 @@ export const PluginSlotProvider = ({ children }: PluginSlotProviderProps) => {
       for (const pluginId of enabledIds) {
         if (cancelled) break;
         try {
-          const manifest = await invoke<PluginManifest>("get_plugin_manifest", { pluginId });
+          const manifest = await pluginGateway.invoke<PluginManifest>("get_plugin_manifest", { pluginId });
           await loadPluginTranslations(pluginId);
           const pluginContributions = await loadExternalPluginContributions(manifest);
           loaded.push(...pluginContributions);

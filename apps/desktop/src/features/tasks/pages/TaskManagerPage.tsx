@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { taskGateway } from "../../../platform/tauri/taskGateway";
 import { useTranslation } from "react-i18next";
 import {
   Activity,
@@ -105,7 +105,7 @@ const NexoraSelfPanel = ({ stats }: { stats: NexoraSelfStats }) => {
   const fetchChildren = useCallback(async () => {
     setLoadingChildren(true);
     try {
-      const result = await invoke<NexoraChildProcess[]>("get_nexora_children");
+      const result = await taskGateway.invoke<NexoraChildProcess[]>("get_nexora_children");
       setChildren(result);
     } finally {
       setLoadingChildren(false);

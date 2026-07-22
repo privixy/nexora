@@ -1,3 +1,5 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../platform/tauri/fileGateway";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,9 +11,9 @@ import {
   type ExportMode,
 } from "../components/ExportConnectionsModal";
 import { ImportFromAppModal } from "../components/ImportFromAppModal";
-import { invoke } from "@tauri-apps/api/core";
-import { save } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { connectionGateway } from "../../../platform/tauri";
+
+
 import {
   Database,
   Plus,
@@ -145,8 +147,8 @@ export const Connections = () => {
     void (async () => {
       try {
         const [openIds, activeId] = await Promise.all([
-          invoke<string[]>("get_last_open_connections"),
-          invoke<string | null>("get_last_active_connection"),
+          connectionGateway.invoke<string[]>("get_last_open_connections"),
+          connectionGateway.invoke<string | null>("get_last_active_connection"),
         ]);
         const toRestore = (openIds ?? []).filter(
           (id) => connections.some((c) => c.id === id) && !isConnectionOpen(id),
@@ -312,7 +314,7 @@ export const Connections = () => {
 
   const handleExport = async (mode: ExportMode, password?: string) => {
     try {
-      const payload = await invoke("export_connections_payload", {
+      const payload = await connectionGateway.invoke("export_connections_payload", {
         includeSecrets: mode !== "noSecrets",
         connectionIds:
           exportSelectionOnly && selectedIds.size > 0
@@ -321,14 +323,14 @@ export const Connections = () => {
       });
       const fileContent =
         mode === "encrypted"
-          ? await invoke("encrypt_export_payload", { payload, password })
+          ? await connectionGateway.invoke("encrypt_export_payload", { payload, password })
           : payload;
-      const path = await save({
+      const path = await dialogGateway.save({
         defaultPath: "nexora-connections.json",
         filters: [{ name: "JSON", extensions: ["json"] }],
       });
       if (path) {
-        await writeTextFile(path, JSON.stringify(fileContent, null, 2));
+        await fileGateway.writeTextFile(path, JSON.stringify(fileContent, null, 2));
       }
     } catch (e) {
       console.error("Export failed:", e);
@@ -402,7 +404,7 @@ export const Connections = () => {
         try {
           for (const id of ids) {
             if (isConnectionOpenAnywhere(id)) await disconnect(id);
-            await invoke("delete_connection", { id });
+            await connectionGateway.invoke("delete_connection", { id });
           }
         } catch (e) {
           console.error(e);
@@ -500,7 +502,7 @@ export const Connections = () => {
         setConfirmModal(null);
         try {
           if (isConnectionOpenAnywhere(id)) await disconnect(id);
-          await invoke("delete_connection", { id });
+          await connectionGateway.invoke("delete_connection", { id });
           void loadConnections();
         } catch (e) {
           console.error(e);
@@ -519,7 +521,7 @@ export const Connections = () => {
 
   const handleDuplicate = async (id: string) => {
     try {
-      const newConn = await invoke<SavedConnection>("duplicate_connection", {
+      const newConn = await connectionGateway.invoke<SavedConnection>("duplicate_connection", {
         id,
       });
       await loadConnections();

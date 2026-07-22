@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Modal } from "../ui/Modal";
 import { X, Download, ExternalLink, CheckCircle, Loader2, AlertCircle } from "lucide-react";
-import { openUrl } from "@tauri-apps/plugin-opener";
+import { openerAdapter } from "../../platform/tauri/openerAdapter";
 
 interface UpdateNotificationModalProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export const UpdateNotificationModal = ({
   if (!updateInfo) return null;
 
   const handleViewRelease = async () => {
-    await openUrl(updateInfo.releaseUrl);
+    await openerAdapter.openUrl(updateInfo.releaseUrl);
   };
 
   return (

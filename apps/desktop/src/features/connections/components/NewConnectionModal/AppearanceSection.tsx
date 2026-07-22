@@ -1,7 +1,8 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
+import { connectionGateway } from "../../../../platform/tauri";
+
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode, SkinTonePickerLocation, type EmojiClickData } from "emoji-picker-react";
 import clsx from "clsx";
@@ -96,7 +97,7 @@ export function AppearanceSection({
     setImageError(null);
     setImageBusy(true);
     try {
-      const picked = await openFileDialog({
+      const picked = await dialogGateway.open({
         multiple: false,
         filters: [{ name: "Image", extensions: ["png", "jpg", "jpeg", "webp", "svg"] }],
       }).catch((e: unknown) => {
@@ -105,7 +106,7 @@ export function AppearanceSection({
       if (typeof picked !== "string") return;
       let stored: string;
       try {
-        stored = await invoke<string>("save_connection_icon", {
+        stored = await connectionGateway.invoke<string>("save_connection_icon", {
           connectionId,
           sourcePath: picked,
         });

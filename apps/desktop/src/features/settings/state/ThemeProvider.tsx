@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import { ThemeContext } from "./ThemeContext";
 import { themeRegistry } from "../../../themes/themeRegistry";
 import { applyThemeToCSS } from "../../../themes/themeUtils";
@@ -52,7 +52,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const loadThemes = async () => {
       try {
         // Load theme from backend config
-        const config = await invoke<AppConfig>("get_config");
+        const config = await settingsGateway.invoke<AppConfig>("get_config");
 
         // Migration: check localStorage for old theme settings
         const oldLocalSettings = localStorage.getItem(
@@ -67,7 +67,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
             activeThemeId = oldSettings.activeThemeId;
 
             // Save to backend
-            await invoke("save_config", {
+            await settingsGateway.invoke("save_config", {
               config: { ...config, theme: activeThemeId },
             });
 
@@ -86,13 +86,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
           activeThemeId = prefersDark ? "nexora-dark" : "nexora-light";
 
           // Save the detected theme
-          await invoke("save_config", {
+          await settingsGateway.invoke("save_config", {
             config: { ...config, theme: activeThemeId },
           });
         }
 
         // Load custom themes from backend
-        const loadedCustomThemes = await invoke<Theme[]>(
+        const loadedCustomThemes = await settingsGateway.invoke<Theme[]>(
           "get_all_themes",
         ).catch(() => [] as Theme[]);
         setCustomThemes(loadedCustomThemes.filter((t) => !t.isPreset));
@@ -131,7 +131,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // Save theme to config.json when it changes (not on initial load)
   useEffect(() => {
     if (!isLoading && currentTheme) {
-      invoke("save_config", {
+      settingsGateway.invoke("save_config", {
         config: { theme: currentTheme.id },
       }).catch((error) => {
         console.error("Failed to save theme to config:", error);
@@ -187,7 +187,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: new Date().toISOString(),
       };
 
-      await invoke("save_custom_theme", { theme: newTheme });
+      await settingsGateway.invoke("save_custom_theme", { theme: newTheme });
 
       setCustomThemes((prev) => [...prev, newTheme]);
       setSettings((prev) => ({
@@ -211,7 +211,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: new Date().toISOString(),
       };
 
-      await invoke("save_custom_theme", { theme: updatedTheme });
+      await settingsGateway.invoke("save_custom_theme", { theme: updatedTheme });
 
       setCustomThemes((prev) =>
         prev.map((t) => (t.id === updatedTheme.id ? updatedTheme : t)),
@@ -232,7 +232,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("Cannot delete preset themes");
       }
 
-      await invoke("delete_custom_theme", { themeId });
+      await settingsGateway.invoke("delete_custom_theme", { themeId });
 
       setCustomThemes((prev) => prev.filter((t) => t.id !== themeId));
       setSettings((prev) => ({
@@ -267,7 +267,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: new Date().toISOString(),
       };
 
-      await invoke("save_custom_theme", { theme: duplicatedTheme });
+      await settingsGateway.invoke("save_custom_theme", { theme: duplicatedTheme });
 
       setCustomThemes((prev) => [...prev, duplicatedTheme]);
       setSettings((prev) => ({
@@ -298,7 +298,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       updatedAt: new Date().toISOString(),
     };
 
-    await invoke("save_custom_theme", { theme: customTheme });
+    await settingsGateway.invoke("save_custom_theme", { theme: customTheme });
 
     setCustomThemes((prev) => [...prev, customTheme]);
     setSettings((prev) => ({

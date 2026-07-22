@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { pluginGateway } from "../../../platform/tauri/pluginGateway";
 import { useCallback, useEffect, useState } from "react";
 
 import type { RegistryPluginWithStatus } from "../contracts";
@@ -15,7 +15,7 @@ export function usePluginRegistry(): {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(() => {
-    invoke<RegistryPluginWithStatus[]>("fetch_plugin_registry")
+    pluginGateway.invoke<RegistryPluginWithStatus[]>("fetch_plugin_registry")
       .then((result) => {
         setPlugins(result);
         setError(null);

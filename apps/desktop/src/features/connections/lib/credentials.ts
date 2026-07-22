@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../platform/tauri/connectionGateway";
 import type { ConnectionParams } from "..";
 
 export interface SavedConnectionWithCredentials {
@@ -10,7 +10,7 @@ export interface SavedConnectionWithCredentials {
 export async function fetchConnectionWithCredentials(
   id: string,
 ): Promise<SavedConnectionWithCredentials> {
-  return await invoke<SavedConnectionWithCredentials>("get_connection_by_id", {
+  return await connectionGateway.invoke<SavedConnectionWithCredentials>("get_connection_by_id", {
     id,
   });
 }

@@ -6,7 +6,7 @@ import {
   RefreshCw,
   AlertTriangle,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { aiGateway } from "../../../platform/tauri/aiGateway";
 import { useSettings } from "../../settings";
 import { getConnectionIcon, useDatabase } from "../../connections";
 import { useDrivers } from "../../plugins";
@@ -78,7 +78,7 @@ export const VisualExplainModal = ({
     setPlan(null);
 
     try {
-      const result = await invoke<ExplainPlan>("explain_query_plan", {
+      const result = await aiGateway.invoke<ExplainPlan>("explain_query_plan", {
         connectionId,
         query,
         analyze,

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useTranslation, Trans } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
+import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import {
   CheckCircle2,
   Code2,
@@ -96,7 +96,7 @@ export function AiTab() {
   const loadModels = useCallback(
     async (force: boolean = false) => {
       try {
-        const models = await invoke<Record<string, string[]>>(
+        const models = await settingsGateway.invoke<Record<string, string[]>>(
           "get_ai_models",
           { forceRefresh: force },
         );
@@ -120,16 +120,16 @@ export function AiTab() {
 
   const checkKeys = useCallback(async () => {
     try {
-      const openai = await invoke<AiKeyStatus>("check_ai_key_status", {
+      const openai = await settingsGateway.invoke<AiKeyStatus>("check_ai_key_status", {
         provider: "openai",
       });
-      const anthropic = await invoke<AiKeyStatus>("check_ai_key_status", {
+      const anthropic = await settingsGateway.invoke<AiKeyStatus>("check_ai_key_status", {
         provider: "anthropic",
       });
-      const openrouter = await invoke<AiKeyStatus>("check_ai_key_status", {
+      const openrouter = await settingsGateway.invoke<AiKeyStatus>("check_ai_key_status", {
         provider: "openrouter",
       });
-      const customOpenai = await invoke<AiKeyStatus>("check_ai_key_status", {
+      const customOpenai = await settingsGateway.invoke<AiKeyStatus>("check_ai_key_status", {
         provider: "custom-openai",
       });
       const ollama = { configured: true, fromEnv: false };
@@ -148,19 +148,19 @@ export function AiTab() {
   useEffect(() => {
     checkKeys();
     loadModels(false);
-    invoke<string>("get_system_prompt")
+    settingsGateway.invoke<string>("get_system_prompt")
       .then(setSystemPrompt)
       .catch(console.error);
-    invoke<string>("get_explain_prompt")
+    settingsGateway.invoke<string>("get_explain_prompt")
       .then(setExplainPrompt)
       .catch(console.error);
-    invoke<string>("get_cellname_prompt")
+    settingsGateway.invoke<string>("get_cellname_prompt")
       .then(setCellnamePrompt)
       .catch(console.error);
-    invoke<string>("get_tabrename_prompt")
+    settingsGateway.invoke<string>("get_tabrename_prompt")
       .then(setTabrenamePrompt)
       .catch(console.error);
-    invoke<string>("get_explainplan_prompt")
+    settingsGateway.invoke<string>("get_explainplan_prompt")
       .then(setExplainplanPrompt)
       .catch(console.error);
   }, [checkKeys, loadModels]);
@@ -168,7 +168,7 @@ export function AiTab() {
   const handleSaveKey = async (provider: string) => {
     if (!keyInput.trim()) return;
     try {
-      await invoke("set_ai_key", { provider, key: keyInput });
+      await settingsGateway.invoke("set_ai_key", { provider, key: keyInput });
       await checkKeys();
       setKeyInput("");
       setEditingKey(false);
@@ -187,7 +187,7 @@ export function AiTab() {
     const promptMap = { system: systemPrompt, explain: explainPrompt, cellname: cellnamePrompt, tabrename: tabrenamePrompt, explainplan: explainplanPrompt };
     const prompt = promptMap[type];
     try {
-      await invoke(cmd, { prompt });
+      await settingsGateway.invoke(cmd, { prompt });
       showAlert(t("settings.ai.promptSaved"), {
         title: t("common.success"),
         kind: "info",
@@ -203,7 +203,7 @@ export function AiTab() {
     const setterMap = { system: setSystemPrompt, explain: setExplainPrompt, cellname: setCellnamePrompt, tabrename: setTabrenamePrompt, explainplan: setExplainplanPrompt };
     const setter = setterMap[type];
     try {
-      const defaultPrompt = await invoke<string>(cmd);
+      const defaultPrompt = await settingsGateway.invoke<string>(cmd);
       setter(defaultPrompt);
       showAlert(t("settings.ai.promptResetSuccess"), {
         title: t("common.success"),
@@ -339,7 +339,7 @@ export function AiTab() {
                             <button
                               onClick={async () => {
                                 try {
-                                  await invoke("delete_ai_key", {
+                                  await settingsGateway.invoke("delete_ai_key", {
                                     provider: settings.aiProvider,
                                   });
                                   await checkKeys();

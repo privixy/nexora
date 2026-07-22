@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { dataTransferGateway } from "../../../../platform/tauri";
+import { dataTransferGateway } from "../../../../platform/tauri/dataTransferGateway";
 
 const invoke = dataTransferGateway.invoke;
 import {

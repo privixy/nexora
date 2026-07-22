@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { mcpGateway } from "../../../platform/tauri/mcpGateway";
 import { useTranslation } from "react-i18next";
 import { X, Check, Copy, Cpu, Terminal } from "lucide-react";
 import { useAlert } from "../../../hooks/useAlert";
@@ -105,7 +105,7 @@ export const McpModal = ({ isOpen, onClose }: McpModalProps) => {
   const loadStatus = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await invoke<McpClientStatus[]>("get_mcp_status");
+      const res = await mcpGateway.invoke<McpClientStatus[]>("get_mcp_status");
       setClients(res);
       if (!selectedClient && res.length > 0) {
         setSelectedClient(res[0]);
@@ -125,7 +125,7 @@ export const McpModal = ({ isOpen, onClose }: McpModalProps) => {
 
   const handleInstall = async (clientId: string) => {
     try {
-      const clientName = await invoke<string>("install_mcp_config", { clientId });
+      const clientName = await mcpGateway.invoke<string>("install_mcp_config", { clientId });
       showAlert(t("mcp.successMsg", { client: clientName }), {
         kind: "info",
         title: t("mcp.successTitle"),

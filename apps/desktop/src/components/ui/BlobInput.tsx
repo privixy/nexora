@@ -1,3 +1,5 @@
+import { dialogGateway } from "../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../platform/tauri/fileGateway";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -9,9 +11,9 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { open, save } from "@tauri-apps/plugin-dialog";
-import { writeFile } from "@tauri-apps/plugin-fs";
+import { queryGateway } from "../../platform/tauri/queryGateway";
+
+
 import {
   extractBlobMetadata,
   extractImageDataUrl,
@@ -95,7 +97,7 @@ export const BlobInput = ({
       return;
     }
     let cancelled = false;
-    invoke<string>("read_file_as_data_url", { filePath: imageFileRefPath })
+    queryGateway.invoke<string>("read_file_as_data_url", { filePath: imageFileRefPath })
       .then((dataUrl) => {
         if (!cancelled) setFileRefPreviewUrl(dataUrl);
       })
@@ -116,7 +118,7 @@ export const BlobInput = ({
       return;
     }
     let cancelled = false;
-    invoke<string>("fetch_blob_as_data_url", {
+    queryGateway.invoke<string>("fetch_blob_as_data_url", {
       connectionId,
       table: tableName,
       colName,
@@ -141,7 +143,7 @@ export const BlobInput = ({
     isDownloading || isUploading || (metadata?.isTruncated && !canFetchFull);
 
   const handleFileUpload = async () => {
-    const filePath = await open({ multiple: false, directory: false });
+    const filePath = await dialogGateway.open({ multiple: false, directory: false });
     if (!filePath) return;
 
     // Clear any previous errors
@@ -152,7 +154,7 @@ export const BlobInput = ({
       // Get file reference (not the content!) - this is instant and non-blocking
       // Format returned: "BLOB_FILE_REF:<size>:<mime>:<filepath>"
       // The actual file will be read only when saving to the database
-      const fileRef = await invoke<string>("load_blob_from_file", { filePath });
+      const fileRef = await queryGateway.invoke<string>("load_blob_from_file", { filePath });
       onChange(fileRef);
     } catch (err) {
       console.error("Failed to load file:", err);
@@ -176,7 +178,7 @@ export const BlobInput = ({
       if (!canFetchFull) return;
 
       const extension = mimeToExtension(metadata.mimeType);
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         defaultPath: `download.${extension}`,
         filters: [{ name: dataType || "BLOB", extensions: [extension] }],
       });
@@ -184,7 +186,7 @@ export const BlobInput = ({
 
       setIsDownloading(true);
       try {
-        await invoke("save_blob_to_file", {
+        await queryGateway.invoke("save_blob_to_file", {
           connectionId,
           table: tableName,
           colName,
@@ -202,7 +204,7 @@ export const BlobInput = ({
 
     try {
       const extension = mimeToExtension(metadata.mimeType);
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         defaultPath: `download.${extension}`,
         filters: [{ name: dataType || "BLOB", extensions: [extension] }],
       });
@@ -210,7 +212,7 @@ export const BlobInput = ({
 
       const base64Payload = extractBase64Payload(value);
       const bytes = blobPayloadToBytes(base64Payload, metadata.isBase64);
-      await writeFile(filePath, bytes);
+      await fileGateway.writeFile(filePath, bytes);
     } catch (error) {
       console.error("Failed to download file:", error);
     }

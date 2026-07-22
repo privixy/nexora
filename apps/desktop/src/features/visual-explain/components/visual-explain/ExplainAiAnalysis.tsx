@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2, Sparkles } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { aiGateway } from "../../../../platform/tauri/aiGateway";
 import { useSettings } from "../../../settings";
 import { getAiExplanationLanguage } from "../../../../i18n/language";
 import type { ExplainPlan } from "../../contracts";
@@ -36,7 +36,7 @@ export function ExplainAiAnalysis({ plan }: ExplainAiAnalysisProps) {
     ].join("\n");
 
     try {
-      const result = await invoke<string>("analyze_ai_explain_plan", {
+      const result = await aiGateway.invoke<string>("analyze_ai_explain_plan", {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || "",

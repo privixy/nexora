@@ -1,3 +1,5 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../platform/tauri/fileGateway";
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -13,9 +15,9 @@ import {
   FolderPlus,
   ListChecks,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { connectionGateway } from "../../../platform/tauri";
+
+
 import clsx from "clsx";
 import { toErrorMessage } from "../../../utils/errors";
 import { useDatabase } from "../hooks/useDatabase";
@@ -118,7 +120,7 @@ export const ImportFromAppModal = ({
       readsPasswordsFromKeychain: false,
       needsFile: true,
     };
-    invoke<ImportSourceInfo[]>("list_connection_import_sources")
+    connectionGateway.invoke<ImportSourceInfo[]>("list_connection_import_sources")
       .then((list) => {
         const all = [nexoraSource, ...list];
         setSources(all);
@@ -168,7 +170,7 @@ export const ImportFromAppModal = ({
   // Preview a parsed Nexora payload (plain or already decrypted) so it goes
   // through the same per-item group picker as a foreign-app import.
   const previewNexora = async (payload: unknown) => {
-    const result = await invoke<ImportPreview>("preview_nexora_import", {
+    const result = await connectionGateway.invoke<ImportPreview>("preview_nexora_import", {
       payload,
     });
     setNexoraPayload(payload);
@@ -182,7 +184,7 @@ export const ImportFromAppModal = ({
     try {
       // Nexora export file: parse (decrypt if needed), then preview.
       if (selectedSource.id === NEXORA_SOURCE_ID) {
-        const picked = await open({
+        const picked = await dialogGateway.open({
           filters: [{ name: "JSON", extensions: ["json"] }],
           multiple: false,
         });
@@ -190,7 +192,7 @@ export const ImportFromAppModal = ({
           setLoading(false);
           return;
         }
-        const content = await readTextFile(picked);
+        const content = await fileGateway.readTextFile(picked);
         const payload = JSON.parse(content) as { encrypted?: boolean };
         // Encrypted exports are an opaque envelope: prompt for the password
         // and decrypt before previewing.
@@ -208,14 +210,14 @@ export const ImportFromAppModal = ({
 
       let filePath: string | null = null;
       if (selectedSource.needsFile) {
-        const picked = await open({ multiple: false });
+        const picked = await dialogGateway.open({ multiple: false });
         if (!picked || Array.isArray(picked)) {
           setLoading(false);
           return;
         }
         filePath = picked;
       }
-      const result = await invoke<ImportPreview>("preview_connection_import", {
+      const result = await connectionGateway.invoke<ImportPreview>("preview_connection_import", {
         sourceId: selectedSource.id,
         includePasswords,
         filePath,
@@ -233,7 +235,7 @@ export const ImportFromAppModal = ({
     setError(null);
     setLoading(true);
     try {
-      const payload = await invoke("decrypt_export_payload", {
+      const payload = await connectionGateway.invoke("decrypt_export_payload", {
         envelope: pendingEnvelope,
         password,
       });
@@ -283,12 +285,12 @@ export const ImportFromAppModal = ({
         return { index: item.index, action };
       });
       if (selectedSource.id === NEXORA_SOURCE_ID) {
-        await invoke("apply_nexora_import", {
+        await connectionGateway.invoke("apply_nexora_import", {
           payload: nexoraPayload,
           resolutions: payload,
         });
       } else {
-        await invoke("apply_connection_import", {
+        await connectionGateway.invoke("apply_connection_import", {
           sourceId: selectedSource.id,
           resolutions: payload,
         });

@@ -16,7 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { connectionGateway } from "../../../../platform/tauri";
+import { connectionGateway } from "../../../../platform/tauri/connectionGateway";
 import type { ConnectionAppearance, ConnectionParams } from "../..";
 import { AppearanceSection } from "./AppearanceSection";
 import { FieldInput } from "./FieldInput";

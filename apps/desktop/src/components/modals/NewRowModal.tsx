@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Plus } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../platform/tauri/queryGateway";
 import { useDatabase } from "../../features/connections";
 import { Modal } from "../ui/Modal";
 import { quoteTableRef } from "../../utils/identifiers";
@@ -61,7 +61,7 @@ export const NewRowModal = ({
       // Select * from referenced table to get context
       const query = `SELECT * FROM ${quotedTable} LIMIT 100`;
 
-      const result = await invoke<{ columns: string[], rows: unknown[][] }>("execute_query", {
+      const result = await queryGateway.invoke<{ columns: string[], rows: unknown[][] }>("execute_query", {
         connectionId: activeConnectionId,
         query,
         ...(database ? { database } : {}),
@@ -121,12 +121,12 @@ export const NewRowModal = ({
         ...(effectiveSchema ? { schema: effectiveSchema } : {}),
       };
       Promise.all([
-        invoke<TableColumn[]>("get_columns", {
+        queryGateway.invoke<TableColumn[]>("get_columns", {
           connectionId: activeConnectionId,
           tableName,
           ...schemaParam,
         }),
-        invoke<ForeignKey[]>("get_foreign_keys", {
+        queryGateway.invoke<ForeignKey[]>("get_foreign_keys", {
           connectionId: activeConnectionId,
           tableName,
           ...schemaParam,
@@ -210,7 +210,7 @@ export const NewRowModal = ({
         }
       }
 
-      await invoke("insert_record", {
+      await queryGateway.invoke("insert_record", {
         connectionId: activeConnectionId,
         table: tableName,
         data: dataToSend,

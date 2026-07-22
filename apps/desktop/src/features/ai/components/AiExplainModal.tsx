@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Loader2, BookOpen } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { aiGateway } from "../../../platform/tauri/aiGateway";
 import { useEditorTheme, useSettings } from "../../settings";
 import { getAiExplanationLanguage } from "../../../i18n/language";
 import { Modal } from "../../../components/ui/Modal";
@@ -48,7 +48,7 @@ export const AiExplainModal = ({ isOpen, onClose, query }: AiExplainModalProps) 
     setExplanation("");
 
     try {
-      const result = await invoke<string>("explain_ai_query", {
+      const result = await aiGateway.invoke<string>("explain_ai_query", {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || "",

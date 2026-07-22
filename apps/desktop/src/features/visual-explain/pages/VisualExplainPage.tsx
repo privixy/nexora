@@ -1,9 +1,10 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FileJson, FolderOpen, Loader2, RefreshCw } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { open as openDialog } from "@tauri-apps/plugin-dialog";
+import { aiGateway } from "../../../platform/tauri";
+
 import type { ExplainPlan } from "../contracts";
 import { VisualExplainView } from "../components/VisualExplainView";
 import type { ExplainViewMode } from "..";
@@ -47,7 +48,7 @@ export const VisualExplainPage = ({
     setPlan(null);
     setSelectedNodeId(null);
     try {
-      const result = await invoke<ExplainPlan>("load_explain_from_file", {
+      const result = await aiGateway.invoke<ExplainPlan>("load_explain_from_file", {
         path,
       });
       setPlan(result);
@@ -66,7 +67,7 @@ export const VisualExplainPage = ({
       setPlan(null);
       setSelectedNodeId(null);
       try {
-        const result = await invoke<ExplainPlan>("explain_query_plan", {
+        const result = await aiGateway.invoke<ExplainPlan>("explain_query_plan", {
           connectionId,
           query,
           analyze: false,
@@ -99,7 +100,7 @@ export const VisualExplainPage = ({
         return;
       }
       try {
-        const pending = await invoke<string | null>("get_pending_explain_file");
+        const pending = await aiGateway.invoke<string | null>("get_pending_explain_file");
         if (!cancelled && pending) {
           setFilePath(pending);
           await loadPlan(pending);
@@ -124,7 +125,7 @@ export const VisualExplainPage = ({
   ]);
 
   const handlePickFile = useCallback(async () => {
-    const selected = await openDialog({
+    const selected = await dialogGateway.open({
       multiple: false,
       filters: [
         { name: "Explain", extensions: ["json", "txt"] },

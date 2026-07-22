@@ -1,3 +1,5 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../../platform/tauri/fileGateway";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,8 +14,8 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
-import { save as saveDialog } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+
+
 import {
   clearAiActivity,
   exportAiActivityCsv,
@@ -78,7 +80,7 @@ export function AiActivityEventsTab({
     try {
       const content =
         format === "json" ? await exportAiActivityJson() : await exportAiActivityCsv();
-      const target = await saveDialog({
+      const target = await dialogGateway.save({
         defaultPath:
           format === "json" ? "ai-activity.jsonl" : "ai-activity.csv",
         filters: [
@@ -89,7 +91,7 @@ export function AiActivityEventsTab({
         ],
       });
       if (typeof target === "string" && target.length > 0) {
-        await writeTextFile(target, content);
+        await fileGateway.writeTextFile(target, content);
         showAlert(t("aiActivity.exportSuccess", { path: target }), {
           kind: "info",
         });

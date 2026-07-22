@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { pluginGateway } from "../../../platform/tauri/pluginGateway";
 import { useCallback, useEffect, useState } from "react";
 
 import type { InstalledPluginInfo, PluginManifest } from "../contracts";
@@ -154,8 +154,8 @@ export function useDrivers(): {
 
   const load = useCallback(() => {
     Promise.all([
-      invoke<PluginManifest[]>("get_registered_drivers"),
-      invoke<InstalledPluginInfo[]>("get_installed_plugins"),
+      pluginGateway.invoke<PluginManifest[]>("get_registered_drivers"),
+      pluginGateway.invoke<InstalledPluginInfo[]>("get_installed_plugins"),
     ])
       .then(([drivers, installed]) => {
         setAllDrivers(drivers);

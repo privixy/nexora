@@ -1,7 +1,8 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { ask, save } from "@tauri-apps/plugin-dialog";
+import { settingsGateway } from "../../../platform/tauri";
+
 import {
   Trash2,
   FileDown,
@@ -51,7 +52,7 @@ export function LogsTab() {
   const loadLogs = useCallback(async () => {
     try {
       setIsLoading(true);
-      const entries = await invoke<LogEntry[]>("get_logs", {
+      const entries = await settingsGateway.invoke<LogEntry[]>("get_logs", {
         request: {
           limit: settings.maxLogEntries || 1000,
           level_filter: levelFilter || null,
@@ -59,7 +60,7 @@ export function LogsTab() {
       });
       setLogs(entries.reverse());
 
-      const data = await invoke<{
+      const data = await settingsGateway.invoke<{
         enabled: boolean;
         max_size: number;
         current_count: number;
@@ -74,12 +75,12 @@ export function LogsTab() {
 
   const handleClearLogs = useCallback(async () => {
     try {
-      const confirmed = await ask(t("settings.clearLogsConfirm"), {
+      const confirmed = await dialogGateway.ask(t("settings.clearLogsConfirm"), {
         title: t("common.delete"),
         kind: "warning",
       });
       if (!confirmed) return;
-      await invoke("clear_logs");
+      await settingsGateway.invoke("clear_logs");
       await loadLogs();
     } catch (e) {
       console.error("Failed to clear logs", e);
@@ -88,12 +89,12 @@ export function LogsTab() {
 
   const handleExportLogs = useCallback(async () => {
     try {
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         filters: [{ name: "Log Files", extensions: ["log"] }],
         defaultPath: `nexora_logs_${new Date().toISOString().split("T")[0]}.log`,
       });
       if (!filePath) return;
-      await invoke("export_logs", { filePath });
+      await settingsGateway.invoke("export_logs", { filePath });
       showAlert(t("settings.exportLogsSuccess"), {
         title: t("common.success"),
         kind: "info",
@@ -106,7 +107,7 @@ export function LogsTab() {
   const handleToggleLogging = useCallback(
     async (enabled: boolean) => {
       try {
-        await invoke("set_log_enabled", { enabled });
+        await settingsGateway.invoke("set_log_enabled", { enabled });
         updateSetting("loggingEnabled", enabled);
         await loadLogs();
       } catch (e) {
@@ -119,7 +120,7 @@ export function LogsTab() {
   const handleSetMaxSize = useCallback(
     async (size: number) => {
       try {
-        await invoke("set_log_max_size", { maxSize: size });
+        await settingsGateway.invoke("set_log_max_size", { maxSize: size });
         updateSetting("maxLogEntries", size);
         await loadLogs();
       } catch (e) {

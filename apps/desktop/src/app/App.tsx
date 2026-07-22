@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { settingsGateway } from "../platform/tauri/settingsGateway";
 import { useSettings, useUpdate } from "../features/settings";
 import { useChangelog } from "../hooks/useChangelog";
 import { useResultTypeColors } from "../hooks/useResultTypeColors";
@@ -58,7 +58,7 @@ export function App() {
   }, [isSettingsLoading, settings.showWelcome]);
 
   useEffect(() => {
-    invoke<boolean>("is_debug_mode").then((debugMode) => {
+    settingsGateway.invoke<boolean>("is_debug_mode").then((debugMode) => {
       setIsDebugMode(debugMode);
     });
   }, []);

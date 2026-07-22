@@ -9,7 +9,7 @@ import type {
 } from "../contracts";
 import { EditorContext } from "./EditorContext";
 import { useDatabase } from "../../connections";
-import { queryGateway } from "../../../platform/tauri";
+import { queryGateway } from "../../../platform/tauri/queryGateway";
 import {
   generateTabId,
   loadEditorPreferences,

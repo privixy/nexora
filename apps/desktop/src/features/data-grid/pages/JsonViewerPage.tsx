@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { windowGateway } from "../../../platform/tauri";
+import { windowGateway } from "../../../platform/tauri/windowGateway";
 import { FileJson } from "lucide-react";
 import { JsonInput } from "../components/JsonInput";
 

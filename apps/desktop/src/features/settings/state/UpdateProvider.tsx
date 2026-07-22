@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { settingsGateway } from "../../../platform/tauri/settingsGateway";
+import { listenTauri } from "../../../platform/tauri";
 import { UpdateContext, type UpdateCheckResult } from "./UpdateContext";
 import { toErrorMessage } from "../../../utils/errors";
 
@@ -15,11 +15,11 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
 
   // Listen for download progress events
   useEffect(() => {
-    const unlistenProgress = listen<number>("update-progress", (event) => {
-      setDownloadProgress(event.payload);
+    const unlistenProgress = listenTauri<number>("update-progress", (payload) => {
+      setDownloadProgress(payload);
     });
 
-    const unlistenInstalling = listen("update-installing", () => {
+    const unlistenInstalling = listenTauri("update-installing", () => {
       setDownloadProgress(100);
     });
 
@@ -34,7 +34,7 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     setIsUpToDate(false);
     try {
-      const result = await invoke<UpdateCheckResult>("check_for_updates", {
+      const result = await settingsGateway.invoke<UpdateCheckResult>("check_for_updates", {
         force,
       });
       if (result.hasUpdate) {
@@ -44,7 +44,7 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
         // a version has been dismissed.
         let dismissed = false;
         if (!force) {
-          const config = await invoke<{ lastDismissedVersion: string }>(
+          const config = await settingsGateway.invoke<{ lastDismissedVersion: string }>(
             "get_config",
           );
           dismissed = config.lastDismissedVersion === result.latestVersion;
@@ -76,7 +76,7 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
     setDownloadProgress(0);
     setError(null);
     try {
-      await invoke("download_and_install_update");
+      await settingsGateway.invoke("download_and_install_update");
       // L'app si riavvierà automaticamente dopo l'installazione
     } catch (err) {
       console.error("Failed to download/install update:", err);
@@ -87,7 +87,7 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
 
   const dismissUpdate = async () => {
     if (updateInfo) {
-      await invoke("save_config", {
+      await settingsGateway.invoke("save_config", {
         config: { lastDismissedVersion: updateInfo.latestVersion },
       });
       setUpdateInfo(null);
@@ -99,11 +99,11 @@ export const UpdateProvider = ({ children }: { children: ReactNode }) => {
     const performStartupCheck = async () => {
       try {
         // Detect installation source first; managed packages skip built-in updates
-        const source = await invoke<string | null>("get_installation_source");
+        const source = await settingsGateway.invoke<string | null>("get_installation_source");
         setInstallationSource(source ?? null);
         if (source) return;
 
-        const config = await invoke<{ autoCheckUpdatesOnStartup: boolean }>(
+        const config = await settingsGateway.invoke<{ autoCheckUpdatesOnStartup: boolean }>(
           "get_config",
         );
         if (config.autoCheckUpdatesOnStartup !== false) {

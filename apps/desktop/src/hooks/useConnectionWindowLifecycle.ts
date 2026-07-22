@@ -1,5 +1,6 @@
+import { windowGateway } from "../platform/tauri/windowGateway";
 import { useEffect, useRef } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+
 import { useDatabase } from "../features/connections";
 
 /** Label prefix used for dedicated single-connection windows. */
@@ -27,7 +28,7 @@ export function useConnectionWindowLifecycle() {
 
   useEffect(() => {
     const boundId = boundIdRef.current;
-    const label = getCurrentWindow().label;
+    const label = windowGateway.getCurrentWindow().label;
     const isDedicated = label.startsWith(CONNECTION_WINDOW_PREFIX);
     if (!isDedicated || !boundId) return;
 
@@ -36,7 +37,7 @@ export function useConnectionWindowLifecycle() {
       return;
     }
     if (hasBeenOpenRef.current) {
-      void getCurrentWindow().close();
+      void windowGateway.getCurrentWindow().close();
     }
   }, [globallyOpenConnectionIds]);
 }

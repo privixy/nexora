@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { schemaGateway } from "../platform/tauri/schemaGateway";
 import type { DataTypeRegistry } from "../types/dataTypes";
 
 const dataTypesCache = new Map<string, DataTypeRegistry>();
@@ -27,7 +27,7 @@ export function useDataTypes(driver: string | undefined) {
           return;
         }
 
-        const registry = await invoke<DataTypeRegistry>("get_data_types", {
+        const registry = await schemaGateway.invoke<DataTypeRegistry>("get_data_types", {
           driver,
         });
 

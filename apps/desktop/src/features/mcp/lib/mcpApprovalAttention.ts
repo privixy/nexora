@@ -1,9 +1,5 @@
-import { UserAttentionType, getCurrentWindow } from "@tauri-apps/api/window";
-import {
-  isPermissionGranted,
-  requestPermission,
-  sendNotification,
-} from "@tauri-apps/plugin-notification";
+import { notificationAdapter } from "../../../platform/tauri/notificationAdapter";
+import { UserAttentionType, windowGateway } from "../../../platform/tauri/windowGateway";
 
 export interface ApprovalNotificationContent {
   title: string;
@@ -36,7 +32,7 @@ function hasWindowAttentionSnapshot(
 }
 
 async function captureWindowAttentionSnapshot(
-  appWindow: ReturnType<typeof getCurrentWindow>,
+  appWindow: ReturnType<typeof windowGateway.getCurrentWindow>,
 ): Promise<WindowAttentionSnapshot | null> {
   const [alwaysOnTop, visible, minimized] = await Promise.allSettled([
     appWindow.isAlwaysOnTop(),
@@ -72,7 +68,7 @@ function isCurrentApprovalAttention(
 }
 
 export async function focusWindowForApproval(approvalId: string): Promise<void> {
-  const appWindow = getCurrentWindow();
+  const appWindow = windowGateway.getCurrentWindow();
 
   approvalAttentionOwnerId = approvalId;
   const version = ++approvalAttentionVersion;
@@ -141,7 +137,7 @@ export async function restoreWindowAlwaysOnTop(
     return;
   }
 
-  const appWindow = getCurrentWindow();
+  const appWindow = windowGateway.getCurrentWindow();
   const remainingWindowState: WindowAttentionSnapshot = {};
 
   if (previousWindowState.alwaysOnTop !== undefined) {
@@ -208,16 +204,16 @@ function approvalNotificationSound(): string | undefined {
 export async function notifyApprovalRequest(
   content: ApprovalNotificationContent,
 ): Promise<void> {
-  let permissionGranted = await isPermissionGranted().catch(() => false);
+  let permissionGranted = await notificationAdapter.isPermissionGranted().catch(() => false);
   if (!permissionGranted) {
-    const permission = await requestPermission().catch(() => "denied" as const);
+    const permission = await notificationAdapter.requestPermission().catch(() => "denied" as const);
     permissionGranted = permission === "granted";
   }
 
   const sound = approvalNotificationSound();
 
   if (permissionGranted) {
-    sendNotification({
+    notificationAdapter.sendNotification({
       title: content.title,
       body: content.body,
       ...(sound ? { sound } : {}),

@@ -1,7 +1,8 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Settings, X, FolderOpen, RotateCcw } from "lucide-react";
-import { open } from "@tauri-apps/plugin-dialog";
+
 import { Modal } from "../../../../components/ui/Modal";
 import { Select } from "../../../../components/ui/Select";
 import { SlotAnchor } from "../../../../components/ui/SlotAnchor";
@@ -58,7 +59,7 @@ export const PluginSettingsModal = ({
   );
 
   const handleBrowse = async () => {
-    const selected = await open({ multiple: false, directory: false });
+    const selected = await dialogGateway.open({ multiple: false, directory: false });
     if (selected) setInterpreter(selected);
   };
 

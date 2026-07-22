@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { settingsGateway } from "../platform/tauri/settingsGateway";
 import shortcutDefs from "../config/shortcuts.json";
 import {
   mergeShortcuts,
@@ -17,7 +17,7 @@ export const KeybindingsProvider = ({ children }: { children: ReactNode }) => {
   const [overrides, setOverrides] = useState<UserOverrides>({});
 
   useEffect(() => {
-    invoke<UserOverrides>("get_keybindings")
+    settingsGateway.invoke<UserOverrides>("get_keybindings")
       .then((data) => {
         if (data && typeof data === "object") setOverrides(data as UserOverrides);
       })
@@ -47,7 +47,7 @@ export const KeybindingsProvider = ({ children }: { children: ReactNode }) => {
     async (id: string, mac: KeyMatch, win: KeyMatch) => {
       const next = { ...overrides, [id]: { mac, win } };
       setOverrides(next);
-      await invoke("save_keybindings", { keybindings: next });
+      await settingsGateway.invoke("save_keybindings", { keybindings: next });
     },
     [overrides],
   );
@@ -57,7 +57,7 @@ export const KeybindingsProvider = ({ children }: { children: ReactNode }) => {
       const next = { ...overrides };
       delete next[id];
       setOverrides(next);
-      await invoke("save_keybindings", { keybindings: next });
+      await settingsGateway.invoke("save_keybindings", { keybindings: next });
     },
     [overrides],
   );

@@ -8,8 +8,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import { openUrl } from "@tauri-apps/plugin-opener";
-import { invoke } from "@tauri-apps/api/core";
+import { openerAdapter } from "../../../platform/tauri/openerAdapter";
+import { pluginGateway } from "../../../platform/tauri";
 import {
   RefreshCw,
   Loader2,
@@ -166,7 +166,7 @@ function PluginCard({
               {homepage ? (
                 <button
                   type="button"
-                  onClick={() => openUrl(homepage)}
+                  onClick={() => openerAdapter.openUrl(homepage)}
                   className="inline-flex min-w-0 items-center gap-1 text-left text-sm font-semibold text-primary hover:underline underline-offset-2"
                 >
                   <span className="truncate">{name}</span>
@@ -189,7 +189,7 @@ function PluginCard({
                 {parsedAuthor.url ?? homepage ? (
                   <button
                     type="button"
-                    onClick={() => openUrl((parsedAuthor.url ?? homepage)!)}
+                    onClick={() => openerAdapter.openUrl((parsedAuthor.url ?? homepage)!)}
                     className="underline-offset-2 transition-colors hover:text-secondary hover:underline"
                   >
                     {parsedAuthor.name}
@@ -554,7 +554,7 @@ export function PluginsTab({
   }, [registryPlugins, activeFilter, searchQuery]);
 
   useEffect(() => {
-    invoke<Array<{ plugin_id: string; error: string }>>(
+    pluginGateway.invoke<Array<{ plugin_id: string; error: string }>>(
       "get_plugin_startup_errors",
     )
       .then((errors) => {
@@ -591,7 +591,7 @@ export function PluginsTab({
     async (pluginId: string, version: string) => {
       setInstallingPluginId(pluginId);
       try {
-        await invoke("install_plugin", { pluginId, version });
+        await pluginGateway.invoke("install_plugin", { pluginId, version });
         await updateSettingRef.current(
           "activeExternalDrivers",
           Array.from(
@@ -632,7 +632,7 @@ export function PluginsTab({
               [pluginId],
             );
             await Promise.all(toDisconnect.map((id) => disconnect(id)));
-            await invoke("uninstall_plugin", { pluginId });
+            await pluginGateway.invoke("uninstall_plugin", { pluginId });
             const currentSettings = settingsRef.current;
             await updateSettingRef.current(
               "plugins",
@@ -671,13 +671,13 @@ export function PluginsTab({
     async (pluginId: string, pluginName: string, isEnabled: boolean) => {
       try {
         if (isEnabled) {
-          await invoke("disable_plugin", { pluginId });
+          await pluginGateway.invoke("disable_plugin", { pluginId });
           await updateSetting(
             "activeExternalDrivers",
             activeExternalDrivers.filter((id) => id !== pluginId),
           );
         } else {
-          await invoke("enable_plugin", { pluginId });
+          await pluginGateway.invoke("enable_plugin", { pluginId });
           await updateSetting(
             "activeExternalDrivers",
             Array.from(new Set([...activeExternalDrivers, pluginId])),
@@ -984,7 +984,7 @@ export function PluginsTab({
                               enabled={false}
                               onToggle={async () => {
                                 try {
-                                  await invoke("enable_plugin", {
+                                  await pluginGateway.invoke("enable_plugin", {
                                     pluginId: plugin.id,
                                   });
                                   await updateSetting(

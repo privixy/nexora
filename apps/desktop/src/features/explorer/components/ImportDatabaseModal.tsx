@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { dataTransferGateway, listenTauri } from "../../../platform/tauri";
+import { dataTransferGateway } from "../../../platform/tauri/dataTransferGateway";
+import { listenTauri } from "../../../platform/tauri/events";
 
 const invoke = dataTransferGateway.invoke;
 import { useAlert } from "../../../hooks/useAlert";

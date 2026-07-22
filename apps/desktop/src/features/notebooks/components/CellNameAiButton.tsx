@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles, Loader2 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { notebookGateway } from "../../../platform/tauri/notebookGateway";
 import { useSettings } from "../../settings";
 
 interface CellNameAiButtonProps {
@@ -24,7 +24,7 @@ export function CellNameAiButton({
 
     setIsLoading(true);
     try {
-      const name = await invoke<string>("generate_cell_name", {
+      const name = await notebookGateway.invoke<string>("generate_cell_name", {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || "",

@@ -12,7 +12,7 @@ import {
   EyeOff,
   X,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../platform/tauri/connectionGateway";
 import {
   loadSshConnections,
   saveSshConnection,
@@ -284,7 +284,7 @@ export function SshConnectionsManager({
     setDeleteTargetId(id);
     setDeleteUsageCount(0);
     try {
-      const saved = await invoke<SavedConnection[]>("get_connections");
+      const saved = await connectionGateway.invoke<SavedConnection[]>("get_connections");
       setDeleteUsageCount(
         saved.filter((c) => c.params.ssh_connection_id === id).length,
       );

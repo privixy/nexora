@@ -1,7 +1,8 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
+import { pluginGateway } from "../../../platform/tauri";
+
 import { FolderOpen, Check, RotateCcw } from "lucide-react";
 import { SettingSection, SettingRow, useSettings } from "../../settings";
 import { findConnectionsForDrivers, useDatabase } from "../../connections";
@@ -32,7 +33,7 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
 
   useEffect(() => {
     if (manifest) return;
-    invoke<PluginManifest>("get_plugin_manifest", { pluginId })
+    pluginGateway.invoke<PluginManifest>("get_plugin_manifest", { pluginId })
       .then((m) => setManifest(m))
       .catch(() => setManifest(undefined))
       .finally(() => setLoading(false));
@@ -91,7 +92,7 @@ function PluginSettingsForm({ pluginId, manifest }: PluginSettingsFormProps) {
   );
 
   const handleBrowse = async () => {
-    const selected = await open({ multiple: false, directory: false });
+    const selected = await dialogGateway.open({ multiple: false, directory: false });
     if (selected) setInterpreter(selected);
   };
 
@@ -152,8 +153,8 @@ function PluginSettingsForm({ pluginId, manifest }: PluginSettingsFormProps) {
       await Promise.all(toDisconnect.map((connectionId) => disconnect(connectionId)));
     } else if (isRunning) {
       try {
-        await invoke("disable_plugin", { pluginId });
-        await invoke("enable_plugin", { pluginId });
+        await pluginGateway.invoke("disable_plugin", { pluginId });
+        await pluginGateway.invoke("enable_plugin", { pluginId });
         refreshDrivers();
       } catch {
         /* settings saved, restart failed – user can retry via Plugins tab */

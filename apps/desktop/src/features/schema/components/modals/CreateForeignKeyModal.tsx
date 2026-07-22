@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Save, Loader2, AlertTriangle, Link } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDatabase } from '../../../connections';
 import { useDrivers } from '../../../plugins';
@@ -74,8 +74,8 @@ export const CreateForeignKeyModal = ({
           ...(resolvedSchema ? { schema: resolvedSchema } : {}),
         };
         Promise.all([
-            invoke<TableInfo[]>('get_tables', { connectionId, ...contextParams }),
-            invoke<TableColumn[]>('get_columns', { connectionId, tableName, ...contextParams })
+            schemaGateway.invoke<TableInfo[]>('get_tables', { connectionId, ...contextParams }),
+            schemaGateway.invoke<TableColumn[]>('get_columns', { connectionId, tableName, ...contextParams })
         ]).then(([tbls, cols]) => {
             setTables(tbls);
             setLocalColumns(cols);
@@ -88,7 +88,7 @@ export const CreateForeignKeyModal = ({
   useEffect(() => {
       if (refTable && isOpen) {
           setFetchingRefCols(true);
-          invoke<TableColumn[]>('get_columns', {
+          schemaGateway.invoke<TableColumn[]>('get_columns', {
             connectionId,
             tableName: refTable,
             ...(database ? { database } : {}),
@@ -117,7 +117,7 @@ export const CreateForeignKeyModal = ({
       return;
     }
     try {
-      const stmts = await invoke<string[]>('get_create_foreign_key_sql', {
+      const stmts = await schemaGateway.invoke<string[]>('get_create_foreign_key_sql', {
         connectionId,
         table: tableName,
         fkName,
@@ -145,7 +145,7 @@ export const CreateForeignKeyModal = ({
       setLoading(true);
       setError('');
       try {
-          const stmts = await invoke<string[]>('get_create_foreign_key_sql', {
+          const stmts = await schemaGateway.invoke<string[]>('get_create_foreign_key_sql', {
             connectionId,
             table: tableName,
             fkName,
@@ -157,7 +157,7 @@ export const CreateForeignKeyModal = ({
             ...(resolvedSchema ? { schema: resolvedSchema } : {}),
           });
           for (const sql of stmts) {
-            await invoke('execute_query', {
+            await schemaGateway.invoke('execute_query', {
               connectionId,
               query: sql,
               ...(database ? { database } : {}),

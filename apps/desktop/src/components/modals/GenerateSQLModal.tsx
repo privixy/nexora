@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import {X, Loader2, Copy, Check, FileCode, List, Table2, PenLine, Trash2, Play} from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../platform/tauri/queryGateway";
 import { useNavigate } from "react-router-dom";
 import { useDatabase } from "../../features/connections";
 import { Modal } from "../ui/Modal";
@@ -55,17 +55,17 @@ export const GenerateSQLModal = ({
           ...(resolvedSchema ? { schema: resolvedSchema } : {}),
         };
         const [fetchedColumns, foreignKeys, indexes] = await Promise.all([
-          invoke<TableColumn[]>("get_columns", {
+          queryGateway.invoke<TableColumn[]>("get_columns", {
             connectionId: activeConnectionId,
             tableName,
             ...contextParams,
           }),
-          invoke<ForeignKey[]>("get_foreign_keys", {
+          queryGateway.invoke<ForeignKey[]>("get_foreign_keys", {
             connectionId: activeConnectionId,
             tableName,
             ...contextParams,
           }),
-          invoke<Index[]>("get_indexes", {
+          queryGateway.invoke<Index[]>("get_indexes", {
             connectionId: activeConnectionId,
             tableName,
             ...contextParams,

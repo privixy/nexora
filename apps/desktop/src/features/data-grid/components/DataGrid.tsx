@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
-import { recordGateway } from "../../../platform/tauri";
+import { recordGateway } from "../../../platform/tauri/recordGateway";
 import { useAlert } from "../../../hooks/useAlert";
 import {
   USE_DEFAULT_SENTINEL,

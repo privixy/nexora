@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Loader2, Key, Table2 } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useDatabase } from '../../../connections';
 import { Modal } from '../../../../components/ui/Modal';
 
@@ -35,7 +35,7 @@ export const SchemaModal = ({ isOpen, onClose, tableName, database, schema }: Sc
       setLoading(true);
       setError('');
       try {
-        const cols = await invoke<TableColumn[]>('get_columns', {
+        const cols = await schemaGateway.invoke<TableColumn[]>('get_columns', {
           connectionId: activeConnectionId,
           tableName,
           ...(database ? { database } : {}),

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Save, Loader2, ListTree, AlertTriangle } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDatabase } from '../../../connections';
 import { Modal } from '../../../../components/ui/Modal';
@@ -49,7 +49,7 @@ export const CreateIndexModal = ({
         setIsUnique(false);
         setError('');
 
-        invoke<TableColumn[]>('get_columns', {
+        schemaGateway.invoke<TableColumn[]>('get_columns', {
           connectionId,
           tableName,
           ...(database ? { database } : {}),
@@ -77,7 +77,7 @@ export const CreateIndexModal = ({
       return;
     }
     try {
-      const stmts = await invoke<string[]>('get_create_index_sql', {
+      const stmts = await schemaGateway.invoke<string[]>('get_create_index_sql', {
         connectionId,
         table: tableName,
         indexName,
@@ -103,7 +103,7 @@ export const CreateIndexModal = ({
       setLoading(true);
       setError('');
       try {
-          const stmts = await invoke<string[]>('get_create_index_sql', {
+          const stmts = await schemaGateway.invoke<string[]>('get_create_index_sql', {
             connectionId,
             table: tableName,
             indexName,
@@ -112,7 +112,7 @@ export const CreateIndexModal = ({
             ...(resolvedSchema ? { schema: resolvedSchema } : {}),
           });
           for (const sql of stmts) {
-            await invoke('execute_query', {
+            await schemaGateway.invoke('execute_query', {
               connectionId,
               query: sql,
               ...(database ? { database } : {}),

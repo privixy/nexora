@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { connectionGateway } from "../platform/tauri/connectionGateway";
+import { listenTauri } from "../platform/tauri/events";
 import type { SshAskpassRequest } from "../types/askpass";
 
 const REQUEST_EVENT = "ssh-askpass://request";
@@ -24,13 +24,13 @@ export function useSshAskpass(): UseSshAskpassResult {
   const [queue, setQueue] = useState<SshAskpassRequest[]>([]);
 
   useEffect(() => {
-    const unlistenRequest = listen<SshAskpassRequest>(REQUEST_EVENT, (event) => {
-      setQueue((prev) => [...prev, event.payload]);
+    const unlistenRequest = listenTauri<SshAskpassRequest>(REQUEST_EVENT, (payload) => {
+      setQueue((prev) => [...prev, payload]);
     });
     // The backend dismisses prompts that timed out or whose security-key
     // notification was satisfied (key touched).
-    const unlistenDismiss = listen<number>(DISMISS_EVENT, (event) => {
-      setQueue((prev) => prev.filter((r) => r.id !== event.payload));
+    const unlistenDismiss = listenTauri<number>(DISMISS_EVENT, (payload) => {
+      setQueue((prev) => prev.filter((r) => r.id !== payload));
     });
     return () => {
       unlistenRequest.then((fn) => fn()).catch(() => {});
@@ -40,7 +40,7 @@ export function useSshAskpass(): UseSshAskpassResult {
 
   const respond = useCallback(async (id: number, response: string | null) => {
     setQueue((prev) => prev.filter((r) => r.id !== id));
-    await invoke("respond_ssh_askpass", { id, response });
+    await connectionGateway.invoke("respond_ssh_askpass", { id, response });
   }, []);
 
   const dismiss = useCallback((id: number) => {

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, X, Table, Eye, Code2, Zap, Database, Play, Copy, Hash, FileText, FileCode } from "lucide-react";
-import { dataTransferGateway } from "../../../platform/tauri";
+import { dataTransferGateway } from "../../../platform/tauri/dataTransferGateway";
 import { useDatabase } from "../../connections";
 import { useAlert } from "../../../hooks/useAlert";
 import { quoteTableRef } from "../../../utils/identifiers";

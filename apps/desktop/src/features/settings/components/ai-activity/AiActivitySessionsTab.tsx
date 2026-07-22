@@ -1,3 +1,5 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../../platform/tauri/fileGateway";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -8,8 +10,8 @@ import {
   RefreshCw,
   Search,
 } from "lucide-react";
-import { save as saveDialog } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+
+
 import {
   exportSessionAsNotebook,
   useAiSessionEvents,
@@ -181,7 +183,7 @@ function SessionCard({ session, expanded, onToggle }: SessionCardProps) {
     try {
       const exp = await exportSessionAsNotebook(session.sessionId);
       const file = notebookFileFromExport(exp);
-      const target = await saveDialog({
+      const target = await dialogGateway.save({
         defaultPath: defaultExportFilename(session.sessionId, exp, settings.displayTimezone),
         filters: [
           {
@@ -191,7 +193,7 @@ function SessionCard({ session, expanded, onToggle }: SessionCardProps) {
         ],
       });
       if (typeof target === "string" && target.length > 0) {
-        await writeTextFile(target, JSON.stringify(file, null, 2));
+        await fileGateway.writeTextFile(target, JSON.stringify(file, null, 2));
         showAlert(t("aiActivity.exportSuccess", { path: target }), {
           kind: "info",
         });

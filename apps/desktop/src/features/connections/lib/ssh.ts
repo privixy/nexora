@@ -3,7 +3,7 @@
  * Extracted for testability and reusability
  */
 
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../platform/tauri/connectionGateway";
 
 export interface SshConnection {
   id: string;
@@ -24,7 +24,7 @@ export interface SshConnection {
  */
 export async function loadSshConnections(): Promise<SshConnection[]> {
   try {
-    return await invoke<SshConnection[]>("get_ssh_connections");
+    return await connectionGateway.invoke<SshConnection[]>("get_ssh_connections");
   } catch (error) {
     console.error("Failed to load SSH connections:", error);
     return [];
@@ -60,7 +60,7 @@ export async function saveSshConnection(
   name: string,
   ssh: Partial<SshConnection>
 ): Promise<SshConnection> {
-  return await invoke<SshConnection>("save_ssh_connection", {
+  return await connectionGateway.invoke<SshConnection>("save_ssh_connection", {
     name,
     ssh: normalizeSshParams(ssh)
   });
@@ -74,7 +74,7 @@ export async function updateSshConnection(
   name: string,
   ssh: Partial<SshConnection>
 ): Promise<SshConnection> {
-  return await invoke<SshConnection>("update_ssh_connection", {
+  return await connectionGateway.invoke<SshConnection>("update_ssh_connection", {
     id,
     name,
     ssh: normalizeSshParams(ssh)
@@ -85,7 +85,7 @@ export async function updateSshConnection(
  * Delete an SSH connection
  */
 export async function deleteSshConnection(id: string): Promise<void> {
-  await invoke("delete_ssh_connection", { id });
+  await connectionGateway.invoke("delete_ssh_connection", { id });
 }
 
 /**
@@ -96,7 +96,7 @@ export async function deleteSshConnection(id: string): Promise<void> {
 export async function testSshConnection(
   ssh: Partial<SshConnection>
 ): Promise<string> {
-  return await invoke<string>("test_ssh_connection", {
+  return await connectionGateway.invoke<string>("test_ssh_connection", {
     ssh: {
       ...normalizeSshParams(ssh),
       connection_id: ssh.id

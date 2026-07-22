@@ -11,7 +11,8 @@ import {
   Upload,
   FileCode,
 } from "lucide-react";
-import { dialogGateway, fileGateway } from "../../../../platform/tauri";
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../../platform/tauri/fileGateway";
 
 const { save, open } = dialogGateway;
 const { writeTextFile, readTextFile } = fileGateway;

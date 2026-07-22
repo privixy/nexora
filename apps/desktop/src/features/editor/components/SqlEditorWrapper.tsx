@@ -3,7 +3,7 @@ import MonacoEditor, { type OnMount, type BeforeMount } from "@monaco-editor/rea
 import type * as Monaco from "monaco-editor";
 import { useEditorTheme } from "../../settings";
 import { loadMonacoTheme } from "../../../themes/themeUtils";
-import { clipboardAdapter } from "../../../platform/tauri";
+import { clipboardAdapter } from "../../../platform/tauri/clipboardAdapter";
 import { useSettings } from "../../settings";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import { getFontCSS } from "../../../utils/settings";

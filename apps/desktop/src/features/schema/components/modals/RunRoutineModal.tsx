@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Play, Variable } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { Modal } from "../../../../components/ui/Modal";
 import type { RoutineInfo } from "../../../connections";
 import {
@@ -45,7 +45,7 @@ export const RunRoutineModal = ({
     let cancelled = false;
     setIsLoading(true);
     setError("");
-    invoke<RoutineParameterInfo[]>("get_routine_parameters", {
+    schemaGateway.invoke<RoutineParameterInfo[]>("get_routine_parameters", {
       connectionId,
       routineName: routine.name,
       ...(database ? { database } : {}),
@@ -91,7 +91,7 @@ export const RunRoutineModal = ({
     setError("");
     try {
       const args = buildRoutineCallArgs(parameters, inputs);
-      const sql = await invoke<string>("build_routine_call_sql", {
+      const sql = await schemaGateway.invoke<string>("build_routine_call_sql", {
         connectionId,
         routineName: routine.name,
         routineType: routine.routine_type,

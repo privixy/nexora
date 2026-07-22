@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import { listenTauri, windowGateway } from "../../../platform/tauri";
+import { listenTauri } from "../../../platform/tauri/events";
+import { windowGateway } from "../../../platform/tauri/windowGateway";
 import { buildPkMap, serializePkKey } from "../lib/dataGrid";
 
 interface JsonViewerSession {

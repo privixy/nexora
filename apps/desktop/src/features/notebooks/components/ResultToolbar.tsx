@@ -1,6 +1,8 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../platform/tauri/fileGateway";
 import { useTranslation } from "react-i18next";
-import { save } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+
+
 import { Download } from "lucide-react";
 import type { QueryResult } from "../../../types/editor";
 import { resultToCsv, resultToJson } from "../../notebooks/lib/notebookExport";
@@ -18,23 +20,23 @@ export function ResultToolbar({ result, executionTime }: ResultToolbarProps) {
   const { t } = useTranslation();
 
   const handleExportCsv = async () => {
-    const filePath = await save({
+    const filePath = await dialogGateway.save({
       defaultPath: "result.csv",
       filters: [{ name: "CSV", extensions: ["csv"] }],
     });
     if (!filePath) return;
     const csv = resultToCsv(result);
-    await writeTextFile(filePath, csv);
+    await fileGateway.writeTextFile(filePath, csv);
   };
 
   const handleExportJson = async () => {
-    const filePath = await save({
+    const filePath = await dialogGateway.save({
       defaultPath: "result.json",
       filters: [{ name: "JSON", extensions: ["json"] }],
     });
     if (!filePath) return;
     const json = resultToJson(result);
-    await writeTextFile(filePath, json);
+    await fileGateway.writeTextFile(filePath, json);
   };
 
   return (

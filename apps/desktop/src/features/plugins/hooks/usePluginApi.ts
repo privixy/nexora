@@ -1,7 +1,8 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 import { useState, useCallback, useContext, useMemo } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { message } from "@tauri-apps/plugin-dialog";
-import { openUrl as openExternal } from "@tauri-apps/plugin-opener";
+import { pluginGateway } from "../../../platform/tauri";
+
+import { openerAdapter } from "../../../platform/tauri";
 import { useTranslation } from "react-i18next";
 
 import { ThemeContext, SettingsContext } from "../../settings";
@@ -28,7 +29,7 @@ export function usePluginQuery() {
       setError(null);
 
       try {
-        const result = await invoke<{ columns: string[]; rows: unknown[][] }>("execute_query", {
+        const result = await pluginGateway.invoke<{ columns: string[]; rows: unknown[][] }>("execute_query", {
           connectionId: dbCtx.activeConnectionId,
           query,
           ...(dbCtx.activeSchema ? { schema: dbCtx.activeSchema } : {}),
@@ -69,15 +70,15 @@ export function usePluginConnection() {
  */
 export function usePluginToast() {
   const showInfo = useCallback(async (text: string) => {
-    await message(text, { kind: "info" });
+    await dialogGateway.message(text, { kind: "info" });
   }, []);
 
   const showError = useCallback(async (text: string) => {
-    await message(text, { kind: "error" });
+    await dialogGateway.message(text, { kind: "error" });
   }, []);
 
   const showWarning = useCallback(async (text: string) => {
-    await message(text, { kind: "warning" });
+    await dialogGateway.message(text, { kind: "warning" });
   }, []);
 
   return useMemo(() => ({ showInfo, showError, showWarning }), [showInfo, showError, showWarning]);
@@ -156,7 +157,7 @@ export function usePluginTranslation(pluginId: string) {
  * Plugin components should use this instead of window.open for external URLs.
  */
 export async function openUrl(url: string): Promise<void> {
-  await openExternal(url);
+  await openerAdapter.openUrl(url);
 }
 
 /**

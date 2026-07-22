@@ -23,7 +23,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import clsx from "clsx";
-import { queryGateway } from "../../../platform/tauri";
+import { queryGateway } from "../../../platform/tauri/queryGateway";
 import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
 import { StackedResultItem } from "../../../components/ui/StackedResultItem";
 import { ContextMenu } from "../../../components/ui/ContextMenu";

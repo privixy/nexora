@@ -1,8 +1,10 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../platform/tauri/fileGateway";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
-import { save, open } from "@tauri-apps/plugin-dialog";
-import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
+import { notebookGateway } from "../../../platform/tauri";
+
+
 import { BookOpen, Loader2 } from "lucide-react";
 import type { Tab, QueryResult } from "../../../types/editor";
 import type {
@@ -374,7 +376,7 @@ export function NotebookView({
 
       const start = performance.now();
       try {
-        const res = await invoke<QueryResult>("execute_query", {
+        const res = await notebookGateway.invoke<QueryResult>("execute_query", {
           connectionId,
           query: resolvedSql,
           limit: pageSize,
@@ -494,7 +496,7 @@ export function NotebookView({
     try {
       const notebookFile = serializeNotebook(tab.title, cellsRef.current, params, stopOnError);
       const safeName = tab.title.replace(/[^a-zA-Z0-9_-]/g, "_");
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         defaultPath: `${safeName}.nexora-notebook`,
         filters: [
           { name: "Nexora Notebook", extensions: ["nexora-notebook"] },
@@ -502,7 +504,7 @@ export function NotebookView({
       });
       if (!filePath) return;
 
-      await writeTextFile(filePath, JSON.stringify(notebookFile, null, 2));
+      await fileGateway.writeTextFile(filePath, JSON.stringify(notebookFile, null, 2));
       showAlert(t("editor.notebook.exportSuccess"), { kind: "info" });
     } catch (e) {
       console.error("Notebook export failed:", e);
@@ -518,13 +520,13 @@ export function NotebookView({
     try {
       const html = exportNotebookToHtml(tab.title, cellsRef.current);
       const safeName = tab.title.replace(/[^a-zA-Z0-9_-]/g, "_");
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         defaultPath: `${safeName}.html`,
         filters: [{ name: "HTML", extensions: ["html"] }],
       });
       if (!filePath) return;
 
-      await writeTextFile(filePath, html);
+      await fileGateway.writeTextFile(filePath, html);
       showAlert(t("editor.notebook.exportSuccess"), { kind: "info" });
     } catch (e) {
       console.error("HTML export failed:", e);
@@ -537,7 +539,7 @@ export function NotebookView({
   }, [tab.title, showAlert, t]);
 
   const handleImport = useCallback(async () => {
-    const filePath = await open({
+    const filePath = await dialogGateway.open({
       filters: [
         { name: "Nexora Notebook", extensions: ["nexora-notebook"] },
       ],
@@ -545,7 +547,7 @@ export function NotebookView({
     if (!filePath || typeof filePath !== "string") return;
 
     try {
-      const content = await readTextFile(filePath);
+      const content = await fileGateway.readTextFile(filePath);
       const { title, cells: importedCells, params: importedParams, stopOnError: importedStopOnError } = deserializeNotebook(content);
       const importedState: NotebookState = {
         cells: importedCells,

@@ -11,7 +11,7 @@ import {
   WrapText,
   X,
 } from "lucide-react";
-import { windowGateway } from "../../../platform/tauri";
+import { windowGateway } from "../../../platform/tauri/windowGateway";
 import {
   formatJsonForEditor,
   parseJsonEditorValue,

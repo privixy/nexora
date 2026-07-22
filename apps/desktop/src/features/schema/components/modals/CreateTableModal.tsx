@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Plus, Trash2, Save, Loader2, AlertTriangle } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useDatabase } from '../../../connections';
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDataTypes } from '../../../../hooks/useDataTypes';
@@ -70,7 +70,7 @@ export const CreateTableModal = ({ isOpen, onClose, onSuccess, database, schema 
         default_value: col.defaultValue || null,
       }));
 
-      const stmts = await invoke<string[]>('get_create_table_sql', {
+      const stmts = await schemaGateway.invoke<string[]>('get_create_table_sql', {
         connectionId: activeConnectionId,
         tableName,
         columns: colDefs,
@@ -129,7 +129,7 @@ export const CreateTableModal = ({ isOpen, onClose, onSuccess, database, schema 
           default_value: col.defaultValue || null,
         }));
 
-        const stmts = await invoke<string[]>('get_create_table_sql', {
+        const stmts = await schemaGateway.invoke<string[]>('get_create_table_sql', {
           connectionId: activeConnectionId,
           tableName,
           columns: colDefs,
@@ -137,7 +137,7 @@ export const CreateTableModal = ({ isOpen, onClose, onSuccess, database, schema 
         });
 
         for (const sql of stmts) {
-          await invoke('execute_query', {
+          await schemaGateway.invoke('execute_query', {
             connectionId: activeConnectionId,
             query: sql,
             ...(database ? { database } : {}),

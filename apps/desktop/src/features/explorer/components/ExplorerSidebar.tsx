@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { quoteTableRef } from "../../../utils/identifiers";
-import { dataTransferGateway, dialogGateway } from "../../../platform/tauri";
+import { dataTransferGateway } from "../../../platform/tauri/dataTransferGateway";
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 import {
   Database,
   Plus,

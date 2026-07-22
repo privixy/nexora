@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../platform/tauri/connectionGateway";
 import { useDatabase } from "./useDatabase";
 import type { SavedConnection } from "..";
 
@@ -25,15 +25,15 @@ export function useOpenConnectionInNewWindow() {
       // is already open somewhere (then it's known-good and the window either
       // reuses the warm pool or just gets focused).
       if (!isConnectionOpenAnywhere(connectionId)) {
-        const connections = await invoke<SavedConnection[]>("get_connections");
+        const connections = await connectionGateway.invoke<SavedConnection[]>("get_connections");
         const conn = connections.find((c) => c.id === connectionId);
         if (!conn) throw new Error("Connection not found");
-        await invoke<string>("test_connection", {
+        await connectionGateway.invoke<string>("test_connection", {
           request: { params: conn.params, connection_id: connectionId },
         });
       }
 
-      await invoke("open_connection_window", {
+      await connectionGateway.invoke("open_connection_window", {
         connectionId,
         title: name ?? null,
       });

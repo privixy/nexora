@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
+import { settingsGateway } from "../../../platform/tauri/settingsGateway";
+import { listenTauri } from "../../../platform/tauri";
 import type {
   AiActivityEvent,
   AiEventFilter,
@@ -40,7 +40,7 @@ export function useAiActivityEvents(
     setLoading(true);
     setError(null);
     try {
-      const data = await invoke<AiActivityEvent[]>("get_ai_activity", {
+      const data = await settingsGateway.invoke<AiActivityEvent[]>("get_ai_activity", {
         filter: stableFilter,
       });
       setEvents(data);
@@ -78,7 +78,7 @@ export function useAiSessions(): UseAiSessionsResult {
     setLoading(true);
     setError(null);
     try {
-      const data = await invoke<AiSessionSummary[]>("get_ai_sessions");
+      const data = await settingsGateway.invoke<AiSessionSummary[]>("get_ai_sessions");
       setSessions(data);
     } catch (err) {
       setError(String(err));
@@ -117,7 +117,7 @@ export function useAiSessionEvents(
       setLoading(true);
       setError(null);
       try {
-        const data = await invoke<AiActivityEvent[]>("get_ai_session_events", {
+        const data = await settingsGateway.invoke<AiActivityEvent[]>("get_ai_session_events", {
           sessionId: id,
         });
         if (!isCancelled()) {
@@ -172,7 +172,7 @@ export function usePendingApprovals(): UsePendingApprovalsResult {
     setLoading(true);
     setError(null);
     try {
-      const data = await invoke<PendingApproval[]>("list_pending_approvals");
+      const data = await settingsGateway.invoke<PendingApproval[]>("list_pending_approvals");
       setPending(data);
     } catch (err) {
       setError(String(err));
@@ -184,7 +184,7 @@ export function usePendingApprovals(): UsePendingApprovalsResult {
 
   useEffect(() => {
     refetch();
-    const unlisten = listen<PendingApproval>(PENDING_APPROVAL_EVENT, () => {
+    const unlisten = listenTauri<PendingApproval>(PENDING_APPROVAL_EVENT, () => {
       refetchRef.current();
     });
     return () => {
@@ -199,7 +199,7 @@ export function usePendingApprovals(): UsePendingApprovalsResult {
       reason,
       editedQuery,
     }: ApprovalDecisionPayload) => {
-      await invoke("decide_pending_approval", {
+      await settingsGateway.invoke("decide_pending_approval", {
         approvalId,
         decision,
         reason,
@@ -220,21 +220,21 @@ export function usePendingApprovals(): UsePendingApprovalsResult {
 // ---------------------------------------------------------------------------
 
 export async function clearAiActivity(): Promise<void> {
-  await invoke("clear_ai_activity");
+  await settingsGateway.invoke("clear_ai_activity");
 }
 
 export async function exportAiActivityJson(): Promise<string> {
-  return invoke<string>("export_ai_activity_json");
+  return settingsGateway.invoke<string>("export_ai_activity_json");
 }
 
 export async function exportAiActivityCsv(): Promise<string> {
-  return invoke<string>("export_ai_activity_csv");
+  return settingsGateway.invoke<string>("export_ai_activity_csv");
 }
 
 export async function exportSessionAsNotebook(
   sessionId: string,
 ): Promise<AiNotebookExport> {
-  return invoke<AiNotebookExport>("export_ai_session_as_notebook", {
+  return settingsGateway.invoke<AiNotebookExport>("export_ai_session_as_notebook", {
     sessionId,
   });
 }

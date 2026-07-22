@@ -3,7 +3,7 @@
  * Manages kubectl port-forward tunnel configurations
  */
 
-import { invoke } from "@tauri-apps/api/core";
+import { connectionGateway } from "../../../platform/tauri/connectionGateway";
 
 export interface K8sConnection {
   id: string;
@@ -29,7 +29,7 @@ export interface K8sConnectionInput {
  */
 export async function loadK8sConnections(): Promise<K8sConnection[]> {
   try {
-    return await invoke<K8sConnection[]>("get_k8s_connections");
+    return await connectionGateway.invoke<K8sConnection[]>("get_k8s_connections");
   } catch (error) {
     console.error("Failed to load K8s connections:", error);
     return [];
@@ -42,7 +42,7 @@ export async function loadK8sConnections(): Promise<K8sConnection[]> {
 export async function saveK8sConnection(
   k8s: K8sConnectionInput
 ): Promise<K8sConnection> {
-  return await invoke<K8sConnection>("save_k8s_connection", { k8s });
+  return await connectionGateway.invoke<K8sConnection>("save_k8s_connection", { k8s });
 }
 
 /**
@@ -52,14 +52,14 @@ export async function updateK8sConnection(
   id: string,
   k8s: K8sConnectionInput
 ): Promise<K8sConnection> {
-  return await invoke<K8sConnection>("update_k8s_connection", { id, k8s });
+  return await connectionGateway.invoke<K8sConnection>("update_k8s_connection", { id, k8s });
 }
 
 /**
  * Delete a K8s connection
  */
 export async function deleteK8sConnection(id: string): Promise<void> {
-  await invoke("delete_k8s_connection", { id });
+  await connectionGateway.invoke("delete_k8s_connection", { id });
 }
 
 /**
@@ -69,21 +69,21 @@ export async function testK8sConnection(
   context: string,
   namespace: string
 ): Promise<string> {
-  return await invoke<string>("test_k8s_connection_cmd", { context, namespace });
+  return await connectionGateway.invoke<string>("test_k8s_connection_cmd", { context, namespace });
 }
 
 /**
  * List available kubectl contexts
  */
 export async function getK8sContexts(): Promise<string[]> {
-  return await invoke<string[]>("get_k8s_contexts_cmd");
+  return await connectionGateway.invoke<string[]>("get_k8s_contexts_cmd");
 }
 
 /**
  * List namespaces in a kubectl context
  */
 export async function getK8sNamespaces(context: string): Promise<string[]> {
-  return await invoke<string[]>("get_k8s_namespaces_cmd", { context });
+  return await connectionGateway.invoke<string[]>("get_k8s_namespaces_cmd", { context });
 }
 
 /**
@@ -94,7 +94,7 @@ export async function getK8sResources(
   namespace: string,
   resourceType: string
 ): Promise<string[]> {
-  return await invoke<string[]>("get_k8s_resources_cmd", {
+  return await connectionGateway.invoke<string[]>("get_k8s_resources_cmd", {
     context,
     namespace,
     resourceType,
@@ -110,7 +110,7 @@ export async function getK8sResourcePorts(
   resourceType: string,
   resourceName: string,
 ): Promise<number[]> {
-  return await invoke<number[]>("get_k8s_resource_ports_cmd", {
+  return await connectionGateway.invoke<number[]>("get_k8s_resource_ports_cmd", {
     context,
     namespace,
     resourceType,

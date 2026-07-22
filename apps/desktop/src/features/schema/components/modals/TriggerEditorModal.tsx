@@ -1,8 +1,9 @@
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Zap, AlertCircle } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { ask } from "@tauri-apps/plugin-dialog";
+import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
+
 import { useAlert } from "../../../../hooks/useAlert";
 import { Modal } from "../../../../components/ui/Modal";
 import { SqlEditorWrapper } from "../../../editor";
@@ -75,7 +76,7 @@ export const TriggerEditorModal = ({
     setLoading(true);
     setError(null);
     try {
-      const def = await invoke<string>("get_trigger_definition", {
+      const def = await schemaGateway.invoke<string>("get_trigger_definition", {
         connectionId,
         triggerName: tName,
         tableName: tTable,
@@ -151,14 +152,14 @@ export const TriggerEditorModal = ({
     }
 
     if (!isNewTrigger) {
-      const confirmed = await ask(
+      const confirmed = await dialogGateway.ask(
         t("triggers.confirmRecreate", { trigger: name }),
         { title: t("triggers.recreateTrigger"), kind: "warning" }
       );
       if (!confirmed) return;
 
       try {
-        await invoke("drop_trigger", {
+        await schemaGateway.invoke("drop_trigger", {
           connectionId,
           triggerName: name,
           tableName,
@@ -174,7 +175,7 @@ export const TriggerEditorModal = ({
     setSaving(true);
     setError(null);
     try {
-      await invoke("create_trigger", {
+      await schemaGateway.invoke("create_trigger", {
         connectionId,
         triggerSql: sql,
         ...(database ? { database } : {}),

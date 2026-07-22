@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { openUrl } from "@tauri-apps/plugin-opener";
-import { invoke } from "@tauri-apps/api/core";
+import { openerAdapter } from "../../../platform/tauri/openerAdapter";
+import { settingsGateway } from "../../../platform/tauri";
 import {
   CheckCircle2,
   Circle,
@@ -232,7 +232,7 @@ export function InfoTab() {
                 return (
                   <button
                     key={i}
-                    onClick={() => openUrl(url)}
+                    onClick={() => openerAdapter.openUrl(url)}
                     className="w-full p-4 flex items-center gap-3 hover:bg-surface-secondary/30 transition-colors group cursor-pointer"
                   >
                     {content}
@@ -260,7 +260,7 @@ export function InfoTab() {
         description={t("taskManager.header.description")}
         action={
           <button
-            onClick={() => invoke("open_task_manager_window")}
+            onClick={() => settingsGateway.invoke("open_task_manager_window")}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-500/15 border border-blue-500/25 text-blue-400 hover:bg-blue-500/25 transition-colors"
           >
             <Activity size={14} />

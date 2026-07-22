@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { X, Sparkles, Loader2 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
+import { aiGateway } from "../../../platform/tauri/aiGateway";
 import { useDatabase } from "../../connections";
 import { useSettings } from "../../settings";
 import { Modal } from "../../../components/ui/Modal";
@@ -50,7 +50,7 @@ export const AiQueryModal = ({
       return inFlightSchemaLoad.current.promise;
     }
 
-    const promise = invoke<string>("get_ai_schema_context", {
+    const promise = aiGateway.invoke<string>("get_ai_schema_context", {
       connectionId: resolvedConnectionId,
       ...(resolvedSchema ? { schema: resolvedSchema } : {}),
     });
@@ -106,7 +106,7 @@ export const AiQueryModal = ({
         schemaLoad.key === schemaKey && schemaLoad.error === null
           ? schemaLoad.context
           : await loadSchema();
-      const sql = await invoke<string>("generate_ai_query", {
+      const sql = await aiGateway.invoke<string>("generate_ai_query", {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || "", // Default fallback handled by backend (first model in list)

@@ -1,4 +1,4 @@
-import { openUrl } from "@tauri-apps/plugin-opener";
+import { openerAdapter } from "../../platform/tauri/openerAdapter";
 import { ExternalLink, Library, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Modal } from "../ui/Modal";
@@ -96,7 +96,7 @@ export function OpenSourceLibrariesModal({
                         </span>
                         <button
                           onClick={() =>
-                            openUrl(
+                            openerAdapter.openUrl(
                               getOpenSourceLibraryUrl(
                                 section.ecosystem,
                                 library.name,

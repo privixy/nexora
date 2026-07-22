@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FileJson, X, Loader2, RotateCcw } from "lucide-react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../platform/tauri/queryGateway";
 import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
 import { loadMonacoTheme } from "../../themes/themeUtils";
 import { Modal } from "../ui/Modal";
@@ -27,7 +27,7 @@ export const ConfigJsonModal = ({ isOpen, onClose }: ConfigJsonModalProps) => {
     if (!isOpen) return;
     setIsLoading(true);
     setError(null);
-    invoke<string>("get_config_json")
+    queryGateway.invoke<string>("get_config_json")
       .then((json) => setJsonValue(json))
       .catch((e) => setError(String(e)))
       .finally(() => setIsLoading(false));
@@ -42,7 +42,7 @@ export const ConfigJsonModal = ({ isOpen, onClose }: ConfigJsonModalProps) => {
     setError(null);
     setIsSaving(true);
     try {
-      await invoke("save_config_json", { json: jsonValue });
+      await queryGateway.invoke("save_config_json", { json: jsonValue });
       setShowRestartConfirm(true);
     } catch (e) {
       setError(String(e));
@@ -52,7 +52,7 @@ export const ConfigJsonModal = ({ isOpen, onClose }: ConfigJsonModalProps) => {
   };
 
   const handleRestartNow = () => {
-    invoke("relaunch_app");
+    queryGateway.invoke("relaunch_app");
   };
 
   const handleRestartLater = () => {

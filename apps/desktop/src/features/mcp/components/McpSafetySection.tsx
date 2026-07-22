@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
+import { mcpGateway } from "../../../platform/tauri/mcpGateway";
 import { ShieldCheck, Lock } from "lucide-react";
 import { useSettings } from "../../settings";
 import {
@@ -24,7 +24,7 @@ export function McpSafetySection() {
   const [connections, setConnections] = useState<ConnectionItem[]>([]);
 
   useEffect(() => {
-    invoke<ConnectionItem[]>("get_connections")
+    mcpGateway.invoke<ConnectionItem[]>("get_connections")
       .then((list) => setConnections(list.map((c) => ({ id: c.id, name: c.name }))))
       .catch(() => setConnections([]));
   }, []);

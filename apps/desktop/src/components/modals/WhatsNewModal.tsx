@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { openUrl } from "@tauri-apps/plugin-opener";
+import { openerAdapter } from "../../platform/tauri/openerAdapter";
 import {
   X,
   Sparkles,
@@ -82,7 +82,7 @@ export const WhatsNewModal = ({
                   {entry.url && (
                     <button
                       onClick={() =>
-                        openUrl(`${entry.url}${UTM_SUFFIX}`)
+                        openerAdapter.openUrl(`${entry.url}${UTM_SUFFIX}`)
                       }
                       className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors"
                     >
@@ -186,7 +186,7 @@ function InlineMarkdown({ text }: { text: string }) {
             href={href}
             onClick={(e) => {
               e.preventDefault();
-              if (href) openUrl(href);
+              if (href) openerAdapter.openUrl(href);
             }}
             className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors cursor-pointer"
           >

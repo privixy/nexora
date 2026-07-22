@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
+import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import {
   SettingsContext,
   DEFAULT_SETTINGS,
@@ -142,7 +142,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
     const loadSettings = async () => {
       try {
-        const config = await invoke<Partial<Settings>>("get_config");
+        const config = await settingsGateway.invoke<Partial<Settings>>("get_config");
 
         // Migration logic: Check localStorage if backend is empty/default
         const savedLocal = localStorage.getItem("nexora_settings");
@@ -157,7 +157,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             language: localData.language || "auto",
           };
           // Save migrated data to backend
-          await invoke("save_config", { config: finalSettings });
+          await settingsGateway.invoke("save_config", { config: finalSettings });
         } else {
           // Use backend config
           finalSettings = {
@@ -188,24 +188,24 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         ) {
           // First, detect which provider has an API key
           let detectedProvider: string | null = null;
-          const hasOpenAI = await invoke<boolean>("check_ai_key", {
+          const hasOpenAI = await settingsGateway.invoke<boolean>("check_ai_key", {
             provider: "openai",
           });
           if (hasOpenAI) {
             detectedProvider = "openai";
           } else {
-            const hasAnthropic = await invoke<boolean>("check_ai_key", {
+            const hasAnthropic = await settingsGateway.invoke<boolean>("check_ai_key", {
               provider: "anthropic",
             });
             if (hasAnthropic) {
               detectedProvider = "anthropic";
             } else {
-              const hasOpenRouter = await invoke<boolean>("check_ai_key", {
+              const hasOpenRouter = await settingsGateway.invoke<boolean>("check_ai_key", {
                 provider: "openrouter",
               });
               if (hasOpenRouter) detectedProvider = "openrouter";
             else {
-              const hasMiniMax = await invoke<boolean>("check_ai_key", {
+              const hasMiniMax = await settingsGateway.invoke<boolean>("check_ai_key", {
                 provider: "minimax",
               });
               if (hasMiniMax) detectedProvider = "minimax";
@@ -216,7 +216,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
           if (detectedProvider) {
             // Get available models for the detected provider
             const models =
-              await invoke<Record<string, string[]>>("get_ai_models");
+              await settingsGateway.invoke<Record<string, string[]>>("get_ai_models");
             const providerModels = models[detectedProvider] || [];
             const firstModel = providerModels[0] || null;
 
@@ -377,7 +377,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       const newSettings = { ...prev, [key]: value };
 
       // Persist to backend
-      persistPromise = invoke<void>("save_config", { config: newSettings }).catch((err) => {
+      persistPromise = settingsGateway.invoke<void>("save_config", { config: newSettings }).catch((err) => {
         console.error("Failed to save settings:", err);
       });
 

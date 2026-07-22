@@ -51,6 +51,12 @@
     "apps/desktop/tests/features/editor/pages/editorNotebookBoundary.test.ts": [
       "apps/desktop/src/features/editor/pages/EditorPage.tsx"
     ],
+    "apps/desktop/tests/features/editor/hooks/editorPayloads.test.ts": [
+      "apps/desktop/src/features/editor/hooks/useBatchExecution.ts",
+      "apps/desktop/src/features/editor/hooks/useQueryExecution.ts",
+      "apps/desktop/src/features/editor/hooks/useQueryExport.ts",
+      "apps/desktop/src/features/editor/hooks/useTableMetadata.ts"
+    ],
     "apps/desktop/tests/utils/minimax.test.ts": [
       "apps/desktop/src/utils/settings.ts",
       "apps/desktop/src/features/settings/lib/settingsUI.ts",
@@ -594,7 +600,7 @@
     "apps/desktop/src-tauri/src/mcp/router.rs": 1148,
     "apps/desktop/src-tauri/src/plugins/rpc_driver.rs": 823,
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
-    "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 2974,
+    "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 2975,
     "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx": 549,
     "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx": 603,
@@ -612,15 +618,15 @@
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,
     "apps/desktop/tests/features/settings/state/ThemeProvider.test.tsx": 651,
     "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501,
-    "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698,
+    "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 699,
     "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx": 2312,
     "apps/desktop/src/features/connections/state/DatabaseProvider.tsx": 1562,
-    "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 929,
+    "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 931,
     "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,
-    "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
+    "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1418,
     "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951,
     "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 792,
-    "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 950,
+    "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 952,
     "apps/desktop/src/features/data-grid/components/DataGrid.tsx": 1261,
     "apps/desktop/src/features/data-grid/components/DataGridRow.tsx": 770,
     "apps/desktop/tests/features/data-grid/lib/dataGrid.test.ts": 689,

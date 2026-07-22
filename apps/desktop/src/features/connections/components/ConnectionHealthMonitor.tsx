@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { listen } from "@tauri-apps/api/event";
+import { listenTauri } from "../../../platform/tauri/events";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../hooks/useAlert";
@@ -18,10 +18,10 @@ export function ConnectionHealthMonitor() {
   }, [navigate]);
 
   useEffect(() => {
-    const unlisten = listen<{ connectionId: string; error: string }>(
+    const unlisten = listenTauri<{ connectionId: string; error: string }>(
       "connection-health-failed",
-      (event) => {
-        const { error } = event.payload;
+      (payload) => {
+        const { error } = payload;
         showAlert(
           `${t("healthCheck.connectionLost")}: ${error}`,
           {

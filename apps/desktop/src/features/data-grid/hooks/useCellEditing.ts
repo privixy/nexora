@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { recordGateway } from "../../../platform/tauri";
+import { recordGateway } from "../../../platform/tauri/recordGateway";
 import { buildPkMap, type MergedRow } from "../lib/dataGrid";
 
 export interface EditingCell {

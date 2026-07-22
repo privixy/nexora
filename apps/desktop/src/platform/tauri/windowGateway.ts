@@ -1,5 +1,7 @@
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow, UserAttentionType } from "@tauri-apps/api/window";
 import { invokeTauri } from "./transport";
+
+export { UserAttentionType };
 
 export const windowGateway = {
   getCurrentWindow,

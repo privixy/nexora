@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { mcpGateway } from "../../../platform/tauri/mcpGateway";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import Editor from "@monaco-editor/react";
@@ -201,7 +201,7 @@ function McpSetupPanel() {
   const loadStatus = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await invoke<McpClientStatus[]>("get_mcp_status");
+      const res = await mcpGateway.invoke<McpClientStatus[]>("get_mcp_status");
       const sortedClients = sortMcpClients(res);
       setClients(sortedClients);
       setSelectedClientId(
@@ -220,7 +220,7 @@ function McpSetupPanel() {
 
   const handleInstall = async (clientId: string) => {
     try {
-      const clientName = await invoke<string>("install_mcp_config", {
+      const clientName = await mcpGateway.invoke<string>("install_mcp_config", {
         clientId,
       });
       showAlert(t("mcp.successMsg", { client: clientName }), {

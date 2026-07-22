@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { taskGateway } from "../../../platform/tauri/taskGateway";
 import type { ProcessInfo, SystemStats } from "../lib/taskManager";
 import { buildProcessRows } from "../lib/taskManager";
 
@@ -29,8 +29,8 @@ export function useTaskManager(): UseTaskManagerResult {
   const fetchData = useCallback(async () => {
     try {
       const [procs, stats] = await Promise.all([
-        invoke<ProcessInfo[]>("get_process_list"),
-        invoke<SystemStats>("get_system_stats"),
+        taskGateway.invoke<ProcessInfo[]>("get_process_list"),
+        taskGateway.invoke<SystemStats>("get_system_stats"),
       ]);
       setProcesses(buildProcessRows(procs));
       setSystemStats(stats);
@@ -61,7 +61,7 @@ export function useTaskManager(): UseTaskManagerResult {
     async (pluginId: string) => {
       setKilling((prev) => new Set(prev).add(pluginId));
       try {
-        await invoke("kill_plugin_process", { pluginId });
+        await taskGateway.invoke("kill_plugin_process", { pluginId });
         await fetchData();
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
@@ -80,8 +80,8 @@ export function useTaskManager(): UseTaskManagerResult {
     async (pluginId: string) => {
       setRestarting((prev) => new Set(prev).add(pluginId));
       try {
-        await invoke("disable_plugin", { pluginId });
-        await invoke("enable_plugin", { pluginId });
+        await taskGateway.invoke("disable_plugin", { pluginId });
+        await taskGateway.invoke("enable_plugin", { pluginId });
         await fetchData();
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
