@@ -70,7 +70,11 @@ const ClientIcon = ({
   }
 };
 
-export function McpPage() {
+interface McpPageProps {
+  renderAiActivity?: () => React.ReactNode;
+}
+
+export function McpPage({ renderAiActivity }: McpPageProps) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<McpPageTab>("setup");
 
@@ -127,7 +131,7 @@ export function McpPage() {
 
           <div className="relative min-h-0 flex-1 overflow-y-auto p-6 lg:p-8 custom-scrollbar">
             {tab === "setup" && <McpSetupPanel />}
-            {tab === "activity" && <AiActivityPanel />}
+            {tab === "activity" && (renderAiActivity?.() ?? <AiActivityPanel />)}
             {tab === "safety" && (
               <div className="max-w-4xl">
                 <McpSafetySection />

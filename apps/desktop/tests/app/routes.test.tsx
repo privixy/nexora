@@ -45,14 +45,21 @@ vi.mock("../../src/features/plugins", () => ({
   PluginsTab: page("plugins"),
   useDrivers: () => ({ allDrivers: [], installedPlugins: [], refresh: vi.fn() }),
 }));
-vi.mock("../../src/features/settings", () => ({ SettingsPage: page("settings") }));
+vi.mock("../../src/features/settings", () => ({
+  AiActivityPanel: page("ai-activity"),
+  SettingsPage: page("settings"),
+  SshTab: page("ssh"),
+}));
 vi.mock("../../src/pages/Editor", () => ({ Editor: page("editor") }));
 vi.mock("../../src/features/editor", () => ({ EditorSchemaDiagramPage: page("schema-diagram") }));
-vi.mock("../../src/features/mcp/pages/McpPage", () => ({ McpPage: page("mcp") }));
+vi.mock("../../src/features/mcp", () => ({ McpPage: page("mcp") }));
 vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));
 vi.mock("../../src/features/schema/pages/SchemaDiagramPage", () => ({ SchemaDiagramPage: page("schema-diagram") }));
-vi.mock("../../src/pages/TaskManagerPage", () => ({ TaskManagerPage: page("task-manager") }));
-vi.mock("../../src/pages/VisualExplainPage", () => ({ VisualExplainPage: page("visual-explain") }));
+vi.mock("../../src/features/tasks", () => ({ TaskManagerPage: page("task-manager") }));
+vi.mock("../../src/features/visual-explain", () => ({
+  VisualExplainModal: page("visual-explain-modal"),
+  VisualExplainPage: page("visual-explain"),
+}));
 vi.mock("../../src/features/data-grid", () => ({ JsonViewerPage: page("json-viewer") }));
 vi.mock("../../src/pages/ResultsWindowPage", () => ({ ResultsWindowPage: page("results-window") }));
 vi.mock("../../src/components/ui/EditorErrorBoundary", () => ({

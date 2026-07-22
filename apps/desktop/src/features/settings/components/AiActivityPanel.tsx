@@ -4,8 +4,22 @@ import { Activity, Layers } from "lucide-react";
 import clsx from "clsx";
 import { AiActivityEventsTab } from "./ai-activity/AiActivityEventsTab";
 import { AiActivitySessionsTab } from "./ai-activity/AiActivitySessionsTab";
+import type { AiActivityEvent } from "../contracts";
 
 type AiActivityTab = "events" | "sessions";
+
+export interface VisualExplainTarget {
+  query: string;
+  connectionId: string;
+  connectionLabel?: string;
+}
+
+interface AiActivityPanelProps {
+  renderVisualExplain?: (
+    target: VisualExplainTarget,
+    onClose: () => void,
+  ) => React.ReactNode;
+}
 
 const TABS: Array<{
   id: AiActivityTab;
@@ -16,9 +30,20 @@ const TABS: Array<{
   { id: "sessions", icon: Layers, labelKey: "aiActivity.tabs.sessions" },
 ];
 
-export function AiActivityPanel() {
+export function AiActivityPanel({ renderVisualExplain }: AiActivityPanelProps) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<AiActivityTab>("events");
+  const [explainTarget, setExplainTarget] = useState<VisualExplainTarget | null>(
+    null,
+  );
+  const handleOpenInVisualExplain = (event: AiActivityEvent) => {
+    if (!event.query || !event.connectionId) return;
+    setExplainTarget({
+      query: event.query,
+      connectionId: event.connectionId,
+      connectionLabel: event.connectionName ?? undefined,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -49,7 +74,17 @@ export function AiActivityPanel() {
         ))}
       </div>
 
-      {tab === "events" ? <AiActivityEventsTab /> : <AiActivitySessionsTab />}
+      {tab === "events" ? (
+        <AiActivityEventsTab
+          onOpenInVisualExplain={
+            renderVisualExplain ? handleOpenInVisualExplain : undefined
+          }
+        />
+      ) : (
+        <AiActivitySessionsTab />
+      )}
+      {explainTarget &&
+        renderVisualExplain?.(explainTarget, () => setExplainTarget(null))}
     </div>
   );
 }

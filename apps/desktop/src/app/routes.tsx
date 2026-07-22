@@ -8,10 +8,35 @@ import { EditorSchemaDiagramPage } from "../features/editor";
 import { JsonViewerPage } from "../features/data-grid";
 import { McpPage } from "../features/mcp";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
-import { SettingsPage, SshTab } from "../features/settings";
+import {
+  AiActivityPanel,
+  SettingsPage,
+  SshTab,
+  type VisualExplainTarget,
+} from "../features/settings";
 import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";
 import { TaskManagerPage } from "../features/tasks";
-import { VisualExplainPage } from "../features/visual-explain";
+import {
+  VisualExplainModal,
+  VisualExplainPage,
+} from "../features/visual-explain";
+
+const renderVisualExplain = (
+  target: VisualExplainTarget,
+  onClose: () => void,
+) => (
+  <VisualExplainModal
+    isOpen
+    onClose={onClose}
+    query={target.query}
+    connectionId={target.connectionId}
+    connectionLabel={target.connectionLabel}
+  />
+);
+
+const renderAiActivity = () => (
+  <AiActivityPanel renderVisualExplain={renderVisualExplain} />
+);
 
 export function AppRoutes() {
   const { allDrivers, installedPlugins, refresh } = useDrivers();
@@ -38,6 +63,7 @@ export function AppRoutes() {
     renderSshTab: () => (
       <SshTab renderConnectionsManager={() => <SshConnectionsManager />} />
     ),
+    renderAiActivity,
   };
 
   return (
@@ -56,7 +82,10 @@ export function AppRoutes() {
             </EditorErrorBoundary>
           }
         />
-        <Route path="mcp" element={<McpPage />} />
+        <Route
+          path="mcp"
+          element={<McpPage renderAiActivity={renderAiActivity} />}
+        />
         <Route
           path="settings"
           element={<SettingsPage {...pluginSettingsComposition} />}

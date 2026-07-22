@@ -35,23 +35,19 @@ import { StatusBadge } from "./StatusBadge";
 import { QueryKindBadge } from "./QueryKindBadge";
 import { EventDetailModal } from "./EventDetailModal";
 import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
-import { VisualExplainModal } from "../../../visual-explain";
 import { Select } from "../../../../components/ui/Select";
 
-interface ExplainTarget {
-  query: string;
-  connectionId: string;
-  connectionName: string | null;
+interface AiActivityEventsTabProps {
+  onOpenInVisualExplain?: (event: AiActivityEvent) => void;
 }
 
-export function AiActivityEventsTab() {
+export function AiActivityEventsTab({
+  onOpenInVisualExplain,
+}: AiActivityEventsTabProps) {
   const { t } = useTranslation();
   const { showAlert } = useAlert();
   const [filter, setFilter] = useState<AiEventFilter>({});
   const [detail, setDetail] = useState<AiActivityEvent | null>(null);
-  const [explainTarget, setExplainTarget] = useState<ExplainTarget | null>(
-    null,
-  );
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const { events, loading, refetch } = useAiActivityEvents(filter);
 
@@ -103,15 +99,6 @@ export function AiActivityEventsTab() {
     }
   };
 
-  const handleOpenInVisualExplain = (ev: AiActivityEvent) => {
-    if (!ev.query || !ev.connectionId) return;
-    setExplainTarget({
-      query: ev.query,
-      connectionId: ev.connectionId,
-      connectionName: ev.connectionName,
-    });
-  };
-
   return (
     <div className="space-y-4 min-w-0">
       <FiltersBar
@@ -148,7 +135,7 @@ export function AiActivityEventsTab() {
           navigator.clipboard.writeText(q);
           showAlert(t("aiActivity.copied"), { kind: "info" });
         }}
-        onOpenInVisualExplain={handleOpenInVisualExplain}
+        onOpenInVisualExplain={onOpenInVisualExplain}
       />
 
       {detail && (
@@ -163,13 +150,6 @@ export function AiActivityEventsTab() {
         onConfirm={handleClear}
       />
 
-      <VisualExplainModal
-        isOpen={explainTarget !== null}
-        onClose={() => setExplainTarget(null)}
-        query={explainTarget?.query ?? ""}
-        connectionId={explainTarget?.connectionId ?? ""}
-        connectionLabel={explainTarget?.connectionName ?? undefined}
-      />
     </div>
   );
 }
@@ -316,7 +296,7 @@ interface EventsTableProps {
   loading: boolean;
   onView: (event: AiActivityEvent) => void;
   onCopyQuery: (query: string) => void;
-  onOpenInVisualExplain: (event: AiActivityEvent) => void;
+  onOpenInVisualExplain?: (event: AiActivityEvent) => void;
 }
 
 function EventsTable({
@@ -470,7 +450,10 @@ function EventsTable({
                         <Copy size={12} />
                       </button>
                     )}
-                    {ev.tool === "run_query" && ev.query && ev.connectionId && (
+                    {onOpenInVisualExplain &&
+                      ev.tool === "run_query" &&
+                      ev.query &&
+                      ev.connectionId && (
                       <button
                         onClick={() => onOpenInVisualExplain(ev)}
                         className="rounded p-1 text-muted hover:bg-green-900/20 hover:text-green-400"

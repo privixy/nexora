@@ -58,6 +58,7 @@ interface SettingsPageProps {
   }) => React.ReactNode;
   renderPluginSettings?: (pluginId: string) => React.ReactNode;
   renderSshTab?: () => React.ReactNode;
+  renderAiActivity?: () => React.ReactNode;
 }
 
 const TAB_ITEMS: Array<{
@@ -94,6 +95,7 @@ export const SettingsPage = ({
   renderPluginTab,
   renderPluginSettings,
   renderSshTab,
+  renderAiActivity,
 }: SettingsPageProps) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
@@ -156,6 +158,8 @@ export const SettingsPage = ({
       ? "plugins"
       : requestedTab;
   const ActiveComponent = TAB_COMPONENTS[activeTab];
+  const activeComposition =
+    activeTab === "ai-activity" ? renderAiActivity?.() : undefined;
   const activePluginId = activeTab.startsWith("plugin:")
     ? activeTab.slice("plugin:".length)
     : null;
@@ -247,9 +251,12 @@ export const SettingsPage = ({
                 setRequestedTab(`plugin:${pluginId}`),
               onPluginsChanged: handlePluginsChanged,
             })
-          ) : (
-            ActiveComponent && <ActiveComponent />
-          )}
+           ) : activeComposition !== undefined ? (
+             activeComposition
+           ) : (
+             ActiveComponent && <ActiveComponent />
+           )}
+
             </div>
           </div>
         </div>
