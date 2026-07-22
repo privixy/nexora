@@ -27,6 +27,29 @@ describe("living architecture documentation", () => {
     }
   });
 
+  it("documents Rust backend boundaries and exact compatibility owners", () => {
+    const architecture = readFileSync(architecturePath, "utf8");
+    const agents = readFileSync(agentsPath, "utf8");
+
+    for (const contract of [
+      "Rust commands",
+      "Tauri-independent domains",
+      "Plugin process transport",
+      "nexora_lib::pool_manager",
+      "export.rs",
+      "dump_commands.rs",
+      "clipboard_import.rs",
+      "connection_import_commands.rs",
+      "count_query_compat.rs",
+      "server_time_compat.rs",
+      "future backend behavior program",
+    ]) {
+      expect(architecture).toContain(contract);
+    }
+    expect(agents).toContain("count_query_compat.rs");
+    expect(agents).toContain("server_time_compat.rs");
+  });
+
   it("documents complete temporary exception ownership", () => {
     const architecture = readFileSync(architecturePath, "utf8");
     const section = architecture.split("## Temporary compatibility exceptions")[1]?.split("## Required verification")[0] ?? "";

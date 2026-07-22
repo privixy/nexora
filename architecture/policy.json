@@ -128,6 +128,41 @@
     "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs"
   ],
   "rustCrateLevelTestAllowlist": [],
+  "rustBackendBoundaries": {
+    "sourceRoot": "apps/desktop/src-tauri/src",
+    "pureCompatibilityFacades": [
+      "apps/desktop/src-tauri/src/config.rs",
+      "apps/desktop/src-tauri/src/health_check.rs",
+      "apps/desktop/src-tauri/src/plugins/driver.rs",
+      "apps/desktop/src-tauri/src/pool_manager.rs"
+    ],
+    "legacyTransferOwners": {
+      "apps/desktop/src-tauri/src/export.rs": {
+        "owner": "future DatabaseDriver semantic transfer program",
+        "removeAfter": "behavior-approved DatabaseDriver export operations"
+      },
+      "apps/desktop/src-tauri/src/dump_commands.rs": {
+        "owner": "future DatabaseDriver semantic transfer program",
+        "removeAfter": "behavior-approved DatabaseDriver dump and import operations"
+      },
+      "apps/desktop/src-tauri/src/clipboard_import.rs": {
+        "owner": "future DatabaseDriver semantic transfer program",
+        "removeAfter": "behavior-approved DatabaseDriver clipboard transfer operations"
+      }
+    },
+    "frozenSqlOwners": {
+      "apps/desktop/src-tauri/src/count_query_compat.rs": {
+        "patterns": ["SELECT COUNT(*) FROM ({}) as count_wrapper"],
+        "owner": "future backend behavior program",
+        "removeAfter": "behavior-approved DatabaseDriver operation replaces this workflow"
+      },
+      "apps/desktop/src-tauri/src/server_time_compat.rs": {
+        "patterns": ["SELECT datetime('now', 'localtime')", "SELECT NOW()"],
+        "owner": "future backend behavior program",
+        "removeAfter": "behavior-approved DatabaseDriver operation replaces this workflow"
+      }
+    }
+  },
   "rustLegacyTransferOwners": {
     "apps/desktop/src-tauri/src/export.rs": {
       "owner": "future DatabaseDriver semantic transfer program",
@@ -157,6 +192,26 @@
       "classification": "public-api-contract",
       "defaultMode": "enabled",
       "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test command_module_compatibility"
+    },
+    "apps/desktop/src-tauri/tests/config_compatibility.rs": {
+      "classification": "public-api-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test config_compatibility"
+    },
+    "apps/desktop/src-tauri/tests/plugin_driver_compatibility.rs": {
+      "classification": "public-api-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test plugin_driver_compatibility"
+    },
+    "apps/desktop/src-tauri/tests/pool_manager_compatibility.rs": {
+      "classification": "public-api-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test pool_manager_compatibility"
+    },
+    "apps/desktop/src-tauri/tests/thin_command_boundaries.rs": {
+      "classification": "source-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test thin_command_boundaries"
     }
   },
   "allowedWorkspaceDependencies": {
@@ -169,9 +224,8 @@
     "apps/desktop/src-tauri/src/ai.rs": 1007,
     "apps/desktop/src-tauri/src/ai_activity.rs": 837,
     "apps/desktop/src-tauri/src/ai_activity/tests.rs": 862,
-    "apps/desktop/src-tauri/src/commands.rs": 4279,
     "apps/desktop/src-tauri/src/commands/tests.rs": 995,
-    "apps/desktop/src-tauri/src/config.rs": 783,
+    "apps/desktop/src-tauri/src/commands/tests/compatibility.rs": 983,
     "apps/desktop/src-tauri/src/drivers/driver_trait.rs": 824,
     "apps/desktop/src-tauri/src/drivers/mysql/explain.rs": 1261,
     "apps/desktop/src-tauri/src/drivers/mysql/mod.rs": 2340,
@@ -182,9 +236,8 @@
     "apps/desktop/src-tauri/src/drivers/postgres/tests.rs": 1088,
     "apps/desktop/src-tauri/src/drivers/postgres/types.rs": 837,
     "apps/desktop/src-tauri/src/drivers/sqlite/mod.rs": 1412,
-    "apps/desktop/src-tauri/src/mcp/mod.rs": 1156,
-    "apps/desktop/src-tauri/src/plugins/driver.rs": 1042,
-    "apps/desktop/src-tauri/src/pool_manager.rs": 1124,
+    "apps/desktop/src-tauri/src/mcp/router.rs": 1148,
+    "apps/desktop/src-tauri/src/plugins/rpc_driver.rs": 823,
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
     "apps/desktop/src/components/layout/ExplorerSidebar.tsx": 3174,
     "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx": 549,
@@ -219,6 +272,7 @@
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
     "apps/desktop/tests/utils/sqlSplitter/splitter.test.ts": 629,
-    "apps/desktop/tests/utils/visualQuery.test.ts": 747
+    "apps/desktop/tests/utils/visualQuery.test.ts": 747,
+    "tests/repository/architecturePolicyChecker.test.ts": 588
   }
 }

@@ -411,6 +411,99 @@ describe("architecture policy", () => {
     }
   });
 
+  it("enforces Rust backend layer and compatibility ownership", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-boundaries-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/query.rs": "use sqlx::Row;\n",
+        "apps/desktop/src-tauri/src/domains/query.rs": "use tauri::AppHandle;\n",
+        "apps/desktop/src-tauri/src/drivers/mysql.rs": "use crate::commands;\n",
+        "apps/desktop/src-tauri/src/infrastructure/files.rs": "use crate::commands;\n",
+        "apps/desktop/src-tauri/src/config.rs": "pub use crate::infrastructure::config::*;\nfn logic() {}\n",
+        "apps/desktop/src-tauri/src/count_query_compat.rs": "#[tauri::command]\nfn run() { let _ = \"SELECT COUNT(*) FROM ({}) as count_wrapper\"; }\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: ["apps/desktop/src-tauri/src/config.rs"],
+          frozenSqlOwners: {
+            "apps/desktop/src-tauri/src/count_query_compat.rs": {
+              patterns: ["SELECT COUNT(*) FROM ({}) as count_wrapper"],
+              owner: "future backend behavior program",
+              removeAfter: "behavior-approved DatabaseDriver operation replaces this workflow",
+            },
+          },
+          legacyTransferOwners: {},
+        },
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toEqual(expect.arrayContaining([
+        expect.stringContaining("commands/query.rs: Rust commands may not depend on sqlx"),
+        expect.stringContaining("domains/query.rs: Rust domains may not depend on tauri"),
+        expect.stringContaining("drivers/mysql.rs: Rust drivers may not depend on commands or domains"),
+        expect.stringContaining("infrastructure/files.rs: Rust infrastructure may not depend on commands"),
+        expect.stringContaining("config.rs: compatibility facade must contain re-exports only"),
+        expect.stringContaining("count_query_compat.rs: frozen SQL owner must not declare a Tauri command"),
+      ]));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects frozen SQL outside its exact owner", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-sql-owner-"));
+
+    try {
+      const owner = "apps/desktop/src-tauri/src/count_query_compat.rs";
+      const offender = "apps/desktop/src-tauri/src/domains/query.rs";
+      const sql = "SELECT COUNT(*) FROM ({}) as count_wrapper";
+      writeFixture(tempRoot, owner, `fn run() { let _ = "${sql}"; }\n`);
+      writeFixture(tempRoot, offender, `fn count() { let _ = "${sql}"; }\n`);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: [],
+          frozenSqlOwners: {
+            [owner]: {
+              patterns: [sql],
+              owner: "future backend behavior program",
+              removeAfter: "behavior-approved DatabaseDriver operation replaces this workflow",
+            },
+          },
+          legacyTransferOwners: {},
+        },
+      }, {
+        trackedFiles: [owner, offender],
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toContain(`${offender}: frozen SQL pattern is owned by ${owner}`);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
   it("rejects desktop alias imports from repository tests without flagging package aliases", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
 

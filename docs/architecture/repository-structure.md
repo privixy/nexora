@@ -14,7 +14,9 @@ The desktop workspace migration and test architecture normalization are complete
 - Packages may not import desktop internals.
 - Features may import `shared` and `platform`; shared modules may not import features.
 - Cross-feature imports use explicit feature public entry points.
-- Rust commands are transport adapters; domains own workflows; drivers own database semantics; infrastructure owns mechanisms.
+- Rust commands under `apps/desktop/src-tauri/src/commands/` are transport adapters and may depend on domains, models, and infrastructure adapter constructors, but not `sqlx`, built-in driver implementations, or pool constructors.
+- Tauri-independent domains own workflows and explicit database context; domains do not import Tauri, direct pools, or built-in drivers. Drivers own database semantics and do not import commands or domains. Infrastructure owns engine-neutral mechanisms and does not import commands.
+- Plugin process transport and the `RpcDriver` adapter are separate. Compatibility facades contain re-exports only and remain stable public entry points.
 
 ## Test ownership
 
@@ -37,7 +39,7 @@ Run `pnpm check:architecture` to enforce `architecture/policy.json`. The checker
 - a peer `*_tests.rs`, non-trivial inline desktop Rust test module, or unclassified crate integration suite is added; checked-in create-plugin template inline suites remain governed separately by the exact package-owned `rustTemplateInlineTestAllowlist`;
 - desktop-owned source, assets, tests, manifests, dependencies, app-local configuration, or the Tauri crate are reintroduced at repository-root paths listed in `forbiddenRootDesktopPaths`.
 
-File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. Desktop Rust inline-test debt is closed with an empty `rustInlineTestAllowlist`. The separate `rustTemplateInlineTestAllowlist` classifies only the two checked-in create-plugin template suites owned by the later package/tooling plan, and every entry must remain below an exact `rustTemplateInlineTestRoots` path; it cannot exempt desktop Rust. `rustIntegrationTests` records the exact external-infrastructure suite, its ignored default mode, and its explicit command.
+File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. Former oversized compatibility files `commands.rs`, `config.rs`, `health_check.rs`, `mcp/mod.rs`, `plugins/driver.rs`, and `pool_manager.rs` have no stale baseline; retained oversized implementation/test owners are explicitly ratcheted. Desktop Rust inline-test debt is closed with an empty `rustInlineTestAllowlist`. The separate `rustTemplateInlineTestAllowlist` classifies only the two checked-in create-plugin template suites owned by the later package/tooling plan, and every entry must remain below an exact `rustTemplateInlineTestRoots` path; it cannot exempt desktop Rust. `rustIntegrationTests` records every crate integration suite with its classification, default mode, and explicit command.
 
 Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
 
@@ -54,6 +56,11 @@ Required services: MySQL on `127.0.0.1:33060` and PostgreSQL on `127.0.0.1:54320
 | Oversized files listed in `architecture/policy.json` | Owning module maintainers | Guard ratchet baseline | Frontend/backend modularization |
 | Exact frontend direct-Tauri importer/package pairs | Frontend feature owners | Each Task 39 inventory row records exact `importer`, `importTarget`, `owner`, `characterizationTest`, `gatewayOrAdapter`, and `removeByTask: 39`; characterization tests must exist or name an exact planned test destination/task, and gateway/adapter paths must be exact Task 9/39 platform destinations | Tasks 13, 14, and 39 |
 | Three exact modal imports of legacy `components/ui/SqlEditorWrapper` | Schema/connections owners | Preserve path-only sequencing until editor publication | Task 36 |
+| `nexora_lib::commands`, `nexora_lib::config`, `nexora_lib::plugins::driver`, `nexora_lib::pool_manager`, and `nexora_lib::health_check` compatibility facades | Public backend API | Preserve re-export-only public paths; repository-local zero consumers do not authorize removal | Separately approved deprecation or breaking-change program |
+| Root `export.rs`, `dump_commands.rs`, and `clipboard_import.rs` | Future `DatabaseDriver` semantic transfer program | Exact-path legacy transfer owners; their current direct pools, driver branches, and SQL must not move into commands, domains, or generic infrastructure | After behavior-approved trait, plugin, and capability operations replace each workflow |
+| `connection_import_commands.rs` | Future connection-import port extraction | Preserve cache, keychain, cancellation, and apply ordering | After an equivalent connection-import service replaces the workflow |
+| Root `count_query_compat.rs` | future backend behavior program | Crate-private, non-Tauri exact-path owner of the frozen count-wrapper workflow only | After a behavior-approved `DatabaseDriver` count operation replaces it |
+| Root `server_time_compat.rs` | Future backend behavior program | Crate-private, non-Tauri exact-path owner of the frozen driver branch and server-time SQL only | After a behavior-approved `DatabaseDriver` server-time operation replaces it |
 
 Do not introduce new legacy exceptions. Remove existing exceptions only in the planned removal phase or with a same-change architecture update.
 

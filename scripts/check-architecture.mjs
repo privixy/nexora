@@ -412,6 +412,84 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
   return violations;
 }
 
+function collectRustBackendViolations(root, trackedFiles, boundaries) {
+  if (!boundaries) return [];
+  const violations = [];
+  const sourceRoot = boundaries.sourceRoot ?? "apps/desktop/src-tauri/src";
+  const rustFiles = [...trackedFiles]
+    .filter((file) => isUnderRoot(file, sourceRoot) && extname(file) === ".rs")
+    .sort();
+  const sources = new Map(rustFiles.map((file) => [file, readFileSync(join(root, file), "utf8")]));
+
+  const dependencyRules = [
+    [`${sourceRoot}/commands`, [
+      ["sqlx", /\bsqlx(?:::|\b)/],
+      ["built-in drivers", /\bdrivers::(?:mysql|postgres|sqlite)(?:::|\b)/],
+      ["pool constructors", /\b(?:get|create)_(?:mysql|postgres|sqlite)_pool\b/],
+    ]],
+    [`${sourceRoot}/domains`, [
+      ["tauri", /\btauri(?:::|\b)/],
+      ["built-in drivers", /\bdrivers::(?:mysql|postgres|sqlite)(?:::|\b)/],
+      ["direct pools", /\b(?:get|create)_(?:mysql|postgres|sqlite)_pool\b/],
+    ]],
+    [`${sourceRoot}/drivers`, [
+      ["commands or domains", /\bcrate::(?:commands|domains)(?:::|\b)/],
+    ]],
+    [`${sourceRoot}/infrastructure`, [
+      ["commands", /\bcrate::commands(?:::|\b)/],
+    ]],
+  ];
+
+  for (const [file, source] of sources) {
+    if (file.split("/").includes("tests") || file.endsWith("/tests.rs")) continue;
+    for (const [directory, forbidden] of dependencyRules) {
+      if (!isUnderRoot(file, directory)) continue;
+      for (const [label, pattern] of forbidden) {
+        if (pattern.test(source)) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
+      }
+    }
+  }
+
+  for (const facade of boundaries.pureCompatibilityFacades ?? []) {
+    const source = sources.get(facade);
+    if (source === undefined) {
+      violations.push(`${facade}: compatibility facade points to a missing tracked file`);
+      continue;
+    }
+    const substantive = source
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line && line !== "};" && !line.startsWith("//") && !line.startsWith("pub use ") && !/^[A-Za-z0-9_, ]+$/.test(line) && !line.startsWith("#[cfg(test)]") && !/^mod tests;$/.test(line));
+    if (substantive.length > 0) violations.push(`${facade}: compatibility facade must contain re-exports only`);
+  }
+
+  for (const [ownerPath, metadata] of Object.entries(boundaries.frozenSqlOwners ?? {})) {
+    const ownerSource = sources.get(ownerPath);
+    if (ownerSource === undefined) {
+      violations.push(`${ownerPath}: frozen SQL owner points to a missing tracked file`);
+      continue;
+    }
+    if (typeof metadata.owner !== "string" || typeof metadata.removeAfter !== "string") {
+      violations.push(`${ownerPath}: frozen SQL owner requires owner and removeAfter metadata`);
+    }
+    if (ownerSource.includes("#[tauri::command]")) {
+      violations.push(`${ownerPath}: frozen SQL owner must not declare a Tauri command`);
+    }
+    if (/^\s*pub\s+(?:use|mod)\b/m.test(ownerSource)) {
+      violations.push(`${ownerPath}: frozen SQL owner must remain crate-private and non-re-exporting`);
+    }
+    for (const pattern of metadata.patterns ?? []) {
+      for (const [file, source] of sources) {
+        if (file !== ownerPath && !file.split("/").includes("tests") && !file.endsWith("/tests.rs") && source.includes(pattern)) {
+          violations.push(`${file}: frozen SQL pattern is owned by ${ownerPath}`);
+        }
+      }
+    }
+  }
+
+  return violations;
+}
+
 function resolvesToForbiddenRoot(importer, specifier, forbiddenRoot, importAliases) {
   if (specifier === forbiddenRoot || specifier.startsWith(`${forbiddenRoot}/`)) {
     return true;
@@ -469,6 +547,8 @@ export function collectViolations(root, policy, inventory = {}) {
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
   const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
+
+  violations.push(...collectRustBackendViolations(root, trackedFiles, policy.rustBackendBoundaries));
 
   const frontendBoundaries = policy.frontendBoundaries
     ? {
