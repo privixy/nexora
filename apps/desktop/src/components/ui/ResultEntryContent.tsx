@@ -4,7 +4,7 @@ import { DataGrid } from "../../features/data-grid";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { PaginationControls } from "../../components/ui/PaginationControls";
 import { formatDuration } from "../../utils/formatTime";
-import { getStackedGridHeight } from "../../utils/multiResult";
+import { getStackedGridHeight } from "../../features/editor/lib/multiResult";
 import type { QueryResultEntry } from "../../types/editor";
 
 interface ResultEntryContentProps {

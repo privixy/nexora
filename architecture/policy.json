@@ -40,7 +40,6 @@
       "apps/desktop/src/features/settings/state/SettingsContext.ts",
       "apps/desktop/src/types/pluginSlots.ts"
     ],
-
     "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
       "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx"
     ],
@@ -55,9 +54,9 @@
       "apps/desktop/src/features/settings/state/SettingsContext.ts"
     ],
     "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
-      "apps/desktop/src/utils/sqlSplitter/index.ts",
-      "apps/desktop/src/utils/sqlSplitter/splitter.ts",
-      "apps/desktop/src/utils/sqlSplitter/tokenizer.ts"
+      "apps/desktop/src/features/editor/lib/sqlSplitter/index.ts",
+      "apps/desktop/src/features/editor/lib/sqlSplitter/splitter.ts",
+      "apps/desktop/src/features/editor/lib/sqlSplitter/tokenizer.ts"
     ],
     "apps/desktop/tests/features/schema/rawTauri.test.tsx": [
       "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx",
@@ -147,23 +146,30 @@
     "temporaryExceptions": [
       {
         "path": "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
-        "importTarget": "../../../../components/ui/SqlEditorWrapper",
+        "importTarget": "../../../editor/components/SqlEditorWrapper",
         "owner": "schema",
-        "reason": "Legacy editor dependency retained until editor page publication",
+        "reason": "Moved editor dependency retained until editor page publication",
         "removeByTask": 36
       },
       {
         "path": "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
-        "importTarget": "../../../../components/ui/SqlEditorWrapper",
+        "importTarget": "../../../editor/components/SqlEditorWrapper",
         "owner": "schema",
-        "reason": "Legacy editor dependency retained until editor page publication",
+        "reason": "Moved editor dependency retained until editor page publication",
         "removeByTask": 36
       },
       {
         "path": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
-        "importTarget": "../../../../components/ui/SqlEditorWrapper",
+        "importTarget": "../../../editor/components/SqlEditorWrapper",
         "owner": "connections",
-        "reason": "Legacy editor dependency retained until editor page publication",
+        "reason": "Moved editor dependency retained until editor page publication",
+        "removeByTask": 36
+      },
+      {
+        "path": "apps/desktop/src/features/notebooks/components/SqlCellEditor.tsx",
+        "importTarget": "../../editor/components/SqlEditorWrapper",
+        "owner": "notebooks",
+        "reason": "Moved editor dependency retained until editor page publication",
         "removeByTask": 36
       }
     ],
@@ -503,16 +509,12 @@
     "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx": 603,
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
-    "apps/desktop/src/components/ui/MultiResultPanel.tsx": 599,
-    "apps/desktop/src/components/ui/VisualQueryBuilder.tsx": 713,
-    "apps/desktop/src/pages/Editor.tsx": 4181,
+    "apps/desktop/src/features/editor/components/MultiResultPanel.tsx": 599,
+    "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx": 713,
+    "apps/desktop/src/features/editor/pages/EditorPage.tsx": 4181,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
-    "apps/desktop/tests/utils/editor.test.ts": 1019,
-    "apps/desktop/tests/utils/multiResult.test.ts": 527,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
-    "apps/desktop/tests/utils/sqlSplitter/splitter.test.ts": 629,
-    "apps/desktop/tests/utils/visualQuery.test.ts": 747,
     "tests/repository/architecturePolicyChecker.test.ts": 588,
     "apps/desktop/src/features/settings/components/AiTab.tsx": 665,
     "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx": 545,
@@ -532,6 +534,10 @@
     "apps/desktop/src/features/data-grid/components/DataGridRow.tsx": 770,
     "apps/desktop/tests/features/data-grid/lib/dataGrid.test.ts": 689,
     "apps/desktop/src/components/ui/TableToolbar.tsx": 684,
-    "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx": 664
+    "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx": 664,
+    "apps/desktop/tests/features/editor/lib/editor.test.ts": 1019,
+    "apps/desktop/tests/features/editor/lib/multiResult.test.ts": 527,
+    "apps/desktop/tests/features/editor/query-builder/visualQuery.test.ts": 747,
+    "apps/desktop/tests/features/editor/lib/sqlSplitter/splitter.test.ts": 629
   }
 }

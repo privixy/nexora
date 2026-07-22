@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { listenTauri, recordGateway, windowGateway } from "../../../../src/platform/tauri";
 import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
 import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
-import { reconstructTableQuery } from "../../../../src/utils/editor";
+import { reconstructTableQuery } from "../../../../src/features/editor/lib/editor";
 import type { Tab } from "../../../../src/types/editor";
 import type { ForeignKey, TableColumn } from "../../../../src/types/editor";
 

@@ -8,7 +8,7 @@ import { useAlert } from "../../../hooks/useAlert";
 import { quoteTableRef } from "../../../utils/identifiers";
 import { isMultiDatabaseCapable, getDatabaseList } from "../../plugins";
 import { getNavigatorItems, filterNavigatorItems } from "../lib/quickNavigator";
-import { newConsoleForTable } from "../../../utils/newConsole";
+import { newConsoleForTable } from "../../editor/lib/newConsole";
 import type { RoutineInfo, TriggerInfo } from "../../connections";
 
 interface QuickNavigatorModalProps {

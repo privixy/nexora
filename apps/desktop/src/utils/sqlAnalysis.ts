@@ -1,6 +1,6 @@
 // SQL Analysis Utilities - Pure logic functions for parsing and analyzing SQL
 
-import { leadingKeyword } from './sqlSplitter/classify';
+import { leadingKeyword } from '../features/editor/lib/sqlSplitter/classify';
 
 export interface ParsedTableRef {
   name: string;

@@ -7,7 +7,7 @@ import {
   GripHorizontal,
 } from 'lucide-react';
 import { MiniResultGrid } from './MiniResultGrid';
-import { useReferencedRecord } from '../../hooks/useReferencedRecord';
+import { useReferencedRecord } from '../../features/editor/hooks/useReferencedRecord';
 import type { ForeignKey } from '../../types/editor';
 
 interface RelatedRecordsPanelProps {

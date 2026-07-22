@@ -17,7 +17,7 @@ import { ResultEntryContent } from "./ResultEntryContent";
 import { PaginationControls } from "./PaginationControls";
 import { ResizeHandle } from "../../features/notebooks/components/ResizeHandle";
 import { formatDuration } from "../../utils/formatTime";
-import { getEntryDisplayLabel, getStackedGridHeight } from "../../utils/multiResult";
+import { getEntryDisplayLabel, getStackedGridHeight } from "../../features/editor/lib/multiResult";
 import type { QueryResultEntry } from "../../types/editor";
 
 interface StackedResultItemProps {

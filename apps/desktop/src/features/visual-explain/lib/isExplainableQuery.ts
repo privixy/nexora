@@ -1,3 +1,3 @@
-import { isExplainable } from '../../../utils/sqlSplitter';
+import { isExplainable } from '../../editor';
 
 export const isExplainableQuery = isExplainable;

@@ -27,7 +27,7 @@ import {
   updateTabInList,
   shouldUseCachedSchema,
   createSchemaCacheEntry,
-} from "../../../utils/editor";
+} from "../lib/editor";
 export const EditorProvider = ({
   children,
   notebookAdapter,

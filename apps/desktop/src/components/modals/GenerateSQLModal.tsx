@@ -14,7 +14,7 @@ import {
   type ForeignKey,
   type Index,
 } from "../../utils/sqlGenerator";
-import { toBindParamName } from "../../utils/queryParameters";
+import { toBindParamName } from "../../features/editor/lib/queryParameters";
 
 interface GenerateSQLModalProps {
   isOpen: boolean;

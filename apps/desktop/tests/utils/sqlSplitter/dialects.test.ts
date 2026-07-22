@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { splitQueries } from '../../../src/utils/sqlSplitter';
+import { splitQueries } from '../../../src/features/editor/lib/sqlSplitter';
 
 describe('dialect canaries', () => {
   it('postgres treats $$ as a string boundary', () => {

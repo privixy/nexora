@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { layoutQueryBuilderGraph } from '../../src/utils/queryBuilderLayout';
 import type { Node, Edge } from '@xyflow/react';
-import type { TableNodeData } from '../../src/components/ui/TableNode';
+import type { TableNodeData } from '../../src/features/editor/query-builder/TableNode';
 
 describe('queryBuilderLayout', () => {
   it('should layout nodes without overlap', () => {

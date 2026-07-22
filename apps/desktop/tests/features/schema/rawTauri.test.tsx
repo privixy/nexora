@@ -43,7 +43,7 @@ vi.mock("../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../../src/components/ui/SqlEditorWrapper", () => ({
+vi.mock("../../../src/features/editor/components/SqlEditorWrapper", () => ({
   SqlEditorWrapper: () => null,
 }));
 

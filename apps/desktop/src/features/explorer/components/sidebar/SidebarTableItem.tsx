@@ -15,7 +15,7 @@ import {
 import clsx from "clsx";
 import { SidebarColumnItem } from "./SidebarColumnItem";
 import { SidebarIndexList } from "./SidebarIndexList";
-import { dragState } from "../../../../utils/dragState";
+import { dragState } from "../../../editor/query-builder/dragState";
 import { areTableItemPropsEqual, getSidebarTableContext } from "../../lib/sidebarTableItem";
 import { groupIndexes } from "../../../schema";
 import type { TableColumn, ForeignKey, Index } from "../../../../types/schema";

@@ -1,5 +1,5 @@
 import { format, type FormatOptionsWithLanguage, type SqlLanguage } from 'sql-formatter';
-import type { SqlDialect } from './sql';
+import type { SqlDialect } from '../features/editor/lib/sql';
 
 /**
  * Maps Nexora' internal SQL dialect to the matching `sql-formatter`

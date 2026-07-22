@@ -11,6 +11,8 @@ const notebookStoreMocks = vi.hoisted(() => ({
   createNotebookFromState: vi.fn(),
   evictFromCache: vi.fn(),
   flushAllPendingSaves: vi.fn(),
+  listNotebooks: vi.fn(),
+  loadNotebook: vi.fn(),
 }));
 const editorUtilsMocks = vi.hoisted(() => ({
   loadEditorPreferences: vi.fn(),
@@ -21,8 +23,8 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 vi.mock("../../../../src/features/notebooks/lib/notebookStore", () => notebookStoreMocks);
-vi.mock("../../../../src/utils/editor", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("../../../../src/utils/editor")>()),
+vi.mock("../../../../src/features/editor/lib/editor", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../../src/features/editor/lib/editor")>()),
   loadEditorPreferences: editorUtilsMocks.loadEditorPreferences,
 }));
 

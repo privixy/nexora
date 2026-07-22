@@ -5,9 +5,9 @@ import type { OnMount } from "@monaco-editor/react";
 import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../../../hooks/useAlert";
-import { extractEditableViewDefinition } from "../../../../utils/sql";
+import { extractEditableViewDefinition } from "../../../editor/lib/sql";
 import { formatSql } from "../../../../utils/sqlFormat";
-import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
+import { SqlEditorWrapper } from "../../../editor/components/SqlEditorWrapper";
 import { useDatabase } from "../../../connections";
 import { Modal } from "../../../../components/ui/Modal";
 

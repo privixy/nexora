@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import React from "react";
-import { Editor } from "../../../../src/pages/Editor";
+import { EditorPage } from "../../../../src/features/editor/pages/EditorPage";
 import { useDatabase } from "../../../../src/features/connections";
 import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
 import { EditorContext, type EditorContextType } from "../../../../src/features/editor/state/EditorContext";
@@ -61,7 +61,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-vi.mock("../../../../src/components/ui/SqlEditorWrapper", () => ({
+vi.mock("../../../../src/features/editor/components/SqlEditorWrapper", () => ({
   SqlEditorWrapper: ({ initialValue, onChange, onRun }: { initialValue?: string; onChange?: (value: string) => void; onRun?: () => void }) => (
     <div>
       <textarea
@@ -123,7 +123,7 @@ vi.mock("../../../../src/components/modals/NewRowModal", () => ({
   NewRowModal: ({ database, schema }: { database?: string; schema?: string }) => <div data-testid="new-row-modal">{[database, schema].filter(Boolean).join("/")}</div>,
 }));
 
-vi.mock("../../../../src/hooks/useDangerousQueryGuard", () => ({
+vi.mock("../../../../src/features/editor/hooks/useDangerousQueryGuard", () => ({
   DANGEROUS_QUERY_I18N: {},
   useDangerousQueryGuard: () => ({
     pending: null,
@@ -176,11 +176,11 @@ vi.mock("../../../../src/hooks/useKeybindings", () => ({
   useKeybindings: () => ({ matchesShortcut: vi.fn(() => false), isMac: false }),
 }));
 
-vi.mock("../../../../src/hooks/useSqlAutocompleteRegistration", () => ({
+vi.mock("../../../../src/features/editor/hooks/useSqlAutocompleteRegistration", () => ({
   useSqlAutocompleteRegistration: vi.fn(),
 }));
 
-vi.mock("../../../../src/components/ui/VisualQueryBuilder", () => ({ VisualQueryBuilder: () => <div /> }));
+vi.mock("../../../../src/features/editor/query-builder/VisualQueryBuilder", () => ({ VisualQueryBuilder: () => <div /> }));
 vi.mock("../../../../src/features/notebooks/components/NotebookView", () => ({ NotebookView: () => <div /> }));
 vi.mock("../../../../src/features/ai", () => ({
   AiDropdownButton: () => <div />,
@@ -188,14 +188,14 @@ vi.mock("../../../../src/features/ai", () => ({
   AiExplainModal: () => <div />,
 }));
 vi.mock("../../../../src/components/modals/VisualExplainModal", () => ({ VisualExplainModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/ExportProgressModal", () => ({ ExportProgressModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/QueryModal", () => ({ QueryModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/ErrorModal", () => ({ ErrorModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/ExportProgressModal", () => ({ ExportProgressModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/modals/QueryModal", () => ({ QueryModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/modals/ErrorModal", () => ({ ErrorModal: () => <div /> }));
 vi.mock("../../../../src/components/modals/ConfirmModal", () => ({ ConfirmModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/QueryParamsModal", () => ({ QueryParamsModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/QuerySelectionModal", () => ({ QuerySelectionModal: ({ isOpen, queries, onRunAll }: { isOpen: boolean; queries: string[]; onRunAll: (queries: string[]) => void }) => isOpen ? <button type="button" onClick={() => onRunAll(queries)}>run-all-queries</button> : null }));
-vi.mock("../../../../src/components/modals/ExplainSelectionModal", () => ({ ExplainSelectionModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/TabSwitcherModal", () => ({ TabSwitcherModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/modals/QueryParamsModal", () => ({ QueryParamsModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/modals/QuerySelectionModal", () => ({ QuerySelectionModal: ({ isOpen, queries, onRunAll }: { isOpen: boolean; queries: string[]; onRunAll: (queries: string[]) => void }) => isOpen ? <button type="button" onClick={() => onRunAll(queries)}>run-all-queries</button> : null }));
+vi.mock("../../../../src/features/editor/components/modals/ExplainSelectionModal", () => ({ ExplainSelectionModal: () => <div /> }));
+vi.mock("../../../../src/features/editor/components/modals/TabSwitcherModal", () => ({ TabSwitcherModal: () => <div /> }));
 
 const makeResult = (rows: unknown[][] = [[1, "Alice"]]): QueryResult => ({
   columns: ["id", "name"],
@@ -346,7 +346,7 @@ function createStatefulEditor(initialTabs: Tab[]) {
         <DatabaseContext.Provider value={database}>
           <EditorContext.Provider value={editor}>
             <Routes>
-              <Route path="/editor" element={<Editor />} />
+              <Route path="/editor" element={<EditorPage />} />
             </Routes>
           </EditorContext.Provider>
         </DatabaseContext.Provider>

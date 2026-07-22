@@ -464,7 +464,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/MultiResultPanel.tsx",
+    "importer": "apps/desktop/src/features/editor/components/MultiResultPanel.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -472,7 +472,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/SqlEditorWrapper.tsx",
+    "importer": "apps/desktop/src/features/editor/components/SqlEditorWrapper.tsx",
     "importTarget": "@tauri-apps/plugin-clipboard-manager",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -480,7 +480,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/VisualQueryBuilder.tsx",
+    "importer": "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -576,7 +576,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useReferencedRecord.ts",
+    "importer": "apps/desktop/src/features/editor/hooks/useReferencedRecord.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -696,7 +696,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Editor.tsx",
+    "importer": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -704,7 +704,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Editor.tsx",
+    "importer": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -712,7 +712,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/Editor.tsx",
+    "importer": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -728,7 +728,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/ResultsWindowPage.tsx",
+    "importer": "apps/desktop/src/features/editor/pages/ResultsWindowPage.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
@@ -776,7 +776,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/utils/editor.ts",
+    "importer": "apps/desktop/src/features/editor/lib/editor.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",
     "characterizationTest": "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",

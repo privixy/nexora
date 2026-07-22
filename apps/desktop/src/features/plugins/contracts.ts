@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { Dialect } from "../../utils/sqlSplitter";
+import type { Dialect } from "../editor";
 
 export interface DriverCapabilities {
   schemas: boolean;

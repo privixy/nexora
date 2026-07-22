@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../../../hooks/useAlert";
 import { Modal } from "../../../../components/ui/Modal";
-import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
+import { SqlEditorWrapper } from "../../../editor/components/SqlEditorWrapper";
 import { useDatabase } from "../../../connections";
 import { quoteIdentifier } from "../../../../utils/identifiers";
 

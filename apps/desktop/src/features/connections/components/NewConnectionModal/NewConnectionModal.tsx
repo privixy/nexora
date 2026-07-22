@@ -29,7 +29,7 @@ import { SlotAnchor } from "../../../../components/ui/SlotAnchor";
 import { useDrivers } from "../../../plugins";
 import { usePluginSlotRegistry } from "../../../plugins";
 import { Modal } from "../../../../components/ui/Modal";
-import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
+import { SqlEditorWrapper } from "../../../editor/components/SqlEditorWrapper";
 import type { PluginManifest } from "../../../../types/plugins";
 import { loadSshConnections, type SshConnection } from "../../lib/ssh";
 import {
