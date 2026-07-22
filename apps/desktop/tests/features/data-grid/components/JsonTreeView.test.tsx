@@ -26,7 +26,7 @@ vi.mock("json-edit-react", () => ({
 }));
 
 // eslint-disable-next-line import/first
-import { JsonTreeView } from "../../../src/components/ui/JsonTreeView";
+import { JsonTreeView } from "../../../../src/features/data-grid/components/JsonTreeView";
 
 describe("JsonTreeView", () => {
   beforeEach(() => {

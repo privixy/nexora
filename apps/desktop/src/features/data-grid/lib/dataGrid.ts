@@ -3,9 +3,9 @@
  * Extracted for testability
  */
 
-import { formatGeometricValue, isGeometricType } from "./geometry";
-import { formatBlobValue, isBlobColumn, isBlobWireFormat } from "./blob";
-import { isJsonColumn } from "./json";
+import { formatGeometricValue, isGeometricType } from "../../../utils/geometry";
+import { formatBlobValue, isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
+import { isJsonColumn } from "../../../utils/json";
 
 /** Sentinel value indicating that the database DEFAULT value should be used */
 export const USE_DEFAULT_SENTINEL = "__USE_DEFAULT__";

@@ -4,7 +4,7 @@ import { Sparkles, Ban, Eraser, FileDigit } from "lucide-react";
 import { GeometryInput } from "./GeometryInput";
 import { BlobInput } from "./BlobInput";
 import { DateInput } from "./DateInput";
-import { JsonInput } from "./JsonInput";
+import { JsonInput } from "../../features/data-grid/components/JsonInput";
 import { TextInput } from "./TextInput";
 import { isGeometricType, formatGeometricValue } from "../../utils/geometry";
 import {
@@ -22,7 +22,7 @@ import {
   supportsEmptyString,
 } from "../../utils/text";
 import { getDateInputMode } from "../../utils/dateInput";
-import { USE_DEFAULT_SENTINEL } from "../../utils/dataGrid";
+import { USE_DEFAULT_SENTINEL } from "../../features/data-grid/lib/dataGrid";
 
 export interface FieldEditorProps {
   name: string;

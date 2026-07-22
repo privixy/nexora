@@ -1,10 +1,10 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
-import { FieldEditor } from "./FieldEditor";
-import { SlotAnchor } from "./SlotAnchor";
-import { useRowEditor } from "../../hooks/useRowEditor";
-import { useRowEditorResize } from "../../hooks/useRowEditorResize";
+import { FieldEditor } from "../../../components/ui/FieldEditor";
+import { SlotAnchor } from "../../../components/ui/SlotAnchor";
+import { useRowEditor } from "../hooks/useRowEditor";
+import { useRowEditorResize } from "../hooks/useRowEditorResize";
 
 interface RowEditorSidebarProps {
   isOpen: boolean;

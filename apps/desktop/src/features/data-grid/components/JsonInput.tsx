@@ -16,14 +16,14 @@ import {
   formatJsonForEditor,
   parseJsonEditorValue,
   validateJson,
-} from "../../utils/json";
-import { CellCodeEditor } from "./CellCodeEditor";
-import { CellDiffEditor } from "./CellDiffEditor";
+} from "../../../utils/json";
+import { CellCodeEditor } from "../../../components/ui/CellCodeEditor";
+import { CellDiffEditor } from "../../../components/ui/CellDiffEditor";
 import { JsonTreeView } from "./JsonTreeView";
 import {
   MIN_SIDE_BY_SIDE_WIDTH,
   useContainerWidth,
-} from "../../hooks/useContainerWidth";
+} from "../../../hooks/useContainerWidth";
 
 type JsonInputMode = "code" | "tree" | "raw";
 

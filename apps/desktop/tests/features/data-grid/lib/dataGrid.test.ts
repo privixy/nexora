@@ -12,7 +12,7 @@ import {
   serializePkKey,
   type ColumnDisplayInfo,
   type CellClassParams,
-} from '../../src/utils/dataGrid';
+} from '../../../../src/features/data-grid/lib/dataGrid';
 
 describe('dataGrid utils', () => {
   describe('formatCellValue', () => {

@@ -17,7 +17,7 @@ interface TreeViewMockProps {
 const codeProps: { current: CodeEditorMockProps | null } = { current: null };
 const treeProps: { current: TreeViewMockProps | null } = { current: null };
 
-vi.mock("../../../src/components/ui/CellCodeEditor", () => ({
+vi.mock("../../../../src/components/ui/CellCodeEditor", () => ({
   CellCodeEditor: (props: CodeEditorMockProps) => {
     codeProps.current = props;
     return (
@@ -30,7 +30,7 @@ vi.mock("../../../src/components/ui/CellCodeEditor", () => ({
   },
 }));
 
-vi.mock("../../../src/components/ui/JsonTreeView", () => ({
+vi.mock("../../../../src/features/data-grid/components/JsonTreeView", () => ({
   JsonTreeView: (props: TreeViewMockProps) => {
     treeProps.current = props;
     return (
@@ -42,7 +42,7 @@ vi.mock("../../../src/components/ui/JsonTreeView", () => ({
 }));
 
 // eslint-disable-next-line import/first
-import { JsonInput } from "../../../src/components/ui/JsonInput";
+import { JsonInput } from "../../../../src/features/data-grid/components/JsonInput";
 
 const getTab = (mode: "code" | "tree" | "raw") =>
   document.querySelector(`[data-mode="${mode}"]`) as HTMLButtonElement;

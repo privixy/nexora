@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { reconstructTableQuery } from "../utils/editor";
 import { resolveEditorContext } from "../utils/editorContext";
-import { serializePkKey, buildPkMap } from "../utils/dataGrid";
+import { serializePkKey, buildPkMap } from "../features/data-grid/lib/dataGrid";
 import { isMultiDatabaseCapable } from "../features/plugins";
 import { isReadonly } from "../utils/driverCapabilities";
 import { formatWindowTitle } from "../utils/windowTitle";
@@ -16,7 +16,7 @@ import {
   initializeNewRow,
   validatePendingInsertion,
   insertionToBackendData,
-} from "../utils/pendingInsertions";
+} from "../features/data-grid/lib/pendingInsertions";
 import { AiQueryModal } from "../features/ai";
 import { AiExplainModal } from "../features/ai";
 import { AiDropdownButton } from "../features/ai";
@@ -59,7 +59,7 @@ import {
 import { invoke } from "@tauri-apps/api/core";
 import { listen, emit } from "@tauri-apps/api/event";
 import { TableToolbar } from "../components/ui/TableToolbar";
-import { DataGrid } from "../components/ui/DataGrid";
+import { DataGrid } from "../features/data-grid/components/DataGrid";
 import { MultiResultPanel } from "../components/ui/MultiResultPanel";
 import { ErrorDisplay } from "../components/ui/ErrorDisplay";
 import { NewRowModal } from "../components/modals/NewRowModal";

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { invoke } from "@tauri-apps/api/core";
-import { DataGrid } from "../../../../src/components/ui/DataGrid";
+import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
 import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
 import { reconstructTableQuery } from "../../../../src/utils/editor";
 import type { Tab } from "../../../../src/types/editor";

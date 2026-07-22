@@ -104,7 +104,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/AiExplainModal.tsx",
+    "importer": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "ai",
     "characterizationTest": "apps/desktop/tests/features/ai/components/AiExplainModal.test.tsx",
@@ -112,7 +112,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/AiQueryModal.tsx",
+    "importer": "apps/desktop/src/features/ai/components/AiQueryModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "ai",
     "characterizationTest": "apps/desktop/tests/features/ai/components/AiExplainModal.test.tsx",
@@ -352,7 +352,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/VisualExplainModal.tsx",
+    "importer": "apps/desktop/src/features/visual-explain/components/VisualExplainModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "visual-explain",
     "characterizationTest": "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx",
@@ -376,7 +376,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/visual-explain/ExplainAiAnalysis.tsx",
+    "importer": "apps/desktop/src/features/visual-explain/components/visual-explain/ExplainAiAnalysis.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "visual-explain",
     "characterizationTest": "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx",
@@ -576,7 +576,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/DataGrid.tsx",
+    "importer": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -584,7 +584,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/DataGrid.tsx",
+    "importer": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -592,7 +592,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/ui/JsonInput.tsx",
+    "importer": "apps/desktop/src/features/data-grid/components/JsonInput.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -800,7 +800,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useTaskManager.ts",
+    "importer": "apps/desktop/src/features/tasks/hooks/useTaskManager.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "tasks",
     "characterizationTest": "apps/desktop/tests/features/tasks/pages/TaskManagerPage.test.tsx",
@@ -856,7 +856,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/JsonViewerPage.tsx",
+    "importer": "apps/desktop/src/features/data-grid/pages/JsonViewerPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -864,7 +864,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/JsonViewerPage.tsx",
+    "importer": "apps/desktop/src/features/data-grid/pages/JsonViewerPage.tsx",
     "importTarget": "@tauri-apps/api/window",
     "owner": "data-grid",
     "characterizationTest": "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
@@ -888,7 +888,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/TaskManagerPage.tsx",
+    "importer": "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "tasks",
     "characterizationTest": "apps/desktop/tests/features/tasks/pages/TaskManagerPage.test.tsx",
@@ -896,7 +896,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/VisualExplainPage.tsx",
+    "importer": "apps/desktop/src/features/visual-explain/pages/VisualExplainPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "visual-explain",
     "characterizationTest": "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx",
@@ -904,7 +904,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/VisualExplainPage.tsx",
+    "importer": "apps/desktop/src/features/visual-explain/pages/VisualExplainPage.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "visual-explain",
     "characterizationTest": "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx",

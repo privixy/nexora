@@ -73,7 +73,7 @@ vi.mock("../../src/components/ui/SqlEditorWrapper", () => ({
   ),
 }));
 
-vi.mock("../../src/components/ui/DataGrid", () => ({
+vi.mock("../../src/features/data-grid/components/DataGrid", () => ({
   DataGrid: ({ columns, data, onSort, onForeignKeyShowPanel, onPendingChange, onSelectionChange }: {
     columns: string[];
     data: unknown[][];

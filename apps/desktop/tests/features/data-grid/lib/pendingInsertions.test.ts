@@ -5,8 +5,8 @@ import {
   validatePendingInsertion,
   insertionToBackendData,
   filterInsertionsBySelection,
-} from "../../src/utils/pendingInsertions";
-import type { TableColumn, PendingInsertion } from "../../src/types/editor";
+} from "../../../../src/features/data-grid/lib/pendingInsertions";
+import type { TableColumn, PendingInsertion } from "../../../../src/types/editor";
 
 describe("pendingInsertions", () => {
   describe("generateTempId", () => {

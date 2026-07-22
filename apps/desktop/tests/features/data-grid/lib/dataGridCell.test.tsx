@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { renderDefaultCellContent } from "../../src/utils/dataGridCell";
+import { renderDefaultCellContent } from "../../../../src/features/data-grid/lib/dataGridCell";
 
 /**
  * `renderDefaultCellContent` is the inlined replacement for react-table's

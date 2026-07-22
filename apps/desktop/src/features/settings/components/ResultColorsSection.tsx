@@ -5,7 +5,7 @@ import { RotateCcw, Check, X } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useTheme } from "../hooks/useTheme";
 import { SettingSection, SettingRow, SettingToggle } from "./SettingControls";
-import type { ResultValueType } from "../../../utils/dataGrid";
+type ResultValueType = "number" | "string" | "date" | "boolean";
 
 const TYPES: { key: ResultValueType; sample: string }[] = [
   { key: "number", sample: "12345" },

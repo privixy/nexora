@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { useRowEditorResize } from "../../src/hooks/useRowEditorResize";
+import { useRowEditorResize } from "../../../../src/features/data-grid/hooks/useRowEditorResize";
 
 const STORAGE_KEY = "nexora_row_editor_sidebar_width";
 

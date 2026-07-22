@@ -1,4 +1,4 @@
-import type { TableColumn, PendingInsertion } from "../types/editor";
+import type { TableColumn, PendingInsertion } from "../../../types/editor";
 
 /**
  * Generates a unique temporary ID for a pending insertion

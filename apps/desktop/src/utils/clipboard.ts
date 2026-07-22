@@ -1,4 +1,4 @@
-import { formatCellValue } from './dataGrid';
+import { formatCellValue } from '../features/data-grid/lib/dataGrid';
 
 export function rowToCSV(row: unknown[], nullLabel: string = "null", delimiter: string = ","): string {
   return row

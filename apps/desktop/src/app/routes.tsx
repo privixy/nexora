@@ -5,7 +5,7 @@ import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
 import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
 import { Editor } from "../pages/Editor";
 import { EditorSchemaDiagramPage } from "../features/editor";
-import { JsonViewerPage } from "../pages/JsonViewerPage";
+import { JsonViewerPage } from "../features/data-grid/pages/JsonViewerPage";
 import { McpPage } from "../features/mcp";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
 import { SettingsPage, SshTab } from "../features/settings";

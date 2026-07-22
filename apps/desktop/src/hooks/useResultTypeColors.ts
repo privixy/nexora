@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useSettings } from "../features/settings/hooks/useSettings";
 import { useTheme } from "../features/settings/hooks/useTheme";
-import type { ResultValueType } from "../utils/dataGrid";
-
-const TYPES: ResultValueType[] = ["number", "string", "date", "boolean"];
+const TYPES = ["number", "string", "date", "boolean"] as const;
 
 export function useResultTypeColors(): void {
   const { settings } = useSettings();

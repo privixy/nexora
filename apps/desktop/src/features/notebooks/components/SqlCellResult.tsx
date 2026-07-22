@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { DataGrid } from "../../../components/ui/DataGrid";
+import { DataGrid } from "../../data-grid/components/DataGrid";
 import { ErrorDisplay } from "../../../components/ui/ErrorDisplay";
 import type { QueryResult } from "../../../types/editor";
 import type { CellChartConfig } from "../../../types/notebook";
-import { canRenderChart, buildDefaultChartConfig } from "../../notebooks/lib/notebookChart";
+import { canRenderChart, buildDefaultChartConfig } from "../lib/notebookChart";
 import { ResultToolbar } from "./ResultToolbar";
 import { ResizeHandle } from "./ResizeHandle";
 import { CellChart } from "./CellChart";

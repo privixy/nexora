@@ -10,27 +10,27 @@ import {
   serializePkKey,
   type ColumnDisplayInfo,
   type MergedRow,
-} from "../../utils/dataGrid";
-import { isGeometricType } from "../../utils/geometry";
+} from "../lib/dataGrid";
+import { isGeometricType } from "../../../utils/geometry";
 import {
   isEnumType,
   parseEnumValues,
   isSetType,
   parseSetValues,
-} from "../../utils/columnTypes";
-import { isBlobColumn, isBlobWireFormat } from "../../utils/blob";
-import { isLongTextCellTarget, truncateCellPreview } from "../../utils/text";
-import { getForeignKeyForPreview } from "../../features/schema/lib/foreignKeys";
-import { getDateInputMode } from "../../utils/dateInput";
-import { renderDefaultCellContent } from "../../utils/dataGridCell";
-import { GeometryInput } from "./GeometryInput";
-import { DateInput } from "./DateInput";
-import { JsonCell } from "./JsonCell";
-import { JsonExpansionEditor } from "./JsonExpansionEditor";
-import { TextCell } from "./TextCell";
-import { TextExpansionEditor } from "./TextExpansionEditor";
-import { EnumSetInput } from "./EnumSetInput";
-import type { ForeignKey } from "../../types/editor";
+} from "../../../utils/columnTypes";
+import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
+import { isLongTextCellTarget, truncateCellPreview } from "../../../utils/text";
+import { getForeignKeyForPreview } from "../../schema/lib/foreignKeys";
+import { getDateInputMode } from "../../../utils/dateInput";
+import { renderDefaultCellContent } from "../lib/dataGridCell";
+import { GeometryInput } from "../../../components/ui/GeometryInput";
+import { DateInput } from "../../../components/ui/DateInput";
+import { JsonCell } from "../../../components/ui/JsonCell";
+import { JsonExpansionEditor } from "../../../components/ui/JsonExpansionEditor";
+import { TextCell } from "../../../components/ui/TextCell";
+import { TextExpansionEditor } from "../../../components/ui/TextExpansionEditor";
+import { EnumSetInput } from "../../../components/ui/EnumSetInput";
+import type { ForeignKey } from "../../../types/editor";
 
 /**
  * Stable, per-grid dependencies shared by every row. Bundled into a single

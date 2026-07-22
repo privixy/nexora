@@ -153,6 +153,62 @@
         "owner": "connections",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
+      },
+      {
+        "path": "apps/desktop/src/app/routes.tsx",
+        "importTarget": "../features/data-grid/pages/JsonViewerPage",
+        "owner": "app",
+        "reason": "Legacy DataGrid route deep import retained until public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/components/ui/ResultEntryContent.tsx",
+        "importTarget": "../../features/data-grid/components/DataGrid",
+        "owner": "editor",
+        "reason": "Legacy DataGrid consumer retained until public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/features/notebooks/components/SqlCellResult.tsx",
+        "importTarget": "../../data-grid/components/DataGrid",
+        "owner": "notebooks",
+        "reason": "Legacy DataGrid consumer retained until public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/pages/Editor.tsx",
+        "importTarget": "../features/data-grid/components/DataGrid",
+        "owner": "editor",
+        "reason": "Legacy DataGrid consumer retained until public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
+        "importTarget": "../../settings/hooks/useSettings",
+        "owner": "data-grid",
+        "reason": "Legacy settings deep import retained until DataGrid public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
+        "importTarget": "../../schema/lib/foreignKeys",
+        "owner": "data-grid",
+        "reason": "Legacy schema deep import retained until DataGrid public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/features/data-grid/components/DataGridRow.tsx",
+        "importTarget": "../../schema/lib/foreignKeys",
+        "owner": "data-grid",
+        "reason": "Legacy schema deep import retained until DataGrid public API publication",
+        "removeByTask": 26
+      },
+      {
+        "path": "apps/desktop/src/features/data-grid/components/JsonTreeView.tsx",
+        "importTarget": "../../settings/state/ThemeContext",
+        "owner": "data-grid",
+        "reason": "Legacy settings deep import retained until DataGrid public API publication",
+        "removeByTask": 26
       }
     ],
     "directTauriExceptionsFile": "architecture/frontend-tauri-exceptions.json",
@@ -490,15 +546,10 @@
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/components/modals/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
-    "apps/desktop/src/components/ui/DataGrid.tsx": 1791,
-    "apps/desktop/src/components/ui/DataGridRow.tsx": 770,
     "apps/desktop/src/components/ui/MultiResultPanel.tsx": 599,
-    "apps/desktop/src/components/ui/TableToolbar.tsx": 684,
     "apps/desktop/src/components/ui/VisualQueryBuilder.tsx": 713,
     "apps/desktop/src/pages/Editor.tsx": 4181,
-    "apps/desktop/src/pages/TaskManagerPage.tsx": 664,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
-    "apps/desktop/tests/utils/dataGrid.test.ts": 689,
     "apps/desktop/tests/utils/editor.test.ts": 1019,
     "apps/desktop/tests/utils/multiResult.test.ts": 527,
     "apps/desktop/tests/utils/settings.test.ts": 599,
@@ -519,6 +570,11 @@
     "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
     "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951,
     "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 790,
-    "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 950
+    "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 950,
+    "apps/desktop/src/features/data-grid/components/DataGrid.tsx": 1791,
+    "apps/desktop/src/features/data-grid/components/DataGridRow.tsx": 770,
+    "apps/desktop/tests/features/data-grid/lib/dataGrid.test.ts": 689,
+    "apps/desktop/src/components/ui/TableToolbar.tsx": 684,
+    "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx": 664
   }
 }

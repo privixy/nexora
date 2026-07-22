@@ -7,8 +7,8 @@ import {
   createColumnHelper,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ContextMenu, type ContextMenuItem } from "./ContextMenu";
-import { SlotAnchor } from "./SlotAnchor";
+import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
+import { SlotAnchor } from "../../../components/ui/SlotAnchor";
 import {
   ArrowUp,
   ArrowDown,
@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { useAlert } from "../../hooks/useAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import {
   USE_DEFAULT_SENTINEL,
   formatCellValue,
@@ -40,23 +40,23 @@ import {
   buildPkMap,
   serializePkKey,
   type MergedRow,
-} from "../../utils/dataGrid";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { isGeometricType, formatGeometricValue } from "../../utils/geometry";
-import { isBlobColumn, isBlobWireFormat } from "../../utils/blob";
-import { isJsonColumn, isJsonContent } from "../../utils/json";
-import { supportsEmptyString } from "../../utils/text";
+} from "../lib/dataGrid";
+import { useSettings } from "../../settings/hooks/useSettings";
+import { isGeometricType, formatGeometricValue } from "../../../utils/geometry";
+import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
+import { isJsonColumn, isJsonContent } from "../../../utils/json";
+import { supportsEmptyString } from "../../../utils/text";
 import {
   pickPrimaryForeignKeyByColumn,
   getForeignKeyForPreview,
-} from "../../features/schema/lib/foreignKeys";
+} from "../../schema/lib/foreignKeys";
 import {
   getDateInputMode,
   parseDateTime,
   formatDateTime,
-} from "../../utils/dateInput";
+} from "../../../utils/dateInput";
 import { RowEditorSidebar } from "./RowEditorSidebar";
-import { useDatabase } from "../../features/connections";
+import { useDatabase } from "../../connections";
 import {
   rowsToCSV,
   rowsToCSVWithHeaders,
@@ -64,12 +64,12 @@ import {
   rowsToSqlInsert,
   getSelectedRows,
   copyTextToClipboard,
-} from "../../utils/clipboard";
+} from "../../../utils/clipboard";
 import type {
   PendingInsertion,
   TableColumn,
   ForeignKey,
-} from "../../types/editor";
+} from "../../../types/editor";
 import { MemoRow, type RowCtx } from "./DataGridRow";
 
 interface DataGridProps {

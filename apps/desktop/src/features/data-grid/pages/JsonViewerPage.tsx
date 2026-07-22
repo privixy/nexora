@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { FileJson } from "lucide-react";
-import { JsonInput } from "../components/ui/JsonInput";
+import { JsonInput } from "../components/JsonInput";
 
 interface SessionDto {
   value: unknown;

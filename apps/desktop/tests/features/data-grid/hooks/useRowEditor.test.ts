@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useRowEditor } from "../../src/hooks/useRowEditor";
+import { useRowEditor } from "../../../../src/features/data-grid/hooks/useRowEditor";
 
 describe("useRowEditor", () => {
   const initialData = {
