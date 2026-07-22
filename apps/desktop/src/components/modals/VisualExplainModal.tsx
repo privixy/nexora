@@ -12,7 +12,7 @@ import { useDatabase } from "../../features/connections";
 import { useDrivers } from "../../features/plugins/hooks/useDrivers";
 import type { ExplainPlan } from "../../types/explain";
 import { isDataModifyingQuery } from "../../utils/explainPlan";
-import { isExplainableQuery } from "../../utils/sql";
+import { isExplainableQuery } from "../../features/visual-explain";
 import { getConnectionIcon } from "../../features/connections/lib/driverUI";
 import { Modal } from "../ui/Modal";
 import { VisualExplainView } from "../explain/VisualExplainView";

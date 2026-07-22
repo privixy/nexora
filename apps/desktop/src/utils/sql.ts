@@ -2,7 +2,6 @@ import {
   type Dialect,
   splitStatements,
   stripLeadingComments,
-  isExplainable,
 } from './sqlSplitter';
 
 export type SqlDialect = Dialect;
@@ -11,7 +10,7 @@ export { splitQueries } from './sqlSplitter';
 
 export const stripLeadingSqlComments = stripLeadingComments;
 
-export const isExplainableQuery = isExplainable;
+export { isExplainableQuery } from '../features/visual-explain';
 
 function isIdentifierChar(char: string): boolean {
   return /[A-Za-z0-9_$]/.test(char);
