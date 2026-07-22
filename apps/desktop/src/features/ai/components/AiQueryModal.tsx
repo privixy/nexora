@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { X, Sparkles, Loader2 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { useDatabase } from "../../connections";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { useSettings } from "../../settings";
 import { Modal } from "../../../components/ui/Modal";
 import type { AiQueryModalProps } from '../contracts';
 

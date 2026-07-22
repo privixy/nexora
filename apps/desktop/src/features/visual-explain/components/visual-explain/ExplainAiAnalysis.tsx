@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2, Sparkles } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../../settings/hooks/useSettings";
+import { useSettings } from "../../../settings";
 import { getAiExplanationLanguage } from "../../../../i18n/language";
 import type { ExplainPlan } from "../../contracts";
 

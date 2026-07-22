@@ -53,7 +53,7 @@ vi.mock("../../src/pages/Settings", () => ({ Settings: page("settings") }));
 vi.mock("../../src/features/schema/pages/SchemaDiagramPage", () => ({ SchemaDiagramPage: page("schema-diagram") }));
 vi.mock("../../src/pages/TaskManagerPage", () => ({ TaskManagerPage: page("task-manager") }));
 vi.mock("../../src/pages/VisualExplainPage", () => ({ VisualExplainPage: page("visual-explain") }));
-vi.mock("../../src/features/data-grid/pages/JsonViewerPage", () => ({ JsonViewerPage: page("json-viewer") }));
+vi.mock("../../src/features/data-grid", () => ({ JsonViewerPage: page("json-viewer") }));
 vi.mock("../../src/pages/ResultsWindowPage", () => ({ ResultsWindowPage: page("results-window") }));
 vi.mock("../../src/components/ui/EditorErrorBoundary", () => ({
   EditorErrorBoundary: ({ children }: { children: ReactNode }) => <div data-testid="editor-error-boundary">{children}</div>,

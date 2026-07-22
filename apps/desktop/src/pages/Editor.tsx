@@ -59,7 +59,7 @@ import {
 import { invoke } from "@tauri-apps/api/core";
 import { listen, emit } from "@tauri-apps/api/event";
 import { TableToolbar } from "../components/ui/TableToolbar";
-import { DataGrid } from "../features/data-grid/components/DataGrid";
+import { DataGrid } from "../features/data-grid";
 import { MultiResultPanel } from "../components/ui/MultiResultPanel";
 import { ErrorDisplay } from "../components/ui/ErrorDisplay";
 import { NewRowModal } from "../components/modals/NewRowModal";

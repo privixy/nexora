@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { CheckCircle2 } from "lucide-react";
-import { DataGrid } from "../../features/data-grid/components/DataGrid";
+import { DataGrid } from "../../features/data-grid";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { PaginationControls } from "../../components/ui/PaginationControls";
 import { formatDuration } from "../../utils/formatTime";

@@ -34,6 +34,7 @@ export { useTheme } from "./hooks/useTheme";
 export { useUpdate } from "./hooks/useUpdate";
 export { useEditorTheme } from "./hooks/useEditorTheme";
 export { AiActivityPanel } from "./components/AiActivityPanel";
+export { parseVisualExplainDeepLink } from "./lib/aiActivity";
 export { SshTab } from "./components/SshTab";
 export {
   SettingButtonGroup,

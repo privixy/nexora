@@ -153,62 +153,6 @@
         "owner": "connections",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
-      },
-      {
-        "path": "apps/desktop/src/app/routes.tsx",
-        "importTarget": "../features/data-grid/pages/JsonViewerPage",
-        "owner": "app",
-        "reason": "Legacy DataGrid route deep import retained until public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/components/ui/ResultEntryContent.tsx",
-        "importTarget": "../../features/data-grid/components/DataGrid",
-        "owner": "editor",
-        "reason": "Legacy DataGrid consumer retained until public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/features/notebooks/components/SqlCellResult.tsx",
-        "importTarget": "../../data-grid/components/DataGrid",
-        "owner": "notebooks",
-        "reason": "Legacy DataGrid consumer retained until public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/pages/Editor.tsx",
-        "importTarget": "../features/data-grid/components/DataGrid",
-        "owner": "editor",
-        "reason": "Legacy DataGrid consumer retained until public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
-        "importTarget": "../../settings/hooks/useSettings",
-        "owner": "data-grid",
-        "reason": "Legacy settings deep import retained until DataGrid public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
-        "importTarget": "../../schema/lib/foreignKeys",
-        "owner": "data-grid",
-        "reason": "Legacy schema deep import retained until DataGrid public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/features/data-grid/components/DataGridRow.tsx",
-        "importTarget": "../../schema/lib/foreignKeys",
-        "owner": "data-grid",
-        "reason": "Legacy schema deep import retained until DataGrid public API publication",
-        "removeByTask": 26
-      },
-      {
-        "path": "apps/desktop/src/features/data-grid/components/JsonTreeView.tsx",
-        "importTarget": "../../settings/state/ThemeContext",
-        "owner": "data-grid",
-        "reason": "Legacy settings deep import retained until DataGrid public API publication",
-        "removeByTask": 26
       }
     ],
     "directTauriExceptionsFile": "architecture/frontend-tauri-exceptions.json",

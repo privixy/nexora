@@ -7,13 +7,12 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../settings/hooks/useSettings";
-import { useDatabase } from "../../connections";
-import { useDrivers } from "../../plugins/hooks/useDrivers";
+import { useSettings } from "../../settings";
+import { getConnectionIcon, useDatabase } from "../../connections";
+import { useDrivers } from "../../plugins";
 import type { ExplainPlan } from "../contracts";
 import { isDataModifyingQuery } from "../lib/explainPlan";
 import { isExplainableQuery } from "..";
-import { getConnectionIcon } from "../../connections/lib/driverUI";
 import { Modal } from "../../../components/ui/Modal";
 import { VisualExplainView } from "./VisualExplainView";
 import type { ExplainViewMode } from "./visual-explain/ExplainSummaryBar";

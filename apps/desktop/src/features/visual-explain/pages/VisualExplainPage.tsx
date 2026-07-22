@@ -11,8 +11,7 @@ import {
   getExplainFileName,
   parseExplainFileParam,
 } from "../lib/explainImport";
-import { parseVisualExplainDeepLink } from "../../settings/lib/aiActivity";
-import { useSettings } from "../../settings/hooks/useSettings";
+import { parseVisualExplainDeepLink, useSettings } from "../../settings";
 
 export interface VisualExplainPageProps {
   /// When provided, render in embedded mode: skip the page header, use the

@@ -4,7 +4,7 @@ import { MultiResultPanel } from "../../../src/components/ui/MultiResultPanel";
 import type { QueryResultEntry, QueryResult } from "../../../src/types/editor";
 
 // Mock DataGrid
-vi.mock("../../../src/features/data-grid/components/DataGrid", () => ({
+vi.mock("../../../src/features/data-grid", () => ({
   DataGrid: vi.fn(() => <div data-testid="data-grid" />),
 }));
 

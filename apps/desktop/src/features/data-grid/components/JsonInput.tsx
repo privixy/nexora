@@ -25,9 +25,9 @@ import {
   useContainerWidth,
 } from "../../../hooks/useContainerWidth";
 
-type JsonInputMode = "code" | "tree" | "raw";
+export type JsonInputMode = "code" | "tree" | "raw";
 
-interface JsonInputProps {
+export interface JsonInputProps {
   value: unknown;
   onChange: (value: unknown) => void;
   placeholder?: string;

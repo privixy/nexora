@@ -6,7 +6,7 @@ import { SlotAnchor } from "../../../components/ui/SlotAnchor";
 import { useRowEditor } from "../hooks/useRowEditor";
 import { useRowEditorResize } from "../hooks/useRowEditorResize";
 
-interface RowEditorSidebarProps {
+export interface RowEditorSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   rowData: Record<string, unknown>;

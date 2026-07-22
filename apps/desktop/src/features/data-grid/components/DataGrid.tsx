@@ -72,7 +72,7 @@ import type {
 } from "../../../types/editor";
 import { MemoRow, type RowCtx } from "./DataGridRow";
 
-interface DataGridProps {
+export interface DataGridProps {
   columns: string[];
   data: unknown[][];
   tableName?: string | null;
