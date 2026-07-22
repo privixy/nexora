@@ -72,52 +72,16 @@ pub async fn open_er_diagram_window(
     schema: Option<String>,
 ) -> Result<(), String> {
     use tauri::{WebviewUrl, WebviewWindowBuilder};
-    use urlencoding::encode;
-
-    let schema_suffix = schema
-        .as_deref()
-        .map(|s| format!("/{}", s))
-        .unwrap_or_default();
-    let title = format_window_title(Some(&format!(
-        "{} ({}{})",
-        database_name, connection_name, schema_suffix
-    )));
-    let mut url = format!(
-        "/schema-diagram?connectionId={}&connectionName={}&databaseName={}",
-        encode(&connection_id),
-        encode(&connection_name),
-        encode(&database_name)
+    let window = crate::domains::queries::build_er_window(
+        &connection_id,
+        &connection_name,
+        &database_name,
+        focus_table.as_deref(),
+        schema.as_deref(),
     );
-
-    if let Some(table) = focus_table {
-        url.push_str(&format!("&focusTable={}", encode(&table)));
-    }
-
-    if let Some(s) = &schema {
-        url.push_str(&format!("&schema={}", encode(s)));
-    }
-
-    // Derive a unique window label per (connection, database, schema) so that
-    // diagrams for different databases on the same connection do not collide on a
-    // shared label (which previously kept showing the first database's diagram).
-    // Tauri window labels only allow a limited character set, so sanitize anything
-    // else to '_'.
-    let raw_label = format!(
-        "er-diagram:{}:{}:{}",
-        connection_id,
-        database_name,
-        schema.as_deref().unwrap_or("")
-    );
-    let label: String = raw_label
-        .chars()
-        .map(|c| {
-            if c.is_ascii_alphanumeric() || c == '-' || c == '_' {
-                c
-            } else {
-                '_'
-            }
-        })
-        .collect();
+    let label = window.label;
+    let url = window.url;
+    let title = window.title;
 
     // If a diagram window for this exact database already exists, just focus it
     // instead of failing to build a second window with the same label.

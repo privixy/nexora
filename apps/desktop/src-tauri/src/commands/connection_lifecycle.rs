@@ -177,25 +177,6 @@ pub async fn get_server_now<R: Runtime>(
             table: None,
         })
         .await?;
-    let params = resolved.params;
-
-    let query = match resolved.saved.params.driver.as_str() {
-        "sqlite" => "SELECT datetime('now', 'localtime')",
-        _ => "SELECT NOW()",
-    };
-
-    let result = resolved
-        .driver
-        .execute_query(&params, query, Some(1), 1, None)
-        .await?;
-
-    result
-        .rows
-        .first()
-        .and_then(|row| row.first())
-        .map(|v| match v {
-            serde_json::Value::String(s) => s.clone(),
-            other => other.to_string(),
-        })
-        .ok_or_else(|| "No timestamp returned from server".to_string())
+    let driver_id = resolved.saved.params.driver.clone();
+    crate::server_time_compat::run(resolved.driver, resolved.params, driver_id).await
 }

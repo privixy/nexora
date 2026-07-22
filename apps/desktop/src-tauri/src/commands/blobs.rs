@@ -77,21 +77,7 @@ pub async fn fetch_blob_as_data_url<R: Runtime>(
     let wire = drv
         .fetch_blob_as_data_url(&params, &table, &col_name, &pk_map, schema.as_deref())
         .await?;
-    // Convert the BLOB wire format to a data: URL
-    // wire format: "BLOB:<size>:<mime>:<base64>"
-    if !wire.starts_with("BLOB:") {
-        return Err("Invalid BLOB wire format".into());
-    }
-    let after_prefix = &wire[5..]; // skip "BLOB:"
-    let size_end = after_prefix.find(':').ok_or("Invalid BLOB wire format")?;
-    let after_size = &after_prefix[size_end + 1..];
-    let mime_end = after_size.find(':').ok_or("Invalid BLOB wire format")?;
-    let mime = &after_size[..mime_end];
-    if !mime.starts_with("image/") {
-        return Err(format!("Not an image: {}", mime));
-    }
-    let base64_payload = &after_size[mime_end + 1..];
-    Ok(format!("data:{};base64,{}", mime, base64_payload))
+    crate::domains::queries::blob_wire_to_data_url(&wire)
 }
 
 #[tauri::command]

@@ -1,6 +1,6 @@
 #[test]
 fn server_time_owner_preserves_driver_branch_and_execute_arguments() {
-    let source = include_str!("../connection_lifecycle.rs");
+    let source = include_str!("../../server_time_compat.rs");
     assert!(source.contains("\"sqlite\" => \"SELECT datetime('now', 'localtime')\""));
     assert!(source.contains("_ => \"SELECT NOW()\""));
     assert!(source.contains(".execute_query(&params, query, Some(1), 1, None)"));
@@ -8,8 +8,8 @@ fn server_time_owner_preserves_driver_branch_and_execute_arguments() {
 
 #[test]
 fn server_time_owner_preserves_result_conversion_and_error() {
-    let source = include_str!("../connection_lifecycle.rs");
-    assert!(source.contains("serde_json::Value::String(s) => s.clone()"));
+    let source = include_str!("../../server_time_compat.rs");
+    assert!(source.contains("serde_json::Value::String(string) => string.clone()"));
     assert!(source.contains("other => other.to_string()"));
     assert!(source.contains("No timestamp returned from server"));
     assert!(source.contains(".await?;"));

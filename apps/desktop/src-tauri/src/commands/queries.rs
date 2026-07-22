@@ -263,33 +263,13 @@ pub async fn count_query<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<u64, String> {
-    let resolved =
-        crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
-            .resolve(crate::domains::connections::DatabaseContext {
-                connection_id: &connection_id,
-                database: database.as_deref(),
-                schema: schema.as_deref(),
-                table: None,
-            })
-            .await?;
-    let params = resolved.params;
-    let drv = resolved.driver;
-
-    let sanitized = query.trim().trim_end_matches(';').to_string();
-
-    let count_q = format!("SELECT COUNT(*) FROM ({}) as count_wrapper", sanitized);
-
-    let result = drv
-        .execute_query(&params, &count_q, None, 1, schema.as_deref())
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
         .await?;
-
-    let total: u64 = result
-        .rows
-        .first()
-        .and_then(|r| r.first())
-        .and_then(|v| v.as_i64())
-        .map(|n| n as u64)
-        .unwrap_or(0);
-
-    Ok(total)
+    crate::count_query_compat::run(resolved.driver, resolved.params, query, schema).await
 }

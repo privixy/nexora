@@ -2,13 +2,14 @@ use urlencoding::encode;
 
 #[test]
 fn er_window_owner_preserves_url_title_label_and_dimensions() {
-    let source = include_str!("../windows.rs");
+    let source = include_str!("../../domains/queries/mod.rs");
     assert!(source.contains("/schema-diagram?connectionId={}&connectionName={}&databaseName={}"));
     assert!(source.contains("format_window_title(Some(&format!"));
     assert!(source.contains("er-diagram:{}:{}:{}"));
     assert!(source.contains("c.is_ascii_alphanumeric() || c == '-' || c == '_'"));
-    assert!(source.contains(".inner_size(1200.0, 800.0)"));
-    assert!(source.contains(".center()"));
+    let adapter = include_str!("../windows.rs");
+    assert!(adapter.contains(".inner_size(1200.0, 800.0)"));
+    assert!(adapter.contains(".center()"));
 }
 
 #[test]
