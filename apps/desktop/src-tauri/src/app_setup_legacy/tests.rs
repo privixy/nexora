@@ -2,7 +2,19 @@ use std::fs;
 
 #[test]
 fn app_setup_legacy_preserves_builder_and_shutdown_order() {
-    let source = fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/src/lib.rs")).unwrap();
+    let source = [
+        "plugins.rs",
+        "state.rs",
+        "setup.rs",
+        "commands.rs",
+        "mod.rs",
+    ]
+    .into_iter()
+    .map(|file| {
+        fs::read_to_string(format!("{}/src/app/{file}", env!("CARGO_MANIFEST_DIR"))).unwrap()
+    })
+    .collect::<Vec<_>>()
+    .join("\n");
     let ordered = [
         ".plugin(tauri_plugin_updater::Builder::new().build())",
         ".plugin(tauri_plugin_clipboard_manager::init())",
@@ -10,17 +22,17 @@ fn app_setup_legacy_preserves_builder_and_shutdown_order() {
         ".plugin(tauri_plugin_dialog::init())",
         ".plugin(tauri_plugin_fs::init())",
         ".plugin(tauri_plugin_notification::init())",
-        ".manage(commands::QueryCancellationState::default())",
-        ".manage(export::ExportCancellationState::default())",
-        ".manage(dump_commands::DumpCancellationState::default())",
+        ".manage(crate::commands::QueryCancellationState::default())",
+        ".manage(crate::export::ExportCancellationState::default())",
+        ".manage(crate::dump_commands::DumpCancellationState::default())",
         ".manage(log_buffer)",
-        ".manage(std::sync::Arc::new(\n            credential_cache::CredentialCache::default(),",
-        ".manage(std::sync::Arc::new(\n            connection_cache::ConnectionCache::default(),",
-        ".manage(connection_import_commands::ImportEnvelopeCache::default())",
-        ".manage(explain_import::PendingExplainFile::default())",
-        ".manage(json_viewer::JsonViewerStore::default())",
-        ".manage(results_window::ResultsWindowStore::default())",
-        ".manage(query_history::QueryHistoryState::default())",
+        ".manage(Arc::new(crate::credential_cache::CredentialCache::default()))",
+        ".manage(Arc::new(crate::connection_cache::ConnectionCache::default()))",
+        ".manage(crate::connection_import_commands::ImportEnvelopeCache::default())",
+        ".manage(crate::explain_import::PendingExplainFile::default())",
+        ".manage(crate::json_viewer::JsonViewerStore::default())",
+        ".manage(crate::results_window::ResultsWindowStore::default())",
+        ".manage(crate::query_history::QueryHistoryState::default())",
         ".setup(move |app|",
         ".invoke_handler(tauri::generate_handler![",
         ".build(tauri::generate_context!())",
@@ -37,19 +49,19 @@ fn app_setup_legacy_preserves_builder_and_shutdown_order() {
 
     let setup = source.split(".setup(move |app|").nth(1).unwrap();
     let setup_order = [
-        "register_driver(drivers::mysql::MysqlDriver::new())",
-        "register_driver(drivers::postgres::PostgresDriver::new())",
-        "register_driver(drivers::sqlite::SqliteDriver::new())",
+        "register_driver(crate::drivers::mysql::MysqlDriver::new())",
+        "register_driver(\n                crate::drivers::postgres::PostgresDriver::new()",
+        "register_driver(crate::drivers::sqlite::SqliteDriver::new())",
         "crate::plugins::manager::load_plugins",
-        "health_check::start_ping_loop",
-        "ai_approval_watcher::spawn",
-        "heartbeat::spawn",
+        "crate::health_check::start_ping_loop",
+        "crate::ai_approval_watcher::spawn",
+        "crate::heartbeat::spawn",
         ".start_maximized",
         "window.maximize()",
         "if args.debug",
         "window.open_devtools()",
         "if let Some(path) = args.explain.clone()",
-        "explain_import::spawn_visual_explain_window",
+        "crate::explain_import::spawn_visual_explain_window",
         "main.close()",
     ];
     let mut cursor = 0;

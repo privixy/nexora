@@ -27,23 +27,27 @@ fn extract_generate_handler_paths(source: &str) -> Vec<String> {
         .filter_map(|line| {
             let normalized = line.split("//").next().unwrap_or_default().trim();
             let normalized = normalized.trim_end_matches(',').trim();
+            let normalized = normalized.strip_prefix("crate::").unwrap_or(normalized);
+            let normalized = match normalized {
+                "debug::is_debug_mode" => "is_debug_mode",
+                "debug::open_devtools" => "open_devtools",
+                "debug::close_devtools" => "close_devtools",
+                value => value,
+            };
             (!normalized.is_empty()).then(|| normalized.to_owned())
         })
         .collect()
 }
 
 fn extract_managed_state_types(source: &str) -> Vec<String> {
-    let setup = source.find(".setup(").expect("missing setup attachment");
-    let builder = source[..setup]
-        .rfind("tauri::Builder::default()")
-        .expect("missing builder");
+    let source_end = source.len();
     let mut states = Vec::new();
-    let mut cursor = builder;
-    while let Some(offset) = source[cursor..setup].find(".manage(") {
+    let mut cursor = 0;
+    while let Some(offset) = source[cursor..source_end].find(".manage(") {
         let start = cursor + offset + ".manage(".len();
         let mut depth = 1;
         let mut end = start;
-        for (index, character) in source[start..setup].char_indices() {
+        for (index, character) in source[start..source_end].char_indices() {
             match character {
                 '(' => depth += 1,
                 ')' => {
@@ -71,6 +75,7 @@ fn extract_managed_state_types(source: &str) -> Vec<String> {
             _ => expression
                 .strip_suffix("::default()")
                 .unwrap_or(&expression)
+                .trim_start_matches("crate::")
                 .to_owned(),
         };
         states.push(normalized);
@@ -81,7 +86,7 @@ fn extract_managed_state_types(source: &str) -> Vec<String> {
 
 #[test]
 fn tauri_handler_registration_matches_baseline() {
-    let source = include_str!("../src/lib.rs");
+    let source = include_str!("../src/app/commands.rs");
     let actual = extract_generate_handler_paths(source);
     let expected = fixture_lines(include_str!("fixtures/tauri-command-registration.txt"));
     assert_eq!(actual, expected);
@@ -89,15 +94,17 @@ fn tauri_handler_registration_matches_baseline() {
 
 #[test]
 fn managed_state_registration_matches_baseline() {
-    let source = include_str!("../src/lib.rs");
+    let source = include_str!("../src/app/state.rs");
     let actual = extract_managed_state_types(source);
     let expected = fixture_lines(include_str!("fixtures/managed-state-registration.txt"));
-    assert_eq!(actual, expected, "actual: {actual:#?}");
+    if actual != expected {
+        panic!("actual: {actual:#?}; expected: {expected:#?}");
+    }
 }
 
 #[test]
 fn fragile_command_registration_is_preserved() {
-    let handlers = extract_generate_handler_paths(include_str!("../src/lib.rs"));
+    let handlers = extract_generate_handler_paths(include_str!("../src/app/commands.rs"));
     for handler in [
         "commands::execute_query_batch",
         "export::export_query_to_file",
@@ -118,7 +125,6 @@ fn fragile_command_registration_is_preserved() {
 }
 
 #[test]
-#[ignore = "target contract activated by Task 3"]
 fn target_app_builder_stages_match_frozen_sequence() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/app");
     let module = std::fs::read_to_string(root.join("mod.rs")).expect("missing src/app/mod.rs");
@@ -127,10 +133,22 @@ fn target_app_builder_stages_match_frozen_sequence() {
     let setup = std::fs::read_to_string(root.join("setup.rs")).expect("missing setup.rs");
     let commands = std::fs::read_to_string(root.join("commands.rs")).expect("missing commands.rs");
 
-    let stages = ["attach_plugins", "manage_state", "attach_setup", "register_commands"];
+    let stages = [
+        "attach_plugins",
+        "manage_state",
+        "attach_setup",
+        "register_commands",
+    ];
+    let run = module
+        .split("pub fn run_desktop")
+        .nth(1)
+        .expect("missing run_desktop");
     let positions: Vec<_> = stages
         .iter()
-        .map(|stage| module.find(stage).unwrap_or_else(|| panic!("missing stage: {stage}")))
+        .map(|stage| {
+            run.find(stage)
+                .unwrap_or_else(|| panic!("missing stage: {stage}"))
+        })
         .collect();
     assert!(positions.windows(2).all(|pair| pair[0] < pair[1]));
     assert_eq!(
