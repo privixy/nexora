@@ -18,8 +18,6 @@ pub mod connection_params;
 pub mod connection_window;
 pub mod credential_cache;
 pub mod dump_commands; // Added
-#[cfg(test)]
-pub mod dump_commands_tests;
 pub mod dump_utils;
 pub mod explain_import;
 pub mod export;

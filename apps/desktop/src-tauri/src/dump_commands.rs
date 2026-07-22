@@ -635,20 +635,4 @@ fn create_sql_reader(file: File, file_path: &str) -> Result<Box<dyn BufRead + Se
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use serde_json::json;
-
-    #[test]
-    fn test_escape_sql_value() {
-        assert_eq!(escape_sql_value(json!(null)), "NULL");
-        assert_eq!(escape_sql_value(json!(123)), "123");
-        assert_eq!(escape_sql_value(json!(12.34)), "12.34");
-        assert_eq!(escape_sql_value(json!(true)), "1");
-        assert_eq!(escape_sql_value(json!(false)), "0");
-        assert_eq!(escape_sql_value(json!("hello")), "'hello'");
-        assert_eq!(escape_sql_value(json!("O'Reilly")), "'O''Reilly'");
-        assert_eq!(escape_sql_value(json!("Back\\slash")), "'Back\\\\slash'");
-        assert_eq!(escape_sql_value(json!("Multi\nLine")), "'Multi\nLine'");
-    }
-}
+mod tests;

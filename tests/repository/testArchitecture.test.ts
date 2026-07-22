@@ -7,7 +7,6 @@ import { describe, expect, it } from "vitest";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (path: string) => readFileSync(resolve(repoRoot, path), "utf8");
 const expectedRustPeerTests = [
-  "apps/desktop/src-tauri/src/dump_commands_tests.rs",
   "apps/desktop/src-tauri/src/export_import_tests.rs",
   "apps/desktop/src-tauri/src/group_tree_tests.rs",
   "apps/desktop/src-tauri/src/updater_tests.rs",
