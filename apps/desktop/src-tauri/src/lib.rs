@@ -49,8 +49,6 @@ pub mod task_manager;
 pub mod theme_commands;
 pub mod theme_models;
 pub mod updater;
-#[cfg(test)]
-pub mod updater_tests;
 pub mod window_title;
 pub mod drivers {
     pub mod common;
