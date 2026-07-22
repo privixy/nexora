@@ -18,12 +18,10 @@ use serde::Serialize;
 use serde_json::Value;
 use tauri::{AppHandle, Emitter, Runtime, State};
 
-use crate::commands::{
-    expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
-    register_abort_handle, resolve_connection_params_with_id, unregister_abort_handle,
-    AbortHandleMap,
-};
+use crate::commands::{register_abort_handle, unregister_abort_handle, AbortHandleMap};
+use crate::domains::connections::DatabaseContext;
 use crate::drivers::{mysql, postgres, sqlite};
+use crate::infrastructure::connections::TauriConnectionContextResolver;
 use crate::models::ConnectionParams;
 
 pub struct ExportCancellationState {
@@ -73,17 +71,16 @@ pub async fn export_query_to_file<R: Runtime>(
     database: Option<String>,
 ) -> Result<(), String> {
     let sanitized_query = sanitize_query(&query);
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let mut params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    // Scope the export to the selected database on connections that expose multiple
-    // databases (e.g. MySQL/MariaDB), so the query runs against the database the
-    // user is viewing rather than the connection's primary database.
-    if let Some(db) = database {
-        params.database = crate::models::DatabaseSelection::Single(db);
-    }
-    let driver = saved_conn.params.driver.clone();
+    let resolved = TauriConnectionContextResolver::new(app.clone())
+        .resolve(DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: None,
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let driver = resolved.saved.params.driver;
 
     let export_format = ExportFormat::parse(&format)?;
     let delimiter = parse_csv_delimiter(csv_delimiter.as_deref());

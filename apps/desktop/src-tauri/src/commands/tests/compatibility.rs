@@ -1,4 +1,4 @@
-use crate::commands::legacy::*;
+use crate::commands::shared::*;
 use crate::commands::*;
 use crate::models::*;
 

@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn test_connection<R: Runtime>(
@@ -138,10 +138,15 @@ pub async fn disconnect_connection<R: Runtime>(
     // Unregister from health check before closing the pool.
     crate::health_check::unregister_connection(&connection_id).await;
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
 
     // Close the connection pool
     crate::pool_manager::close_pool_with_id(&params, Some(&connection_id)).await;
@@ -161,18 +166,25 @@ pub async fn get_server_now<R: Runtime>(
     app: AppHandle<R>,
     connection_id: String,
 ) -> Result<String, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
 
-    let query = match saved_conn.params.driver.as_str() {
+    let query = match resolved.saved.params.driver.as_str() {
         "sqlite" => "SELECT datetime('now', 'localtime')",
         _ => "SELECT NOW()",
     };
 
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    let result = drv.execute_query(&params, query, Some(1), 1, None).await?;
+    let result = resolved
+        .driver
+        .execute_query(&params, query, Some(1), 1, None)
+        .await?;
 
     result
         .rows

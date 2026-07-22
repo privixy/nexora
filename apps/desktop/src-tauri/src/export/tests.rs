@@ -10,7 +10,7 @@ use std::fs;
 fn legacy_export_orchestration_contract_is_preserved() {
     let source = fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/src/export.rs")).unwrap();
     assert!(source.contains("query.trim().trim_end_matches(';').to_string()"));
-    assert!(source.contains("params.database = crate::models::DatabaseSelection::Single(db)"));
+    assert!(source.contains("database: database.as_deref()"));
     assert!(source.contains("const EXPORT_PROGRESS_EVENT: &str = \"export_progress\""));
     assert!(source.contains("rows_processed: count"));
     assert!(source.contains("\"mysql\" => mysql::export::stream_query"));

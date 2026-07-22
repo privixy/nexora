@@ -9,7 +9,7 @@ use zip::write::FileOptions;
 fn legacy_dump_import_orchestration_contract_is_preserved() {
     let source =
         fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/src/dump_commands.rs")).unwrap();
-    assert!(source.contains("params.database = crate::models::DatabaseSelection::Single(db)"));
+    assert!(source.contains("database: database.as_deref()"));
     assert!(source.contains("schema.unwrap_or_else(|| \"public\".to_string())"));
     assert!(source.contains("writeln!(writer, \"-- Nexora Dump\")"));
     assert!(source.contains("-- Structure for table {}"));

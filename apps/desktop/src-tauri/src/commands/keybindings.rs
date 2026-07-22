@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn get_keybindings<R: Runtime>(app: AppHandle<R>) -> Result<serde_json::Value, String> {

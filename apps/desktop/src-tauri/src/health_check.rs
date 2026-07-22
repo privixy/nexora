@@ -163,14 +163,16 @@ async fn ping_all_connections(app: &tauri::AppHandle, failure_counts: &mut HashM
 
 /// Ping a single connection by resolving its params and calling driver.ping().
 async fn ping_single_connection(app: &tauri::AppHandle, connection_id: &str) -> Result<(), String> {
-    let saved_conn = crate::commands::find_connection_by_id(app, connection_id)?;
-
-    let expanded_params =
-        crate::commands::expand_ssh_connection_params(app, &saved_conn.params).await?;
-    let expanded_params =
-        crate::commands::expand_k8s_connection_params(app, &expanded_params).await?;
-    let params =
-        crate::commands::resolve_connection_params_with_id(&expanded_params, connection_id)?;
+    let resolved =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id,
+                database: None,
+                schema: None,
+                table: None,
+            })
+            .await?;
+    let params = resolved.params;
 
     // Check if pool exists before attempting ping (avoid creating new pools).
     let is_builtin = matches!(params.driver.as_str(), "mysql" | "postgres" | "sqlite");
@@ -194,17 +196,17 @@ async fn handle_connection_failure(app: &tauri::AppHandle, connection_id: &str, 
 
     // Close the pool (best-effort — if params can't be resolved the pool stays orphaned
     // but will be reclaimed on next connect or app shutdown).
-    if let Ok(saved_conn) = crate::commands::find_connection_by_id(app, connection_id) {
-        if let Ok(expanded) =
-            crate::commands::expand_ssh_connection_params(app, &saved_conn.params).await
-        {
-            let expanded = crate::commands::expand_k8s_connection_params(app, &expanded).await;
-            if let Ok(params) = expanded.and_then(|params| {
-                crate::commands::resolve_connection_params_with_id(&params, connection_id)
-            }) {
-                crate::pool_manager::close_pool_with_id(&params, Some(connection_id)).await;
-            }
-        }
+    if let Ok(resolved) =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id,
+                database: None,
+                schema: None,
+                table: None,
+            })
+            .await
+    {
+        crate::pool_manager::close_pool_with_id(&resolved.params, Some(connection_id)).await;
     }
 
     // Notify frontend.

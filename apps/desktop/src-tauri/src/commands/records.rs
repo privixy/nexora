@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 use crate::domains::connections::DatabaseContext;
 use crate::infrastructure::connections::TauriConnectionContextResolver;
 
@@ -44,7 +44,7 @@ pub async fn delete_record<R: Runtime>(
             connection_id: &connection_id,
             database: database.as_deref(),
             schema: schema.as_deref(),
-            table: Some(&table),
+            table: Some(table.as_str()),
         })
         .await?;
     resolved
@@ -78,19 +78,21 @@ pub async fn update_record<R: Runtime>(
             connection_id: &connection_id,
             database: database.as_deref(),
             schema: schema.as_deref(),
-            table: Some(&table),
+            table: Some(table.as_str()),
         })
         .await?;
-    resolved.driver.update_record(
-        &resolved.params,
-        &table,
-        &pk_map,
-        &col_name,
-        new_val,
-        schema.as_deref(),
-        max_blob_size,
-    )
-    .await
+    resolved
+        .driver
+        .update_record(
+            &resolved.params,
+            &table,
+            &pk_map,
+            &col_name,
+            new_val,
+            schema.as_deref(),
+            max_blob_size,
+        )
+        .await
 }
 
 #[tauri::command]
@@ -115,7 +117,7 @@ pub async fn insert_record<R: Runtime>(
             connection_id: &connection_id,
             database: database.as_deref(),
             schema: schema.as_deref(),
-            table: Some(&table),
+            table: Some(table.as_str()),
         })
         .await?;
     resolved

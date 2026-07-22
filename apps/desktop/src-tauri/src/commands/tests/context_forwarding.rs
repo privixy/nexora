@@ -1,7 +1,5 @@
 use crate::commands::{resolve_connection_params, resolve_connection_params_with_id};
-use crate::domains::connections::{
-    ConnectionContextResolver, DatabaseContext, ResolvedConnection,
-};
+use crate::domains::connections::{ConnectionContextResolver, DatabaseContext, ResolvedConnection};
 use crate::models::{ConnectionParams, DatabaseSelection};
 
 fn params() -> ConnectionParams {
@@ -70,6 +68,89 @@ async fn resolver_receives_exact_record_context_tuple() {
             Some("monthly_sales".into()),
         )]
     );
+}
+
+#[test]
+fn command_owners_route_exact_context_through_shared_resolver() {
+    let source_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    assert!(!source_root.join("commands/legacy.rs").exists());
+
+    for (file, fields) in [
+        (
+            "commands/catalog.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        (
+            "commands/queries.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        (
+            "commands/records.rs",
+            [
+                "database.as_deref()",
+                "schema.as_deref()",
+                "Some(table.as_str())",
+            ],
+        ),
+        (
+            "commands/blobs.rs",
+            [
+                "database.as_deref()",
+                "schema.as_deref()",
+                "Some(table.as_str())",
+            ],
+        ),
+        (
+            "commands/ddl.rs",
+            [
+                "database.as_deref()",
+                "schema.as_deref()",
+                "Some(table.as_str())",
+            ],
+        ),
+        (
+            "commands/routines.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        (
+            "commands/triggers.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        (
+            "commands/views.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        ("commands/connection_lifecycle.rs", ["None", "None", "None"]),
+        ("export.rs", ["database.as_deref()", "None", "None"]),
+        (
+            "dump_commands.rs",
+            ["database.as_deref()", "schema.as_deref()", "None"],
+        ),
+        (
+            "clipboard_import.rs",
+            [
+                "None",
+                "req.schema.as_deref()",
+                "Some(req.table_name.as_str())",
+            ],
+        ),
+    ] {
+        let source = std::fs::read_to_string(source_root.join(file)).unwrap();
+        assert!(source.contains("TauriConnectionContextResolver"), "{file}");
+        if file != "commands/connection_lifecycle.rs" {
+            assert!(
+                !source.contains("expand_ssh_connection_params"),
+                "{file} must not retain the repeated connection resolution chain"
+            );
+            assert!(
+                !source.contains("resolve_connection_params_with_id"),
+                "{file} must not retain the repeated connection resolution chain"
+            );
+        }
+        for field in fields {
+            assert!(source.contains(field), "{file} must forward {field}");
+        }
+    }
 }
 
 #[tokio::test]

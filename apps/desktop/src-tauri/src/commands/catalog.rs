@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn get_schemas<R: Runtime>(
@@ -30,14 +30,15 @@ pub async fn get_schemas<R: Runtime>(
 ) -> Result<Vec<String>, String> {
     log::info!("Fetching schemas for connection: {}", connection_id);
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.get_schemas(&params).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: None,
+            table: None,
+        })
+        .await?;
+    resolved.driver.get_schemas(&resolved.params).await
 }
 
 #[tauri::command]
@@ -50,13 +51,15 @@ pub async fn get_available_databases<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.get_databases(&params).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    resolved.driver.get_databases(&resolved.params).await
 }
 
 #[tauri::command]
@@ -65,12 +68,18 @@ pub async fn create_database<R: Runtime>(
     connection_id: String,
     database: String,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.create_database(&params, &database).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    resolved
+        .driver
+        .create_database(&resolved.params, &database)
+        .await
 }
 
 #[tauri::command]
@@ -79,12 +88,15 @@ pub async fn drop_database<R: Runtime>(
     connection_id: String,
     database: String,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.drop_database(&params, &database).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    resolved.driver.drop_database(&resolved.params, &database).await
 }
 
 #[tauri::command]
@@ -94,12 +106,18 @@ pub async fn rename_database<R: Runtime>(
     database: String,
     new_name: String,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.rename_database(&params, &database, &new_name).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: None,
+            table: None,
+        })
+        .await?;
+    resolved
+        .driver
+        .rename_database(&resolved.params, &database, &new_name)
+        .await
 }
 
 #[tauri::command]
@@ -109,13 +127,15 @@ pub async fn create_schema<R: Runtime>(
     database: Option<String>,
     schema: String,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.create_schema(&params, &schema).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: Some(schema.as_str()),
+            table: None,
+        })
+        .await?;
+    resolved.driver.create_schema(&resolved.params, &schema).await
 }
 
 #[tauri::command]
@@ -126,13 +146,18 @@ pub async fn truncate_table<R: Runtime>(
     table: String,
     schema: Option<String>,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.truncate_table(&params, &table, schema.as_deref()).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table.as_str()),
+        })
+        .await?;
+    resolved
+        .driver
+        .truncate_table(&resolved.params, &table, schema.as_deref())
+        .await
 }
 
 #[tauri::command]
@@ -143,13 +168,18 @@ pub async fn drop_table<R: Runtime>(
     table: String,
     schema: Option<String>,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.drop_table(&params, &table, schema.as_deref()).await
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table.as_str()),
+        })
+        .await?;
+    resolved
+        .driver
+        .drop_table(&resolved.params, &table, schema.as_deref())
+        .await
 }
 
 #[tauri::command]
@@ -161,19 +191,23 @@ pub async fn get_tables<R: Runtime>(
 ) -> Result<Vec<TableInfo>, String> {
     log::info!("Fetching tables for connection: {}", connection_id);
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
 
     log::debug!(
         "Getting tables from {} database: {}",
-        saved_conn.params.driver,
+        resolved.saved.params.driver,
         params.database
     );
 
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let drv = resolved.driver;
     let result = drv.get_tables(&params, schema.as_deref()).await;
 
     match &result {
@@ -192,12 +226,16 @@ pub async fn get_columns<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<Vec<TableColumn>, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table_name.as_str()),
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_columns(&params, &table_name, schema.as_deref())
         .await
 }
@@ -210,12 +248,16 @@ pub async fn get_foreign_keys<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<Vec<ForeignKey>, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table_name.as_str()),
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_foreign_keys(&params, &table_name, schema.as_deref())
         .await
 }
@@ -228,12 +270,16 @@ pub async fn get_indexes<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<Vec<Index>, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table_name.as_str()),
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_indexes(&params, &table_name, schema.as_deref())
         .await
 }
@@ -245,12 +291,16 @@ pub async fn get_schema_snapshot<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<Vec<crate::models::TableSchema>, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_schema_snapshot(&params, schema.as_deref()).await
 }
 
@@ -260,11 +310,16 @@ pub async fn get_ai_schema_context<R: Runtime>(
     connection_id: String,
     schema: Option<String>,
 ) -> Result<String, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let driver = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: None,
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let driver = resolved.driver;
     let identifier_quote = driver.manifest().capabilities.identifier_quote.as_str();
     let context = driver
         .get_ai_schema_context(

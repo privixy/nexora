@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 use crate::infrastructure::cancellation::{register_abort_handle, unregister_abort_handle};
 
 #[tauri::command]
@@ -50,13 +50,17 @@ pub async fn execute_query<R: Runtime>(
 
     let sanitized_query = sanitize_user_query(&query);
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id: &connection_id,
+                database: database.as_deref(),
+                schema: schema.as_deref(),
+                table: None,
+            })
+            .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let task = tokio::spawn(async move {
         drv.execute_query(
             &params,
@@ -114,13 +118,17 @@ pub async fn execute_query_batch<R: Runtime>(
 
     let sanitized_queries: Vec<String> = queries.iter().map(|q| sanitize_user_query(q)).collect();
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id: &connection_id,
+                database: database.as_deref(),
+                schema: schema.as_deref(),
+                table: None,
+            })
+            .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
 
     // Build a Tauri-agnostic progress sink the driver invokes per statement.
     // Each invocation emits one event so result tabs resolve as they finish.
@@ -208,13 +216,17 @@ pub async fn explain_query_plan<R: Runtime>(
         );
     }
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id: &connection_id,
+                database: database.as_deref(),
+                schema: schema.as_deref(),
+                table: None,
+            })
+            .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let task = tokio::spawn(async move {
         drv.explain_query(&params, &sanitized_query, analyze, schema.as_deref())
             .await
@@ -251,17 +263,22 @@ pub async fn count_query<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<u64, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
+    let resolved =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+            .resolve(crate::domains::connections::DatabaseContext {
+                connection_id: &connection_id,
+                database: database.as_deref(),
+                schema: schema.as_deref(),
+                table: None,
+            })
+            .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
 
     let sanitized = query.trim().trim_end_matches(';').to_string();
 
     let count_q = format!("SELECT COUNT(*) FROM ({}) as count_wrapper", sanitized);
 
-    let drv = driver_for(&saved_conn.params.driver).await?;
     let result = drv
         .execute_query(&params, &count_q, None, 1, schema.as_deref())
         .await?;

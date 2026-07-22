@@ -1,13 +1,8 @@
 use crate::{
-    commands::{
-        expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
-        resolve_connection_params_with_id,
-    },
-    drivers::{driver_trait::DatabaseDriver, registry::get_driver},
-    models::ColumnDefinition,
+    domains::connections::DatabaseContext, drivers::driver_trait::DatabaseDriver,
+    infrastructure::connections::TauriConnectionContextResolver, models::ColumnDefinition,
 };
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use tauri::{AppHandle, Runtime};
 
 #[cfg(test)]
@@ -81,15 +76,16 @@ pub async fn execute_clipboard_import<R: Runtime>(
         req.create_table
     );
 
-    let saved_conn = find_connection_by_id(&app, &req.connection_id)?;
-    let expanded = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded = expand_k8s_connection_params(&app, &expanded).await?;
-    let params = resolve_connection_params_with_id(&expanded, &req.connection_id)?;
-    let drv: Arc<dyn DatabaseDriver> = get_driver(&saved_conn.params.driver)
-        .await
-        .ok_or_else(|| format!("Unsupported driver: {}", saved_conn.params.driver))?;
+    let resolved = TauriConnectionContextResolver::new(app)
+        .resolve(DatabaseContext {
+            connection_id: &req.connection_id,
+            database: None,
+            schema: req.schema.as_deref(),
+            table: Some(req.table_name.as_str()),
+        })
+        .await?;
 
-    execute_with_driver(drv.as_ref(), &params, &req).await
+    execute_with_driver(resolved.driver.as_ref(), &resolved.params, &req).await
 }
 
 async fn execute_with_driver(

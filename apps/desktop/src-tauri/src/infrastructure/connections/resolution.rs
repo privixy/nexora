@@ -1,8 +1,6 @@
 use tauri::{AppHandle, Manager, Runtime};
 
-use crate::domains::connections::{
-    ConnectionContextResolver, DatabaseContext, ResolvedConnection,
-};
+use crate::domains::connections::{ConnectionContextResolver, DatabaseContext, ResolvedConnection};
 use crate::models::{ConnectionParams, K8sConnection, SshConnection};
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 
@@ -113,7 +111,7 @@ fn build_tunnel_map_key(
     crate::ssh_tunnel::build_tunnel_key(ssh_user, ssh_host, ssh_port, remote_host, remote_port)
 }
 
-pub(crate) fn resolve_k8s_params(params: &ConnectionParams) -> Result<ConnectionParams, String> {
+pub fn resolve_k8s_params(params: &ConnectionParams) -> Result<ConnectionParams, String> {
     let context = params.k8s_context.as_deref().ok_or("Missing K8s context")?;
     let namespace = params
         .k8s_namespace
@@ -142,17 +140,12 @@ pub(crate) fn resolve_k8s_params(params: &ConnectionParams) -> Result<Connection
         }
     }
 
-    let tunnel = crate::k8s_tunnel::K8sTunnel::new(
-        context,
-        namespace,
-        resource_type,
-        resource_name,
-        port,
-    )
-    .map_err(|error| {
-        eprintln!("[Connection Error] K8s Tunnel setup failed: {}", error);
-        error
-    })?;
+    let tunnel =
+        crate::k8s_tunnel::K8sTunnel::new(context, namespace, resource_type, resource_name, port)
+            .map_err(|error| {
+            eprintln!("[Connection Error] K8s Tunnel setup failed: {}", error);
+            error
+        })?;
     let local_port = tunnel.local_port;
     crate::k8s_tunnel::get_tunnels()
         .lock()

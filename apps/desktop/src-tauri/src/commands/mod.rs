@@ -1,6 +1,10 @@
-pub(crate) mod legacy;
+pub(crate) mod shared;
 
-pub use crate::infrastructure::connections::TauriConnectionContextResolver;
+pub use crate::infrastructure::connections::{
+    expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
+    get_config_path, get_ssh_config_path, resolve_connection_params,
+    resolve_connection_params_with_id, resolve_k8s_params, TauriConnectionContextResolver,
+};
 
 mod connection_store;
 pub use connection_store::*;
@@ -40,7 +44,7 @@ pub use windows::*;
 pub(crate) use crate::infrastructure::cancellation::{
     register_abort_handle, unregister_abort_handle, AbortHandleMap,
 };
-pub use legacy::*;
+pub use shared::*;
 
 #[cfg(test)]
 mod tests;

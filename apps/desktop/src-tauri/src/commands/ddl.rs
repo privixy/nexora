@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn get_create_table_sql<R: Runtime>(
@@ -118,12 +118,16 @@ pub async fn drop_index_action<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table.as_str()),
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.drop_index(&params, &table, &index_name, schema.as_deref())
         .await
 }
@@ -137,12 +141,16 @@ pub async fn drop_foreign_key_action<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<(), String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(table.as_str()),
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.drop_foreign_key(&params, &table, &fk_name, schema.as_deref())
         .await
 }

@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn get_routines<R: Runtime>(
@@ -31,13 +31,16 @@ pub async fn get_routines<R: Runtime>(
 ) -> Result<Vec<RoutineInfo>, String> {
     log::info!("Fetching routines for connection: {}", connection_id);
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_routines(&params, schema.as_deref()).await
 }
 
@@ -55,13 +58,16 @@ pub async fn get_routine_parameters<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_routine_parameters(&params, &routine_name, schema.as_deref())
         .await
 }
@@ -82,13 +88,16 @@ pub async fn get_routine_definition<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_routine_definition(&params, &routine_name, &routine_type, schema.as_deref())
         .await
 }
@@ -103,13 +112,16 @@ pub async fn build_routine_call_sql<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<String, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.build_routine_call_sql(
         &params,
         &routine_name,
@@ -142,13 +154,16 @@ pub async fn get_routine_edit_script<R: Runtime>(
     schema: Option<String>,
     database: Option<String>,
 ) -> Result<String, String> {
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.get_routine_edit_script(&params, &routine_name, &routine_type, schema.as_deref())
         .await
 }
@@ -169,13 +184,16 @@ pub async fn drop_routine<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     drv.drop_routine(&params, &routine_name, &routine_type, schema.as_deref())
         .await
 }

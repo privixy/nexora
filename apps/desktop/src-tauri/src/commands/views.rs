@@ -20,7 +20,7 @@ use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
-use super::legacy::*;
+use super::shared::*;
 
 #[tauri::command]
 pub async fn get_views<R: Runtime>(
@@ -31,19 +31,23 @@ pub async fn get_views<R: Runtime>(
 ) -> Result<Vec<crate::models::ViewInfo>, String> {
     log::info!("Fetching views for connection: {}", connection_id);
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
 
     log::debug!(
         "Getting views from {} database: {}",
-        saved_conn.params.driver,
+        resolved.saved.params.driver,
         params.database
     );
 
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let drv = resolved.driver;
     let result = drv.get_views(&params, schema.as_deref()).await;
 
     match &result {
@@ -68,13 +72,16 @@ pub async fn get_view_definition<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .get_view_definition(&params, &view_name, schema.as_deref())
         .await;
@@ -102,13 +109,16 @@ pub async fn create_view<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .create_view(&params, &view_name, &definition, schema.as_deref())
         .await;
@@ -136,13 +146,16 @@ pub async fn alter_view<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .alter_view(&params, &view_name, &definition, schema.as_deref())
         .await;
@@ -169,13 +182,16 @@ pub async fn drop_view<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv.drop_view(&params, &view_name, schema.as_deref()).await;
 
     match &result {
@@ -200,13 +216,16 @@ pub async fn get_view_columns<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .get_view_columns(&params, &view_name, schema.as_deref())
         .await;
@@ -231,13 +250,16 @@ pub async fn get_materialized_views<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv.get_materialized_views(&params, schema.as_deref()).await;
 
     match &result {
@@ -270,13 +292,16 @@ pub async fn get_materialized_view_columns<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .get_materialized_view_columns(&params, &view_name, schema.as_deref())
         .await;
@@ -311,13 +336,16 @@ pub async fn get_materialized_view_definition<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .get_materialized_view_definition(&params, &view_name, schema.as_deref())
         .await;
@@ -351,13 +379,16 @@ pub async fn refresh_materialized_view<R: Runtime>(
         connection_id
     );
 
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    let params = apply_database_override(params, database.as_deref());
-
-    let drv = driver_for(&saved_conn.params.driver).await?;
+    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app)
+        .resolve(crate::domains::connections::DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: None,
+        })
+        .await?;
+    let params = resolved.params;
+    let drv = resolved.driver;
     let result = drv
         .refresh_materialized_view(&params, &view_name, schema.as_deref())
         .await;
