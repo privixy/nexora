@@ -624,22 +624,6 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
-    "importTarget": "@tauri-apps/api/core",
-    "owner": "connections",
-    "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/connectionGateway.ts",
-    "removeByTask": 39
-  },
-  {
-    "importer": "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
-    "importTarget": "@tauri-apps/api/event",
-    "owner": "connections",
-    "characterizationTest": "apps/desktop/tests/features/connections/rawTauri.test.tsx",
-    "gatewayOrAdapter": "apps/desktop/src/platform/tauri/events.ts",
-    "removeByTask": 39
-  },
-  {
     "importer": "apps/desktop/src/contexts/EditorProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "editor",

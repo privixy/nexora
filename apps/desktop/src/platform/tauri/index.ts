@@ -10,6 +10,7 @@ export { catalogGateway } from "./catalogGateway";
 export { connectionGateway } from "./connectionGateway";
 export { queryGateway } from "./queryGateway";
 export { recordGateway } from "./recordGateway";
+export { windowGateway } from "./windowGateway";
 export type { ConnectionParamsDto, SavedConnectionDto } from "./contracts/connections";
 export type { CatalogContextDto, TableColumnDto } from "./contracts/catalog";
 export type { RecordContextDto, RecordMutationDto } from "./contracts/records";

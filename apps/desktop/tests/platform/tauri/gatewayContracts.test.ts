@@ -5,6 +5,7 @@ import {
   connectionGateway,
   queryGateway,
   recordGateway,
+  windowGateway,
 } from "../../../src/platform/tauri";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
@@ -22,6 +23,10 @@ describe("Tauri gateway contracts", () => {
     expect(invoke).toHaveBeenCalledWith("test_connection", { params, connection_id: undefined });
     await connectionGateway.getConnections();
     expect(invoke).toHaveBeenCalledWith("get_connections");
+    await connectionGateway.invoke("get_active_connections");
+    expect(invoke).toHaveBeenCalledWith("get_active_connections");
+    await connectionGateway.invoke("set_last_open_connections", { connectionIds: ["id"] });
+    expect(invoke).toHaveBeenCalledWith("set_last_open_connections", { connectionIds: ["id"] });
     await connectionGateway.listDatabases({ request: { params, connection_id: undefined } });
     expect(invoke).toHaveBeenCalledWith("list_databases", { request: { params, connection_id: undefined } });
     await connectionGateway.saveConnection({ name: "name", params, detectJsonInTextColumns: null });
@@ -32,6 +37,11 @@ describe("Tauri gateway contracts", () => {
     expect(invoke).toHaveBeenCalledWith("set_connection_appearance", { id: "id", appearance: null });
     await connectionGateway.deleteConnectionIcon({ relativePath: "icon.png" });
     expect(invoke).toHaveBeenCalledWith("delete_connection_icon", { relativePath: "icon.png" });
+  });
+
+  it("preserves window command wrappers", async () => {
+    await windowGateway.setWindowTitle({ title: "Nexora" });
+    expect(invoke).toHaveBeenCalledWith("set_window_title", { title: "Nexora" });
   });
 
   it("forwards catalog, query, and record payloads unchanged", async () => {

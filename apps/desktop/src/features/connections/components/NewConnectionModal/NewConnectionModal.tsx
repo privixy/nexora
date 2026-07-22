@@ -20,7 +20,7 @@ import { connectionGateway } from "../../../../platform/tauri";
 import type { ConnectionAppearance, ConnectionParams } from "../..";
 import { AppearanceSection } from "./AppearanceSection";
 import { FieldInput } from "./FieldInput";
-import { dialogGateway } from "../../../../platform/tauri";
+import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 import clsx from "clsx";
 import { SshConnectionsModal } from "../../../../components/modals/SshConnectionsModal";
 import { K8sConnectionsModal } from "../../../../components/modals/K8sConnectionsModal";

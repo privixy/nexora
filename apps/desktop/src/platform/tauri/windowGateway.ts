@@ -6,4 +6,7 @@ export const windowGateway = {
   openConnectionWindow(payload: Record<string, unknown>) {
     return invokeTauri("open_connection_window", payload);
   },
+  setWindowTitle(payload: { title: string }) {
+    return invokeTauri("set_window_title", payload);
+  },
 };

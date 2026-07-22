@@ -1,7 +1,16 @@
 import type { ConnectionParamsDto } from "./contracts/connections";
 import { invokeTauri } from "./transport";
 
+function invokeConnection<T>(command: string): Promise<T>;
+function invokeConnection<T>(command: string, payload: Record<string, unknown>): Promise<T>;
+function invokeConnection<T>(command: string, payload?: Record<string, unknown>) {
+  return arguments.length === 1
+    ? invokeTauri<T>(command)
+    : invokeTauri<T>(command, payload as Record<string, unknown>);
+}
+
 export const connectionGateway = {
+  invoke: invokeConnection,
   createConnection(payload: { params: ConnectionParamsDto }) {
     return invokeTauri("create_connection", payload);
   },

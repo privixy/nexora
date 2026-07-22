@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+import { connectionGateway, listenTauri, windowGateway } from '../../../platform/tauri';
 import {
   DatabaseContext,
   type TableInfo,
@@ -21,32 +20,9 @@ import { useSettings } from '../../settings';
 import { findConnectionsForDrivers } from '../lib/connectionManager';
 import { isMultiDatabaseCapable, getEffectiveDatabase, getDatabaseList } from '../../plugins';
 import { formatWindowTitle } from '../../../utils/windowTitle';
+import { createEmptyConnectionData } from './createEmptyConnectionData';
 
-const createEmptyConnectionData = (driver: string = '', name: string = '', dbName: string = ''): ConnectionData => ({
-  driver,
-  capabilities: null,
-  connectionName: name,
-  databaseName: dbName,
-  tables: [],
-  views: [],
-  routines: [],
-  triggers: [],
-  isLoadingTables: false,
-  isLoadingViews: false,
-  isLoadingRoutines: false,
-  isLoadingTriggers: false,
-  schemas: [],
-  isLoadingSchemas: false,
-  schemaDataMap: {},
-  activeDatabase: dbName || null,
-  activeSchema: null,
-  selectedSchemas: [],
-  needsSchemaSelection: false,
-  selectedDatabases: [],
-  databaseDataMap: {},
-  isConnecting: false,
-  isConnected: false,
-});
+const invoke = connectionGateway.invoke;
 
 export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
   const { settings } = useSettings();
@@ -115,7 +91,7 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
               : activeDatabaseName;
           title = formatWindowTitle(`${activeConnectionName} (${dbDisplay}${schemaSuffix})`);
         }
-        await invoke('set_window_title', { title });
+        await windowGateway.setWindowTitle({ title });
       } catch (e) {
         console.error('Failed to update window title', e);
       }
@@ -1366,11 +1342,11 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
 
   // Listen for backend health-check failures and clean up dead connections.
   useEffect(() => {
-    const unlisten = listen<{ connectionId: string; error: string }>(
+    const unlisten = listenTauri<{ connectionId: string; error: string }>(
       'connection-health-failed',
       (event) => {
-        const { connectionId } = event.payload;
-        console.warn(`[DatabaseProvider] Connection health check failed for ${connectionId}: ${event.payload.error}`);
+        const { connectionId } = event;
+        console.warn(`[DatabaseProvider] Connection health check failed for ${connectionId}: ${event.error}`);
 
         clearAutocompleteCache(connectionId);
 
@@ -1399,8 +1375,8 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
     invoke<string[]>('get_active_connections')
       .then(setGloballyOpenConnectionIds)
       .catch(() => {});
-    const unlisten = listen<string[]>('connections:active-changed', (event) => {
-      setGloballyOpenConnectionIds(event.payload);
+    const unlisten = listenTauri<string[]>('connections:active-changed', (connectionIds) => {
+      setGloballyOpenConnectionIds(connectionIds);
     });
     return () => { unlisten.then(fn => fn()); };
   }, []);

@@ -515,7 +515,7 @@
     "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501,
     "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698,
     "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx": 2312,
-    "apps/desktop/src/features/connections/state/DatabaseProvider.tsx": 1586,
+    "apps/desktop/src/features/connections/state/DatabaseProvider.tsx": 1562,
     "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx": 929,
     "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx": 649,
     "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx": 1416,
