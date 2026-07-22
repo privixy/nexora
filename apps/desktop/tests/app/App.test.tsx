@@ -3,7 +3,7 @@ import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { App } from "../../src/App";
+import { App } from "../../src/app/App";
 import { useChangelog } from "../../src/hooks/useChangelog";
 import { useResultTypeColors } from "../../src/hooks/useResultTypeColors";
 import { useSettings } from "../../src/hooks/useSettings";

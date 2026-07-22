@@ -1,6 +1,6 @@
 [
   {
-    "importer": "apps/desktop/src/App.tsx",
+    "importer": "apps/desktop/src/app/App.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "app",
     "characterizationTest": "apps/desktop/tests/app/App.test.tsx",

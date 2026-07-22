@@ -25,7 +25,7 @@ const forbiddenRootDesktopPaths = [
 describe("current workspace layout", () => {
   it("owns frontend source, assets, and app configuration in apps/desktop", () => {
     for (const path of [
-      "apps/desktop/src/main.tsx",
+      "apps/desktop/src/app/main.tsx",
       "apps/desktop/public/logo.png",
       "apps/desktop/index.html",
       "apps/desktop/vite.config.ts",

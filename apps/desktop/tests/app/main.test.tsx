@@ -5,7 +5,7 @@ const renderMock = vi.fn();
 const createRootMock = vi.fn(() => ({ render: renderMock }));
 
 vi.mock("react-dom/client", () => ({ default: { createRoot: createRootMock } }));
-vi.mock("../../src/App", () => ({ App: function App() { return null; } }));
+vi.mock("../../src/app/App", () => ({ App: function App() { return null; } }));
 vi.mock("../../src/contexts/DatabaseProvider", () => ({ DatabaseProvider: function DatabaseProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/contexts/SettingsProvider", () => ({ SettingsProvider: function SettingsProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/contexts/SavedQueriesProvider", () => ({ SavedQueriesProvider: function SavedQueriesProvider({ children }: { children: ReactNode }) { return children; } }));
@@ -35,7 +35,7 @@ describe("legacy main composition root", () => {
   });
 
   it("starts React on the root element with the exact provider order", async () => {
-    await import("../../src/main");
+    await import("../../src/app/main");
 
     const root = document.getElementById("root");
     expect(createRootMock).toHaveBeenCalledOnce();
