@@ -60,21 +60,47 @@
       "apps/desktop/src/utils/sqlSplitter/index.ts",
       "apps/desktop/src/utils/sqlSplitter/splitter.ts",
       "apps/desktop/src/utils/sqlSplitter/tokenizer.ts"
+    ],
+    "apps/desktop/tests/features/plugins/hooks/useDrivers.test.tsx": [
+      "apps/desktop/src/features/plugins/hooks/useDrivers.ts"
+    ],
+    "apps/desktop/tests/platform/tauri/gatewayContracts.test.ts": [
+      "apps/desktop/src/platform/tauri/catalogGateway.ts",
+      "apps/desktop/src/platform/tauri/connectionGateway.ts",
+      "apps/desktop/src/platform/tauri/queryGateway.ts",
+      "apps/desktop/src/platform/tauri/recordGateway.ts"
+    ],
+    "apps/desktop/tests/platform/tauri/platformAdapters.test.ts": [
+      "apps/desktop/src/platform/tauri/assetAdapter.ts",
+      "apps/desktop/src/platform/tauri/clipboardAdapter.ts",
+      "apps/desktop/src/platform/tauri/notificationAdapter.ts",
+      "apps/desktop/src/platform/tauri/openerAdapter.ts",
+      "apps/desktop/src/platform/tauri/pathAdapter.ts",
+      "apps/desktop/src/platform/tauri/updaterAdapter.ts"
+    ],
+    "apps/desktop/tests/utils/createTable.test.ts": [
+      "apps/desktop/src/features/schema/lib/createTable.ts"
+    ],
+    "apps/desktop/tests/utils/database.test.ts": [
+      "apps/desktop/src/features/plugins/lib/databaseCapabilities.ts"
+    ],
+    "apps/desktop/tests/utils/foreignKeys.test.ts": [
+      "apps/desktop/src/features/schema/lib/foreignKeys.ts"
     ]
   },
   "frontendBoundaries": {
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/components/modals/ViewEditorModal.tsx",
-        "importTarget": "../ui/SqlEditorWrapper",
+        "path": "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
+        "importTarget": "../../../../components/ui/SqlEditorWrapper",
         "owner": "schema",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
       },
       {
-        "path": "apps/desktop/src/components/modals/TriggerEditorModal.tsx",
-        "importTarget": "../ui/SqlEditorWrapper",
+        "path": "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
+        "importTarget": "../../../../components/ui/SqlEditorWrapper",
         "owner": "schema",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
@@ -433,7 +459,6 @@
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
     "apps/desktop/src/components/layout/ExplorerSidebar.tsx": 3174,
     "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx": 549,
-    "apps/desktop/src/components/modals/ClipboardImportModal.tsx": 698,
     "apps/desktop/src/components/modals/ImportFromAppModal.tsx": 929,
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/components/modals/NewConnectionModal.tsx": 2409,
@@ -465,6 +490,7 @@
     "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx": 545,
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,
     "apps/desktop/tests/features/settings/state/ThemeProvider.test.tsx": 651,
-    "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501
+    "apps/desktop/tests/features/settings/lib/aiActivity.test.ts": 501,
+    "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx": 698
   }
 }

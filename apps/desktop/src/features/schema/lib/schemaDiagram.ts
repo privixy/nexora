@@ -6,7 +6,7 @@
 /**
  * Connection parameters parsed from URL
  */
-import type { SchemaDiagramRouteParams } from "../features/schema";
+import type { SchemaDiagramRouteParams } from "..";
 
 /**
  * Parse connection parameters from URL search params

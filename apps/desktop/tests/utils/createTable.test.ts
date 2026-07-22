@@ -4,7 +4,7 @@ import {
   getCreateTableRefreshPlan,
   resolveCreateTableSchema,
   type CreateTableTarget,
-} from "../../src/utils/createTable";
+} from "../../src/features/schema/lib/createTable";
 
 describe("createTable", () => {
   describe("getCreateTableRefreshPlan", () => {

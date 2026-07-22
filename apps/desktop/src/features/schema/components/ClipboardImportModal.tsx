@@ -15,23 +15,23 @@ import {
 } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
 import { readText } from '@tauri-apps/plugin-clipboard-manager';
-import { Modal } from '../ui/Modal';
-import { Select } from '../ui/Select';
-import { useDatabase } from '../../hooks/useDatabase';
-import { useSettings } from '../../features/settings/hooks/useSettings';
+import { Modal } from '../../../components/ui/Modal';
+import { Select } from '../../../components/ui/Select';
+import { useDatabase } from '../../../hooks/useDatabase';
+import { useSettings } from '../../settings';
 import { SchemaEditor, type SchemaColumn } from './ClipboardImport/SchemaEditor';
-import { DataPreview } from './ClipboardImport/DataPreview';
-import { TableNameInput } from './ClipboardImport/TableNameInput';
-import { ParseSummary } from './ClipboardImport/ParseSummary';
-import { ModeToggle } from './ClipboardImport/ModeToggle';
-import { useDataTypes } from '../../hooks/useDataTypes';
-import type { TableColumn } from '../../utils/sqlGenerator';
+import { DataPreview } from '../../../components/modals/ClipboardImport/DataPreview';
+import { TableNameInput } from '../../../components/modals/ClipboardImport/TableNameInput';
+import { ParseSummary } from '../../../components/modals/ClipboardImport/ParseSummary';
+import { ModeToggle } from '../../../components/modals/ClipboardImport/ModeToggle';
+import { useDataTypes } from '../../../hooks/useDataTypes';
+import type { TableColumn } from '../../../utils/sqlGenerator';
 import {
   parseClipboardText,
   reParseWithHeaderOption,
   type ParsedClipboardData,
   type InferredColumn,
-} from '../../utils/clipboardParser';
+} from '../../../utils/clipboardParser';
 
 type ImportMode = 'create' | 'append';
 type IfExistsStrategy = 'fail' | 'append' | 'replace';

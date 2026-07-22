@@ -6,7 +6,7 @@ import { Editor } from "../pages/Editor";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { McpPage } from "../pages/McpPage";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
-import { SchemaDiagramPage } from "../pages/SchemaDiagramPage";
+import { SchemaDiagramPage } from "../features/schema";
 import { SettingsPage } from "../features/settings";
 import { TaskManagerPage } from "../pages/TaskManagerPage";
 import { VisualExplainPage } from "../pages/VisualExplainPage";

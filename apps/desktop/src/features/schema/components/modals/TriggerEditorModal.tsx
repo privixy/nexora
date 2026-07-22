@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { X, Loader2, Zap, AlertCircle } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
-import { useAlert } from "../../hooks/useAlert";
-import { Modal } from "../ui/Modal";
-import { SqlEditorWrapper } from "../ui/SqlEditorWrapper";
-import { useDatabase } from "../../hooks/useDatabase";
-import { quoteIdentifier } from "../../utils/identifiers";
+import { useAlert } from "../../../../hooks/useAlert";
+import { Modal } from "../../../../components/ui/Modal";
+import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
+import { useDatabase } from "../../../../hooks/useDatabase";
+import { quoteIdentifier } from "../../../../utils/identifiers";
 
 interface TriggerEditorModalProps {
   isOpen: boolean;

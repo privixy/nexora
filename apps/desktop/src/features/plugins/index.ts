@@ -20,3 +20,8 @@ export { PluginSlotProvider } from "./state/PluginSlotProvider";
 export { useDrivers } from "./hooks/useDrivers";
 export { usePluginRegistry } from "./hooks/usePluginRegistry";
 export { usePluginSlotRegistry } from "./hooks/usePluginSlotRegistry";
+export {
+  getDatabaseList,
+  getEffectiveDatabase,
+  isMultiDatabaseCapable,
+} from "./lib/databaseCapabilities";

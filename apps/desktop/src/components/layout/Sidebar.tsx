@@ -14,7 +14,7 @@ import { ExplorerSidebar, type SidebarTab } from "./ExplorerSidebar";
 import { PanelDatabaseProvider } from "./PanelDatabaseProvider";
 import { QuickNavigatorModal } from "../modals/QuickNavigatorModal";
 import { GenerateSQLModal } from "../modals/GenerateSQLModal";
-import { SchemaModal } from "../modals/SchemaModal";
+import { SchemaModal } from "../../features/schema";
 
 // Hooks & Utils
 import { useSidebarResize } from "../../hooks/useSidebarResize";

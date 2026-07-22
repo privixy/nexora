@@ -50,20 +50,20 @@ import type { QueryHistoryEntry } from "../../types/queryHistory";
 import type { NotebookMetadata } from "../../types/notebook";
 import { ContextMenu, type ContextMenuItem } from "../ui/ContextMenu";
 import { Modal } from "../ui/Modal";
-import { SchemaModal } from "../modals/SchemaModal";
-import { CreateTableModal } from "../modals/CreateTableModal";
+import { SchemaModal } from "../../features/schema";
+import { CreateTableModal } from "../../features/schema";
 import { QueryModal } from "../modals/QueryModal";
-import { ModifyColumnModal } from "../modals/ModifyColumnModal";
-import { CreateIndexModal } from "../modals/CreateIndexModal";
-import { CreateForeignKeyModal } from "../modals/CreateForeignKeyModal";
+import { ModifyColumnModal } from "../../features/schema";
+import { CreateIndexModal } from "../../features/schema";
+import { CreateForeignKeyModal } from "../../features/schema";
 import { GenerateSQLModal } from "../modals/GenerateSQLModal";
 import { DumpDatabaseModal } from "../modals/DumpDatabaseModal";
 import { ImportDatabaseModal } from "../modals/ImportDatabaseModal";
-import { ClipboardImportModal } from "../modals/ClipboardImportModal";
-import { ViewEditorModal } from "../modals/ViewEditorModal";
-import { TriggerEditorModal } from "../modals/TriggerEditorModal";
+import { ClipboardImportModal } from "../../features/schema";
+import { ViewEditorModal } from "../../features/schema";
+import { TriggerEditorModal } from "../../features/schema";
 import { ConfirmModal } from "../modals/ConfirmModal";
-import { RunRoutineModal } from "../modals/RunRoutineModal";
+import { RunRoutineModal } from "../../features/schema";
 import { Accordion } from "./sidebar/Accordion";
 import { SidebarTableItem } from "./sidebar/SidebarTableItem";
 import { buildTableItemSelector } from "../../utils/sidebarTableItem";
@@ -84,10 +84,10 @@ import type { TableColumn } from "../../types/schema";
 import type { ContextMenuData } from "../../types/sidebar";
 import type { RoutineInfo, TriggerInfo } from "../../features/connections";
 import { groupRoutinesByType } from "../../utils/routines";
-import { formatObjectCount } from "../../utils/schema";
+import { formatObjectCount } from "../../features/schema/lib/schema";
 import { groupByDate, formatHistoryTime } from "../../utils/dateGroups";
 import { SqlHighlight } from "../ui/SqlHighlight";
-import { isMultiDatabaseCapable } from "../../utils/database";
+import { isMultiDatabaseCapable } from "../../features/plugins";
 import {
   supportsCreateDatabase,
   supportsCreateSchema,
@@ -101,7 +101,7 @@ import {
   DEFAULT_CREATE_TABLE_TARGET,
   getCreateTableRefreshPlan,
   type CreateTableTarget,
-} from "../../utils/createTable";
+} from "../../features/schema/lib/createTable";
 
 export type SidebarTab = "structure" | "favorites" | "history" | "notebooks";
 

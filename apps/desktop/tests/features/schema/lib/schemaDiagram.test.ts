@@ -8,7 +8,7 @@ import {
   resolveDiagramDatabase,
   resolveDiagramSchema,
   type ConnectionParams,
-} from '../../src/utils/schemaDiagram';
+} from '../../../../src/features/schema/lib/schemaDiagram';
 
 describe('schemaDiagram', () => {
   describe('resolveDiagramSchema', () => {

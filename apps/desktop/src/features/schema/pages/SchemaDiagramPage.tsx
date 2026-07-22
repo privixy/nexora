@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SchemaDiagram } from '../components/ui/SchemaDiagram';
-import { resolveDiagramDatabase, resolveDiagramSchema } from '../utils/schemaDiagram';
+import { SchemaDiagram } from '../components/SchemaDiagram';
+import { resolveDiagramDatabase, resolveDiagramSchema } from '../lib/schemaDiagram';
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DatabaseProvider } from '../contexts/DatabaseProvider';
-import { EditorProvider } from '../contexts/EditorProvider';
+import { DatabaseProvider } from '../../../contexts/DatabaseProvider';
+import { EditorProvider } from '../../../contexts/EditorProvider';
 
 export const SchemaDiagramPage = () => {
   const { t } = useTranslation();

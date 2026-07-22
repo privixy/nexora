@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Folder, List } from "lucide-react";
-import type { GroupedIndex } from "../../../utils/indexes";
+import type { GroupedIndex } from "../../../features/schema/lib/indexes";
 
 interface SidebarIndexListProps {
   indexes: GroupedIndex[];

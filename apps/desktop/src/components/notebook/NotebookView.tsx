@@ -59,7 +59,7 @@ import {
 } from "../../utils/notebookStore";
 import { useDatabase } from "../../hooks/useDatabase";
 import { useSqlAutocompleteRegistration } from "../../hooks/useSqlAutocompleteRegistration";
-import { isMultiDatabaseCapable } from "../../utils/database";
+import { isMultiDatabaseCapable } from "../../features/plugins";
 import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useAlert } from "../../hooks/useAlert";
 import { useKeybindings } from "../../hooks/useKeybindings";

@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Play, Variable } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { Modal } from "../ui/Modal";
-import type { RoutineInfo } from "../../features/connections";
+import { Modal } from "../../../../components/ui/Modal";
+import type { RoutineInfo } from "../../../connections";
 import {
   buildRoutineCallArgs,
   isCallParameter,
@@ -11,7 +11,7 @@ import {
   isOutputOnly,
   type RoutineArgInput,
   type RoutineParameterInfo,
-} from "../../utils/routineCall";
+} from "../../../../utils/routineCall";
 
 interface RunRoutineModalProps {
   isOpen: boolean;

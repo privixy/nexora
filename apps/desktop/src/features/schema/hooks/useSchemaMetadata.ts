@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import type { TableSchema, ForeignKey } from '../types/editor';
+import type { TableSchema, ForeignKey } from '../../../types/editor';
 
 interface SchemaMetadata {
   schema: TableSchema[] | null;

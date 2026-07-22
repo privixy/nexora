@@ -14,14 +14,14 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import dagre from "dagre";
-import { useEditor } from "../../hooks/useEditor";
+import { useEditor } from "../../../hooks/useEditor";
 import { SchemaTableNodeComponent } from "./SchemaTableNode";
 import { Loader2, ArrowLeftRight, ArrowUpDown, Maximize2, Focus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ContextMenu } from "./ContextMenu";
+import { ContextMenu } from "../../../components/ui/ContextMenu";
 import { useSearchParams } from "react-router-dom";
-import { useSettings } from "../../features/settings/hooks/useSettings";
-import { DEFAULT_SETTINGS } from "../../features/settings/state/SettingsContext";
+import { useSettings } from "../../settings";
+import { DEFAULT_SETTINGS } from "../../settings";
 
 const nodeTypes = {
   schemaTable: SchemaTableNodeComponent,

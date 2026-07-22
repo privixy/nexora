@@ -3,7 +3,7 @@ import {
   formatObjectCount,
   filterValidSchemas,
   getDefaultSchema,
-} from '../../src/utils/schema';
+} from '../../../../src/features/schema/lib/schema';
 
 describe('formatObjectCount', () => {
   it('should format counts with proper labels', () => {

@@ -4,7 +4,7 @@ import {
   isMultiDatabaseSelection,
   getDatabaseList,
   getEffectiveDatabase,
-} from '../../src/utils/database';
+} from '../../src/features/plugins/lib/databaseCapabilities';
 import type { DriverCapabilities } from '../../src/types/plugins';
 
 const baseCapabilities: DriverCapabilities = {

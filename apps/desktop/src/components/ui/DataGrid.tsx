@@ -49,7 +49,7 @@ import { supportsEmptyString } from "../../utils/text";
 import {
   pickPrimaryForeignKeyByColumn,
   getForeignKeyForPreview,
-} from "../../utils/foreignKeys";
+} from "../../features/schema/lib/foreignKeys";
 import {
   getDateInputMode,
   parseDateTime,

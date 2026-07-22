@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { reconstructTableQuery } from "../utils/editor";
 import { resolveEditorContext } from "../utils/editorContext";
 import { serializePkKey, buildPkMap } from "../utils/dataGrid";
-import { isMultiDatabaseCapable } from "../utils/database";
+import { isMultiDatabaseCapable } from "../features/plugins";
 import { isReadonly } from "../utils/driverCapabilities";
 import { formatWindowTitle } from "../utils/windowTitle";
 import {
@@ -127,7 +127,7 @@ import type {
   TableColumn,
   ForeignKey,
 } from "../types/editor";
-import { buildForeignKeyFilterClause } from "../utils/foreignKeys";
+import { buildForeignKeyFilterClause } from "../features/schema/lib/foreignKeys";
 import { formatSqlIdentifier } from "../utils/identifiers";
 import { RelatedRecordsPanel } from "../components/ui/RelatedRecordsPanel";
 import {

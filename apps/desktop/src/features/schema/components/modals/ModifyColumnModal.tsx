@@ -2,15 +2,15 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Save, Loader2, AlertTriangle, Columns, Plus } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { SqlPreview } from "../ui/SqlPreview";
-import { useDatabase } from "../../hooks/useDatabase";
-import { useDataTypes } from "../../hooks/useDataTypes";
-import { useDrivers } from "../../features/plugins/hooks/useDrivers";
-import { Modal } from "../ui/Modal";
-import { Select } from "../ui/Select";
-import { supportsAlterColumn } from "../../utils/driverCapabilities";
-import { parseColumnType, buildColumnDefinition } from "../../utils/columnTypes";
-import type { ColumnFormData } from "../../utils/columnTypes";
+import { SqlPreview } from "../../../../components/ui/SqlPreview";
+import { useDatabase } from "../../../../hooks/useDatabase";
+import { useDataTypes } from "../../../../hooks/useDataTypes";
+import { useDrivers } from "../../../plugins";
+import { Modal } from "../../../../components/ui/Modal";
+import { Select } from "../../../../components/ui/Select";
+import { supportsAlterColumn } from "../../../../utils/driverCapabilities";
+import { parseColumnType, buildColumnDefinition } from "../../../../utils/columnTypes";
+import type { ColumnFormData } from "../../../../utils/columnTypes";
 
 type ColumnDef = ColumnFormData;
 

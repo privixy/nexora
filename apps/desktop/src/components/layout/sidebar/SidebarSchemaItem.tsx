@@ -20,7 +20,7 @@ import type { SchemaData, RoutineInfo, TriggerInfo } from "../../../features/con
 import type { TableColumn } from "../../../types/schema";
 import type { ContextMenuData } from "../../../types/sidebar";
 import { groupRoutinesByType } from "../../../utils/routines";
-import { formatObjectCount } from "../../../utils/schema";
+import { formatObjectCount } from "../../../features/schema/lib/schema";
 import { fuzzyFilter } from "../../../utils/fuzzy";
 
 interface SidebarSchemaItemProps {

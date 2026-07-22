@@ -4,12 +4,12 @@ import { X, Loader2, Eye, AlertCircle, Play, Sparkles } from "lucide-react";
 import type { OnMount } from "@monaco-editor/react";
 import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
-import { useAlert } from "../../hooks/useAlert";
-import { extractEditableViewDefinition } from "../../utils/sql";
-import { formatSql } from "../../utils/sqlFormat";
-import { SqlEditorWrapper } from "../ui/SqlEditorWrapper";
-import { useDatabase } from "../../hooks/useDatabase";
-import { Modal } from "../ui/Modal";
+import { useAlert } from "../../../../hooks/useAlert";
+import { extractEditableViewDefinition } from "../../../../utils/sql";
+import { formatSql } from "../../../../utils/sqlFormat";
+import { SqlEditorWrapper } from "../../../../components/ui/SqlEditorWrapper";
+import { useDatabase } from "../../../../hooks/useDatabase";
+import { Modal } from "../../../../components/ui/Modal";
 
 interface ViewEditorModalProps {
   isOpen: boolean;

@@ -41,7 +41,7 @@ import {
   getK8sResourcePorts,
   type K8sConnection,
 } from "../../utils/k8s";
-import { isMultiDatabaseCapable } from "../../utils/database";
+import { isMultiDatabaseCapable } from "../../features/plugins";
 import { fetchConnectionWithCredentials } from "../../utils/credentials";
 import { getDriverIcon, getDriverColorStyle } from "../../utils/driverUI";
 import {

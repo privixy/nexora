@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Save, Loader2, AlertTriangle, Link } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
-import { SqlPreview } from '../ui/SqlPreview';
-import { useDatabase } from '../../hooks/useDatabase';
-import { useDrivers } from '../../features/plugins/hooks/useDrivers';
-import { Modal } from '../ui/Modal';
-import { supportsCreateForeignKeys, getCapabilitiesForDriver } from '../../utils/driverCapabilities';
+import { SqlPreview } from '../../../../components/ui/SqlPreview';
+import { useDatabase } from '../../../../hooks/useDatabase';
+import { useDrivers } from '../../../plugins';
+import { Modal } from '../../../../components/ui/Modal';
+import { supportsCreateForeignKeys, getCapabilitiesForDriver } from '../../../../utils/driverCapabilities';
 
 interface CreateForeignKeyModalProps {
   isOpen: boolean;

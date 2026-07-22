@@ -1,8 +1,8 @@
 import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import type { ReactNode } from 'react';
-import { SchemaDiagram } from '../../../src/components/ui/SchemaDiagram';
-import type { TableSchema } from '../../../src/types/editor';
+import { SchemaDiagram } from '../../../../src/features/schema/components/SchemaDiagram';
+import type { TableSchema } from '../../../../src/types/editor';
 
 type GetSchema = (
   connectionId: string,
@@ -13,11 +13,12 @@ type GetSchema = (
 
 const getSchemaMock = vi.hoisted(() => vi.fn<GetSchema>());
 
-vi.mock('../../../src/hooks/useEditor', () => ({
+vi.mock('../../../../src/hooks/useEditor', () => ({
   useEditor: () => ({ getSchema: getSchemaMock }),
 }));
 
-vi.mock('../../../src/features/settings/hooks/useSettings', () => ({
+vi.mock('../../../../src/features/settings', () => ({
+  DEFAULT_SETTINGS: { erDiagramDefaultLayout: 'LR' },
   useSettings: () => ({ settings: {} }),
 }));
 

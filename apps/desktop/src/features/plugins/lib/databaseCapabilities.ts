@@ -1,4 +1,4 @@
-import type { DriverCapabilities } from '../types/plugins';
+import type { DriverCapabilities } from '../../../types/plugins';
 
 /**
  * Returns true when a driver supports cross-database access from a single connection

@@ -24,6 +24,7 @@ export { SettingsPage } from "./pages/SettingsPage";
 export { SettingsProvider } from "./state/SettingsProvider";
 export { ThemeProvider } from "./state/ThemeProvider";
 export { UpdateProvider } from "./state/UpdateProvider";
+export { DEFAULT_SETTINGS } from "./state/SettingsContext";
 export { useSettings } from "./hooks/useSettings";
 export { useTheme } from "./hooks/useTheme";
 export { useUpdate } from "./hooks/useUpdate";

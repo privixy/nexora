@@ -6,7 +6,7 @@ import {
   isNumericColumnType,
   buildForeignKeyFilterClause,
   getForeignKeyForPreview,
-} from "../../src/utils/foreignKeys";
+} from "../../src/features/schema/lib/foreignKeys";
 
 const fk = (
   name: string,

@@ -5,7 +5,7 @@ import { quoteTableRef } from '../utils/identifiers';
 import {
   isForeignKeyValueNavigable,
   buildForeignKeyFilterClause,
-} from '../utils/foreignKeys';
+} from '../features/schema/lib/foreignKeys';
 
 export interface FetchReferencedRecordParams {
   connectionId: string;

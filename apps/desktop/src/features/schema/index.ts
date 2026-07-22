@@ -1,1 +1,13 @@
 export type { ForeignKey, Index, SchemaDiagramRouteParams, TableColumn } from "./contracts";
+
+export { SchemaDiagramPage } from "./pages/SchemaDiagramPage";
+export { ClipboardImportModal } from "./components/ClipboardImportModal";
+export { CreateForeignKeyModal } from "./components/modals/CreateForeignKeyModal";
+export { CreateIndexModal } from "./components/modals/CreateIndexModal";
+export { CreateTableModal } from "./components/modals/CreateTableModal";
+export { ModifyColumnModal } from "./components/modals/ModifyColumnModal";
+export { RunRoutineModal } from "./components/modals/RunRoutineModal";
+export { SchemaModal } from "./components/modals/SchemaModal";
+export { TriggerEditorModal } from "./components/modals/TriggerEditorModal";
+export { ViewEditorModal } from "./components/modals/ViewEditorModal";
+export { useSchemaMetadata } from "./hooks/useSchemaMetadata";

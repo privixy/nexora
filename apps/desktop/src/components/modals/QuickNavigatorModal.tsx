@@ -6,7 +6,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useDatabase } from "../../hooks/useDatabase";
 import { useAlert } from "../../hooks/useAlert";
 import { quoteTableRef } from "../../utils/identifiers";
-import { isMultiDatabaseCapable, getDatabaseList } from "../../utils/database";
+import { isMultiDatabaseCapable, getDatabaseList } from "../../features/plugins";
 import { getNavigatorItems, filterNavigatorItems } from "../../utils/quickNavigator";
 import { newConsoleForTable } from "../../utils/newConsole";
 import type { RoutineInfo, TriggerInfo } from "../../features/connections";

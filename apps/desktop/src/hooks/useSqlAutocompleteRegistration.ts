@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { Monaco } from "@monaco-editor/react";
 import { loader } from "@monaco-editor/react";
 import { useDatabase } from "./useDatabase";
-import { isMultiDatabaseCapable } from "../utils/database";
+import { isMultiDatabaseCapable } from "../features/plugins";
 import { registerSqlAutocomplete, disposeSqlAutocomplete } from "../utils/autocomplete";
 
 type Options = {
