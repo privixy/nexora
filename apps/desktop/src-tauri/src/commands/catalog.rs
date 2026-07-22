@@ -38,7 +38,7 @@ pub async fn get_schemas<R: Runtime>(
             table: None,
         })
         .await?;
-    resolved.driver.get_schemas(&resolved.params).await
+    crate::domains::catalog::CatalogService::get_schemas(resolved).await
 }
 
 #[tauri::command]
@@ -76,10 +76,7 @@ pub async fn create_database<R: Runtime>(
             table: None,
         })
         .await?;
-    resolved
-        .driver
-        .create_database(&resolved.params, &database)
-        .await
+    crate::domains::catalog::CatalogService::create_database(resolved, &database).await
 }
 
 #[tauri::command]
@@ -96,7 +93,10 @@ pub async fn drop_database<R: Runtime>(
             table: None,
         })
         .await?;
-    resolved.driver.drop_database(&resolved.params, &database).await
+    resolved
+        .driver
+        .drop_database(&resolved.params, &database)
+        .await
 }
 
 #[tauri::command]
@@ -135,7 +135,10 @@ pub async fn create_schema<R: Runtime>(
             table: None,
         })
         .await?;
-    resolved.driver.create_schema(&resolved.params, &schema).await
+    resolved
+        .driver
+        .create_schema(&resolved.params, &schema)
+        .await
 }
 
 #[tauri::command]
@@ -154,9 +157,7 @@ pub async fn truncate_table<R: Runtime>(
             table: Some(table.as_str()),
         })
         .await?;
-    resolved
-        .driver
-        .truncate_table(&resolved.params, &table, schema.as_deref())
+    crate::domains::catalog::CatalogService::truncate_table(resolved, &table, schema.as_deref())
         .await
 }
 

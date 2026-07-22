@@ -135,24 +135,27 @@ pub async fn disconnect_connection<R: Runtime>(
 ) -> Result<(), String> {
     log::info!("Disconnecting from connection: {}", connection_id);
 
-    // Unregister from health check before closing the pool.
-    crate::health_check::unregister_connection(&connection_id).await;
-
-    let resolved = crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone())
-        .resolve(crate::domains::connections::DatabaseContext {
-            connection_id: &connection_id,
-            database: None,
-            schema: None,
-            table: None,
-        })
-        .await?;
-    let params = resolved.params;
-
-    // Close the connection pool
-    crate::pool_manager::close_pool_with_id(&params, Some(&connection_id)).await;
-
-    // Broadcast so every window learns this connection is now closed.
-    crate::health_check::emit_active_changed(&app).await;
+    let resolver =
+        crate::infrastructure::connections::TauriConnectionContextResolver::new(app.clone());
+    crate::domains::connections::ConnectionService::disconnect(
+        &connection_id,
+        |id| async move { crate::health_check::unregister_connection(&id).await },
+        |id| async move {
+            resolver
+                .resolve(crate::domains::connections::DatabaseContext {
+                    connection_id: &id,
+                    database: None,
+                    schema: None,
+                    table: None,
+                })
+                .await
+        },
+        |resolved, id| async move {
+            crate::pool_manager::close_pool_with_id(&resolved.params, Some(&id)).await;
+        },
+        || crate::health_check::emit_active_changed(&app),
+    )
+    .await?;
 
     log::info!(
         "Successfully disconnected from connection: {}",
