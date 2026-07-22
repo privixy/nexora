@@ -137,6 +137,23 @@ function renderGrid(overrides: Partial<React.ComponentProps<typeof DataGrid>> = 
 }
 
 describe("DataGrid operations", () => {
+  it("can transition from no columns to rendered columns without changing hook order", () => {
+    const props: React.ComponentProps<typeof DataGrid> = {
+      data: [],
+      columns: [],
+      connectionId: "connection-1",
+      tableName: "users",
+      onRefresh: vi.fn(),
+    };
+    const { rerender } = render(<DataGrid {...props} />);
+
+    expect(screen.getByText("dataGrid.noData")).toBeInTheDocument();
+
+    rerender(<DataGrid {...props} columns={["id"]} data={[[1]]} />);
+
+    expect(screen.getByText("id")).toBeInTheDocument();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
     mockDatabaseContext.activeDatabase = "analytics";

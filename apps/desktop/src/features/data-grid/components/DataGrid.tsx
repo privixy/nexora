@@ -358,6 +358,30 @@ export const DataGrid = React.memo(
       [columns, pkIndexMaps, pkColumns, pendingChanges],
     );
 
+    const {
+      editingCell,
+      setEditingCell,
+      handleEditCommit,
+      handleKeyDown,
+      commitEditWithValue,
+    } = useCellEditing({
+      columns,
+      mergedRows,
+      tableName,
+      pkColumns,
+      pkIndexMaps,
+      connectionId,
+      database,
+      schema,
+      activeDatabase,
+      activeSchema,
+      onRefresh,
+      onPendingChange,
+      onPendingInsertionChange,
+      showAlert,
+      t,
+    });
+
     const handleCellDoubleClick = useCallback(
       (rowIndex: number, colIndex: number, value: unknown) => {
       if (!tableName || readonlyProp) return;
@@ -475,33 +499,10 @@ export const DataGrid = React.memo(
         buildRowDataWithPending,
         openJsonViewerWindow,
         showAlert,
+        setEditingCell,
         t,
       ],
     );
-
-    const {
-      editingCell,
-      setEditingCell,
-      handleEditCommit,
-      handleKeyDown,
-      commitEditWithValue,
-    } = useCellEditing({
-      columns,
-      mergedRows,
-      tableName,
-      pkColumns,
-      pkIndexMaps,
-      connectionId,
-      database,
-      schema,
-      activeDatabase,
-      activeSchema,
-      onRefresh,
-      onPendingChange,
-      onPendingInsertionChange,
-      showAlert,
-      t,
-    });
 
     useEffect(() => {
       if (editingCell && editInputRef.current) {
@@ -1034,16 +1035,6 @@ export const DataGrid = React.memo(
       ],
     );
 
-    // Show "no data" if there are no columns (even with pending insertions, we can't render without column info)
-    // OR if there are columns but no data and no pending insertions
-    if (columns.length === 0) {
-      return (
-        <div className="h-full flex items-center justify-center text-muted">
-          {t("dataGrid.noData")}
-        </div>
-      );
-    }
-
     const contextPkVal =
       contextMenu && pkIndexMaps.length > 0 && pkColumns
         ? serializePkKey(buildPkMap(pkColumns, contextMenu.row, pkIndexMaps))
@@ -1100,6 +1091,14 @@ export const DataGrid = React.memo(
         ? rowVirtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end
         : 0;
     const totalColumnCount = tableColumns.length + 1;
+
+    if (columns.length === 0) {
+      return (
+        <div className="h-full flex items-center justify-center text-muted">
+          {t("dataGrid.noData")}
+        </div>
+      );
+    }
 
     return (
       <>
