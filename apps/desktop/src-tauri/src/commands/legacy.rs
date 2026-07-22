@@ -18,6 +18,7 @@ use crate::models::{
 use crate::persistence;
 use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
+pub use crate::infrastructure::connections::{find_connection_by_id, get_config_path, get_ssh_config_path};
 
 // Constants
 /// Resolve the driver from the registry or return a descriptive error.
@@ -336,75 +337,6 @@ pub fn resolve_connection_params_with_id(
     Ok(resolved)
 }
 
-pub fn get_config_path<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, String> {
-    let config_dir = app.path().app_config_dir().map_err(|e| e.to_string())?;
-    if !config_dir.exists() {
-        fs::create_dir_all(&config_dir).map_err(|e| e.to_string())?;
-    }
-    Ok(crate::paths::resolve_connections_path(&config_dir))
-}
-
-pub fn get_ssh_config_path<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, String> {
-    let config_dir = app.path().app_config_dir().map_err(|e| e.to_string())?;
-    if !config_dir.exists() {
-        fs::create_dir_all(&config_dir).map_err(|e| e.to_string())?;
-    }
-    Ok(config_dir.join("ssh_connections.json"))
-}
-
-pub fn find_connection_by_id<R: Runtime>(
-    app: &AppHandle<R>,
-    id: &str,
-) -> Result<SavedConnection, String> {
-    let conn_cache = app.state::<std::sync::Arc<crate::connection_cache::ConnectionCache>>();
-
-    let mut conn = match conn_cache.lookup(id) {
-        crate::connection_cache::CacheLookup::Hit(c) => c,
-        crate::connection_cache::CacheLookup::Miss => {
-            return Err("Connection not found".to_string())
-        }
-        crate::connection_cache::CacheLookup::Cold => {
-            let path = get_config_path(app)?;
-            let conn_file = persistence::load_connections_file(&path).unwrap_or_default();
-            conn_cache.populate(&conn_file.connections);
-            conn_file
-                .connections
-                .into_iter()
-                .find(|c| c.id == id)
-                .ok_or_else(|| "Connection not found".to_string())?
-        }
-    };
-
-    // Load passwords from keychain if needed, via the in-memory cache.
-    // On a warm cache hit this is a HashMap lookup (nanoseconds); on a cold miss
-    // it calls keychain once and caches the result for all subsequent reads.
-    if conn.params.save_in_keychain.unwrap_or(false) {
-        let cache = app.state::<std::sync::Arc<crate::credential_cache::CredentialCache>>();
-        match credential_cache::get_db_password_cached(&cache, &conn.id) {
-            Ok(pwd) => conn.params.password = Some(pwd),
-            Err(e) => eprintln!(
-                "[Keyring Error] Failed to get DB password for {}: {}",
-                conn.id, e
-            ),
-        }
-        if conn.params.ssh_enabled.unwrap_or(false) {
-            if let Ok(ssh_pwd) = credential_cache::get_ssh_password_cached(&cache, &conn.id) {
-                if !ssh_pwd.trim().is_empty() {
-                    conn.params.ssh_password = Some(ssh_pwd);
-                }
-            }
-            if let Ok(ssh_passphrase) =
-                credential_cache::get_ssh_key_passphrase_cached(&cache, &conn.id)
-            {
-                if !ssh_passphrase.trim().is_empty() {
-                    conn.params.ssh_key_passphrase = Some(ssh_passphrase);
-                }
-            }
-        }
-    }
-
-    Ok(conn)
-}
 
 /// Merge a list of incoming groups into an existing list, preserving hierarchy
 /// and repairing any `parent_id` that points to a group id not present in the

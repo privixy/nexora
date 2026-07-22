@@ -1,4 +1,7 @@
 use crate::commands::{resolve_connection_params, resolve_connection_params_with_id};
+use crate::domains::connections::{
+    ConnectionContextResolver, DatabaseContext, ResolvedConnection,
+};
 use crate::models::{ConnectionParams, DatabaseSelection};
 
 fn params() -> ConnectionParams {
@@ -26,4 +29,78 @@ fn resolution_with_id_preserves_database_and_sets_pool_identity() {
     let resolved = resolve_connection_params_with_id(&params(), "conn-1").unwrap();
     assert_eq!(resolved.database.primary(), "original");
     assert_eq!(resolved.connection_id.as_deref(), Some("conn-1"));
+}
+
+#[derive(Default)]
+struct CapturingResolver {
+    contexts: std::sync::Mutex<Vec<(String, Option<String>, Option<String>, Option<String>)>>,
+}
+
+#[async_trait::async_trait]
+impl ConnectionContextResolver for CapturingResolver {
+    async fn resolve(&self, context: DatabaseContext<'_>) -> Result<ResolvedConnection, String> {
+        self.contexts.lock().unwrap().push((
+            context.connection_id.to_string(),
+            context.database.map(str::to_string),
+            context.schema.map(str::to_string),
+            context.table.map(str::to_string),
+        ));
+        Err("captured".into())
+    }
+}
+
+#[tokio::test]
+async fn resolver_receives_exact_record_context_tuple() {
+    let resolver = CapturingResolver::default();
+    let result = resolver
+        .resolve(DatabaseContext {
+            connection_id: "conn-2",
+            database: Some("analytics"),
+            schema: Some("reporting"),
+            table: Some("monthly_sales"),
+        })
+        .await;
+    assert!(matches!(result, Err(error) if error == "captured"));
+    assert_eq!(
+        resolver.contexts.into_inner().unwrap(),
+        vec![(
+            "conn-2".into(),
+            Some("analytics".into()),
+            Some("reporting".into()),
+            Some("monthly_sales".into()),
+        )]
+    );
+}
+
+#[tokio::test]
+async fn resolver_does_not_infer_missing_fields_or_stale_database() {
+    let resolver = CapturingResolver::default();
+    let _ = resolver
+        .resolve(DatabaseContext {
+            connection_id: "conn-2",
+            database: Some("selected"),
+            schema: None,
+            table: None,
+        })
+        .await;
+    let _ = resolver
+        .resolve(DatabaseContext {
+            connection_id: "conn-2",
+            database: None,
+            schema: Some("reporting"),
+            table: Some("monthly_sales"),
+        })
+        .await;
+    assert_eq!(
+        resolver.contexts.into_inner().unwrap(),
+        vec![
+            ("conn-2".into(), Some("selected".into()), None, None),
+            (
+                "conn-2".into(),
+                None,
+                Some("reporting".into()),
+                Some("monthly_sales".into()),
+            ),
+        ]
+    );
 }

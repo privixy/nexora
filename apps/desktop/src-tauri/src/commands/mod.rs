@@ -1,5 +1,7 @@
 pub(crate) mod legacy;
 
+pub use crate::infrastructure::connections::TauriConnectionContextResolver;
+
 mod connection_store;
 pub use connection_store::*;
 mod ssh;

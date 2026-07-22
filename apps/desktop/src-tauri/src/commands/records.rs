@@ -21,6 +21,8 @@ use crate::ssh_tunnel::{get_tunnels, SshTunnel};
 use crate::window_title::format_window_title;
 
 use super::legacy::*;
+use crate::domains::connections::DatabaseContext;
+use crate::infrastructure::connections::TauriConnectionContextResolver;
 
 #[tauri::command]
 pub async fn delete_record<R: Runtime>(
@@ -37,15 +39,17 @@ pub async fn delete_record<R: Runtime>(
         table,
         pk_map
     );
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let mut params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    if let Some(db) = database {
-        params.database = crate::models::DatabaseSelection::Single(db);
-    }
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.delete_record(&params, &table, &pk_map, schema.as_deref())
+    let resolved = TauriConnectionContextResolver::new(app)
+        .resolve(DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(&table),
+        })
+        .await?;
+    resolved
+        .driver
+        .delete_record(&resolved.params, &table, &pk_map, schema.as_deref())
         .await
 }
 
@@ -68,17 +72,17 @@ pub async fn update_record<R: Runtime>(
         new_val,
         pk_map
     );
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let mut params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    if let Some(db) = database {
-        params.database = crate::models::DatabaseSelection::Single(db);
-    }
     let max_blob_size = crate::config::get_max_blob_size(&app);
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.update_record(
-        &params,
+    let resolved = TauriConnectionContextResolver::new(app)
+        .resolve(DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(&table),
+        })
+        .await?;
+    resolved.driver.update_record(
+        &resolved.params,
         &table,
         &pk_map,
         &col_name,
@@ -105,15 +109,23 @@ pub async fn insert_record<R: Runtime>(
         table,
         columns.join(", ")
     );
-    let saved_conn = find_connection_by_id(&app, &connection_id)?;
-    let expanded_params = expand_ssh_connection_params(&app, &saved_conn.params).await?;
-    let expanded_params = expand_k8s_connection_params(&app, &expanded_params).await?;
-    let mut params = resolve_connection_params_with_id(&expanded_params, &connection_id)?;
-    if let Some(db) = database {
-        params.database = crate::models::DatabaseSelection::Single(db);
-    }
     let max_blob_size = crate::config::get_max_blob_size(&app);
-    let drv = driver_for(&saved_conn.params.driver).await?;
-    drv.insert_record(&params, &table, data, schema.as_deref(), max_blob_size)
+    let resolved = TauriConnectionContextResolver::new(app)
+        .resolve(DatabaseContext {
+            connection_id: &connection_id,
+            database: database.as_deref(),
+            schema: schema.as_deref(),
+            table: Some(&table),
+        })
+        .await?;
+    resolved
+        .driver
+        .insert_record(
+            &resolved.params,
+            &table,
+            data,
+            schema.as_deref(),
+            max_blob_size,
+        )
         .await
 }

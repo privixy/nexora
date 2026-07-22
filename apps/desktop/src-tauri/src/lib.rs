@@ -23,6 +23,7 @@ pub mod connection_window;
 pub mod credential_cache;
 pub mod dump_commands; // Added
 pub mod dump_utils;
+pub mod domains;
 pub mod explain_import;
 pub mod export;
 pub mod export_crypto;
