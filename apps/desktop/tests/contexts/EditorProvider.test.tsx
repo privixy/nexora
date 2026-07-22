@@ -7,8 +7,23 @@ import { invoke } from "@tauri-apps/api/core";
 import React from "react";
 import type { TableSchema } from "../../src/types/editor";
 
+const notebookStoreMocks = vi.hoisted(() => ({
+  createNotebookFromState: vi.fn(),
+  evictFromCache: vi.fn(),
+  flushAllPendingSaves: vi.fn(),
+}));
+const editorUtilsMocks = vi.hoisted(() => ({
+  loadEditorPreferences: vi.fn(),
+}));
+
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
+}));
+
+vi.mock("../../src/utils/notebookStore", () => notebookStoreMocks);
+vi.mock("../../src/utils/editor", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../src/utils/editor")>()),
+  loadEditorPreferences: editorUtilsMocks.loadEditorPreferences,
 }));
 
 describe("EditorProvider", () => {
@@ -83,8 +98,13 @@ describe("EditorProvider", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+    notebookStoreMocks.createNotebookFromState.mockResolvedValue({ notebookId: "migrated-notebook" });
+    notebookStoreMocks.evictFromCache.mockResolvedValue(undefined);
+    notebookStoreMocks.flushAllPendingSaves.mockResolvedValue(undefined);
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({ tabs: [], activeTabId: null });
     vi.mocked(invoke).mockImplementation((cmd: string) => {
       if (cmd === "load_editor_preferences") return Promise.resolve(null);
+      if (cmd === "save_editor_preferences") return Promise.resolve(null);
       if (cmd === "get_schema_snapshot") return Promise.resolve(mockSchema);
       return Promise.reject(new Error(`Unexpected command: ${cmd}`));
     });
@@ -104,30 +124,24 @@ describe("EditorProvider", () => {
   });
 
   it("should ignore persisted active tab on connection startup", async () => {
-    vi.mocked(invoke).mockImplementation((cmd: string) => {
-      if (cmd === "load_editor_preferences") {
-        return Promise.resolve({
-          active_tab_id: "old-tab",
-          tabs: [
-            {
-              id: "old-tab",
-              type: "console",
-              title: "Old Console",
-              query: "select 1",
-              result: null,
-              error: "",
-              executionTime: null,
-              page: 1,
-              activeTable: null,
-              pkColumns: null,
-              connectionId: "conn-1",
-              database: "analytics",
-            },
-          ],
-        });
-      }
-      if (cmd === "get_schema_snapshot") return Promise.resolve(mockSchema);
-      return Promise.resolve(null);
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({
+      activeTabId: "old-tab",
+      tabs: [
+        {
+          id: "old-tab",
+          type: "console",
+          title: "Old Console",
+          query: "select 1",
+          result: null,
+          error: "",
+          executionTime: null,
+          page: 1,
+          activeTable: null,
+          pkColumns: null,
+          connectionId: "conn-1",
+          database: "analytics",
+        },
+      ],
     });
 
     const wrapper = createWrapper("conn-1");
@@ -138,6 +152,119 @@ describe("EditorProvider", () => {
     });
     expect(result.current.activeTab?.database).toBeUndefined();
     expect(result.current.activeTab?.title).toBe("Console");
+  });
+
+  it("loads, migrates, and persists notebook tabs in order", async () => {
+    const legacyState = { cells: [], stopOnError: true };
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({
+      tabs: [
+        {
+          id: "legacy-notebook-tab",
+          title: "Legacy notebook",
+          type: "notebook",
+          query: "",
+          result: null,
+          error: "",
+          executionTime: null,
+          page: 1,
+          activeTable: null,
+          pkColumns: null,
+          connectionId: "conn-1",
+          notebookState: legacyState,
+        },
+      ],
+      activeTabId: "legacy-notebook-tab",
+    });
+
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(2));
+
+    expect(notebookStoreMocks.createNotebookFromState).toHaveBeenCalledWith(
+      "Legacy notebook",
+      legacyState,
+      "conn-1",
+    );
+    expect(result.current.tabs[1]).toMatchObject({
+      id: "legacy-notebook-tab",
+      notebookId: "migrated-notebook",
+      notebookState: undefined,
+    });
+
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "save_editor_preferences")).toBe(true);
+    });
+    expect(notebookStoreMocks.createNotebookFromState.mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(invoke).mock.invocationCallOrder[
+        vi.mocked(invoke).mock.calls.findIndex(([command]) => command === "save_editor_preferences")
+      ],
+    );
+  });
+
+  it("opens or focuses notebook tabs after the active connection finishes loading", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+
+    act(() => result.current.openNotebook("conn-1", "notebook-1", "Notebook one"));
+    await waitFor(() => expect(result.current.tabs).toHaveLength(2));
+    const notebookTabId = result.current.activeTabId;
+
+    act(() => result.current.openNotebook("conn-1", "notebook-1", "Renamed elsewhere"));
+
+    expect(result.current.tabs).toHaveLength(2);
+    expect(result.current.activeTabId).toBe(notebookTabId);
+    expect(result.current.activeTab).toMatchObject({ notebookId: "notebook-1", title: "Notebook one" });
+  });
+
+  it("flushes pending notebook saves on beforeunload and removes the listener on unmount", () => {
+    const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
+    const wrapper = createWrapper("conn-1");
+    const { unmount } = renderHook(() => useEditor(), { wrapper });
+
+    window.dispatchEvent(new Event("beforeunload"));
+    expect(notebookStoreMocks.flushAllPendingSaves).toHaveBeenCalledOnce();
+
+    unmount();
+    expect(removeEventListenerSpy).toHaveBeenCalledWith("beforeunload", expect.any(Function));
+
+    window.dispatchEvent(new Event("beforeunload"));
+    expect(notebookStoreMocks.flushAllPendingSaves).toHaveBeenCalledOnce();
+  });
+
+  it("does not persist tabs until preference loading has completed", async () => {
+    let resolvePreferences: (value: { tabs: []; activeTabId: null }) => void = () => undefined;
+    const preferences = new Promise<{ tabs: []; activeTabId: null }>((resolve) => {
+      resolvePreferences = resolve;
+    });
+    editorUtilsMocks.loadEditorPreferences.mockReturnValue(preferences);
+
+    const wrapper = createWrapper("conn-1");
+    renderHook(() => useEditor(), { wrapper });
+
+    expect(vi.mocked(invoke).mock.calls.filter(([command]) => command === "save_editor_preferences")).toHaveLength(0);
+
+    await act(async () => resolvePreferences({ tabs: [], activeTabId: null }));
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.filter(([command]) => command === "save_editor_preferences")).toHaveLength(1);
+    });
+  });
+
+  it("falls back to an initial tab and persists it after preference loading fails", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    editorUtilsMocks.loadEditorPreferences.mockRejectedValue(new Error("storage unavailable"));
+
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+    expect(result.current.activeTab).toMatchObject({ type: "console", connectionId: "conn-1" });
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "save_editor_preferences")).toBe(true);
+    });
+    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
   it("should add a new console tab", () => {
