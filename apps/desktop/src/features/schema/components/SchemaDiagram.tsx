@@ -90,6 +90,7 @@ interface SchemaDiagramContentProps {
 
 const SchemaDiagramContent = ({
   connectionId,
+  getSchema,
   refreshTrigger,
   schema,
   database,
@@ -267,10 +268,8 @@ const SchemaDiagramContent = ({
       isMounted = false;
     };
   }, [
-  connectionId,
-  getSchema,
-  refreshTrigger,
-
+    connectionId,
+    refreshTrigger,
     getSchema,
     fitView,
     setNodes,

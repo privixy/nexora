@@ -36,7 +36,7 @@ describe("mcpApprovalAttention", () => {
     };
     getCurrentWindow.mockReturnValue(appWindow);
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.focusWindowForApproval("approval-1");
     await attention.restoreWindowAlwaysOnTop("approval-1");
@@ -64,7 +64,7 @@ describe("mcpApprovalAttention", () => {
     };
     getCurrentWindow.mockReturnValue(appWindow);
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.focusWindowForApproval("approval-2");
     await attention.restoreWindowAlwaysOnTop("approval-2");
@@ -96,7 +96,7 @@ describe("mcpApprovalAttention", () => {
     };
     getCurrentWindow.mockReturnValue(appWindow);
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.focusWindowForApproval("approval-partial");
     await attention.restoreWindowAlwaysOnTop("approval-partial");
@@ -155,7 +155,7 @@ describe("mcpApprovalAttention", () => {
       value: audioContext,
     });
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.notifyApprovalRequest({
       title: "Approval needed",
@@ -188,7 +188,7 @@ describe("mcpApprovalAttention", () => {
       value: audioContext,
     });
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.notifyApprovalRequest({
       title: "Approval needed",
@@ -243,7 +243,7 @@ describe("mcpApprovalAttention", () => {
       value: audioContext,
     });
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.notifyApprovalRequest({
       title: "Approval needed",
@@ -270,7 +270,7 @@ describe("mcpApprovalAttention", () => {
     };
     getCurrentWindow.mockReturnValue(appWindow);
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     // First approval: normal flow, snapshot captured
     await attention.focusWindowForApproval("approval-A");
@@ -351,7 +351,7 @@ describe("mcpApprovalAttention", () => {
       value: audioContext,
     });
 
-    const attention = await import("../../src/utils/mcpApprovalAttention");
+    const attention = await import("../../../../src/utils/mcpApprovalAttention");
 
     await attention.notifyApprovalRequest({
       title: "Approval needed",

@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 import { X, Check, Copy, Cpu, Terminal } from "lucide-react";
-import { useAlert } from "../../hooks/useAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import Editor from "@monaco-editor/react";
-import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
-import { loadMonacoTheme } from "../../themes/themeUtils";
-import { Modal } from "../ui/Modal";
+import { useEditorTheme } from "../../settings";
+import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { Modal } from "../../../components/ui/Modal";
 import {
   AnthropicIcon,
   CursorIcon,
@@ -14,8 +14,8 @@ import {
   OpenCodeIcon,
   WindsurfIcon,
   AntigravityIcon,
-} from "../icons/ClientIcons";
-import { McpSafetySection } from "./mcp/McpSafetySection";
+} from "../../../components/icons/ClientIcons";
+import { McpSafetySection } from "./McpSafetySection";
 
 interface McpClientStatus {
   client_id: string;

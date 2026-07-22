@@ -7,7 +7,7 @@ import {
   focusWindowForApproval,
   notifyApprovalRequest,
   restoreWindowAlwaysOnTop,
-} from "../../../../src/utils/mcpApprovalAttention";
+} from "../../../../src/features/mcp/lib/mcpApprovalAttention";
 
 vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock("../../../../src/features/settings/hooks/useAiActivity", () => ({
   usePendingApprovals: vi.fn(),
 }));
 
-vi.mock("../../../../src/utils/mcpApprovalAttention", () => ({
+vi.mock("../../../../src/features/mcp/lib/mcpApprovalAttention", () => ({
   focusWindowForApproval: vi.fn().mockResolvedValue(undefined),
   notifyApprovalRequest: vi.fn().mockResolvedValue(undefined),
   restoreWindowAlwaysOnTop: vi.fn().mockResolvedValue(undefined),

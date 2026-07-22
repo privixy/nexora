@@ -6,7 +6,7 @@ import { ConnectionsPage, SshConnectionsManager } from "../features/connections"
 import { Editor } from "../pages/Editor";
 import { EditorSchemaDiagramPage } from "../features/editor";
 import { JsonViewerPage } from "../pages/JsonViewerPage";
-import { McpPage } from "../pages/McpPage";
+import { McpPage } from "../features/mcp";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
 import { SettingsPage, SshTab } from "../features/settings";
 import { PluginSettingsPage, PluginsTab, useDrivers } from "../features/plugins";

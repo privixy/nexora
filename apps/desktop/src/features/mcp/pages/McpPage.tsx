@@ -18,12 +18,12 @@ import {
   OpenAIIcon,
   OpenCodeIcon,
   WindsurfIcon,
-} from "../components/icons/ClientIcons";
-import { AiActivityPanel } from "../features/settings/components/AiActivityPanel";
-import { McpSafetySection } from "../components/modals/mcp/McpSafetySection";
-import { useAlert } from "../hooks/useAlert";
-import { useEditorTheme } from "../features/settings/hooks/useEditorTheme";
-import { loadMonacoTheme } from "../themes/themeUtils";
+} from "../../../components/icons/ClientIcons";
+import { AiActivityPanel } from "../../settings";
+import { McpSafetySection } from "../components/McpSafetySection";
+import { useAlert } from "../../../hooks/useAlert";
+import { useEditorTheme } from "../../settings";
+import { loadMonacoTheme } from "../../../themes/themeUtils";
 
 interface McpClientStatus {
   client_id: string;

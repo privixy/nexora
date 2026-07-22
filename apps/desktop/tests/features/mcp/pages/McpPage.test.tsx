@@ -1,25 +1,25 @@
 import { invoke } from "@tauri-apps/api/core";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { McpPage } from "../../src/pages/McpPage";
+import { McpPage } from "../../../../src/features/mcp/pages/McpPage";
 
-vi.mock("../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../src/features/settings/hooks/useEditorTheme", () => ({
+vi.mock("../../../../src/features/settings/hooks/useEditorTheme", () => ({
   useEditorTheme: () => "vs-dark",
 }));
 
-vi.mock("../../src/themes/themeUtils", () => ({
+vi.mock("../../../../src/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 
-vi.mock("../../src/features/settings/components/AiActivityPanel", () => ({
+vi.mock("../../../../src/features/settings/components/AiActivityPanel", () => ({
   AiActivityPanel: () => null,
 }));
 
-vi.mock("../../src/components/modals/mcp/McpSafetySection", () => ({
+vi.mock("../../../../src/features/mcp/components/McpSafetySection", () => ({
   McpSafetySection: () => null,
 }));
 

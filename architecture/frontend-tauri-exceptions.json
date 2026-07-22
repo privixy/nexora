@@ -232,7 +232,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/McpModal.tsx",
+    "importer": "apps/desktop/src/features/mcp/components/McpModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "mcp",
     "characterizationTest": "apps/desktop/tests/features/mcp/pages/McpPage.test.tsx",
@@ -368,7 +368,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/mcp/McpSafetySection.tsx",
+    "importer": "apps/desktop/src/features/mcp/components/McpSafetySection.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "mcp",
     "characterizationTest": "apps/desktop/tests/features/mcp/pages/McpPage.test.tsx",
@@ -872,7 +872,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/pages/McpPage.tsx",
+    "importer": "apps/desktop/src/features/mcp/pages/McpPage.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "mcp",
     "characterizationTest": "apps/desktop/tests/features/mcp/pages/McpPage.test.tsx",
