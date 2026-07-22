@@ -334,8 +334,11 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
       if (sourceOwner && exception.owner !== sourceOwner.owner) {
         violations.push(`${importer}: direct Tauri exception owner must match final source owner ${sourceOwner.owner}`);
       }
-      if (exception.removeByTask !== 39) {
-        violations.push(`${importer}: direct Tauri exception removeByTask must be 39`);
+      const isTask32ExplorerException = exception.removeByTask === 32
+        && exception.owner === "explorer"
+        && importer.startsWith(`${sourceRoot}/features/explorer/`);
+      if (exception.removeByTask !== 39 && !isTask32ExplorerException) {
+        violations.push(`${importer}: direct Tauri exception removeByTask must be 39 unless it is exact Task 32 Explorer debt`);
       }
     }
   }

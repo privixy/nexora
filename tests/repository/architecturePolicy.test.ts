@@ -433,6 +433,39 @@ describe("architecture policy", () => {
     }], sourceOwners, {}, plannedTests, gateways)).toEqual(expect.arrayContaining([expect.stringContaining("removeByTask must be 39")]));
   });
 
+  it("accepts only exact Explorer imports staged for Task 32", () => {
+    const importer = "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx";
+    const importTarget = "@tauri-apps/api/core";
+    const characterizationTest = "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx";
+    const gatewayOrAdapter = "apps/desktop/src/platform/tauri/dataTransferGateway.ts";
+    const imports = { [importer]: importTarget };
+    const sourceOwners = [{ source: importer, destination: importer, owner: "explorer", moveTask: 30 }];
+    const plannedTests = [{ owner: "explorer", destination: characterizationTest, task: 29 }];
+    const gateways = [{ owner: "explorer", importTarget, destination: gatewayOrAdapter, task: 9 }];
+
+    expect(boundaryViolations(imports, [], [{
+      importer,
+      importTarget,
+      owner: "explorer",
+      characterizationTest,
+      gatewayOrAdapter,
+      removeByTask: 32,
+    }], sourceOwners, {}, plannedTests, gateways)).toEqual([]);
+
+    expect(boundaryViolations({
+      "apps/desktop/src/features/editor/components/Editor.tsx": importTarget,
+    }, [], [{
+      importer: "apps/desktop/src/features/editor/components/Editor.tsx",
+      importTarget,
+      owner: "editor",
+      characterizationTest: "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx",
+      gatewayOrAdapter,
+      removeByTask: 32,
+    }], [], {}, [{ owner: "editor", destination: "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx", task: 34 }], gateways)).toEqual(expect.arrayContaining([
+      expect.stringContaining("removeByTask must be 39"),
+    ]));
+  });
+
   it("requires temporary exceptions to match an active exact import", () => {
     const exception = {
       path: "apps/desktop/src/features/schema/index.ts",
