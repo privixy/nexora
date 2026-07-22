@@ -133,6 +133,11 @@
       "classification": "external-infrastructure",
       "defaultMode": "ignored",
       "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored"
+    },
+    "apps/desktop/src-tauri/tests/tauri_command_contract.rs": {
+      "classification": "source-contract",
+      "defaultMode": "enabled",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test tauri_command_contract"
     }
   },
   "allowedWorkspaceDependencies": {

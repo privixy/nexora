@@ -1,0 +1,11 @@
+commands::QueryCancellationState
+export::ExportCancellationState
+dump_commands::DumpCancellationState
+SharedLogBuffer
+Arc<credential_cache::CredentialCache>
+Arc<connection_cache::ConnectionCache>
+connection_import_commands::ImportEnvelopeCache
+explain_import::PendingExplainFile
+json_viewer::JsonViewerStore
+results_window::ResultsWindowStore
+query_history::QueryHistoryState
