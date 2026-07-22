@@ -17,7 +17,7 @@ import '@xyflow/react/dist/style.css';
 import { TableNodeComponent, type TableNodeData, type ColumnAggregation } from './TableNode';
 import { JoinEdge } from './JoinEdge';
 import { useDatabase } from '../../connections';
-import { invoke } from '@tauri-apps/api/core';
+import { catalogGateway } from '../../../platform/tauri';
 import { dragState } from './dragState';
 import { useEditor } from '..';
 import { Filter, SortAsc, Group, Hash, X, Plus } from 'lucide-react';
@@ -191,7 +191,7 @@ const VisualQueryBuilderContent = () => {
 
     const loadInitialTable = async () => {
       try {
-        const columns = await invoke<TableColumn[]>("get_columns", {
+        const columns = await catalogGateway.getColumns<TableColumn[]>({
           connectionId: activeConnectionId,
           tableName,
           ...(database ? { database } : {}),
@@ -278,7 +278,7 @@ const VisualQueryBuilderContent = () => {
       });
 
       try {
-        const columns = await invoke<TableColumn[]>("get_columns", {
+        const columns = await catalogGateway.getColumns<TableColumn[]>({
           connectionId: activeConnectionId,
           tableName,
           ...(database ? { database } : {}),
@@ -326,7 +326,7 @@ const VisualQueryBuilderContent = () => {
       if (!activeConnectionId) return;
 
       try {
-        const columns = await invoke<TableColumn[]>("get_columns", {
+        const columns = await catalogGateway.getColumns<TableColumn[]>({
           connectionId: activeConnectionId,
           tableName: target.table,
           ...(target.database ? { database: target.database } : {}),

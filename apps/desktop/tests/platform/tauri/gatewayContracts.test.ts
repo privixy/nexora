@@ -49,6 +49,10 @@ describe("Tauri gateway contracts", () => {
   it("preserves window command wrappers", async () => {
     await windowGateway.setWindowTitle({ title: "Nexora" });
     expect(invoke).toHaveBeenCalledWith("set_window_title", { title: "Nexora" });
+    await windowGateway.openResultsWindow({ tabId: "tab-1", title: "Results" });
+    expect(invoke).toHaveBeenCalledWith("open_results_window", { tabId: "tab-1", title: "Results" });
+    await windowGateway.closeResultsWindow({ tabId: "tab-1" });
+    expect(invoke).toHaveBeenCalledWith("close_results_window", { tabId: "tab-1" });
     await windowGateway.openJsonViewer({ value: { a: 1 }, originalValue: null });
     expect(invoke).toHaveBeenCalledWith("open_json_viewer_window", {
       value: { a: 1 },
@@ -67,8 +71,22 @@ describe("Tauri gateway contracts", () => {
     const payload = { connectionId: "id", database: "db", schema: undefined };
     await catalogGateway.getColumns(payload);
     expect(invoke).toHaveBeenCalledWith("get_columns", payload);
+    await catalogGateway.getForeignKeys(payload);
+    expect(invoke).toHaveBeenCalledWith("get_foreign_keys", payload);
     await queryGateway.executeQuery(payload);
     expect(invoke).toHaveBeenCalledWith("execute_query", payload);
+    await queryGateway.executeBatch(payload);
+    expect(invoke).toHaveBeenCalledWith("execute_query_batch", payload);
+    await queryGateway.cancelQuery(payload);
+    expect(invoke).toHaveBeenCalledWith("cancel_query", payload);
+    await queryGateway.countQuery(payload);
+    expect(invoke).toHaveBeenCalledWith("count_query", payload);
+    await queryGateway.invoke("get_query_history", payload);
+    expect(invoke).toHaveBeenCalledWith("get_query_history", payload);
+    await dataTransferGateway.cancelExport(payload);
+    expect(invoke).toHaveBeenCalledWith("cancel_export", payload);
+    await dataTransferGateway.exportQueryToFile(payload);
+    expect(invoke).toHaveBeenCalledWith("export_query_to_file", payload);
     await recordGateway.insertRecord(payload);
     expect(invoke).toHaveBeenCalledWith("insert_record", payload);
     await recordGateway.updateRecord(payload);

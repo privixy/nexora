@@ -5,7 +5,7 @@ import type {
   EditorPreferences,
 } from "../../../types/editor";
 import { quoteTableRef } from "../../../utils/identifiers";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../../platform/tauri";
 import { cleanTabForStorage, restoreTabFromStorage } from "./tabCleaner";
 import {
   filterTabsByConnection,
@@ -29,7 +29,7 @@ export async function loadEditorPreferences(
   if (!connectionId) return { tabs: [], activeTabId: null };
 
   try {
-    const prefs = await invoke<EditorPreferences | null>(
+    const prefs = await queryGateway.invoke<EditorPreferences | null>(
       "load_editor_preferences",
       { connectionId },
     );
@@ -64,7 +64,7 @@ export async function saveTabsToStorage(
     // Clean tabs before saving: remove temporary data like results, errors, etc.
     const cleanedTabs = tabs.map(cleanTabForStorage);
 
-    await invoke("save_editor_preferences", {
+    await queryGateway.invoke("save_editor_preferences", {
       connectionId,
       preferences: {
         tabs: cleanedTabs,

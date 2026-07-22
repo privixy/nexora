@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../../platform/tauri";
 import { useDatabase } from "../../connections";
 import {
   QueryHistoryContext,
@@ -30,7 +30,7 @@ export const QueryHistoryProvider = ({
 
     setIsLoading(true);
     try {
-      const result = await invoke<QueryHistoryResponse>("get_query_history", {
+      const result = await queryGateway.invoke<QueryHistoryResponse>("get_query_history", {
         connectionId: activeConnectionId,
       });
       setEntries(result.entries);
@@ -65,7 +65,7 @@ export const QueryHistoryProvider = ({
   ) => {
     if (!activeConnectionId) return;
     try {
-      const entry = await invoke<QueryHistoryEntry>(
+      const entry = await queryGateway.invoke<QueryHistoryEntry>(
         "add_query_history_entry",
         {
           connectionId: activeConnectionId,
@@ -92,7 +92,7 @@ export const QueryHistoryProvider = ({
   const deleteEntry = async (id: string) => {
     if (!activeConnectionId) return;
     try {
-      await invoke("delete_query_history_entry", {
+      await queryGateway.invoke("delete_query_history_entry", {
         connectionId: activeConnectionId,
         id,
       });
@@ -106,7 +106,7 @@ export const QueryHistoryProvider = ({
   const clearHistory = async () => {
     if (!activeConnectionId) return;
     try {
-      await invoke("clear_query_history", {
+      await queryGateway.invoke("clear_query_history", {
         connectionId: activeConnectionId,
       });
       setEntries([]);

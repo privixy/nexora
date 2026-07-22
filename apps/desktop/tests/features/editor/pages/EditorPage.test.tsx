@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
 import React from "react";
+import {
+  catalogGateway,
+  listenTauri,
+  queryGateway,
+} from "../../../../src/platform/tauri";
 import { EditorPage } from "../../../../src/features/editor/pages/EditorPage";
 import { useDatabase } from "../../../../src/features/connections";
 import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
@@ -11,9 +14,34 @@ import { EditorContext, type EditorContextType } from "../../../../src/features/
 import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../../../src/types/editor";
 import type { PluginManifest } from "../../../../src/types/plugins";
 
-vi.mock("@tauri-apps/api/event", () => ({
-  listen: vi.fn(),
-  emit: vi.fn(),
+vi.mock("../../../../src/platform/tauri", () => ({
+  catalogGateway: {
+    getColumns: vi.fn(),
+    getForeignKeys: vi.fn(),
+  },
+  dataTransferGateway: {
+    cancelExport: vi.fn(),
+    exportQueryToFile: vi.fn(),
+  },
+  dialogGateway: { save: vi.fn() },
+  emitTauri: vi.fn(),
+  listenTauri: vi.fn(),
+  queryGateway: {
+    cancelQuery: vi.fn(),
+    countQuery: vi.fn(),
+    executeBatch: vi.fn(),
+    executeQuery: vi.fn(),
+  },
+  recordGateway: {
+    deleteRecord: vi.fn(),
+    insertRecord: vi.fn(),
+    updateRecord: vi.fn(),
+  },
+  windowGateway: {
+    closeResultsWindow: vi.fn(),
+    openResultsWindow: vi.fn(),
+    setWindowTitle: vi.fn(),
+  },
 }));
 
 vi.mock("lucide-react", () => {
@@ -379,14 +407,13 @@ function createStatefulEditor(initialTabs: Tab[]) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(listen).mockResolvedValue(vi.fn());
-  vi.mocked(invoke).mockImplementation((command: string) => {
-    if (command === "execute_query") return Promise.resolve(makeResult([[1, "Alice"]]));
-    if (command === "execute_query_batch") return Promise.resolve([]);
-    if (command === "get_columns") return Promise.resolve([{ name: "id", data_type: "integer", is_pk: true, is_nullable: false, is_auto_increment: true } satisfies TableColumn]);
-    if (command === "get_foreign_keys") return Promise.resolve([]);
-    return Promise.resolve(undefined);
-  });
+  vi.mocked(listenTauri).mockResolvedValue(vi.fn());
+  vi.mocked(queryGateway.executeQuery).mockResolvedValue(makeResult([[1, "Alice"]]));
+  vi.mocked(queryGateway.executeBatch).mockResolvedValue([]);
+  vi.mocked(catalogGateway.getColumns).mockResolvedValue([
+    { name: "id", data_type: "integer", is_pk: true, is_nullable: false, is_auto_increment: true } satisfies TableColumn,
+  ]);
+  vi.mocked(catalogGateway.getForeignKeys).mockResolvedValue([]);
 });
 
 afterEach(() => {
@@ -433,7 +460,7 @@ describe("Editor", () => {
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("execute_query", expect.objectContaining({
+      expect(queryGateway.executeQuery).toHaveBeenCalledWith(expect.objectContaining({
         connectionId: "conn-1",
         query: "SELECT * FROM users",
         limit: 50,
@@ -455,7 +482,7 @@ describe("Editor", () => {
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("execute_query", expect.objectContaining({
+      expect(queryGateway.executeQuery).toHaveBeenCalledWith(expect.objectContaining({
         connectionId: "conn-1",
         database: "analytics",
         schema: "reporting",
@@ -466,14 +493,12 @@ describe("Editor", () => {
 
   it("shows loading state and then preserves already-loaded results", async () => {
     let resolveQuery: (value: QueryResult) => void = () => {};
-    vi.mocked(invoke).mockImplementation((command: string) => {
-      if (command === "execute_query") {
-        return new Promise<QueryResult>((resolve) => {
+    vi.mocked(queryGateway.executeQuery).mockImplementation(
+      () =>
+        new Promise<QueryResult>((resolve) => {
           resolveQuery = resolve;
-        });
-      }
-      return Promise.resolve([]);
-    });
+        }),
+    );
     createStatefulEditor([baseConsoleTab]);
 
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
@@ -494,17 +519,14 @@ describe("Editor", () => {
       { result: makeResult([[1]]), error: null, execution_time_ms: 3 },
       { result: null, error: "syntax error", execution_time_ms: 4 },
     ];
-    vi.mocked(invoke).mockImplementation((command: string) => {
-      if (command === "execute_query_batch") return Promise.resolve(batchResults);
-      return Promise.resolve([]);
-    });
+    vi.mocked(queryGateway.executeBatch).mockResolvedValue(batchResults);
     createStatefulEditor([{ ...baseConsoleTab, query: "SELECT 1; SELECT broken" }]);
 
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
     fireEvent.click(await screen.findByText("run-all-queries"));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("execute_query_batch", expect.objectContaining({
+      expect(queryGateway.executeBatch).toHaveBeenCalledWith(expect.objectContaining({
         connectionId: "conn-1",
         queries: ["SELECT 1", "SELECT broken"],
         database: "analytics",
@@ -517,10 +539,7 @@ describe("Editor", () => {
   });
 
   it("marks unresolved batch statements failed when execution stops on error", async () => {
-    vi.mocked(invoke).mockImplementation((command: string) => {
-      if (command === "execute_query_batch") return Promise.reject("stopped on error");
-      return Promise.resolve([]);
-    });
+    vi.mocked(queryGateway.executeBatch).mockRejectedValue("stopped on error");
     createStatefulEditor([{ ...baseConsoleTab, query: "SELECT ok; SELECT fail; SELECT skipped" }]);
 
     fireEvent.click(screen.getByRole("button", { name: /editor.run/ }));
@@ -539,7 +558,7 @@ describe("Editor", () => {
     fireEvent.click(screen.getByText("editor.stop"));
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith("cancel_query", { connectionId: "conn-1" });
+      expect(queryGateway.cancelQuery).toHaveBeenCalledWith({ connectionId: "conn-1" });
     });
     expect(screen.queryByText("editor.executingQuery")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /editor.run/ })).toBeInTheDocument();

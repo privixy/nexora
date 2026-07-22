@@ -48,6 +48,9 @@
       "apps/desktop/src/features/connections/state/DatabaseContext.ts",
       "apps/desktop/src/features/connections/hooks/useDatabase.ts"
     ],
+    "apps/desktop/tests/features/editor/pages/editorNotebookBoundary.test.ts": [
+      "apps/desktop/src/features/editor/pages/EditorPage.tsx"
+    ],
     "apps/desktop/tests/utils/minimax.test.ts": [
       "apps/desktop/src/utils/settings.ts",
       "apps/desktop/src/features/settings/lib/settingsUI.ts",
@@ -599,7 +602,7 @@
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/features/editor/components/MultiResultPanel.tsx": 599,
     "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx": 713,
-    "apps/desktop/src/features/editor/pages/EditorPage.tsx": 4195,
+    "apps/desktop/src/features/editor/pages/EditorPage.tsx": 4200,
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
@@ -627,6 +630,6 @@
     "apps/desktop/tests/features/editor/lib/multiResult.test.ts": 527,
     "apps/desktop/tests/features/editor/query-builder/visualQuery.test.ts": 747,
     "apps/desktop/tests/features/editor/lib/sqlSplitter/splitter.test.ts": 629,
-    "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 547
+    "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 566
   }
 }

@@ -3,7 +3,7 @@ import MonacoEditor, { type OnMount, type BeforeMount } from "@monaco-editor/rea
 import type * as Monaco from "monaco-editor";
 import { useEditorTheme } from "../../settings";
 import { loadMonacoTheme } from "../../../themes/themeUtils";
-import { readText } from "@tauri-apps/plugin-clipboard-manager";
+import { clipboardAdapter } from "../../../platform/tauri";
 import { useSettings } from "../../settings";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import { getFontCSS } from "../../../utils/settings";
@@ -93,7 +93,7 @@ const SqlEditorInternal = ({
 
     const tauriPaste = async (ed: Monaco.editor.ICodeEditor) => {
       try {
-        const text = await readText();
+        const text = await clipboardAdapter.readText();
         const selections = ed.getSelections();
         if (selections && selections.length > 0 && text) {
           const lines = text.split('\n');

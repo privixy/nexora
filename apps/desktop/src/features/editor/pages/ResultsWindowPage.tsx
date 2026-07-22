@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { emit, listen } from "@tauri-apps/api/event";
+import { emitTauri, listenTauri } from "../../../platform/tauri";
 import { MultiResultPanel } from "../components/MultiResultPanel";
 import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
 import {
@@ -30,14 +30,14 @@ export const ResultsWindowPage = () => {
   // Receive result snapshots for this tab from the main window.
   useEffect(() => {
     if (!tabId) return;
-    const unlistenPromise = listen<ResultsSyncPayload>(
+    const unlistenPromise = listenTauri<ResultsSyncPayload>(
       RESULTS_SYNC_EVENT,
-      (event) => {
-        if (event.payload.tabId === tabId) setPayload(event.payload);
+      (nextPayload) => {
+        if (nextPayload.tabId === tabId) setPayload(nextPayload);
       },
     );
     // Ask the main window to send this tab's current state now that we're mounted.
-    emit(RESULTS_READY_EVENT, { tabId });
+    emitTauri(RESULTS_READY_EVENT, { tabId });
     return () => {
       unlistenPromise.then((unlisten) => unlisten());
     };
@@ -45,7 +45,7 @@ export const ResultsWindowPage = () => {
 
   const send = useCallback(
     (action: ResultsWindowAction) => {
-      emit(RESULTS_ACTION_EVENT, { tabId, action });
+      emitTauri(RESULTS_ACTION_EVENT, { tabId, action });
     },
     [tabId],
   );

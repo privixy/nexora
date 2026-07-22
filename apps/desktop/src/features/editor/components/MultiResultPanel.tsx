@@ -23,7 +23,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import clsx from "clsx";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../../platform/tauri";
 import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
 import { StackedResultItem } from "../../../components/ui/StackedResultItem";
 import { ContextMenu } from "../../../components/ui/ContextMenu";
@@ -326,7 +326,7 @@ export function MultiResultPanel({
     if (!entry?.query.trim() || !settings.aiProvider) return;
     setAiRenamingEntryId(entryId);
     try {
-      const name = await invoke<string>("generate_tab_rename", {
+      const name = await queryGateway.invoke<string>("generate_tab_rename", {
         req: {
           provider: settings.aiProvider,
           model: settings.aiModel || "",

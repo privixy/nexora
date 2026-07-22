@@ -58,8 +58,16 @@ import {
   ExternalLink,
   CheckCircle2,
 } from "lucide-react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen, emit } from "@tauri-apps/api/event";
+import {
+  catalogGateway,
+  dataTransferGateway,
+  dialogGateway,
+  emitTauri,
+  listenTauri,
+  queryGateway,
+  recordGateway,
+  windowGateway,
+} from "../../../platform/tauri";
 import { TableToolbar } from "../../../components/ui/TableToolbar";
 import { MultiResultPanel } from "../components/MultiResultPanel";
 import { ErrorDisplay } from "../../../components/ui/ErrorDisplay";
@@ -107,7 +115,6 @@ import {
 import { SqlEditorWrapper } from "../components/SqlEditorWrapper";
 import { useSqlAutocompleteRegistration } from "../hooks/useSqlAutocompleteRegistration";
 import { type OnMount, type Monaco } from "@monaco-editor/react";
-import { save } from "@tauri-apps/plugin-dialog";
 import { useAlert } from "../../../hooks/useAlert";
 import { useDatabase } from "../../connections";
 import { useDrivers } from "../../plugins";
@@ -256,10 +263,10 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
   }, [activeTabId]);
 
   useEffect(() => {
-    const unlisten = listen<ExportProgress>("export_progress", (event) => {
+    const unlisten = listenTauri<ExportProgress>("export_progress", (payload) => {
       setExportState((prev) => ({
         ...prev,
-        rowsProcessed: event.payload.rows_processed,
+        rowsProcessed: payload.rows_processed,
       }));
     });
     return () => {
@@ -463,7 +470,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
           }
           title = formatWindowTitle(`${activeConnectionName} (${dbDisplay}${schemaSuffix})`);
         }
-        await invoke("set_window_title", { title });
+        await windowGateway.setWindowTitle({ title });
       } catch (e) {
         console.error("Failed to update window title", e);
       }
@@ -636,13 +643,13 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       const effectiveSchema = tabSchema ?? activeSchema;
       try {
         const [cols, fks] = await Promise.all([
-          invoke<TableColumn[]>("get_columns", {
+          catalogGateway.getColumns<TableColumn[]>({
             connectionId: activeConnectionId,
             tableName: table,
             ...(tabDatabase ? { database: tabDatabase } : {}),
             ...(effectiveSchema ? { schema: effectiveSchema } : {}),
           }),
-          invoke<ForeignKey[]>("get_foreign_keys", {
+          catalogGateway.getForeignKeys<ForeignKey[]>({
             connectionId: activeConnectionId,
             tableName: table,
             ...(tabDatabase ? { database: tabDatabase } : {}),
@@ -693,7 +700,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
   const stopQuery = useCallback(async () => {
     if (!activeConnectionId) return;
     try {
-      await invoke("cancel_query", { connectionId: activeConnectionId });
+      await queryGateway.cancelQuery({ connectionId: activeConnectionId });
       updateActiveTab({ isLoading: false });
     } catch (e) {
       console.error("Failed to stop:", e);
@@ -823,7 +830,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
           settings.resultPageSize && settings.resultPageSize > 0
             ? settings.resultPageSize
             : 100;
-        const res = await invoke<QueryResult>("execute_query", {
+        const res = await queryGateway.executeQuery<QueryResult>({
           connectionId: activeConnectionId,
           query: textToRun,
           limit: pageSize,
@@ -1073,12 +1080,12 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       // events from any other batch executing concurrently.
       const batchId = `batch-${targetTabId}-${performance.now()}`;
       // Registered before `invoke` so no early statement event is missed.
-      const unlisten = await listen<{
+      const unlisten = await listenTauri<{
         batch_id: string;
         index: number;
         statement: BatchStatementResult;
-      }>("batch-statement-complete", (event) => {
-        const p = event.payload;
+      }>("batch-statement-complete", (payload) => {
+        const p = payload;
         if (p.batch_id !== batchId || applied.has(p.index)) return;
         applied.add(p.index);
         applyStatement(p.index, p.statement);
@@ -1090,9 +1097,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       const batchStart = performance.now();
       let batchResults: BatchStatementResult[];
       try {
-        batchResults = await invoke<BatchStatementResult[]>(
-          "execute_query_batch",
-          {
+        batchResults = await queryGateway.executeBatch<BatchStatementResult[]>({
             connectionId: activeConnectionId,
             queries: entries.map((e) => e.query),
             limit: pageSize,
@@ -1189,7 +1194,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
 
       try {
         const start = performance.now();
-        const res = await invoke<QueryResult>("execute_query", {
+        const res = await queryGateway.executeQuery<QueryResult>({
           connectionId: activeConnectionId,
           query: entry.query,
           limit: pageSize,
@@ -1267,7 +1272,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       try {
         const database = resolveTabDatabase(tab);
         const schema = resolveTabSchema(tab);
-        const total = await invoke<number>("count_query", {
+        const total = await queryGateway.countQuery<number>({
           connectionId: activeConnectionId,
           query: countTarget,
           ...(database ? { database } : {}),
@@ -1300,7 +1305,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     if (!activeTab) return;
     const tabId = activeTab.id;
     try {
-      await invoke("open_results_window", {
+      await windowGateway.openResultsWindow({
         tabId,
         title: `${activeTab.title} — Query Results`,
       });
@@ -1312,7 +1317,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
 
   const handleReattachResults = useCallback(async (tabId: string) => {
     try {
-      await invoke("close_results_window", { tabId });
+      await windowGateway.closeResultsWindow({ tabId });
     } catch (e) {
       console.error("Failed to close results window", e);
     }
@@ -1330,7 +1335,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     for (const id of detachedTabIds) {
       const tab = tabs.find((t) => t.id === id);
       if (tab) {
-        emit(
+        emitTauri(
           RESULTS_SYNC_EVENT,
           buildSyncPayload(tab, {
             connectionId: activeConnectionId,
@@ -1356,7 +1361,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
   useEffect(() => {
     for (const id of detachedTabIds) {
       if (!tabs.some((t) => t.id === id)) {
-        invoke("close_results_window", { tabId: id }).catch(() => {});
+        windowGateway.closeResultsWindow({ tabId: id }).catch(() => {});
       }
     }
   }, [tabs, detachedTabIds]);
@@ -1374,7 +1379,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     const emitSyncFor = (tabId: string) => {
       const tab = tabsRef.current.find((t) => t.id === tabId);
       if (tab) {
-        emit(
+        emitTauri(
           RESULTS_SYNC_EVENT,
           buildSyncPayload(tab, {
             connectionId: activeConnectionId,
@@ -1465,23 +1470,23 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       };
     };
 
-    const readyP = listen<ResultsReadyPayload>(RESULTS_READY_EVENT, (event) =>
-      emitSyncFor(event.payload.tabId),
+    const readyP = listenTauri<ResultsReadyPayload>(RESULTS_READY_EVENT, (payload) =>
+      emitSyncFor(payload.tabId),
     );
-    const actionP = listen<ResultsActionEnvelope>(
+    const actionP = listenTauri<ResultsActionEnvelope>(
       RESULTS_ACTION_EVENT,
-      (event) => {
+      (payload) => {
         // Only honor actions for tabs we actually have detached — defense in
         // depth against events arriving for a reattached/unknown tab.
-        const { tabId, action } = event.payload;
+        const { tabId, action } = payload;
         if (!detachedTabIdsRef.current.has(tabId)) return;
         applyAction(action, makeHandlers(tabId));
       },
     );
-    const closedP = listen<ResultsClosedPayload>(
+    const closedP = listenTauri<ResultsClosedPayload>(
       RESULTS_CLOSED_EVENT,
-      (event) => {
-        const closedId = event.payload.tabId;
+      (payload) => {
+        const closedId = payload.tabId;
         setDetachedTabIds((prev) => {
           if (!prev.has(closedId)) return prev;
           const next = new Set(prev);
@@ -2085,7 +2090,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     try {
       const database = resolveTabDatabase(activeTab);
       const schema = resolveTabSchema(activeTab);
-      const columns = await invoke<TableColumn[]>("get_columns", {
+      const columns = await catalogGateway.getColumns<TableColumn[]>({
         connectionId: activeConnectionId,
         tableName: activeTab.activeTable,
         ...(database ? { database } : {}),
@@ -2259,7 +2264,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     if (pendingInsertions && Object.keys(pendingInsertions).length > 0) {
       try {
         // Fetch columns for validation
-        const columns = await invoke<TableColumn[]>("get_columns", {
+        const columns = await catalogGateway.getColumns<TableColumn[]>({
           connectionId: activeConnectionId,
           tableName: activeTable,
           ...databaseParam,
@@ -2332,7 +2337,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       if (deletions.length > 0) {
         promises.push(
           ...deletions.map((pkMap) =>
-            invoke("delete_record", {
+            recordGateway.deleteRecord({
               connectionId: activeConnectionId,
               table: activeTable,
               pkMap,
@@ -2347,7 +2352,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       if (updates.length > 0) {
         promises.push(
           ...updates.map((u) =>
-            invoke("update_record", {
+            recordGateway.updateRecord({
               connectionId: activeConnectionId,
               table: activeTable,
               pkMap: u.pkVal,
@@ -2364,7 +2369,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       if (insertions.length > 0) {
         promises.push(
           ...insertions.map((insertion) =>
-            invoke("insert_record", {
+            recordGateway.insertRecord({
               connectionId: activeConnectionId,
               table: activeTable,
               data: insertion.data,
@@ -2779,7 +2784,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
   const cancelExport = useCallback(async () => {
     if (!activeConnectionId) return;
     try {
-      await invoke("cancel_export", { connectionId: activeConnectionId });
+      await dataTransferGateway.cancelExport({ connectionId: activeConnectionId });
       setExportState((prev) => ({
         ...prev,
         isOpen: false,
@@ -2806,7 +2811,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
     if (!query || !query.trim()) return;
 
     try {
-      const filePath = await save({
+      const filePath = await dialogGateway.save({
         filters: [{ name: format.toUpperCase(), extensions: [format] }],
         defaultPath: `result_${Date.now()}.${format}`,
       });
@@ -2824,7 +2829,7 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
       const targetDatabase = resolveTabDatabase(activeTab);
       const databaseParam = targetDatabase ? { database: targetDatabase } : {};
 
-      await invoke("export_query_to_file", {
+      await dataTransferGateway.exportQueryToFile({
         connectionId: activeConnectionId,
         query,
         filePath,

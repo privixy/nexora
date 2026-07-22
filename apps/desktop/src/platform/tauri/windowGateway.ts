@@ -18,4 +18,10 @@ export const windowGateway = {
   setWindowTitle(payload: { title: string }) {
     return invokeTauri("set_window_title", payload);
   },
+  openResultsWindow(payload: { tabId: string; title: string }) {
+    return invokeTauri("open_results_window", payload);
+  },
+  closeResultsWindow(payload: { tabId: string }) {
+    return invokeTauri("close_results_window", payload);
+  },
 };

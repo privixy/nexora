@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { queryGateway } from '../../../platform/tauri';
 import { useDatabase } from '../../connections';
 import { SavedQueriesContext, type SavedQuery } from './SavedQueriesContext';
 
@@ -16,7 +16,7 @@ export const SavedQueriesProvider = ({ children }: { children: ReactNode }) => {
     
     setIsLoading(true);
     try {
-      const result = await invoke<SavedQuery[]>('get_saved_queries', { connectionId: activeConnectionId });
+      const result = await queryGateway.invoke<SavedQuery[]>('get_saved_queries', { connectionId: activeConnectionId });
       setQueries(result);
     } catch (e) {
       console.error("Failed to load saved queries:", e);
@@ -32,7 +32,7 @@ export const SavedQueriesProvider = ({ children }: { children: ReactNode }) => {
   const saveQuery = async (name: string, sql: string, database?: string | null) => {
     if (!activeConnectionId) return;
     try {
-      await invoke('save_query', { connectionId: activeConnectionId, name, sql, database: database ?? null });
+      await queryGateway.invoke('save_query', { connectionId: activeConnectionId, name, sql, database: database ?? null });
       await refreshQueries();
     } catch (e) {
       console.error("Failed to save query:", e);
@@ -42,7 +42,7 @@ export const SavedQueriesProvider = ({ children }: { children: ReactNode }) => {
 
   const updateQuery = async (id: string, name: string, sql: string, database?: string | null) => {
     try {
-      await invoke('update_saved_query', { id, name, sql, database: database ?? null });
+      await queryGateway.invoke('update_saved_query', { id, name, sql, database: database ?? null });
       await refreshQueries();
     } catch (e) {
       console.error("Failed to update query:", e);
@@ -52,7 +52,7 @@ export const SavedQueriesProvider = ({ children }: { children: ReactNode }) => {
 
   const deleteQuery = async (id: string) => {
     try {
-      await invoke('delete_saved_query', { id });
+      await queryGateway.invoke('delete_saved_query', { id });
       await refreshQueries();
     } catch (e) {
       console.error("Failed to delete query:", e);

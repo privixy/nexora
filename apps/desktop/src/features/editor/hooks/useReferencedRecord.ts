@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { queryGateway } from '../../../platform/tauri';
 import type { ForeignKey, QueryResult } from '../../../types/editor';
 import { quoteTableRef } from '../../../utils/identifiers';
 import {
@@ -42,7 +42,7 @@ export async function fetchReferencedRecord({
 
   const query = `SELECT * FROM ${quotedTable} WHERE ${filterClause}`;
 
-  return invoke<QueryResult>('execute_query', {
+  return queryGateway.executeQuery<QueryResult>({
     connectionId,
     query,
     limit: 100,

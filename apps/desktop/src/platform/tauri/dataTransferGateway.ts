@@ -16,4 +16,10 @@ export const dataTransferGateway = {
   importDatabase(payload: Record<string, unknown>) {
     return invokeTauri("import_database", payload);
   },
+  cancelExport(payload: Record<string, unknown>) {
+    return invokeTauri("cancel_export", payload);
+  },
+  exportQueryToFile(payload: Record<string, unknown>) {
+    return invokeTauri("export_query_to_file", payload);
+  },
 };

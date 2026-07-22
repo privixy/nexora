@@ -9,7 +9,7 @@ import type {
 } from "../contracts";
 import { EditorContext } from "./EditorContext";
 import { useDatabase } from "../../connections";
-import { invoke } from "@tauri-apps/api/core";
+import { queryGateway } from "../../../platform/tauri";
 import {
   generateTabId,
   loadEditorPreferences,
@@ -386,7 +386,7 @@ export const EditorProvider = ({
         return cached!.data;
       }
 
-      const data = await invoke<TableSchema[]>("get_schema_snapshot", {
+      const data = await queryGateway.invoke<TableSchema[]>("get_schema_snapshot", {
         connectionId,
         ...(schema ? { schema } : {}),
         ...(database ? { database } : {}),
