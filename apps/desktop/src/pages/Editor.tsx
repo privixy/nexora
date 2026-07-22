@@ -113,10 +113,10 @@ import { useAlert } from "../hooks/useAlert";
 import { useDatabase } from "../features/connections";
 import { useDrivers } from "../features/plugins/hooks/useDrivers";
 import { getConnectionAccent } from "../features/connections/lib/driverUI";
-import { useSavedQueries } from "../hooks/useSavedQueries";
-import { useQueryHistory } from "../hooks/useQueryHistory";
+import { useSavedQueries } from "../features/editor/hooks/useSavedQueries";
+import { useQueryHistory } from "../features/editor/hooks/useQueryHistory";
 import { useSettings } from "../features/settings/hooks/useSettings";
-import { useEditor } from "../hooks/useEditor";
+import { useEditor } from "../features/editor/hooks/useEditor";
 import { useConnectionLayoutContext } from "../hooks/useConnectionLayoutContext";
 import { useKeybindings } from "../hooks/useKeybindings";
 import type {

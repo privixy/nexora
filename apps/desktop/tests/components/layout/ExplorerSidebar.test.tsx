@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { MemoryRouter } from "react-router-dom";
 import { ExplorerSidebar } from "../../../src/components/layout/ExplorerSidebar";
 import { useDatabase } from "../../../src/features/connections/hooks/useDatabase";
-import { useEditor } from "../../../src/hooks/useEditor";
+import { useEditor } from "../../../src/features/editor/hooks/useEditor";
 import { useDrivers } from "../../../src/features/plugins/hooks/useDrivers";
 import type { DatabaseContextType } from "../../../src/features/connections/state/DatabaseContext";
 import type { DriverCapabilities } from "../../../src/types/plugins";
@@ -13,7 +13,7 @@ vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: vi.fn(),
 }));
 
-vi.mock("../../../src/hooks/useEditor", () => ({
+vi.mock("../../../src/features/editor/hooks/useEditor", () => ({
   useEditor: vi.fn(),
 }));
 
@@ -33,11 +33,11 @@ vi.mock("../../../src/hooks/useConnectionLayoutContext", () => ({
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
 }));
 
-vi.mock("../../../src/hooks/useSavedQueries", () => ({
+vi.mock("../../../src/features/editor/hooks/useSavedQueries", () => ({
   useSavedQueries: () => ({ queries: [], saveQuery: vi.fn(), deleteQuery: vi.fn(), updateQuery: vi.fn() }),
 }));
 
-vi.mock("../../../src/hooks/useQueryHistory", () => ({
+vi.mock("../../../src/features/editor/hooks/useQueryHistory", () => ({
   useQueryHistory: () => ({ entries: [], isLoading: false, deleteEntry: vi.fn(), clearHistory: vi.fn(), recoveryNotice: null, dismissRecoveryNotice: vi.fn() }),
 }));
 

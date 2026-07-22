@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, waitFor, act } from "@testing-library/react";
-import { EditorProvider } from "../../src/contexts/EditorProvider";
-import { useEditor } from "../../src/hooks/useEditor";
-import { DatabaseContext, type DatabaseContextType } from "../../src/features/connections/state/DatabaseContext";
+import { EditorProvider } from "../../../../src/features/editor/state/EditorProvider";
+import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
+import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
 import { invoke } from "@tauri-apps/api/core";
 import React from "react";
-import type { TableSchema } from "../../src/types/editor";
+import type { TableSchema } from "../../../../src/types/editor";
 
 const notebookStoreMocks = vi.hoisted(() => ({
   createNotebookFromState: vi.fn(),
@@ -20,9 +20,9 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
 }));
 
-vi.mock("../../src/utils/notebookStore", () => notebookStoreMocks);
-vi.mock("../../src/utils/editor", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("../../src/utils/editor")>()),
+vi.mock("../../../../src/utils/notebookStore", () => notebookStoreMocks);
+vi.mock("../../../../src/utils/editor", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../../src/utils/editor")>()),
   loadEditorPreferences: editorUtilsMocks.loadEditorPreferences,
 }));
 

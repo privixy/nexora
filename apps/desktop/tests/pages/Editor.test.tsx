@@ -6,7 +6,7 @@ import { listen } from "@tauri-apps/api/event";
 import React from "react";
 import { Editor } from "../../src/pages/Editor";
 import { DatabaseContext, type DatabaseContextType } from "../../src/features/connections/state/DatabaseContext";
-import { EditorContext, type EditorContextType } from "../../src/contexts/EditorContext";
+import { EditorContext, type EditorContextType } from "../../src/features/editor/state/EditorContext";
 import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../src/types/editor";
 import type { PluginManifest } from "../../src/types/plugins";
 
@@ -139,11 +139,11 @@ vi.mock("../../src/features/settings/hooks/useSettings", () => ({
   }),
 }));
 
-vi.mock("../../src/hooks/useSavedQueries", () => ({
+vi.mock("../../src/features/editor/hooks/useSavedQueries", () => ({
   useSavedQueries: () => ({ saveQuery: vi.fn() }),
 }));
 
-vi.mock("../../src/hooks/useQueryHistory", () => ({
+vi.mock("../../src/features/editor/hooks/useQueryHistory", () => ({
   useQueryHistory: () => ({ addEntry: vi.fn() }),
 }));
 

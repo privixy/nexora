@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SavedQueriesContext } from '../contexts/SavedQueriesContext';
+import { SavedQueriesContext } from '../state/SavedQueriesContext';
 
 export const useSavedQueries = () => {
   const context = useContext(SavedQueriesContext);

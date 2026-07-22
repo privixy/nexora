@@ -5,7 +5,7 @@ import { resolveDiagramDatabase, resolveDiagramSchema } from '../lib/schemaDiagr
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DatabaseProvider } from '../../connections';
-import { EditorProvider } from '../../../contexts/EditorProvider';
+import { EditorProvider } from '../../../features/editor/state/EditorProvider';
 
 export const SchemaDiagramPage = () => {
   const { t } = useTranslation();

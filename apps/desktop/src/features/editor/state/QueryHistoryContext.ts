@@ -2,7 +2,7 @@ import { createContext } from "react";
 import type {
   QueryHistoryEntry,
   QueryHistoryRecoveryNotice,
-} from "../types/queryHistory";
+} from "../../../types/queryHistory";
 
 export type { QueryHistoryEntry };
 

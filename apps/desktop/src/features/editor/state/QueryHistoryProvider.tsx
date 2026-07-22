@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { useDatabase } from "../features/connections";
+import { useDatabase } from "../../connections";
 import {
   QueryHistoryContext,
   type QueryHistoryEntry,
@@ -8,7 +8,7 @@ import {
 import type {
   QueryHistoryRecoveryNotice,
   QueryHistoryResponse,
-} from "../types/queryHistory";
+} from "../../../types/queryHistory";
 
 export const QueryHistoryProvider = ({
   children,

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryHistoryContext } from "../contexts/QueryHistoryContext";
+import { QueryHistoryContext } from "../state/QueryHistoryContext";
 
 export const useQueryHistory = () => {
   const context = useContext(QueryHistoryContext);

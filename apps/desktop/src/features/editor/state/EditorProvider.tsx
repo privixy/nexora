@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
-import type { Tab, SchemaCache, TableSchema, QueryResultEntry } from "../types/editor";
+import type { Tab, SchemaCache, TableSchema, QueryResultEntry } from "../contracts";
 import { EditorContext } from "./EditorContext";
-import { useDatabase } from "../features/connections";
+import { useDatabase } from "../../connections";
 import { invoke } from "@tauri-apps/api/core";
 import {
   generateTabId,
@@ -21,12 +21,12 @@ import {
   updateTabInList,
   shouldUseCachedSchema,
   createSchemaCacheEntry,
-} from "../utils/editor";
+} from "../../../utils/editor";
 import {
   createNotebookFromState,
   evictFromCache,
   flushAllPendingSaves,
-} from "../utils/notebookStore";
+} from "../../../utils/notebookStore";
 
 export const EditorProvider = ({ children }: { children: ReactNode }) => {
   const { activeConnectionId } = useDatabase();

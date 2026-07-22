@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle, Home, RotateCcw, XCircle } from "lucide-react";
 import type { TFunction } from "i18next";
-import { useEditor } from "../../hooks/useEditor";
+import { useEditor } from "../../features/editor/hooks/useEditor";
 
 interface InnerProps {
   t: TFunction;

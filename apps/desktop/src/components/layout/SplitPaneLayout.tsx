@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { PanelDatabaseProvider } from './PanelDatabaseProvider';
-import { EditorProvider } from '../../contexts/EditorProvider';
+import { EditorProvider } from '../../features/editor/state/EditorProvider';
 import { Editor } from '../../pages/Editor';
 import { useSplitPaneResize } from '../../hooks/useSplitPaneResize';
 import { useConnectionLayoutContext } from '../../hooks/useConnectionLayoutContext';

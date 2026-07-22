@@ -13,7 +13,7 @@ type GetSchema = (
 
 const getSchemaMock = vi.hoisted(() => vi.fn<GetSchema>());
 
-vi.mock('../../../../src/hooks/useEditor', () => ({
+vi.mock('../../../../src/features/editor/hooks/useEditor', () => ({
   useEditor: () => ({ getSchema: getSchemaMock }),
 }));
 

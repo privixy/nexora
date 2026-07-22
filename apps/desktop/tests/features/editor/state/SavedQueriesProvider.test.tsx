@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { SavedQueriesProvider } from '../../src/contexts/SavedQueriesProvider';
-import { useSavedQueries } from '../../src/hooks/useSavedQueries';
-import { useDatabase } from '../../src/features/connections/hooks/useDatabase';
+import { SavedQueriesProvider } from '../../../../src/features/editor/state/SavedQueriesProvider';
+import { useSavedQueries } from '../../../../src/features/editor/hooks/useSavedQueries';
+import { useDatabase } from '../../../../src/features/connections/hooks/useDatabase';
 import { invoke } from '@tauri-apps/api/core';
 import React from 'react';
 
@@ -11,7 +11,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 }));
 
 // Mock useDatabase
-vi.mock('../../src/features/connections/hooks/useDatabase', () => ({
+vi.mock('../../../../src/features/connections/hooks/useDatabase', () => ({
   useDatabase: vi.fn(),
 }));
 

@@ -14,7 +14,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import dagre from "dagre";
-import { useEditor } from "../../../hooks/useEditor";
+import { useEditor } from "../../../features/editor/hooks/useEditor";
 import { SchemaTableNodeComponent } from "./SchemaTableNode";
 import { Loader2, ArrowLeftRight, ArrowUpDown, Maximize2, Focus } from "lucide-react";
 import { useTranslation } from "react-i18next";
