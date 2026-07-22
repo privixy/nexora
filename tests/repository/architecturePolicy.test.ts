@@ -1,9 +1,59 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
+import { collectViolations } from "../../scripts/check-architecture.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+
+function writeFixture(rootPath: string, file: string, content: string) {
+  const filePath = join(rootPath, file);
+  mkdirSync(dirname(filePath), { recursive: true });
+  writeFileSync(filePath, content);
+}
+
+function boundaryViolations(
+  imports: Record<string, string>,
+  temporaryExceptions: object[] = [],
+  directTauriExceptions: object[] = [],
+  sourceOwners: object[] = [],
+  sourceFiles: Record<string, string> = {},
+  plannedCharacterizationTests: object[] = [],
+  tauriGatewayOwnership: object[] = [],
+) {
+  const tempRoot = mkdtempSync(join(tmpdir(), "nexora-frontend-boundaries-"));
+  const trackedFiles = ["package.json"];
+  writeFixture(tempRoot, "package.json", JSON.stringify({ name: "nexora" }));
+
+  for (const [file, importTarget] of Object.entries(imports)) {
+    writeFixture(tempRoot, file, sourceFiles[file] ?? (/^`/.test(importTarget) ? `import(${importTarget});\n` : `import(${JSON.stringify(importTarget)});\n`));
+    trackedFiles.push(file);
+  }
+
+  try {
+    return collectViolations(tempRoot, {
+      sourceRoots: ["apps/desktop/src"],
+      frontendTestRoots: [],
+      forbiddenFrontendTestRoots: [],
+      repositoryTestRoots: [],
+      rootTestRoots: [],
+      allowedWorkspaceDependencies: { nexora: [] },
+      fileSizeBaselines: {},
+      frontendBoundaries: {
+        sourceRoot: "apps/desktop/src",
+        temporaryExceptions,
+        directTauriExceptions,
+        sourceOwners,
+        plannedCharacterizationTests,
+        tauriGatewayOwnership,
+      },
+    }, { trackedFiles, workspacePackageDirectories: ["."] });
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
 const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json"), "utf8")) as {
   forbiddenRootDesktopPaths: string[];
   frontendTestRoots: string[];
@@ -106,6 +156,233 @@ describe("architecture policy", () => {
 
   it("ratchets file-size baselines to current tracked file sizes", () => {
     expect(policy.fileSizeBaselines["apps/desktop/src-tauri/src/drivers/mysql/mod.rs"]).toBe(2340);
+  });
+
+  it.each([
+    ["apps/desktop/src/features/editor/pages/EditorPage.tsx", "@/features/data-grid/components/DataGrid"],
+    ["apps/desktop/src/features/editor/pages/EditorPage.tsx", "@/features/explorer/components/private/Tree"],
+    ["apps/desktop/src/shared/ui/Modal.tsx", "@/features/connections"],
+    ["apps/desktop/src/shared/ui/Modal.tsx", "@tauri-apps/api/core"],
+    ["apps/desktop/src/features/editor/pages/EditorPage.tsx", "@tauri-apps/api/core"],
+    ["apps/desktop/src/platform/tauri/queryGateway.ts", "@/features/editor"],
+    ["apps/desktop/src/platform/tauri/contracts/queries.ts", "@/features/editor/contracts"],
+    ["apps/desktop/src/features/editor/pages/EditorPage.tsx", "@/app/providers"],
+  ])("rejects frontend boundary import %s -> %s", (file, importTarget) => {
+    expect(boundaryViolations({ [file]: importTarget })).not.toEqual([]);
+  });
+
+  it.each([
+    {
+      "apps/desktop/src/features/a/index.ts": "@/features/b",
+      "apps/desktop/src/features/b/index.ts": "@/features/a",
+    },
+    {
+      "apps/desktop/src/features/a/index.ts": "@/features/b",
+      "apps/desktop/src/features/b/index.ts": "@/features/c",
+      "apps/desktop/src/features/c/index.ts": "@/features/a",
+    },
+    {
+      "apps/desktop/src/features/settings/index.ts": "@/features/plugins",
+      "apps/desktop/src/features/plugins/index.ts": "@/features/settings",
+    },
+    {
+      "apps/desktop/src/features/settings/index.ts": "@/features/visual-explain",
+      "apps/desktop/src/features/visual-explain/index.ts": "@/features/settings",
+    },
+    {
+      "apps/desktop/src/features/schema/index.ts": "@/features/editor",
+      "apps/desktop/src/features/editor/index.ts": "@/features/schema",
+    },
+  ])("rejects feature cycles", (imports) => {
+    expect(boundaryViolations(imports)).toEqual(expect.arrayContaining([
+      expect.stringContaining("feature dependency cycle"),
+    ]));
+  });
+
+  it("allows app composition of feature public roots, platform, and shared", () => {
+    expect(boundaryViolations({
+      "apps/desktop/src/app/routes.tsx": "@/features/editor",
+      "apps/desktop/src/app/providers.tsx": "@/platform/tauri",
+      "apps/desktop/src/app/shell.tsx": "@/shared/ui",
+      "apps/desktop/src/features/editor/index.ts": "@/shared/ui",
+      "apps/desktop/src/features/settings/index.ts": "@/platform/tauri",
+    })).toEqual([]);
+  });
+
+  it.each([
+    ["apps/desktop/src/shared/ui/Modal.tsx", "@/app/providers"],
+    ["apps/desktop/src/shared/ui/Modal.tsx", "../../app/providers"],
+    ["apps/desktop/src/platform/tauri/queryGateway.ts", "@/app/providers"],
+    ["apps/desktop/src/platform/tauri/queryGateway.ts", "../../app/providers"],
+  ])("rejects shared and platform imports of app modules: %s -> %s", (file, importTarget) => {
+    expect(boundaryViolations({ [file]: importTarget })).toEqual(expect.arrayContaining([
+      expect.stringContaining("may not import app modules"),
+    ]));
+  });
+
+  it.each([
+    "../features/editor",
+    "../features/editor/index",
+    "../features/editor/index.ts",
+    "../features/editor/index.tsx",
+  ])("allows app composition through resolved relative feature public roots: %s", (importTarget) => {
+    expect(boundaryViolations({
+      "apps/desktop/src/app/routes.tsx": importTarget,
+    })).toEqual([]);
+  });
+
+  it.each([
+    "../../schema",
+    "../../schema/index",
+    "../../schema/index.ts",
+    "../../schema/index.tsx",
+  ])("allows cross-feature imports through resolved relative public roots: %s", (importTarget) => {
+    expect(boundaryViolations({
+      "apps/desktop/src/features/editor/pages/EditorPage.tsx": importTarget,
+    })).toEqual([]);
+  });
+
+  it.each([
+    ["apps/desktop/src/app/routes.tsx", "../features/editor/pages/EditorPage", "app imports must use the public feature root"],
+    ["apps/desktop/src/features/schema/index.ts", "../editor/pages/EditorPage", "cross-feature imports must use the public feature root"],
+  ])("rejects resolved relative feature deep imports: %s -> %s", (file, importTarget, message) => {
+    expect(boundaryViolations({ [file]: importTarget })).toEqual(expect.arrayContaining([
+      expect.stringContaining(message),
+    ]));
+  });
+
+  it("rejects app deep imports into features", () => {
+    expect(boundaryViolations({
+      "apps/desktop/src/app/routes.tsx": "@/features/editor/pages/EditorPage",
+    })).toEqual(expect.arrayContaining([expect.stringContaining("app imports must use the public feature root")]));
+  });
+
+  it("enforces static template-literal dynamic imports", () => {
+    expect(boundaryViolations({
+      "apps/desktop/src/app/routes.tsx": "`@/features/editor/pages/EditorPage`",
+    })).toEqual(expect.arrayContaining([expect.stringContaining("app imports must use the public feature root")]));
+    expect(boundaryViolations({
+      "apps/desktop/src/features/editor/index.ts": "`@tauri-apps/api/core`",
+    })).toEqual(expect.arrayContaining([expect.stringContaining("direct Tauri import outside platform is forbidden")]));
+  });
+
+  it("rejects every non-static dynamic import target but ignores ordinary template strings", () => {
+    const file = "apps/desktop/src/features/editor/index.ts";
+    for (const target of [
+      "featurePath",
+      "'@/features/' + feature",
+      "resolveFeature(feature)",
+      "`@/features/${feature}`",
+      "'@/features/editor', options",
+    ]) {
+      expect(boundaryViolations({ [file]: "unused" }, [], [], [], {
+        [file]: `import(${target});\n`,
+      })).toEqual(expect.arrayContaining([expect.stringContaining("dynamic import target must be static")]));
+    }
+    expect(boundaryViolations({ [file]: "unused" }, [], [], [], {
+      [file]: "const message = `ordinary ${template}`;\n",
+    })).toEqual([]);
+  });
+
+  it("requires exact Task 39 direct Tauri inventory rows", () => {
+    const importer = "apps/desktop/src/features/editor/index.ts";
+    const importTarget = "@tauri-apps/api/core";
+    const characterizationTest = "apps/desktop/tests/features/editor/EditorPage.test.tsx";
+    const gatewayOrAdapter = "apps/desktop/src/platform/tauri/queryGateway.ts";
+    const exception = {
+      importer,
+      importTarget,
+      owner: "editor",
+      characterizationTest,
+      gatewayOrAdapter,
+      removeByTask: 39,
+    };
+    const sourceOwners = [{ source: importer, destination: importer, owner: "editor", moveTask: 14 }];
+    const plannedTests = [{ importer, destination: characterizationTest, task: 34 }];
+    const gateways = [{ owner: "editor", importTarget, destination: gatewayOrAdapter, task: 9 }];
+    expect(boundaryViolations({ [importer]: importTarget }, [], [exception], sourceOwners, {}, plannedTests, gateways)).toEqual([]);
+    expect(boundaryViolations({ [importer]: "@tauri-apps/api/event" }, [], [exception], sourceOwners, {}, plannedTests, gateways)).toEqual(expect.arrayContaining([
+      expect.stringContaining("exception is unused"),
+      expect.stringContaining("direct Tauri import outside platform is forbidden"),
+    ]));
+  });
+
+  it.each([
+    ["legacy path", { importer: undefined, path: "apps/desktop/src/features/editor/index.ts" }, "exact importer"],
+    ["missing characterization", { characterizationTest: "" }, "characterizationTest"],
+    ["wildcard characterization", { characterizationTest: "apps/desktop/tests/features/editor/*" }, "characterizationTest"],
+    ["unplanned characterization", { characterizationTest: "apps/desktop/tests/features/editor/Missing.test.tsx" }, "existing test or exact planned"],
+    ["generic gateway", { gatewayOrAdapter: "windows/events/dialogs/files" }, "gatewayOrAdapter"],
+    ["unowned gateway", { gatewayOrAdapter: "apps/desktop/src/platform/tauri/unknownGateway.ts" }, "gatewayOrAdapter"],
+  ])("rejects %s in direct Tauri inventory", (_name, override, message) => {
+    const importer = "apps/desktop/src/features/editor/index.ts";
+    const importTarget = "@tauri-apps/api/core";
+    const characterizationTest = "apps/desktop/tests/features/editor/EditorPage.test.tsx";
+    const gatewayOrAdapter = "apps/desktop/src/platform/tauri/queryGateway.ts";
+    const exception = { importer, importTarget, owner: "editor", characterizationTest, gatewayOrAdapter, removeByTask: 39, ...override };
+    const sourceOwners = [{ source: importer, destination: importer, owner: "editor", moveTask: 14 }];
+    const plannedTests = [{ importer, destination: characterizationTest, task: 34 }];
+    const gateways = [{ owner: "editor", importTarget, destination: gatewayOrAdapter, task: 9 }];
+    expect(boundaryViolations({ [importer]: importTarget }, [], [exception], sourceOwners, {}, plannedTests, gateways)).toEqual(expect.arrayContaining([
+      expect.stringContaining(message),
+    ]));
+  });
+
+  it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
+    const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
+    expect(inventory).toHaveLength(126);
+    expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
+      "characterizationTest",
+      "gatewayOrAdapter",
+      "importTarget",
+      "importer",
+      "owner",
+      "removeByTask",
+    ].join(","))).toBe(true);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(126);
+  });
+
+  it("requires direct Tauri inventory ownership and removal task to match staging", () => {
+    const importer = "apps/desktop/src/features/editor/index.ts";
+    const importTarget = "@tauri-apps/api/core";
+    const characterizationTest = "apps/desktop/tests/features/editor/EditorPage.test.tsx";
+    const gatewayOrAdapter = "apps/desktop/src/platform/tauri/queryGateway.ts";
+    const imports = { [importer]: importTarget };
+    const sourceOwners = [{ source: importer, destination: importer, owner: "editor", moveTask: 14 }];
+    const plannedTests = [{ importer, destination: characterizationTest, task: 34 }];
+    const gateways = [{ owner: "editor", importTarget, destination: gatewayOrAdapter, task: 9 }];
+    expect(boundaryViolations(imports, [], [{
+      importer,
+      importTarget,
+      owner: "frontend",
+      characterizationTest,
+      gatewayOrAdapter,
+      removeByTask: 39,
+    }], sourceOwners, {}, plannedTests, gateways)).toEqual(expect.arrayContaining([expect.stringContaining("owner must match final source owner editor")]));
+    expect(boundaryViolations(imports, [], [{
+      importer,
+      importTarget,
+      owner: "editor",
+      characterizationTest,
+      gatewayOrAdapter,
+      removeByTask: 14,
+    }], sourceOwners, {}, plannedTests, gateways)).toEqual(expect.arrayContaining([expect.stringContaining("removeByTask must be 39")]));
+  });
+
+  it("requires temporary exceptions to match an active exact import", () => {
+    const exception = {
+      path: "apps/desktop/src/features/schema/index.ts",
+      importTarget: "@/features/editor/internal",
+      owner: "schema",
+      reason: "temporary",
+      removeByTask: 36,
+    };
+    expect(boundaryViolations({
+      "apps/desktop/src/features/schema/index.ts": "@/features/editor/internal",
+    }, [exception])).toEqual([]);
+    expect(boundaryViolations({
+      "apps/desktop/src/features/schema/index.ts": "@/features/editor",
+    }, [exception])).toEqual(expect.arrayContaining([expect.stringContaining("exception is unused")]));
   });
 
   it("rejects every old root desktop policy path", () => {

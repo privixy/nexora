@@ -4,8 +4,9 @@ This document defines the standard styling and structural patterns for all modal
 
 ## File Location
 
-- **Primary location**: `src/components/modals/*.tsx` - for standalone modals
-- **Secondary location**: `src/components/ui/*.tsx` - when modal is part of a larger UI component set
+- **Current location**: `apps/desktop/src/components/modals/*.tsx` until each modal's owner task moves it
+- **Target location**: `apps/desktop/src/features/<owner>/components/*.tsx`; domain-neutral primitives belong in `apps/desktop/src/shared/ui/`
+- Cross-feature modal dependencies must use feature public entry points. The three exact legacy `SqlEditorWrapper` imports remain temporary Task 36 exceptions only.
 
 ## Component Structure
 

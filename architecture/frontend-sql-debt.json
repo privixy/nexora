@@ -1,0 +1,212 @@
+[
+  {
+    "symbol": "connections:NewConnectionModal:advancedTabContent:Set PIPES_AS_CONCAT sql_mode on connect:1",
+    "owner": "connections",
+    "normalizedText": "Set PIPES_AS_CONCAT sql_mode on connect"
+  },
+  {
+    "symbol": "data-grid:useReferencedRecord:query:SELECT * FROM ${quotedTable} WHERE ${filterClause}:1",
+    "owner": "data-grid",
+    "normalizedText": "SELECT * FROM ${quotedTable} WHERE ${filterClause}"
+  },
+  {
+    "symbol": "editor:editor:baseQuery:SELECT * FROM (${baseQuery} LIMIT ${limitClause}) AS limited_subset:1",
+    "owner": "editor",
+    "normalizedText": "SELECT * FROM (${baseQuery} LIMIT ${limitClause}) AS limited_subset"
+  },
+  {
+    "symbol": "editor:editor:baseQuery:SELECT * FROM ${quotedTable} ${filter} ${sort}:1",
+    "owner": "editor",
+    "normalizedText": "SELECT * FROM ${quotedTable} ${filter} ${sort}"
+  },
+  {
+    "symbol": "editor:editor:filter:WHERE ${normalizeSmartQuotes(filterClause)}:1",
+    "owner": "editor",
+    "normalizedText": "WHERE ${normalizeSmartQuotes(filterClause)}"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:fields:SELECT ${fields} FROM ${tableName} LIMIT 100;:1",
+    "owner": "editor",
+    "normalizedText": "SELECT ${fields} FROM ${tableName} LIMIT 100;"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:fields:UPDATE ${tableName} SET column = :column WHERE 1 = 0;:1",
+    "owner": "editor",
+    "normalizedText": "UPDATE ${tableName} SET column = :column WHERE 1 = 0;"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:getTabSql:SELECT * FROM ${tableName} LIMIT 100;:1",
+    "owner": "editor",
+    "normalizedText": "SELECT * FROM ${tableName} LIMIT 100;"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:getTabSql:SELECT * FROM ${tableName};:1",
+    "owner": "editor",
+    "normalizedText": "SELECT * FROM ${tableName};"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:setClauses:DELETE FROM ${tableName} WHERE 1 = 0;:1",
+    "owner": "editor",
+    "normalizedText": "DELETE FROM ${tableName} WHERE 1 = 0;"
+  },
+  {
+    "symbol": "editor:GenerateSQLModal:setClauses:UPDATE ${tableName} SET ${setClauses} WHERE 1 = 0;:1",
+    "owner": "editor",
+    "normalizedText": "UPDATE ${tableName} SET ${setClauses} WHERE 1 = 0;"
+  },
+  {
+    "symbol": "editor:NewRowModal:query:SELECT * FROM ${quotedTable} LIMIT 100:1",
+    "owner": "editor",
+    "normalizedText": "SELECT * FROM ${quotedTable} LIMIT 100"
+  },
+  {
+    "symbol": "editor:sqlGenerator:lines:CREATE TABLE ${quote}${tableName}${quote} (:1",
+    "owner": "editor",
+    "normalizedText": "CREATE TABLE ${quote}${tableName}${quote} ("
+  },
+  {
+    "symbol": "editor:sqlGenerator:nonUniqueIndexes:CREATE INDEX ${quote}${idx.name}${quote} ON ${quote}${tableName}${quote} (${renderColumns(idx.columns)});:1",
+    "owner": "editor",
+    "normalizedText": "CREATE INDEX ${quote}${idx.name}${quote} ON ${quote}${tableName}${quote} (${renderColumns(idx.columns)});"
+  },
+  {
+    "symbol": "editor:visualQuery:condition:WHERE:1",
+    "owner": "editor",
+    "normalizedText": "WHERE"
+  },
+  {
+    "symbol": "editor:visualQuery:generateLimitClause:LIMIT ${limit.trim()}:1",
+    "owner": "editor",
+    "normalizedText": "LIMIT ${limit.trim()}"
+  },
+  {
+    "symbol": "editor:visualQuery:sql:FROM ${formatTableReference(firstData, driver)} ${aliases[firstNode.id]}:1",
+    "owner": "editor",
+    "normalizedText": "FROM ${formatTableReference(firstData, driver)} ${aliases[firstNode.id]}"
+  },
+  {
+    "symbol": "editor:visualQuery:tableList:FROM:1",
+    "owner": "editor",
+    "normalizedText": "FROM"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:2",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:3",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:4",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT COUNT(*) as count FROM ${quotedTable}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT COUNT(*) as count FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:2",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:3",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:4",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:5",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT COUNT(*) as count FROM ${quotedView}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT COUNT(*) as count FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT COUNT(*) as count FROM ${quotedView}:2",
+    "owner": "explorer",
+    "normalizedText": "SELECT COUNT(*) as count FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:QuickNavigatorModal:quotedTable:SELECT * FROM ${quotedTable}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:QuickNavigatorModal:quotedTable:SELECT * FROM ${quotedTable}:2",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:QuickNavigatorModal:quotedTable:SELECT COUNT(*) as count FROM ${quotedTable}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT COUNT(*) as count FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:QuickNavigatorModal:quotedView:SELECT * FROM ${quotedView}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:QuickNavigatorModal:quotedView:SELECT * FROM ${quotedView}:2",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
+  },
+  {
+    "symbol": "explorer:SidebarColumnItem:query:ALTER TABLE ${quotedTable} DROP COLUMN ${quotedColumn}:1",
+    "owner": "explorer",
+    "normalizedText": "ALTER TABLE ${quotedTable} DROP COLUMN ${quotedColumn}"
+  },
+  {
+    "symbol": "schema:CreateForeignKeyModal:ON_ACTIONS:SET DEFAULT:1",
+    "owner": "schema",
+    "normalizedText": "SET DEFAULT"
+  },
+  {
+    "symbol": "schema:CreateForeignKeyModal:ON_ACTIONS:SET NULL:1",
+    "owner": "schema",
+    "normalizedText": "SET NULL"
+  },
+  {
+    "symbol": "schema:TriggerEditorModal:eventStr:CREATE TRIGGER ${q(name)}:1",
+    "owner": "schema",
+    "normalizedText": "CREATE TRIGGER ${q(name)}"
+  },
+  {
+    "symbol": "schema:ViewEditorModal:selectPart:SELECT * FROM:1",
+    "owner": "schema",
+    "normalizedText": "SELECT * FROM"
+  },
+  {
+    "symbol": "shared:clipboard:vals:INSERT INTO `${tableName}` (${cols}) VALUES (${vals});:1",
+    "owner": "shared",
+    "normalizedText": "INSERT INTO `${tableName}` (${cols}) VALUES (${vals});"
+  },
+  {
+    "symbol": "shared:newConsole:newConsoleForTable:SELECT * FROM ${quoteTableRef(tableName, driver, schema)}:1",
+    "owner": "shared",
+    "normalizedText": "SELECT * FROM ${quoteTableRef(tableName, driver, schema)}"
+  }
+]

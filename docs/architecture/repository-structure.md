@@ -6,7 +6,7 @@ Foundation architecture guards are current and enforced through `pnpm check:arch
 
 ## Target state
 
-The desktop workspace migration and test architecture normalization are complete: the desktop product owns `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration, while root owns workspace orchestration, root ESLint, repository assets, and `tests/repository/`. Later modularization phases will establish the planned frontend feature/shared/platform boundaries and thin Rust command/domain/infrastructure ownership.
+The desktop workspace migration and test architecture normalization are complete: the desktop product owns `apps/desktop/{src,tests,src-tauri,public}` and app-local configuration, while root owns workspace orchestration, root ESLint, repository assets, and `tests/repository/`. Frontend modularization guardrails now enforce feature/public-root, app, shared, platform, direct-Tauri-debt, and acyclic dependency rules before source movement. `tests/repository/frontendSourceOwnership.test.ts` authoritatively assigns every current source to its final owner, destination, and one Tasks 2-40 move task; SQL and driver-specific frontend canaries freeze existing debt. Later tasks perform the manifest-driven moves, gateway migrations, and decomposition without behavior changes.
 
 ## Dependency direction
 
@@ -52,6 +52,8 @@ Required services: MySQL on `127.0.0.1:33060` and PostgreSQL on `127.0.0.1:54320
 | Root `tests/repository/` | Repository maintainers | Sole documented root test exception for workspace/release contracts; may inspect repository files but must not import desktop-private modules | Permanent repository ownership |
 | Rust inline test modules in create-plugin templates listed in `rustTemplateInlineTestAllowlist` | Plugin tooling maintainers | Existing generated template convention retained without changing generated output | Packages/tooling cleanup |
 | Oversized files listed in `architecture/policy.json` | Owning module maintainers | Guard ratchet baseline | Frontend/backend modularization |
+| Exact frontend direct-Tauri importer/package pairs | Frontend feature owners | Each Task 39 inventory row records exact `importer`, `importTarget`, `owner`, `characterizationTest`, `gatewayOrAdapter`, and `removeByTask: 39`; characterization tests must exist or name an exact planned test destination/task, and gateway/adapter paths must be exact Task 9/39 platform destinations | Tasks 13, 14, and 39 |
+| Three exact modal imports of legacy `components/ui/SqlEditorWrapper` | Schema/connections owners | Preserve path-only sequencing until editor publication | Task 36 |
 
 Do not introduce new legacy exceptions. Remove existing exceptions only in the planned removal phase or with a same-change architecture update.
 

@@ -155,17 +155,25 @@ function sourceTokens(content) {
       continue;
     }
     if (character === "`") {
+      let value = "";
+      let interpolated = false;
       index += 1;
       while (index < content.length) {
         if (content[index] === "\\" && index + 1 < content.length) {
+          value += content[index + 1];
+          index += 2;
+        } else if (content[index] === "$" && content[index + 1] === "{") {
+          interpolated = true;
           index += 2;
         } else if (content[index] === "`") {
           index += 1;
           break;
         } else {
+          value += content[index];
           index += 1;
         }
       }
+      tokens.push({ type: interpolated ? "template-interpolated" : "string", value });
       continue;
     }
     if (/[A-Za-z_$]/.test(character)) {
@@ -194,8 +202,12 @@ function importSpecifiers(content) {
     if (token.type !== "identifier" || (token.value !== "import" && token.value !== "export")) {
       continue;
     }
-    if (token.value === "import" && tokens[index + 1]?.value === "(" && tokens[index + 2]?.type === "string") {
-      specifiers.push(tokens[index + 2].value);
+    if (token.value === "import" && tokens[index + 1]?.value === "(") {
+      if (tokens[index + 2]?.type === "string" && tokens[index + 3]?.value === ")") {
+        specifiers.push(tokens[index + 2].value);
+      } else {
+        specifiers.push(undefined);
+      }
       continue;
     }
     if (token.value === "import" && tokens[index + 1]?.type === "string") {
@@ -211,6 +223,193 @@ function importSpecifiers(content) {
   }
 
   return specifiers;
+}
+
+function resolveSourceImport(importer, specifier, sourceRoot) {
+  if (specifier === "@") return sourceRoot;
+  if (specifier.startsWith("@/")) return `${sourceRoot}/${specifier.slice(2)}`;
+  if (!specifier.startsWith(".")) return undefined;
+  return toPosixPath(relative(".", join(dirname(importer), specifier)));
+}
+
+function featureName(file, sourceRoot) {
+  const match = file.match(new RegExp(`^${sourceRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/features/([^/]+)(?:/|$)`));
+  return match?.[1];
+}
+
+function isFeaturePublicRoot(resolved, importedFeature, sourceRoot) {
+  if (!resolved || !importedFeature) return false;
+  const normalized = resolved.replace(/\.(?:ts|tsx)$/, "");
+  const featureRoot = `${sourceRoot}/features/${importedFeature}`;
+  return normalized === featureRoot || normalized === `${featureRoot}/index`;
+}
+
+function exceptionMatches(exception, file, importTarget) {
+  const importer = exception?.importer ?? exception?.path;
+  return importer === file
+    && exception?.importTarget === importTarget
+    && typeof exception?.owner === "string"
+    && Number.isInteger(exception?.removeByTask);
+}
+
+function isExactRepositoryPath(value, pattern) {
+  return typeof value === "string"
+    && value.length > 0
+    && !value.includes("*")
+    && !value.includes("\\")
+    && pattern.test(value);
+}
+
+function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
+  if (!boundaries) return [];
+  const violations = [];
+  const sourceRoot = boundaries.sourceRoot ?? "apps/desktop/src";
+  const exceptions = boundaries.temporaryExceptions ?? [];
+  const tauriExceptions = boundaries.directTauriExceptions ?? [];
+  const sourceOwners = boundaries.sourceOwners ?? [];
+  const plannedCharacterizationTests = boundaries.plannedCharacterizationTests ?? [];
+  const tauriGatewayOwnership = boundaries.tauriGatewayOwnership ?? [];
+  const featureEdges = new Map();
+
+  for (const exception of [...exceptions, ...tauriExceptions]) {
+    const isTauriException = tauriExceptions.includes(exception);
+    const importer = isTauriException ? exception?.importer : exception?.path;
+    if (
+      !exception
+      || !isExactRepositoryPath(importer, /^apps\/desktop\/src\/.+\.tsx?$/)
+      || typeof exception.importTarget !== "string"
+      || exception.importTarget.includes("*")
+      || typeof exception.owner !== "string"
+      || !Number.isInteger(exception.removeByTask)
+      || (!isTauriException && typeof exception.reason !== "string")
+    ) {
+      violations.push(isTauriException
+        ? "direct Tauri inventory rows require exact importer, importTarget, owner, characterizationTest, gatewayOrAdapter, and removeByTask fields"
+        : "frontend boundary exceptions require exact path, importTarget, owner, reason, and removeByTask fields");
+      continue;
+    }
+    if (!trackedFiles.has(importer) || !existsSync(join(root, importer))) {
+      violations.push(`${importer}: frontend boundary exception points to a missing tracked importer`);
+    }
+    if (isTauriException) {
+      const validCharacterizationPath = isExactRepositoryPath(exception.characterizationTest, /^apps\/desktop\/tests\/.+\.test\.tsx?$/);
+      const characterizationExists = validCharacterizationPath
+        && trackedFiles.has(exception.characterizationTest)
+        && existsSync(join(root, exception.characterizationTest));
+      const plannedCharacterization = validCharacterizationPath && plannedCharacterizationTests.some(({ importer: plannedImporter, owner, destination, task }) =>
+        (plannedImporter === importer || owner === exception.owner)
+          && destination === exception.characterizationTest
+          && Number.isInteger(task)
+          && task > 1
+          && task <= 39,
+      );
+      if (!validCharacterizationPath) {
+        violations.push(`${importer}: direct Tauri inventory characterizationTest must be a non-empty exact desktop test path`);
+      } else if (!characterizationExists && !plannedCharacterization) {
+        violations.push(`${importer}: direct Tauri inventory characterizationTest must reference an existing test or exact planned later task/destination`);
+      }
+      const validGatewayPath = isExactRepositoryPath(exception.gatewayOrAdapter, /^apps\/desktop\/src\/platform\/tauri\/.+\.ts$/);
+      const gatewayOwned = validGatewayPath && tauriGatewayOwnership.some(({ owner, importTarget, destination, task }) =>
+        (owner === undefined || owner === exception.owner)
+          && (importTarget === undefined || importTarget === exception.importTarget)
+          && destination === exception.gatewayOrAdapter
+          && (task === 9 || task === 39),
+      );
+      if (!validGatewayPath || !gatewayOwned) {
+        violations.push(`${importer}: direct Tauri inventory gatewayOrAdapter must be an exact owner/import target destination staged by Task 9 or 39`);
+      }
+      const sourceOwner = sourceOwners.find(({ source, destination }) => source === importer || destination === importer);
+      if (sourceOwner && exception.owner !== sourceOwner.owner) {
+        violations.push(`${importer}: direct Tauri exception owner must match final source owner ${sourceOwner.owner}`);
+      }
+      if (exception.removeByTask !== 39) {
+        violations.push(`${importer}: direct Tauri exception removeByTask must be 39`);
+      }
+    }
+  }
+
+  const sourceFiles = [...trackedFiles]
+    .filter((file) => isUnderRoot(file, sourceRoot) && [".ts", ".tsx"].includes(extname(file)))
+    .sort();
+  const activeImports = new Set(sourceFiles.flatMap((file) =>
+    importSpecifiers(readFileSync(join(root, file), "utf8"))
+      .filter((importTarget) => importTarget !== undefined)
+      .map((importTarget) => `${file}\0${importTarget}`),
+  ));
+  for (const exception of [...exceptions, ...tauriExceptions]) {
+    const importer = tauriExceptions.includes(exception) ? exception.importer : exception.path;
+    if (exceptionMatches(exception, importer, exception.importTarget) && !activeImports.has(`${importer}\0${exception.importTarget}`)) {
+      violations.push(`${importer}: frontend boundary exception is unused: ${exception.importTarget}`);
+    }
+  }
+
+  for (const file of sourceFiles) {
+    const importerFeature = featureName(file, sourceRoot);
+    const content = readFileSync(join(root, file), "utf8");
+    for (const importTarget of importSpecifiers(content)) {
+      if (importTarget === undefined) {
+        violations.push(`${file}: dynamic import target must be static`);
+        continue;
+      }
+      const resolved = resolveSourceImport(file, importTarget, sourceRoot);
+      const importedFeature = resolved ? featureName(resolved, sourceRoot) : undefined;
+      const importsFeaturePublicRoot = isFeaturePublicRoot(resolved, importedFeature, sourceRoot);
+      const isExcepted = exceptions.some((exception) => exceptionMatches(exception, file, importTarget));
+      const isTauri = importTarget.startsWith("@tauri-apps/");
+      const isPlatform = isUnderRoot(file, `${sourceRoot}/platform`);
+      const isShared = isUnderRoot(file, `${sourceRoot}/shared`);
+      const isApp = isUnderRoot(file, `${sourceRoot}/app`);
+      const importsApp = resolved && isUnderRoot(resolved, `${sourceRoot}/app`);
+
+      if (isTauri && !isPlatform) {
+        if (tauriExceptions.some((exception) => exceptionMatches(exception, file, importTarget))) {
+          console.warn(`[architecture] frontend Tauri debt: ${file} -> ${importTarget}`);
+        } else {
+          violations.push(`${file}: direct Tauri import outside platform is forbidden: ${importTarget}`);
+        }
+      }
+      if ((isPlatform || isShared) && importedFeature && !isExcepted) {
+        violations.push(`${file}: ${isPlatform ? "platform" : "shared"} modules may not import features: ${importTarget}`);
+      }
+      if ((importerFeature || isPlatform || isShared) && importsApp && !isExcepted) {
+        const importerLayer = importerFeature ? "features" : isPlatform ? "platform" : "shared";
+        violations.push(`${file}: ${importerLayer} may not import app modules: ${importTarget}`);
+      }
+      if (isApp && importedFeature && !importsFeaturePublicRoot && !isExcepted) {
+        violations.push(`${file}: app imports must use the public feature root: ${importTarget}`);
+      }
+      if (importerFeature && importedFeature && importerFeature !== importedFeature) {
+        if (!importsFeaturePublicRoot && !isExcepted) {
+          violations.push(`${file}: cross-feature imports must use the public feature root: ${importTarget}`);
+        }
+        if (!featureEdges.has(importerFeature)) featureEdges.set(importerFeature, new Set());
+        featureEdges.get(importerFeature).add(importedFeature);
+      }
+      if (isExcepted) {
+        console.warn(`[architecture] frontend boundary debt: ${file} -> ${importTarget}`);
+      }
+    }
+  }
+
+  const visiting = new Set();
+  const visited = new Set();
+  const stack = [];
+  function visit(feature) {
+    if (visiting.has(feature)) {
+      const start = stack.indexOf(feature);
+      violations.push(`feature dependency cycle: ${[...stack.slice(start), feature].join(" -> ")}`);
+      return;
+    }
+    if (visited.has(feature)) return;
+    visiting.add(feature);
+    stack.push(feature);
+    for (const dependency of featureEdges.get(feature) ?? []) visit(dependency);
+    stack.pop();
+    visiting.delete(feature);
+    visited.add(feature);
+  }
+  for (const feature of [...featureEdges.keys()].sort()) visit(feature);
+  return violations;
 }
 
 function resolvesToForbiddenRoot(importer, specifier, forbiddenRoot, importAliases) {
@@ -270,6 +469,19 @@ export function collectViolations(root, policy, inventory = {}) {
   const repositoryTestForbiddenImportRoots = policy.repositoryTestForbiddenImportRoots ?? [];
   const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
+
+  const frontendBoundaries = policy.frontendBoundaries
+    ? {
+      ...policy.frontendBoundaries,
+      directTauriExceptions: policy.frontendBoundaries.directTauriExceptionsFile
+        ? readJson(join(root, policy.frontendBoundaries.directTauriExceptionsFile))
+        : policy.frontendBoundaries.directTauriExceptions,
+      sourceOwners: policy.frontendBoundaries.sourceOwnersFile
+        ? readJson(join(root, policy.frontendBoundaries.sourceOwnersFile))
+        : policy.frontendBoundaries.sourceOwners,
+    }
+    : undefined;
+  violations.push(...collectFrontendBoundaryViolations(root, trackedFiles, frontendBoundaries));
 
   for (const [testFile, owners] of Object.entries(frontendTestOwners)) {
     const validTestKey = /^apps\/desktop\/tests\/(?!repository\/).+\.test\.(?:ts|tsx)$/.test(testFile);

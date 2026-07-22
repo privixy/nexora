@@ -1,0 +1,2474 @@
+[
+  {
+    "source": "apps/desktop/src/App.css",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/App.css",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/App.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/App.tsx",
+    "moveTask": 3
+  },
+  {
+    "source": "apps/desktop/src/components/ConnectionErrorBanner.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/ConnectionErrorBanner.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/ConnectionHealthMonitor.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/ConnectionHealthMonitor.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/ConnectionIconImage.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/ConnectionIconImage.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/SocialLinks.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/components/SocialLinks.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/connections/ActionButtons.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/list/ActionButtons.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/connections/ConnectionCard.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/list/ConnectionCard.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/connections/ConnectionListItem.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/list/ConnectionListItem.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/connections/GroupHeader.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/list/GroupHeader.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/connections/StatusBadge.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/list/StatusBadge.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/explain/VisualExplainView.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/VisualExplainView.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/icons/BrandIcons.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/BrandIcons.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/icons/ClientIcons.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ClientIcons.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/ExplorerSidebar.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/MainLayout.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/MainLayout.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/PanelDatabaseProvider.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/shell/PanelDatabaseProvider.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/Sidebar.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/Sidebar.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/SplitPaneLayout.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/SplitPaneLayout.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/Accordion.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/Accordion.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/ConnectionGroupFolder.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/ConnectionGroupItem.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/sidebar/ConnectionGroupItem.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/NavItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/NavItem.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/NotebooksSection.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebooksSection.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/OpenConnectionItem.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/sidebar/OpenConnectionItem.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/QueryHistorySection.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/QueryHistorySection.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarColumnItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarColumnItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarDatabaseItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarIndexList.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarIndexList.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarRoutineGroupHeader.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarRoutineGroupHeader.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarRoutineItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarRoutineItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarSchemaItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarSchemaItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarTableItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarTableItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarTriggerItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarTriggerItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/layout/sidebar/SidebarViewItem.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/SidebarViewItem.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/modals/AiApprovalGate.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/AiApprovalGate.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/modals/AiApprovalModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/AiApprovalModal.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/modals/AiExplainModal.tsx",
+    "owner": "ai",
+    "destination": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
+    "moveTask": 22
+  },
+  {
+    "source": "apps/desktop/src/components/modals/AiQueryModal.tsx",
+    "owner": "ai",
+    "destination": "apps/desktop/src/features/ai/components/AiQueryModal.tsx",
+    "moveTask": 22
+  },
+  {
+    "source": "apps/desktop/src/components/modals/AlertModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/AlertModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/DataPreview.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/DataPreview.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/FormatBadge.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/FormatBadge.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/ModeToggle.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/ModeToggle.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/ParseSummary.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/ParseSummary.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/SchemaEditor.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/SchemaEditor.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImport/TableNameInput.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/TableNameInput.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ClipboardImportModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/ClipboardImportModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/CommunityModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/CommunityModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ConfigJsonModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ConfirmModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ConfirmModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/CreateForeignKeyModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/CreateForeignKeyModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/CreateIndexModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/CreateIndexModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/CreateTableModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/CreateTableModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/DumpDatabaseModal.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/DumpDatabaseModal.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ErrorModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ErrorModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ExplainSelectionModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ExplainSelectionModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ExportConnectionsModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/ExportConnectionsModal.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ExportProgressModal.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/ExportProgressModal.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/modals/GenerateSQLModal.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/GenerateSQLModal.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ImportDatabaseModal.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/ImportDatabaseModal.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ImportFromAppModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/modals/K8sConnectionsModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/McpModal.tsx",
+    "owner": "mcp",
+    "destination": "apps/desktop/src/features/mcp/components/McpModal.tsx",
+    "moveTask": 18
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ModifyColumnModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/ModifyColumnModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/NewConnectionModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/modals/NewRowModal.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/NewRowModal.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/modals/OpenSourceLibrariesModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/OpenSourceLibrariesModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/PluginInstallErrorModal.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/PluginInstallErrorModal.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/components/modals/PluginRemoveModal.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/PluginRemoveModal.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/components/modals/PluginSettingsModal.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/PluginSettingsModal.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/components/modals/PluginStartErrorModal.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/PluginStartErrorModal.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/components/modals/QueryModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/QueryModal.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/modals/QueryParamsModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/QueryParamsModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/QuerySelectionModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/QuerySelectionModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/QuickNavigatorModal.tsx",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/components/modals/RunRoutineModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/SchemaModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/SchemaModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/SshAskpassGate.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/SshAskpassGate.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/SshAskpassModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/SshAskpassModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/SshConnectionsModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/TabSwitcherModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/TabSwitcherModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/TriggerEditorModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/UpdateNotificationModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/UpdateNotificationModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/ViewEditorModal.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/modals/VisualExplainModal.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/VisualExplainModal.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/WhatsNewModal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/WhatsNewModal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/modals/mcp/McpSafetySection.tsx",
+    "owner": "mcp",
+    "destination": "apps/desktop/src/features/mcp/components/McpSafetySection.tsx",
+    "moveTask": 18
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainAiAnalysis.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainAiAnalysis.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainGraph.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainGraph.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainNodeDetails.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainNodeDetails.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainOverviewBar.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainOverviewBar.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainSummaryBar.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainSummaryBar.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/modals/visual-explain/ExplainTableView.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainTableView.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/AddCellButton.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/AddCellButton.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/CellChart.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/CellChart.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/CellHistoryPanel.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/CellHistoryPanel.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/CellNameAiButton.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/CellNameAiButton.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/CellSectionHeader.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/CellSectionHeader.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/MarkdownCell.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/MarkdownCell.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookAiButtons.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookAiButtons.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookCellHeader.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookCellHeader.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookCellWrapper.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookCellWrapper.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookHistoryPanel.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookHistoryPanel.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookOutline.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookOutline.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookToolbar.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookToolbar.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/NotebookView.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/NotebookView.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/ParamsPanel.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/ParamsPanel.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/ResizeHandle.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/ResizeHandle.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/ResultToolbar.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/ResultToolbar.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/RunAllSummary.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/RunAllSummary.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/SqlCell.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/SqlCell.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/SqlCellEditor.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/SqlCellEditor.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/notebook/SqlCellResult.tsx",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/components/SqlCellResult.tsx",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/components/settings/AiActivityPanel.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/AiActivityPanel.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/AiTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/AiTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/AppearanceTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/AppearanceTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/FontPicker.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/FontPicker.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/GeneralTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/GeneralTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/InfoTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/InfoTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/LocalizationTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/LocalizationTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/LogsTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/LogsTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/PluginSettingsPage.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/PluginSettingsPage.tsx",
+    "moveTask": 12
+  },
+  {
+    "source": "apps/desktop/src/components/settings/PluginsTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/PluginsTab.tsx",
+    "moveTask": 12
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ResultColorsSection.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/ResultColorsSection.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/SettingControls.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/SettingControls.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ShortcutsTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/ShortcutsTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/SshTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/SshTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ThemePicker.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/ThemePicker.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ai-activity/AiActivityEventsTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/AiActivityEventsTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ai-activity/AiActivitySessionsTab.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/AiActivitySessionsTab.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ai-activity/EventDetailModal.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/EventDetailModal.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ai-activity/QueryKindBadge.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/QueryKindBadge.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/settings/ai-activity/StatusBadge.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/StatusBadge.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/components/ssh/SshConnectionsManager.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/components/ui/AiDropdownButton.tsx",
+    "owner": "ai",
+    "destination": "apps/desktop/src/features/ai/components/AiDropdownButton.tsx",
+    "moveTask": 22
+  },
+  {
+    "source": "apps/desktop/src/components/ui/BetaBadge.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/BetaBadge.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/BlobInput.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/BlobInput.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/CellCodeEditor.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/CellCodeEditor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/CellDiffEditor.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/CellDiffEditor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/ContextMenu.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ContextMenu.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/DataGrid.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/DataGrid.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/DataGridRow.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/DataGridRow.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/DateInput.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/DateInput.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/EditorErrorBoundary.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/EditorErrorBoundary.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/EnumSetInput.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/EnumSetInput.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/ErrorDisplay.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/ErrorDisplay.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/ExplainPlanNode.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/components/ExplainPlanNode.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/components/ui/FieldEditor.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/FieldEditor.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/FilterRow.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/FilterRow.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/GeometryInput.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/GeometryInput.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/JoinEdge.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/JoinEdge.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/JsonCell.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/JsonCell.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/JsonExpansionEditor.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/JsonExpansionEditor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/JsonInput.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/JsonInput.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/JsonTreeView.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/JsonTreeView.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/MiniResultGrid.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/MiniResultGrid.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/Modal.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/Modal.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/MultiResultPanel.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/MultiResultPanel.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/PaginationControls.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/PaginationControls.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/PasswordInput.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/PasswordInput.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/RelatedRecordsPanel.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/RelatedRecordsPanel.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/ResultEntryContent.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/ResultEntryContent.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/RowEditorSidebar.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/RowEditorSidebar.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SchemaDiagram.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/components/SchemaDiagram.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SchemaTableNode.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/SchemaTableNode.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/Select.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/Select.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SlotAnchor.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SqlEditorWrapper.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/SqlEditorWrapper.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SqlHighlight.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/SqlHighlight.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/SqlPreview.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/SqlPreview.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/StackedResultItem.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/StackedResultItem.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/StyledSelect.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/StyledSelect.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/TableNode.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/TableNode.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/components/ui/TableToolbar.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/components/TableToolbar.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/components/ui/TextCell.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/TextCell.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/TextExpansionEditor.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/TextExpansionEditor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/TextInput.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/TextInput.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/components/ui/VisualQueryBuilder.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/components/VisualQueryBuilder.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/config/links.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config/links.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/config/shortcuts.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config/shortcuts.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/config/socialLinks.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config/socialLinks.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/contexts/AlertContext.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/AlertContext.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/contexts/AlertProvider.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/AlertProvider.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/contexts/ConnectionLayoutContext.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/ConnectionLayoutContext.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/contexts/ConnectionLayoutProvider.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/ConnectionLayoutProvider.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/contexts/DatabaseContext.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/state/DatabaseContext.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/contexts/DatabaseProvider.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/state/DatabaseProvider.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/contexts/EditorContext.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/EditorContext.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/EditorProvider.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/EditorProvider.tsx",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/KeybindingsContext.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/KeybindingsContext.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/KeybindingsProvider.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/KeybindingsProvider.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/PluginModalContext.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/state/PluginModalContext.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/contexts/PluginModalProvider.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/state/PluginModalProvider.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/contexts/PluginSlotContext.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/contexts/PluginSlotProvider.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/contexts/QueryHistoryContext.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/QueryHistoryContext.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/QueryHistoryProvider.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/QueryHistoryProvider.tsx",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/SavedQueriesContext.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/SavedQueriesContext.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/SavedQueriesProvider.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/state/SavedQueriesProvider.tsx",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/contexts/SettingsContext.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/SettingsContext.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/SettingsProvider.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/SettingsProvider.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/ThemeContext.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/ThemeContext.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/ThemeProvider.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/ThemeProvider.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/UpdateContext.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/UpdateContext.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/contexts/UpdateProvider.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/state/UpdateProvider.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/data/changelog.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config/changelog.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useAiActivity.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useAiActivity.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useAlert.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useAlert.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useAutoConnectFromUrl.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useAutoConnectFromUrl.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/useChangelog.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useChangelog.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useColumnResize.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/hooks/useColumnResize.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/hooks/useConnectionLayout.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useConnectionLayout.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useConnectionLayoutContext.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useConnectionLayoutContext.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useConnectionManager.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useConnectionManager.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/useConnectionWindowLifecycle.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useConnectionWindowLifecycle.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/useContainerWidth.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useContainerWidth.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useDangerousQueryGuard.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/hooks/useDangerousQueryGuard.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/hooks/useDataTypes.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/hooks/useDataTypes.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/hooks/useDatabase.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useDatabase.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/useDrivers.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/hooks/useDrivers.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/hooks/useEditor.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/hooks/useEditor.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/hooks/useEditorTheme.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useEditorTheme.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useEscapeKey.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useEscapeKey.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useGlobalShortcuts.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useGlobalShortcuts.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useKeybindings.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useKeybindings.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useOpenConnectionInNewWindow.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useOpenConnectionInNewWindow.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/usePluginApi.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/hooks/usePluginApi.ts",
+    "moveTask": 12
+  },
+  {
+    "source": "apps/desktop/src/hooks/usePluginRegistry.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/hooks/usePluginRegistry.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/hooks/usePluginSlotRegistry.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/hooks/usePluginSlotRegistry.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/hooks/useQueryHistory.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/hooks/useQueryHistory.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/hooks/useReferencedRecord.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/hooks/useReferencedRecord.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/hooks/useResultTypeColors.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/hooks/useResultTypeColors.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/hooks/useRowEditor.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/hooks/useRowEditor.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/hooks/useRowEditorResize.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/hooks/useRowEditorResize.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSavedQueries.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/hooks/useSavedQueries.ts",
+    "moveTask": 16
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSchemaMetadata.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/hooks/useSchemaMetadata.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSettings.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useSettings.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSidebarResize.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/hooks/useSidebarResize.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSplitPaneResize.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/hooks/useSplitPaneResize.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSqlAutocompleteRegistration.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/hooks/useSqlAutocompleteRegistration.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/hooks/useSshAskpass.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useSshAskpass.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/hooks/useTaskManager.ts",
+    "owner": "tasks",
+    "destination": "apps/desktop/src/features/tasks/hooks/useTaskManager.ts",
+    "moveTask": 23
+  },
+  {
+    "source": "apps/desktop/src/hooks/useTheme.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useTheme.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/hooks/useUpdate.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/hooks/useUpdate.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/i18n/config.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/language.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/language.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/de.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/de.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/en.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/en.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/es.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/es.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/fr.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/fr.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/it.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/it.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/ja.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/ja.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/ko.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/ko.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/ru.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/ru.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/tl.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/tl.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/i18n/locales/zh.json",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/zh.json",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/index.css",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/index.css",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/main.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/main.tsx",
+    "moveTask": 3
+  },
+  {
+    "source": "apps/desktop/src/pages/Connections.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/pages/Connections.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/pages/Editor.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/pages/Editor.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/pages/JsonViewerPage.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/pages/JsonViewerPage.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/pages/McpPage.tsx",
+    "owner": "mcp",
+    "destination": "apps/desktop/src/features/mcp/pages/McpPage.tsx",
+    "moveTask": 18
+  },
+  {
+    "source": "apps/desktop/src/pages/ResultsWindowPage.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/pages/ResultsWindowPage.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/pages/SchemaDiagramPage.tsx",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/pages/SchemaDiagramPage.tsx",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/pages/Settings.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/pages/Settings.tsx",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/pages/TaskManagerPage.tsx",
+    "owner": "tasks",
+    "destination": "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx",
+    "moveTask": 23
+  },
+  {
+    "source": "apps/desktop/src/pages/VisualExplainPage.tsx",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/pages/VisualExplainPage.tsx",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/pluginApi.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/lib/pluginApi.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/polyfills.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/polyfills.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/themes/colorUtils.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/colorUtils.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Dracula.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Dracula.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/GitHub Dark.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/GitHub Dark.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/GitHub Light.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/GitHub Light.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Gruvbox Material Dark.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Gruvbox Material Dark.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Gruvbox Material Light.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Gruvbox Material Light.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Monokai.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Monokai.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Night Owl.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Night Owl.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Nord.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Nord.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/One Dark Pro.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/One Dark Pro.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Solarized-dark.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Solarized-dark.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Solarized-light.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Solarized-light.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/monaco/Tomorrow-Night-Eighties.json",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/monaco/Tomorrow-Night-Eighties.json",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/dracula.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/dracula.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/githubDark.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/githubDark.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/gruvboxDark.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/gruvboxDark.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/gruvboxLight.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/gruvboxLight.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/highContrast.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/highContrast.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/monokai.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/monokai.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/nexoraDark.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/nexoraDark.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/nexoraLight.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/nexoraLight.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/nord.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/nord.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/oneDarkPro.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/oneDarkPro.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/solarizedDark.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/solarizedDark.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/presets/solarizedLight.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/presets/solarizedLight.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/themeRegistry.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/themeRegistry.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/themes/themeUtils.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/themes/themeUtils.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/types/ai.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/ai.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/types/askpass.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/contracts/askpass.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/types/connectionImport.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/contracts/connectionImport.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/types/dataTypes.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/contracts/dataTypes.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/types/editor.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/contracts/editor.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/types/explain.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/explain.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/types/notebook.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/contracts/notebook.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/types/pluginSlots.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/contracts/pluginSlots.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/types/plugins.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/contracts/plugins.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/types/queryHistory.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/contracts/queryHistory.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/types/schema.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/contracts/schema.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/types/sidebar.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/sidebar.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/types/theme.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/theme.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/types/wkx.d.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/wkx.d.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/aiActivity.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/aiActivity.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/autocomplete.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/autocomplete.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/blob.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/blob.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/changelog.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/changelog.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/clipboard.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/clipboard.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/clipboardParser.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/clipboardParser.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/columnTypes.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/columnTypes.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/connectionIconPack.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/connectionIconPack.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/connectionLayout.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/connectionLayout.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/connectionManager.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/connectionManager.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/connectionStringParser.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/connectionStringParser.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/connections.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/connections.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/contextMenu.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/lib/contextMenu.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/utils/createTable.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/createTable.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/credentials.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/credentials.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/dataGrid.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/dataGrid.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/dataGridCell.tsx",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/dataGridCell.tsx",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/database.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/database.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/dateGroups.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/dateGroups.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/dateInput.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/dateInput.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/dragState.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/dragState.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/driverCapabilities.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/lib/driverCapabilities.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/utils/driverIcons.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/driverIcons.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/driverUI.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/driverUI.tsx",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/dropdownPosition.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/dropdownPosition.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/dumpUtils.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/lib/dumpUtils.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/utils/editor.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/editor.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/editorContext.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/editorContext.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/errors.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/errors.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/explainImport.ts",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/lib/explainImport.ts",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/utils/explainPlan.ts",
+    "owner": "visual-explain",
+    "destination": "apps/desktop/src/features/visual-explain/lib/explainPlan.ts",
+    "moveTask": 21
+  },
+  {
+    "source": "apps/desktop/src/utils/filterBar.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/filterBar.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/foreignKeys.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/foreignKeys.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/formatTime.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/formatTime.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/fuzzy.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/fuzzy.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/geometry.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/geometry.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/geometryInput.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/geometryInput.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/groupTree.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/lib/groupTree.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/utils/identifiers.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/identifiers.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/indexes.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/indexes.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/json.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/json.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/jsonHighlight.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/jsonHighlight.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/jsonTree.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/jsonTree.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/k8s.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/k8s.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/keybindings.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/keybindings.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/layoutWorker.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/layoutWorker.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/mcpApprovalAttention.ts",
+    "owner": "mcp",
+    "destination": "apps/desktop/src/features/mcp/lib/mcpApprovalAttention.ts",
+    "moveTask": 18
+  },
+  {
+    "source": "apps/desktop/src/utils/multiResult.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/multiResult.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/newConsole.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/newConsole.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/notebook.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebook.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookChart.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookChart.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookDnd.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookDnd.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookExport.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookExport.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookFile.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookFile.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookHistory.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookHistory.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookHtmlExport.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookHtmlExport.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookOutline.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookOutline.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookParams.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookParams.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookRunAll.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookRunAll.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookStore.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookStore.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookUndo.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookUndo.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/notebookVariables.ts",
+    "owner": "notebooks",
+    "destination": "apps/desktop/src/features/notebooks/lib/notebookVariables.ts",
+    "moveTask": 19
+  },
+  {
+    "source": "apps/desktop/src/utils/openSourceLibraries.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/openSourceLibraries.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/pendingInsertions.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/pendingInsertions.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/pluginConfig.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/lib/pluginConfig.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/utils/pluginModuleLoader.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/lib/pluginModuleLoader.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/utils/plugins.ts",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/lib/plugins.ts",
+    "moveTask": 8
+  },
+  {
+    "source": "apps/desktop/src/utils/queryBuilderLayout.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/queryBuilderLayout.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/queryParameters.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/queryParameters.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/quickNavigator.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/lib/quickNavigator.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/utils/resultsWindowSync.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/resultsWindowSync.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/routineCall.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/routineCall.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/routines.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/routines.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/schema.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/schema.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/schemaDiagram.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/schemaDiagram.ts",
+    "moveTask": 10
+  },
+  {
+    "source": "apps/desktop/src/utils/settings.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/settings.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/settingsUI.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/settingsUI.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/sidebarTableItem.ts",
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/lib/sidebarTableItem.ts",
+    "moveTask": 30
+  },
+  {
+    "source": "apps/desktop/src/utils/sql.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/sql.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlAnalysis.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/sqlAnalysis.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlFormat.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/sqlFormat.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlGenerator.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/sqlGenerator.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlHighlight.tsx",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/sqlHighlight.tsx",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlSplitter/classify.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/classify.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlSplitter/index.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/index.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlSplitter/splitter.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/splitter.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/sqlSplitter/tokenizer.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/tokenizer.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/ssh.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/ssh.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/utils/tabCleaner.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/tabCleaner.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/tabFilters.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/tabFilters.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/tabScroll.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/tabScroll.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/tableToolbar.ts",
+    "owner": "data-grid",
+    "destination": "apps/desktop/src/features/data-grid/lib/tableToolbar.ts",
+    "moveTask": 25
+  },
+  {
+    "source": "apps/desktop/src/utils/taskManager.ts",
+    "owner": "tasks",
+    "destination": "apps/desktop/src/features/tasks/lib/taskManager.ts",
+    "moveTask": 23
+  },
+  {
+    "source": "apps/desktop/src/utils/text.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/text.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/themeManagement.ts",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/lib/themeManagement.ts",
+    "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/utils/versionCompare.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/versionCompare.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/utils/visualQuery.ts",
+    "owner": "editor",
+    "destination": "apps/desktop/src/features/editor/lib/visualQuery.ts",
+    "moveTask": 35
+  },
+  {
+    "source": "apps/desktop/src/utils/windowTitle.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/windowTitle.ts",
+    "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/version.ts",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/config/version.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/workers/layoutWorker.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/workers/layoutWorker.ts",
+    "moveTask": 40
+  }
+]
