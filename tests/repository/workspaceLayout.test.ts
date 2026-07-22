@@ -86,7 +86,7 @@ describe("current workspace layout", () => {
       "apps/desktop/src-tauri/Cargo.lock",
       "apps/desktop/src-tauri/tauri.conf.json",
       "apps/desktop/src-tauri/src/lib.rs",
-      "apps/desktop/src-tauri/tests/integration_tests.rs",
+      "apps/desktop/src-tauri/tests/database_integration.rs",
       "apps/desktop/src-tauri/capabilities/default.json",
       "apps/desktop/src-tauri/icons/icon.png",
     ]) {

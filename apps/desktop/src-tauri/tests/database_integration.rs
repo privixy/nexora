@@ -28,6 +28,13 @@ fn get_postgres_params() -> ConnectionParams {
     }
 }
 
+fn require_integration_service(available: bool, service: &str, port: u16) {
+    assert!(
+        available,
+        "{service} integration service is required on 127.0.0.1:{port}"
+    );
+}
+
 #[tokio::test]
 #[ignore] // Ignored by default in CI/local unless explicitly requested with --include-ignored
 async fn test_mysql_integration_flow() {
@@ -43,10 +50,7 @@ async fn test_mysql_integration_flow() {
         sleep(Duration::from_millis(500)).await;
     }
 
-    if !connected {
-        eprintln!("SKIPPING MySQL Test: Could not connect to Docker container on port 33060");
-        return;
-    }
+    require_integration_service(connected, "MySQL", 33060);
 
     // 2. Create Table
     let create_sql = "CREATE TABLE IF NOT EXISTS test_users (
@@ -110,10 +114,7 @@ async fn test_postgres_integration_flow() {
         sleep(Duration::from_millis(500)).await;
     }
 
-    if !connected {
-        eprintln!("SKIPPING Postgres Test: Could not connect to Docker container on port 54320");
-        return;
-    }
+    require_integration_service(connected, "PostgreSQL", 54320);
 
     // 2. Create Table
     let create_sql = "CREATE TABLE IF NOT EXISTS test_users (
@@ -191,10 +192,7 @@ async fn wait_for_postgres(params: &ConnectionParams) -> bool {
 #[ignore]
 async fn test_mysql_batch_preserves_user_variable_and_last_insert_id() {
     let params = get_mysql_params();
-    if !wait_for_mysql(&params).await {
-        eprintln!("SKIPPING: MySQL not reachable on 33060");
-        return;
-    }
+    require_integration_service(wait_for_mysql(&params).await, "MySQL", 33060);
 
     // Ensure a clean slate. Child first because of the FK-shaped dependency.
     let _ = mysql::execute_query(
@@ -279,10 +277,7 @@ async fn test_mysql_batch_preserves_user_variable_and_last_insert_id() {
 #[ignore]
 async fn test_mysql_batch_preserves_transaction_atomicity() {
     let params = get_mysql_params();
-    if !wait_for_mysql(&params).await {
-        eprintln!("SKIPPING: MySQL not reachable on 33060");
-        return;
-    }
+    require_integration_service(wait_for_mysql(&params).await, "MySQL", 33060);
 
     let _ =
         mysql::execute_query(&params, "DROP TABLE IF EXISTS test_batch_tx", None, 1, None).await;
@@ -339,10 +334,7 @@ async fn test_mysql_batch_preserves_transaction_atomicity() {
 #[ignore]
 async fn test_postgres_batch_preserves_temp_table_and_transaction() {
     let params = get_postgres_params();
-    if !wait_for_postgres(&params).await {
-        eprintln!("SKIPPING: Postgres not reachable on 54320");
-        return;
-    }
+    require_integration_service(wait_for_postgres(&params).await, "PostgreSQL", 54320);
 
     let queries: Vec<String> = [
         "BEGIN",
@@ -394,10 +386,7 @@ async fn test_postgres_batch_preserves_temp_table_and_transaction() {
 #[ignore]
 async fn test_mysql_affected_rows_reported_correctly() {
     let params = get_mysql_params();
-    if !wait_for_mysql(&params).await {
-        eprintln!("SKIPPING: MySQL not reachable on 33060");
-        return;
-    }
+    require_integration_service(wait_for_mysql(&params).await, "MySQL", 33060);
 
     let _ =
         mysql::execute_query(&params, "DROP TABLE IF EXISTS test_affected", None, 1, None).await;
@@ -463,10 +452,7 @@ async fn test_mysql_affected_rows_reported_correctly() {
 #[ignore]
 async fn test_postgres_affected_rows_reported_correctly() {
     let params = get_postgres_params();
-    if !wait_for_postgres(&params).await {
-        eprintln!("SKIPPING: Postgres not reachable on 54320");
-        return;
-    }
+    require_integration_service(wait_for_postgres(&params).await, "PostgreSQL", 54320);
 
     let _ =
         postgres::execute_query(&params, "DROP TABLE IF EXISTS test_affected", None, 1, None).await;
@@ -522,10 +508,11 @@ async fn test_concurrent_cancel_aborts_all_in_flight_queries() {
     use tokio::task::AbortHandle;
 
     let params = get_mysql_params();
-    if mysql::get_tables(&params, None).await.is_err() {
-        eprintln!("SKIPPING concurrent-cancel test: MySQL container not reachable on 33060");
-        return;
-    }
+    require_integration_service(
+        mysql::get_tables(&params, None).await.is_ok(),
+        "MySQL",
+        33060,
+    );
 
     let state = QueryCancellationState::default();
     let connection_id = "concurrent-cancel-test".to_string();
@@ -593,10 +580,7 @@ async fn test_concurrent_cancel_aborts_all_in_flight_queries() {
 #[ignore]
 async fn test_postgres_foreign_keys_via_pg_catalog() {
     let params = get_postgres_params();
-    if !wait_for_postgres(&params).await {
-        eprintln!("SKIPPING: Postgres not reachable on 54320");
-        return;
-    }
+    require_integration_service(wait_for_postgres(&params).await, "PostgreSQL", 54320);
 
     let setup: Vec<String> = [
         "DROP TABLE IF EXISTS public.test_fk_child",

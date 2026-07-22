@@ -20,7 +20,7 @@ The desktop workspace migration is complete: the desktop product owns `apps/desk
 
 - Desktop TypeScript tests live in `apps/desktop/tests/` and mirror `apps/desktop/src/`; `apps/desktop/tests/repository/` owns desktop contracts that do not mirror one source file. The named `desktop` Vitest project owns JSDOM setup and coverage of `apps/desktop/src`.
 - Root `tests/repository/` is the sole root test namespace and owns workspace/release contracts only. The root Vitest aggregator exposes it as the named `repository` project in Node and composes the desktop project. Repository tests may inspect files but may not import desktop-private modules.
-- Desktop Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`. Non-trivial desktop Rust unit tests are module-local under their production owners, including the intact commands and PostgreSQL extractor suites; no crate-level peer suites remain. The command inventory contract partitions Cargo's prefix-inclusive `commands::tests::` listing into 59 owner tests, 7 export/import tests, 17 group-tree tests, and the 2 unrelated `dump_commands::tests` substring matches. Checked-in create-plugin Rust templates retain their two exact inline suites under package-owned policy until the package/tooling plan changes generated output.
+- Desktop Rust unit tests use sibling `tests.rs`; crate integration tests use `apps/desktop/src-tauri/tests/`. Non-trivial desktop Rust unit tests are module-local under their production owners, including the intact commands and PostgreSQL extractor suites; no crate-level peer suites remain. `apps/desktop/src-tauri/tests/database_integration.rs` is explicitly classified as external infrastructure; its nine tests remain ignored in default Cargo runs. Path-only integration moves may not change skip semantics, and precondition changes require a separate reviewed batch. The command inventory contract partitions Cargo's prefix-inclusive `commands::tests::` listing into 59 owner tests, 7 export/import tests, 17 group-tree tests, and the 2 unrelated `dump_commands::tests` substring matches. Checked-in create-plugin Rust templates retain their two exact inline suites under package-owned policy until the package/tooling plan changes generated output.
 
 ## Architecture policy
 
@@ -35,7 +35,13 @@ Run `pnpm check:architecture` to enforce `architecture/policy.json`. The checker
 - root repository contract tests import desktop-private modules from paths such as `apps/desktop/src/` or `apps/desktop/src-tauri/`, including configured desktop aliases such as `@` and `@/…`;
 - desktop-owned source, assets, tests, manifests, dependencies, app-local configuration, or the Tauri crate are reintroduced at repository-root paths listed in `forbiddenRootDesktopPaths`.
 
-File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. Desktop Rust inline-test debt is closed with an empty `rustInlineTestAllowlist`. The separate `rustTemplateInlineTestAllowlist` classifies only the two checked-in create-plugin template suites owned by the later package/tooling plan, and every entry must remain below an exact `rustTemplateInlineTestRoots` path; it cannot exempt desktop Rust.
+File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. Desktop Rust inline-test debt is closed with an empty `rustInlineTestAllowlist`. The separate `rustTemplateInlineTestAllowlist` classifies only the two checked-in create-plugin template suites owned by the later package/tooling plan, and every entry must remain below an exact `rustTemplateInlineTestRoots` path; it cannot exempt desktop Rust. `rustIntegrationTests` records the exact external-infrastructure suite, its ignored default mode, and its explicit command.
+
+Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+
+Explicit external integration run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored`
+
+Required services: MySQL on `127.0.0.1:33060` and PostgreSQL on `127.0.0.1:54320` with the existing test credentials and database. Explicit runs fail with the required-service precondition when infrastructure is absent rather than succeeding as no-ops.
 
 ## Temporary compatibility exceptions
 

@@ -6,6 +6,16 @@ import { describe, expect, it } from "vitest";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (path: string) => readFileSync(resolve(repoRoot, path), "utf8");
+const policy = JSON.parse(read("architecture/policy.json")) as {
+  rustIntegrationTests?: Record<
+    string,
+    {
+      classification: string;
+      defaultMode: string;
+      explicitRun: string;
+    }
+  >;
+};
 const expectedRustPeerTests: string[] = [];
 
 describe("test architecture", () => {
@@ -70,6 +80,17 @@ describe("test architecture", () => {
       ...groupTreeTests,
       ...unrelatedTests,
     ].sort()).toEqual([...listedTests].sort());
+  });
+
+  it("classifies external-infrastructure Rust integration tests", () => {
+    expect(policy.rustIntegrationTests).toEqual({
+      "apps/desktop/src-tauri/tests/database_integration.rs": {
+        classification: "external-infrastructure",
+        defaultMode: "ignored",
+        explicitRun:
+          "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored",
+      },
+    });
   });
 
   it("rejects Rust peer-test files", () => {

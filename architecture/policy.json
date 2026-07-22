@@ -28,6 +28,13 @@
     "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs"
   ],
   "rustCrateLevelTestAllowlist": [],
+  "rustIntegrationTests": {
+    "apps/desktop/src-tauri/tests/database_integration.rs": {
+      "classification": "external-infrastructure",
+      "defaultMode": "ignored",
+      "explicitRun": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored"
+    }
+  },
   "allowedWorkspaceDependencies": {
     "nexora": [],
     "@nexora/desktop": [],

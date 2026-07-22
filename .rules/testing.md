@@ -18,7 +18,13 @@ All utility functions and testable logic must be placed in `apps/desktop/src/uti
 - ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
 
 ### Test Files
-Desktop TypeScript tests must be placed in `apps/desktop/tests/`, normally mirroring `apps/desktop/src/`. Desktop contracts that do not map to one source file belong in `apps/desktop/tests/repository/`. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Desktop Rust unit tests are module-local with no peer or inline-test exceptions. The two exact create-plugin template inline suites remain package-owned generated-template classifications. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/`, normally mirroring `apps/desktop/src/`. Desktop contracts that do not map to one source file belong in `apps/desktop/tests/repository/`. Root `tests/` must contain only `tests/repository/`, which owns non-desktop workspace and release contracts. Desktop Rust unit tests are module-local with no peer or inline-test exceptions. The external-infrastructure suite is classified at `apps/desktop/src-tauri/tests/database_integration.rs`; all nine tests remain ignored by default. Path-only integration moves must not change skip semantics, and precondition changes require a separate reviewed batch. The two exact create-plugin template inline suites remain package-owned generated-template classifications. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+
+Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+
+Explicit external integration run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored`
+
+Required services: MySQL on `127.0.0.1:33060` and PostgreSQL on `127.0.0.1:54320` with the existing test credentials and database. An explicit run must fail with the required-service precondition when either service is absent; it must not succeed as a no-op.
 
 ```
 project-root/
