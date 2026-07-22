@@ -1,14 +1,14 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Trash2, Loader2, Database, AlertTriangle, X } from "lucide-react";
-import { groupByDate, formatHistoryTime } from "../../../utils/dateGroups";
-import { SqlHighlight } from "../../ui/SqlHighlight";
-import { formatSqlPreview } from "../../../utils/sqlHighlight";
-import { useSettings } from "../../../features/settings/hooks/useSettings";
+import { groupByDate, formatHistoryTime } from "../../../../utils/dateGroups";
+import { SqlHighlight } from "../../../../components/ui/SqlHighlight";
+import { formatSqlPreview } from "../../../../utils/sqlHighlight";
+import { useSettings } from "../../../settings/hooks/useSettings";
 import type {
   QueryHistoryEntry,
   QueryHistoryRecoveryNotice,
-} from "../../../types/queryHistory";
+} from "../../../../types/queryHistory";
 
 interface QueryHistorySectionProps {
   entries: QueryHistoryEntry[];

@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, X, Table, Eye, Code2, Zap, Database, Play, Copy, Hash, FileText, FileCode } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useDatabase } from "../../features/connections";
-import { useAlert } from "../../hooks/useAlert";
-import { quoteTableRef } from "../../utils/identifiers";
-import { isMultiDatabaseCapable, getDatabaseList } from "../../features/plugins";
-import { getNavigatorItems, filterNavigatorItems } from "../../utils/quickNavigator";
-import { newConsoleForTable } from "../../utils/newConsole";
-import type { RoutineInfo, TriggerInfo } from "../../features/connections";
+import { useDatabase } from "../../connections";
+import { useAlert } from "../../../hooks/useAlert";
+import { quoteTableRef } from "../../../utils/identifiers";
+import { isMultiDatabaseCapable, getDatabaseList } from "../../plugins";
+import { getNavigatorItems, filterNavigatorItems } from "../lib/quickNavigator";
+import { newConsoleForTable } from "../../../utils/newConsole";
+import type { RoutineInfo, TriggerInfo } from "../../connections";
 
 interface QuickNavigatorModalProps {
   isOpen: boolean;

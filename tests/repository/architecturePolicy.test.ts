@@ -114,8 +114,8 @@ describe("architecture policy", () => {
       "apps/desktop/src/features/settings/state/SettingsContext.ts",
         "apps/desktop/src/types/pluginSlots.ts",
       ],
-      "apps/desktop/tests/components/layout/sidebar/SidebarTableItem.test.ts": [
-        "apps/desktop/src/utils/sidebarTableItem.ts",
+      "apps/desktop/tests/features/explorer/lib/sidebarTableItemProps.test.ts": [
+        "apps/desktop/src/features/explorer/lib/sidebarTableItem.ts",
       ],
       "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
         "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
@@ -394,7 +394,8 @@ describe("architecture policy", () => {
 
   it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
     const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
-    expect(inventory).toHaveLength(122);
+    expect(inventory).toHaveLength(113);
+    expect(inventory.filter((row) => (row as { removeByTask?: number }).removeByTask === 32)).toHaveLength(14);
     expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
       "characterizationTest",
       "gatewayOrAdapter",
@@ -403,7 +404,7 @@ describe("architecture policy", () => {
       "owner",
       "removeByTask",
     ].join(","))).toBe(true);
-    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(122);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(113);
   });
 
   it("requires direct Tauri inventory ownership and removal task to match staging", () => {

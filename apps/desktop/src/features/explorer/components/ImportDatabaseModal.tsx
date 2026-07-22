@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { useAlert } from "../../hooks/useAlert";
+import { useAlert } from "../../../hooks/useAlert";
 import { Loader2, Database, X, CheckCircle2, XCircle } from "lucide-react";
-import { formatElapsedTime } from "../../utils/formatTime";
-import { useDatabase } from "../../features/connections";
-import { Modal } from "../ui/Modal";
+import { formatElapsedTime } from "../../../utils/formatTime";
+import { useDatabase } from "../../connections";
+import { Modal } from "../../../components/ui/Modal";
 
 interface ImportProgress {
   statements_executed: number;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getNavigatorItems, filterNavigatorItems, type NavigatorItemParams } from "../../src/utils/quickNavigator";
-import type { SchemaData } from "../../src/features/connections/state/DatabaseContext";
+import { getNavigatorItems, filterNavigatorItems, type NavigatorItemParams } from "../../../../src/features/explorer/lib/quickNavigator";
+import type { SchemaData } from "../../../../src/features/connections/state/DatabaseContext";
 
 describe("quickNavigator utility", () => {
   describe("getNavigatorItems", () => {

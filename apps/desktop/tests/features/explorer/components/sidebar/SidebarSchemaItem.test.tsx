@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
-import { SidebarSchemaItem } from "../../../../src/components/layout/sidebar/SidebarSchemaItem";
+import { SidebarSchemaItem } from "../../../../../src/features/explorer/components/sidebar/SidebarSchemaItem";
 import { invoke } from "@tauri-apps/api/core";
 
 vi.mock("@tauri-apps/api/core", () => ({

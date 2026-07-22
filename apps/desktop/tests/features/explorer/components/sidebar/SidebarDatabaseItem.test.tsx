@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { SidebarDatabaseItem } from "../../../../src/components/layout/sidebar/SidebarDatabaseItem";
+import { SidebarDatabaseItem } from "../../../../../src/features/explorer/components/sidebar/SidebarDatabaseItem";
 import type { DatabaseData } from "../../../../src/features/connections/state/DatabaseContext";
 import type { DriverCapabilities } from "../../../../src/types/plugins";
 

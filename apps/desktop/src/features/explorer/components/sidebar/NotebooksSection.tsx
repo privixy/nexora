@@ -13,23 +13,23 @@ import {
 } from "lucide-react";
 import { save, open } from "@tauri-apps/plugin-dialog";
 import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
-import { useSettings } from "../../../features/settings/hooks/useSettings";
-import { useAlert } from "../../../hooks/useAlert";
-import { formatHistoryTime } from "../../../utils/dateGroups";
+import { useSettings } from "../../../settings/hooks/useSettings";
+import { useAlert } from "../../../../hooks/useAlert";
+import { formatHistoryTime } from "../../../../utils/dateGroups";
 import {
   listNotebooks,
   loadNotebook,
   createNotebookFromState,
   NOTEBOOKS_CHANGED_EVENT,
-} from "../../../features/notebooks/lib/notebookStore";
+} from "../../../notebooks/lib/notebookStore";
 import {
   serializeNotebook,
   deserializeNotebook,
-} from "../../../features/notebooks/lib/notebookFile";
-import { exportNotebookToHtml } from "../../../features/notebooks/lib/notebookHtmlExport";
-import { ConfirmModal } from "../../modals/ConfirmModal";
-import { ContextMenu, type ContextMenuItem } from "../../ui/ContextMenu";
-import type { NotebookMetadata } from "../../../types/notebook";
+} from "../../../notebooks/lib/notebookFile";
+import { exportNotebookToHtml } from "../../../notebooks/lib/notebookHtmlExport";
+import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
+import { ContextMenu, type ContextMenuItem } from "../../../../components/ui/ContextMenu";
+import type { NotebookMetadata } from "../../../../types/notebook";
 
 interface NotebooksSectionProps {
   /** Active connection — notebooks shown belong to it. */

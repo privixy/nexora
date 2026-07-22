@@ -128,7 +128,7 @@
   {
     "source": "apps/desktop/src/components/layout/sidebar/Accordion.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/Accordion.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/Accordion.tsx",
     "moveTask": 30
   },
   {
@@ -151,9 +151,9 @@
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/NotebooksSection.tsx",
-    "owner": "notebooks",
-    "destination": "apps/desktop/src/features/notebooks/components/NotebooksSection.tsx",
-    "moveTask": 19
+    "owner": "explorer",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
+    "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/OpenConnectionItem.tsx",
@@ -164,61 +164,61 @@
   {
     "source": "apps/desktop/src/components/layout/sidebar/QueryHistorySection.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/QueryHistorySection.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/QueryHistorySection.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarColumnItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarColumnItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarColumnItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarDatabaseItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarIndexList.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarIndexList.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarIndexList.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarRoutineGroupHeader.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarRoutineGroupHeader.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarRoutineGroupHeader.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarRoutineItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarRoutineItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarRoutineItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarSchemaItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarSchemaItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarSchemaItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarTableItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarTableItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarTableItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarTriggerItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarTriggerItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarTriggerItem.tsx",
     "moveTask": 30
   },
   {
     "source": "apps/desktop/src/components/layout/sidebar/SidebarViewItem.tsx",
     "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/SidebarViewItem.tsx",
+    "destination": "apps/desktop/src/features/explorer/components/sidebar/SidebarViewItem.tsx",
     "moveTask": 30
   },
   {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import {Accordion} from "../../../../src/components/layout/sidebar/Accordion";
+import {Accordion} from "../../../../../src/features/explorer/components/sidebar/Accordion";
 
 describe("Accordion", () => {
   it("renders title correctly", () => {

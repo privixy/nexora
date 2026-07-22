@@ -2,17 +2,17 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { save } from "@tauri-apps/plugin-dialog";
-import { useAlert } from "../../hooks/useAlert";
-import { useDatabase } from "../../features/connections";
-import { isMultiDatabaseCapable } from "../../features/plugins";
-import { Modal } from "../ui/Modal";
+import { useAlert } from "../../../hooks/useAlert";
+import { useDatabase } from "../../connections";
+import { isMultiDatabaseCapable } from "../../plugins";
+import { Modal } from "../../../components/ui/Modal";
 import { Loader2, Download, Database, Square, CheckSquare } from "lucide-react";
 import {
   validateDumpOptions,
   toggleTableSelection,
   selectAllTables,
-} from "../../utils/dumpUtils";
-import { formatElapsedTime } from "../../utils/formatTime";
+} from "../../../utils/dumpUtils";
+import { formatElapsedTime } from "../../../utils/formatTime";
 
 interface DumpDatabaseModalProps {
   isOpen: boolean;

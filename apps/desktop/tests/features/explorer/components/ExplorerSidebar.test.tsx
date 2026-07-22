@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { ask, open, save } from "@tauri-apps/plugin-dialog";
 import { MemoryRouter } from "react-router-dom";
-import { ExplorerSidebar } from "../../../../src/components/layout/ExplorerSidebar";
+import { ExplorerSidebar } from "../../../../src/features/explorer/components/ExplorerSidebar";
 import { useDatabase } from "../../../../src/features/connections/hooks/useDatabase";
 import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
 import { useDrivers } from "../../../../src/features/plugins/hooks/useDrivers";
@@ -68,19 +68,19 @@ vi.mock("../../../../src/components/modals/ConfirmModal", () => ({
   ) : null,
 }));
 
-vi.mock("../../../../src/components/layout/sidebar/NotebooksSection", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/NotebooksSection", () => ({
   NotebooksSection: () => <div>notebooks-section</div>,
 }));
 
-vi.mock("../../../../src/components/layout/sidebar/QueryHistorySection", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/QueryHistorySection", () => ({
   QueryHistorySection: () => <div>history-section</div>,
 }));
 
-vi.mock("../../../../src/components/modals/DumpDatabaseModal", () => ({
+vi.mock("../../../../src/features/explorer/components/DumpDatabaseModal", () => ({
   DumpDatabaseModal: ({ isOpen }: { isOpen: boolean }) => isOpen ? <div>dump-modal</div> : null,
 }));
 
-vi.mock("../../../../src/components/modals/ImportDatabaseModal", () => ({
+vi.mock("../../../../src/features/explorer/components/ImportDatabaseModal", () => ({
   ImportDatabaseModal: ({ isOpen }: { isOpen: boolean }) => isOpen ? <div>import-modal</div> : null,
 }));
 
@@ -92,7 +92,7 @@ vi.mock("../../../../src/features/schema", async (importOriginal) => {
   };
 });
 
-vi.mock("../../../../src/components/layout/sidebar/SidebarSchemaItem", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/SidebarSchemaItem", () => ({
   SidebarSchemaItem: ({ database, schemaName, schemaData, onTableClick, onTableDoubleClick, onContextMenu }: {
     database?: string;
     schemaName: string;

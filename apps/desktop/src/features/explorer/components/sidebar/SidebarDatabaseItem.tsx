@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supportsManageTables } from "../../../utils/driverCapabilities";
+import { supportsManageTables } from "../../../../utils/driverCapabilities";
 import { useTranslation } from "react-i18next";
 import {
   Loader2,
@@ -21,13 +21,13 @@ import { SidebarRoutineItem } from "./SidebarRoutineItem";
 import { SidebarRoutineGroupHeader } from "./SidebarRoutineGroupHeader";
 import { SidebarTriggerItem } from "./SidebarTriggerItem";
 import { SidebarSchemaItem } from "./SidebarSchemaItem";
-import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../features/connections";
-import type { TableColumn } from "../../../types/schema";
-import type { ContextMenuData } from "../../../types/sidebar";
-import type { DriverCapabilities } from "../../../types/plugins";
-import { groupRoutinesByType } from "../../../utils/routines";
-import { formatObjectCount } from "../../../features/schema/lib/schema";
-import { fuzzyFilter } from "../../../utils/fuzzy";
+import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../connections";
+import type { TableColumn } from "../../../../types/schema";
+import type { ContextMenuData } from "../../../../types/sidebar";
+import type { DriverCapabilities } from "../../../../types/plugins";
+import { groupRoutinesByType } from "../../../../utils/routines";
+import { formatObjectCount } from "../../../schema/lib/schema";
+import { fuzzyFilter } from "../../../../utils/fuzzy";
 
 interface SidebarDatabaseItemProps {
   databaseName: string;

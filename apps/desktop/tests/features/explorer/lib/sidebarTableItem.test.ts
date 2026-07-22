@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSidebarTableContext } from '@/utils/sidebarTableItem';
+import { getSidebarTableContext } from '@/features/explorer/lib/sidebarTableItem';
 
 describe('getSidebarTableContext', () => {
   it('preserves database and schema for multi-database table actions', () => {

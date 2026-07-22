@@ -40,9 +40,7 @@
       "apps/desktop/src/features/settings/state/SettingsContext.ts",
       "apps/desktop/src/types/pluginSlots.ts"
     ],
-    "apps/desktop/tests/components/layout/sidebar/SidebarTableItem.test.ts": [
-      "apps/desktop/src/utils/sidebarTableItem.ts"
-    ],
+
     "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
       "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx"
     ],
@@ -75,6 +73,18 @@
     ],
     "apps/desktop/tests/features/settings/publicApi.test.ts": [
       "apps/desktop/src/features/settings/index.ts"
+    ],
+    "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
+      "apps/desktop/src/features/data-grid/index.ts"
+    ],
+    "apps/desktop/tests/features/visual-explain/components/ExplainAiAnalysis.test.tsx": [
+      "apps/desktop/src/features/visual-explain/components/visual-explain/ExplainAiAnalysis.tsx"
+    ],
+    "apps/desktop/tests/features/explorer/components/ExplorerSidebarContext.test.tsx": [
+      "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx"
+    ],
+    "apps/desktop/tests/features/explorer/lib/sidebarTableItemProps.test.ts": [
+      "apps/desktop/src/features/explorer/lib/sidebarTableItem.ts"
     ],
     "apps/desktop/tests/features/plugins/hooks/useDrivers.test.tsx": [
       "apps/desktop/src/features/plugins/hooks/useDrivers.ts"
@@ -153,6 +163,125 @@
         "owner": "connections",
         "reason": "Legacy editor dependency retained until editor page publication",
         "removeByTask": 36
+      },
+      {
+        "path": "apps/desktop/src/components/layout/Sidebar.tsx",
+        "importTarget": "../../features/explorer/components/ExplorerSidebar",
+        "owner": "explorer",
+        "reason": "Legacy explorer app-shell deep import retained until public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../settings/hooks/useSettings",
+        "owner": "explorer",
+        "reason": "Legacy settings deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../editor/state/SavedQueriesContext",
+        "owner": "explorer",
+        "reason": "Legacy editor deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../plugins/hooks/useDrivers",
+        "owner": "explorer",
+        "reason": "Legacy plugins deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../connections/lib/driverUI",
+        "owner": "explorer",
+        "reason": "Legacy connections deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../schema/lib/schema",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
+        "importTarget": "../../schema/lib/createTable",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
+        "importTarget": "../../../settings/hooks/useSettings",
+        "owner": "explorer",
+        "reason": "Legacy settings deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
+        "importTarget": "../../../notebooks/lib/notebookStore",
+        "owner": "explorer",
+        "reason": "Legacy notebooks deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
+        "importTarget": "../../../notebooks/lib/notebookFile",
+        "owner": "explorer",
+        "reason": "Legacy notebooks deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
+        "importTarget": "../../../notebooks/lib/notebookHtmlExport",
+        "owner": "explorer",
+        "reason": "Legacy notebooks deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/QueryHistorySection.tsx",
+        "importTarget": "../../../settings/hooks/useSettings",
+        "owner": "explorer",
+        "reason": "Legacy settings deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx",
+        "importTarget": "../../../schema/lib/schema",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/SidebarIndexList.tsx",
+        "importTarget": "../../../schema/lib/indexes",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/SidebarSchemaItem.tsx",
+        "importTarget": "../../../schema/lib/schema",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/SidebarTableItem.tsx",
+        "importTarget": "../../../schema/lib/indexes",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
+      },
+      {
+        "path": "apps/desktop/src/features/explorer/components/sidebar/SidebarViewItem.tsx",
+        "importTarget": "../../../schema/lib/indexes",
+        "owner": "explorer",
+        "reason": "Legacy schema deep import retained until Explorer public API publication",
+        "removeByTask": 31
       }
     ],
     "directTauriExceptionsFile": "architecture/frontend-tauri-exceptions.json",
@@ -485,10 +614,11 @@
     "apps/desktop/src-tauri/src/mcp/router.rs": 1148,
     "apps/desktop/src-tauri/src/plugins/rpc_driver.rs": 823,
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
-    "apps/desktop/src/components/layout/ExplorerSidebar.tsx": 3174,
-    "apps/desktop/src/components/layout/sidebar/SidebarDatabaseItem.tsx": 549,
+    "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 3174,
+    "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx": 530,
+    "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx": 549,
+    "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx": 603,
     "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
-    "apps/desktop/src/components/modals/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/components/ui/MultiResultPanel.tsx": 599,
     "apps/desktop/src/components/ui/VisualQueryBuilder.tsx": 713,

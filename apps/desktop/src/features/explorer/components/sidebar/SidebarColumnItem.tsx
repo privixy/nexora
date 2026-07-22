@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../../hooks/useAlert";
 import { Key, Columns, Edit, Copy, Trash2 } from "lucide-react";
 import clsx from "clsx";
-import { ContextMenu } from "../../ui/ContextMenu";
-import type { TableColumn } from "../../../types/schema";
-import { quoteIdentifier, quoteTableRef } from "../../../utils/identifiers";
+import { ContextMenu } from "../../../../components/ui/ContextMenu";
+import type { TableColumn } from "../../../../types/schema";
+import { quoteIdentifier, quoteTableRef } from "../../../../utils/identifiers";
 
 interface SidebarColumnItemProps {
   column: TableColumn;

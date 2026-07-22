@@ -2,50 +2,50 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { MemoryRouter } from "react-router-dom";
-import { ExplorerSidebar } from "../../../src/components/layout/ExplorerSidebar";
-import { useDatabase } from "../../../src/features/connections/hooks/useDatabase";
-import { useEditor } from "../../../src/features/editor/hooks/useEditor";
-import { useDrivers } from "../../../src/features/plugins/hooks/useDrivers";
-import type { DatabaseContextType } from "../../../src/features/connections/state/DatabaseContext";
-import type { DriverCapabilities } from "../../../src/types/plugins";
+import { ExplorerSidebar } from "../../../../src/features/explorer/components/ExplorerSidebar";
+import { useDatabase } from "../../../../src/features/connections/hooks/useDatabase";
+import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
+import { useDrivers } from "../../../../src/features/plugins/hooks/useDrivers";
+import type { DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
+import type { DriverCapabilities } from "../../../../src/types/plugins";
 
-vi.mock("../../../src/features/connections/hooks/useDatabase", () => ({
+vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: vi.fn(),
 }));
 
-vi.mock("../../../src/features/editor/hooks/useEditor", () => ({
+vi.mock("../../../../src/features/editor/hooks/useEditor", () => ({
   useEditor: vi.fn(),
 }));
 
-vi.mock("../../../src/features/plugins/hooks/useDrivers", () => ({
+vi.mock("../../../../src/features/plugins/hooks/useDrivers", () => ({
   useDrivers: vi.fn(),
 }));
 
-vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
+vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { compactMode: false } }),
 }));
 
-vi.mock("../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../../src/hooks/useConnectionLayoutContext", () => ({
+vi.mock("../../../../src/hooks/useConnectionLayoutContext", () => ({
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
 }));
 
-vi.mock("../../../src/features/editor/hooks/useSavedQueries", () => ({
+vi.mock("../../../../src/features/editor/hooks/useSavedQueries", () => ({
   useSavedQueries: () => ({ queries: [], saveQuery: vi.fn(), deleteQuery: vi.fn(), updateQuery: vi.fn() }),
 }));
 
-vi.mock("../../../src/features/editor/hooks/useQueryHistory", () => ({
+vi.mock("../../../../src/features/editor/hooks/useQueryHistory", () => ({
   useQueryHistory: () => ({ entries: [], isLoading: false, deleteEntry: vi.fn(), clearHistory: vi.fn(), recoveryNotice: null, dismissRecoveryNotice: vi.fn() }),
 }));
 
-vi.mock("../../../src/components/ui/Modal", () => ({
+vi.mock("../../../../src/components/ui/Modal", () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? <div>{children}</div> : null,
 }));
 
-vi.mock("../../../src/components/ui/ContextMenu", () => ({
+vi.mock("../../../../src/components/ui/ContextMenu", () => ({
   ContextMenu: ({ items }: { items: Array<{ label?: string; action?: () => void; separator?: boolean; disabled?: boolean }> }) => (
     <div>
       {items.filter((item) => !item.separator).map((item) => (
@@ -57,7 +57,7 @@ vi.mock("../../../src/components/ui/ContextMenu", () => ({
   ),
 }));
 
-vi.mock("../../../src/components/modals/ConfirmModal", () => ({
+vi.mock("../../../../src/components/modals/ConfirmModal", () => ({
   ConfirmModal: ({ isOpen, title, onConfirm }: { isOpen: boolean; title: string; onConfirm: () => void }) => isOpen ? (
     <div>
       <span>{title}</span>
@@ -66,15 +66,15 @@ vi.mock("../../../src/components/modals/ConfirmModal", () => ({
   ) : null,
 }));
 
-vi.mock("../../../src/components/layout/sidebar/NotebooksSection", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/NotebooksSection", () => ({
   NotebooksSection: () => <div />,
 }));
 
-vi.mock("../../../src/components/layout/sidebar/QueryHistorySection", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/QueryHistorySection", () => ({
   QueryHistorySection: () => <div />,
 }));
 
-vi.mock("../../../src/components/layout/sidebar/SidebarSchemaItem", () => ({
+vi.mock("../../../../src/features/explorer/components/sidebar/SidebarSchemaItem", () => ({
   SidebarSchemaItem: ({ database, schemaName, schemaData, onTableClick, onTableDoubleClick, onContextMenu }: {
     database?: string;
     schemaName: string;
@@ -103,9 +103,11 @@ vi.mock("../../../src/components/layout/sidebar/SidebarSchemaItem", () => ({
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ ask: vi.fn(), open: vi.fn() }));
-vi.mock("lucide-react", () => {
+vi.mock("lucide-react", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("lucide-react")>();
   const Icon = () => null;
   return {
+    ...actual,
     Database: Icon,
     Plus: Icon,
     FileCode: Icon,

@@ -3,7 +3,7 @@ import {
   areTableItemPropsEqual,
   buildTableItemSelector,
   type TableItemComparableProps,
-} from '@/utils/sidebarTableItem';
+} from '@/features/explorer/lib/sidebarTableItem';
 
 const base: TableItemComparableProps = {
   table: { name: 'users' },

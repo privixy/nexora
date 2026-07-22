@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { SidebarViewItem } from "../../../../src/components/layout/sidebar/SidebarViewItem";
+import { SidebarViewItem } from "../../../../../src/features/explorer/components/sidebar/SidebarViewItem";
 import { invoke } from "@tauri-apps/api/core";
 import React from "react";
 

@@ -1,5 +1,5 @@
-import type { TableInfo, ViewInfo, RoutineInfo, TriggerInfo, SchemaData, DatabaseData } from '../features/connections';
-import { fuzzyFilter } from './fuzzy';
+import type { TableInfo, ViewInfo, RoutineInfo, TriggerInfo, SchemaData, DatabaseData } from '../../connections';
+import { fuzzyFilter } from '../../../utils/fuzzy';
 
 export interface NavigatorItem {
   name: string;

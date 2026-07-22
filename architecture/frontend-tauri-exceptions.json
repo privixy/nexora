@@ -32,76 +32,76 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/layout/ExplorerSidebar.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/ExplorerSidebar.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/NotebooksSection.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
-    "owner": "notebooks",
-    "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
+    "owner": "explorer",
+    "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/NotebooksSection.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/NotebooksSection.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
-    "owner": "notebooks",
-    "characterizationTest": "apps/desktop/tests/features/notebooks/rawTauri.test.tsx",
+    "owner": "explorer",
+    "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/fileGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/SidebarColumnItem.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/SidebarColumnItem.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/SidebarColumnItem.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/SidebarColumnItem.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/SidebarRoutineItem.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/SidebarRoutineItem.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/SidebarTableItem.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/SidebarTableItem.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/layout/sidebar/SidebarViewItem.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/sidebar/SidebarViewItem.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
     "importer": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
@@ -168,20 +168,20 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/DumpDatabaseModal.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/DumpDatabaseModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/modals/DumpDatabaseModal.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/DumpDatabaseModal.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dialogGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
     "importer": "apps/desktop/src/components/modals/GenerateSQLModal.tsx",
@@ -192,20 +192,20 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/ImportDatabaseModal.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/ImportDatabaseModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
-    "importer": "apps/desktop/src/components/modals/ImportDatabaseModal.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/ImportDatabaseModal.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/events.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
     "importer": "apps/desktop/src/features/connections/components/ImportFromAppModal.tsx",
@@ -288,12 +288,12 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/modals/QuickNavigatorModal.tsx",
+    "importer": "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "explorer",
     "characterizationTest": "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx",
     "gatewayOrAdapter": "apps/desktop/src/platform/tauri/dataTransferGateway.ts",
-    "removeByTask": 39
+    "removeByTask": 32
   },
   {
     "importer": "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx",
