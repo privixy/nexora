@@ -1,0 +1,66 @@
+import type { ReactElement, ReactNode } from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const renderMock = vi.fn();
+const createRootMock = vi.fn(() => ({ render: renderMock }));
+
+vi.mock("react-dom/client", () => ({ default: { createRoot: createRootMock } }));
+vi.mock("../../src/App", () => ({ App: function App() { return null; } }));
+vi.mock("../../src/contexts/DatabaseProvider", () => ({ DatabaseProvider: function DatabaseProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/SettingsProvider", () => ({ SettingsProvider: function SettingsProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/SavedQueriesProvider", () => ({ SavedQueriesProvider: function SavedQueriesProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/QueryHistoryProvider", () => ({ QueryHistoryProvider: function QueryHistoryProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/EditorProvider", () => ({ EditorProvider: function EditorProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/ThemeProvider", () => ({ ThemeProvider: function ThemeProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/contexts/UpdateProvider", () => ({ UpdateProvider: function UpdateProvider({ children }: { children: ReactNode }) { return children; } }));
+vi.mock("../../src/polyfills", () => ({}));
+vi.mock("../../src/i18n/config", () => ({}));
+vi.mock("../../src/index.css", () => ({}));
+
+function componentName(element: ReactElement) {
+  if (typeof element.type === "string") return element.type;
+  if (typeof element.type === "symbol") return "StrictMode";
+  return element.type.name;
+}
+
+function onlyChild(element: ReactElement) {
+  return element.props.children as ReactElement;
+}
+
+describe("legacy main composition root", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.clearAllMocks();
+    document.body.innerHTML = '<div id="root"></div>';
+  });
+
+  it("starts React on the root element with the exact provider order", async () => {
+    await import("../../src/main");
+
+    const root = document.getElementById("root");
+    expect(createRootMock).toHaveBeenCalledOnce();
+    expect(createRootMock).toHaveBeenCalledWith(root);
+    expect(renderMock).toHaveBeenCalledOnce();
+
+    const providerOrder: string[] = [];
+    let current = renderMock.mock.calls[0][0] as ReactElement;
+    while (current) {
+      providerOrder.push(componentName(current));
+      const child = onlyChild(current);
+      if (!child) break;
+      current = child;
+    }
+
+    expect(providerOrder).toEqual([
+      "StrictMode",
+      "UpdateProvider",
+      "ThemeProvider",
+      "SettingsProvider",
+      "DatabaseProvider",
+      "SavedQueriesProvider",
+      "QueryHistoryProvider",
+      "EditorProvider",
+      "App",
+    ]);
+  });
+});
