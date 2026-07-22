@@ -11,7 +11,7 @@ use tauri::AppHandle;
 use crate::config::PluginConfig;
 use crate::drivers::driver_trait::{DriverCapabilities, PluginManifest, PluginSettingDefinition};
 use crate::models::DataTypeInfo;
-use crate::plugins::driver::RpcDriver;
+use crate::plugins::rpc_driver::RpcDriver;
 
 /// Errors that occurred during startup plugin loading, to be fetched by the frontend.
 static STARTUP_ERRORS: Lazy<Mutex<Vec<PluginLoadError>>> = Lazy::new(|| Mutex::new(Vec::new()));
