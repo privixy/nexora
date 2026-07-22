@@ -22,8 +22,6 @@ pub mod dump_commands; // Added
 pub mod dump_commands_tests;
 pub mod dump_utils;
 pub mod explain_import;
-#[cfg(test)]
-pub mod explain_import_tests;
 pub mod export;
 pub mod export_crypto;
 #[cfg(test)]
@@ -44,8 +42,6 @@ pub mod paths; // Added
 pub mod persistence;
 pub mod plugins;
 pub mod pool_manager;
-#[cfg(test)]
-pub mod pool_manager_tests;
 pub mod preferences;
 pub mod query_history;
 pub mod results_window;

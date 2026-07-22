@@ -48,14 +48,11 @@ fn ensure_rustls_crypto_provider() {
 
 type PoolMap<T> = Arc<RwLock<HashMap<String, Pool<T>>>>;
 type PgPoolMap = Arc<RwLock<HashMap<String, PgPool>>>;
-
 static MYSQL_POOLS: Lazy<PoolMap<MySql>> = Lazy::new(|| Arc::new(RwLock::new(HashMap::new())));
 static POSTGRES_POOLS: Lazy<PgPoolMap> = Lazy::new(|| Arc::new(RwLock::new(HashMap::new())));
 static SQLITE_POOLS: Lazy<PoolMap<Sqlite>> = Lazy::new(|| Arc::new(RwLock::new(HashMap::new())));
-
 const DEFAULT_MYSQL_CONNECT_TIMEOUT_MS: u64 = 60_000;
 const DEFAULT_MYSQL_TIMEZONE: &str = "SYSTEM";
-
 /// SQLite is file-based so the preflight is effectively local, but a custom
 /// VFS or a path on a stalled network mount could still hang it; bound it so a
 /// broken script can never wedge pool creation indefinitely.
@@ -1122,3 +1119,6 @@ pub async fn close_all_pools() {
         }
     }
 }
+
+#[cfg(test)]
+mod tests;

@@ -1,324 +1,321 @@
-#[cfg(test)]
-mod tests {
-    use crate::models::{ConnectionParams, DatabaseSelection};
-    use crate::pool_manager::{
-        build_connection_key, build_mysql_options, format_error_chain,
-        is_pipes_as_concat_unsupported,
-    };
-    use sqlx::mysql::MySqlSslMode;
+use crate::models::{ConnectionParams, DatabaseSelection};
+use crate::pool_manager::{
+    build_connection_key, build_mysql_options, format_error_chain,
+    is_pipes_as_concat_unsupported,
+};
+use sqlx::mysql::MySqlSslMode;
 
-    fn connection_params(driver: &str, ssl_mode: Option<&str>) -> ConnectionParams {
-        ConnectionParams {
-            driver: driver.to_string(),
-            host: Some("127.0.0.1".to_string()),
-            port: Some(match driver {
-                "postgres" => 5432,
-                "mysql" => 3306,
-                _ => 0,
-            }),
-            username: Some("dec".to_string()),
-            password: Some("secret".to_string()),
-            database: DatabaseSelection::Single("dec".to_string()),
-            ssl_mode: ssl_mode.map(ToOwned::to_owned),
-            ssl_ca: None,
-            ssl_cert: None,
-            ssl_key: None,
-            ssh_enabled: Some(true),
-            ssh_connection_id: Some("ssh-1".to_string()),
-            ssh_host: Some("149.202.85.42".to_string()),
-            ssh_port: Some(2222),
-            ssh_user: Some("julien".to_string()),
-            ssh_password: None,
-            ssh_key_file: Some("/Users/julienbarbe/.ssh/id_rsa".to_string()),
-            ssh_key_passphrase: None,
-            save_in_keychain: None,
-            connection_id: Some("conn-1".to_string()),
-            ..Default::default()
+fn connection_params(driver: &str, ssl_mode: Option<&str>) -> ConnectionParams {
+    ConnectionParams {
+        driver: driver.to_string(),
+        host: Some("127.0.0.1".to_string()),
+        port: Some(match driver {
+            "postgres" => 5432,
+            "mysql" => 3306,
+            _ => 0,
+        }),
+        username: Some("dec".to_string()),
+        password: Some("secret".to_string()),
+        database: DatabaseSelection::Single("dec".to_string()),
+        ssl_mode: ssl_mode.map(ToOwned::to_owned),
+        ssl_ca: None,
+        ssl_cert: None,
+        ssl_key: None,
+        ssh_enabled: Some(true),
+        ssh_connection_id: Some("ssh-1".to_string()),
+        ssh_host: Some("149.202.85.42".to_string()),
+        ssh_port: Some(2222),
+        ssh_user: Some("julien".to_string()),
+        ssh_password: None,
+        ssh_key_file: Some("/Users/julienbarbe/.ssh/id_rsa".to_string()),
+        ssh_key_passphrase: None,
+        save_in_keychain: None,
+        connection_id: Some("conn-1".to_string()),
+        ..Default::default()
+    }
+}
+
+fn mysql_params(ssl_mode: &str) -> ConnectionParams {
+    connection_params("mysql", Some(ssl_mode))
+}
+
+#[test]
+fn format_error_chain_walks_sources() {
+    use std::error::Error as StdError;
+    use std::fmt;
+
+    #[derive(Debug)]
+    struct Inner;
+    impl fmt::Display for Inner {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("inner cause")
+        }
+    }
+    impl StdError for Inner {}
+
+    #[derive(Debug)]
+    struct Outer(Inner);
+    impl fmt::Display for Outer {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("outer message")
+        }
+    }
+    impl StdError for Outer {
+        fn source(&self) -> Option<&(dyn StdError + 'static)> {
+            Some(&self.0)
         }
     }
 
-    fn mysql_params(ssl_mode: &str) -> ConnectionParams {
-        connection_params("mysql", Some(ssl_mode))
-    }
+    assert_eq!(
+        format_error_chain(&Outer(Inner)),
+        "outer message -> inner cause"
+    );
+}
 
-    #[test]
-    fn format_error_chain_walks_sources() {
-        use std::error::Error as StdError;
-        use std::fmt;
+#[test]
+fn mysql_pool_key_changes_when_ssl_mode_changes() {
+    let required = mysql_params("required");
+    let disabled = mysql_params("disabled");
 
-        #[derive(Debug)]
-        struct Inner;
-        impl fmt::Display for Inner {
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                f.write_str("inner cause")
-            }
-        }
-        impl StdError for Inner {}
+    assert_ne!(
+        build_connection_key(&required, Some("conn-1")),
+        build_connection_key(&disabled, Some("conn-1"))
+    );
+}
 
-        #[derive(Debug)]
-        struct Outer(Inner);
-        impl fmt::Display for Outer {
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                f.write_str("outer message")
-            }
-        }
-        impl StdError for Outer {
-            fn source(&self) -> Option<&(dyn StdError + 'static)> {
-                Some(&self.0)
-            }
-        }
+#[test]
+fn postgres_pool_key_changes_when_ssl_mode_changes() {
+    let required = connection_params("postgres", Some("require"));
+    let disabled = connection_params("postgres", Some("disable"));
 
-        assert_eq!(
-            format_error_chain(&Outer(Inner)),
-            "outer message -> inner cause"
-        );
-    }
+    assert_ne!(
+        build_connection_key(&required, Some("conn-1")),
+        build_connection_key(&disabled, Some("conn-1"))
+    );
+}
 
-    #[test]
-    fn mysql_pool_key_changes_when_ssl_mode_changes() {
-        let required = mysql_params("required");
-        let disabled = mysql_params("disabled");
+#[test]
+fn postgres_pool_key_changes_when_ssl_ca_changes() {
+    let without_ca = connection_params("postgres", Some("verify-ca"));
+    let mut with_ca = connection_params("postgres", Some("verify-ca"));
+    with_ca.ssl_ca = Some("/tmp/postgres-ca.pem".to_string());
 
-        assert_ne!(
-            build_connection_key(&required, Some("conn-1")),
-            build_connection_key(&disabled, Some("conn-1"))
-        );
-    }
+    assert_ne!(
+        build_connection_key(&without_ca, Some("conn-1")),
+        build_connection_key(&with_ca, Some("conn-1"))
+    );
+}
 
-    #[test]
-    fn postgres_pool_key_changes_when_ssl_mode_changes() {
-        let required = connection_params("postgres", Some("require"));
-        let disabled = connection_params("postgres", Some("disable"));
+#[test]
+fn postgres_maintenance_databases_share_pool_key() {
+    let mut postgres = connection_params("postgres", Some("require"));
+    postgres.database = DatabaseSelection::Single("postgres".to_string());
+    let mut template1 = postgres.clone();
+    template1.database = DatabaseSelection::Single("template1".to_string());
 
-        assert_ne!(
-            build_connection_key(&required, Some("conn-1")),
-            build_connection_key(&disabled, Some("conn-1"))
-        );
-    }
+    assert_eq!(
+        build_connection_key(&postgres, Some("conn-1")),
+        build_connection_key(&template1, Some("conn-1"))
+    );
+}
 
-    #[test]
-    fn postgres_pool_key_changes_when_ssl_ca_changes() {
-        let without_ca = connection_params("postgres", Some("verify-ca"));
-        let mut with_ca = connection_params("postgres", Some("verify-ca"));
-        with_ca.ssl_ca = Some("/tmp/postgres-ca.pem".to_string());
+#[test]
+fn sqlite_pool_key_ignores_tls_key_fields() {
+    let required = connection_params("sqlite", Some("required"));
+    let mut disabled = connection_params("sqlite", Some("disabled"));
+    disabled.ssl_ca = Some("/tmp/sqlite-ca.pem".to_string());
 
-        assert_ne!(
-            build_connection_key(&without_ca, Some("conn-1")),
-            build_connection_key(&with_ca, Some("conn-1"))
-        );
-    }
+    assert_eq!(
+        build_connection_key(&required, Some("conn-1")),
+        build_connection_key(&disabled, Some("conn-1"))
+    );
+}
 
-    #[test]
-    fn postgres_maintenance_databases_share_pool_key() {
-        let mut postgres = connection_params("postgres", Some("require"));
-        postgres.database = DatabaseSelection::Single("postgres".to_string());
-        let mut template1 = postgres.clone();
-        template1.database = DatabaseSelection::Single("template1".to_string());
+#[test]
+fn pool_key_changes_when_startup_script_changes() {
+    let none = connection_params("postgres", Some("require"));
+    let mut script_a = none.clone();
+    script_a.startup_script = Some("SET app.bypass_rls = 'on';".to_string());
+    let mut script_b = none.clone();
+    script_b.startup_script = Some("SET app.bypass_rls = 'off';".to_string());
 
-        assert_eq!(
-            build_connection_key(&postgres, Some("conn-1")),
-            build_connection_key(&template1, Some("conn-1"))
-        );
-    }
+    let key_none = build_connection_key(&none, Some("conn-1"));
+    let key_a = build_connection_key(&script_a, Some("conn-1"));
+    let key_b = build_connection_key(&script_b, Some("conn-1"));
 
-    #[test]
-    fn sqlite_pool_key_ignores_tls_key_fields() {
-        let required = connection_params("sqlite", Some("required"));
-        let mut disabled = connection_params("sqlite", Some("disabled"));
-        disabled.ssl_ca = Some("/tmp/sqlite-ca.pem".to_string());
+    // A script changes the key, and different scripts differ — otherwise an
+    // edited startup script would silently reuse the old cached pool.
+    assert_ne!(key_none, key_a);
+    assert_ne!(key_a, key_b);
+}
 
-        assert_eq!(
-            build_connection_key(&required, Some("conn-1")),
-            build_connection_key(&disabled, Some("conn-1"))
-        );
-    }
+#[test]
+fn pool_key_ignores_blank_startup_script() {
+    let none = connection_params("postgres", Some("require"));
+    let mut blank = none.clone();
+    blank.startup_script = Some("   \n\t".to_string());
 
-    #[test]
-    fn pool_key_changes_when_startup_script_changes() {
-        let none = connection_params("postgres", Some("require"));
-        let mut script_a = none.clone();
-        script_a.startup_script = Some("SET app.bypass_rls = 'on';".to_string());
-        let mut script_b = none.clone();
-        script_b.startup_script = Some("SET app.bypass_rls = 'off';".to_string());
+    // Whitespace-only scripts are treated as absent (no hook runs), so they
+    // must not fragment the pool away from the no-script connection.
+    assert_eq!(
+        build_connection_key(&none, Some("conn-1")),
+        build_connection_key(&blank, Some("conn-1"))
+    );
+}
 
-        let key_none = build_connection_key(&none, Some("conn-1"));
-        let key_a = build_connection_key(&script_a, Some("conn-1"));
-        let key_b = build_connection_key(&script_b, Some("conn-1"));
+#[test]
+fn mysql_options_accept_snake_case_verify_ssl_modes() {
+    let verify_ca = mysql_params("verify_ca");
+    let verify_identity = mysql_params("verify_identity");
 
-        // A script changes the key, and different scripts differ — otherwise an
-        // edited startup script would silently reuse the old cached pool.
-        assert_ne!(key_none, key_a);
-        assert_ne!(key_a, key_b);
-    }
+    assert!(matches!(
+        build_mysql_options(&verify_ca, None)
+            .unwrap()
+            .get_ssl_mode(),
+        MySqlSslMode::VerifyCa
+    ));
+    assert!(matches!(
+        build_mysql_options(&verify_identity, None)
+            .unwrap()
+            .get_ssl_mode(),
+        MySqlSslMode::VerifyIdentity
+    ));
+}
 
-    #[test]
-    fn pool_key_ignores_blank_startup_script() {
-        let none = connection_params("postgres", Some("require"));
-        let mut blank = none.clone();
-        blank.startup_script = Some("   \n\t".to_string());
+#[test]
+fn adhoc_mysql_pool_key_changes_when_username_changes() {
+    // No connection_id → ad-hoc key. Bastions like Warpgate share one
+    // host:port across targets and select the backend by username, so two
+    // usernames must never resolve to the same pool.
+    let mut alice = mysql_params("required");
+    alice.username = Some("alice".to_string());
+    let mut bob = mysql_params("required");
+    bob.username = Some("bob".to_string());
 
-        // Whitespace-only scripts are treated as absent (no hook runs), so they
-        // must not fragment the pool away from the no-script connection.
-        assert_eq!(
-            build_connection_key(&none, Some("conn-1")),
-            build_connection_key(&blank, Some("conn-1"))
-        );
-    }
+    assert_ne!(
+        build_connection_key(&alice, None),
+        build_connection_key(&bob, None)
+    );
+}
 
-    #[test]
-    fn mysql_options_accept_snake_case_verify_ssl_modes() {
-        let verify_ca = mysql_params("verify_ca");
-        let verify_identity = mysql_params("verify_identity");
+#[test]
+fn pool_key_changes_when_database_changes_for_saved_connection() {
+    let mut app = mysql_params("required");
+    app.database = DatabaseSelection::Single("app".to_string());
+    let mut audit = app.clone();
+    audit.database = DatabaseSelection::Single("audit".to_string());
 
-        assert!(matches!(
-            build_mysql_options(&verify_ca, None)
-                .unwrap()
-                .get_ssl_mode(),
-            MySqlSslMode::VerifyCa
-        ));
-        assert!(matches!(
-            build_mysql_options(&verify_identity, None)
-                .unwrap()
-                .get_ssl_mode(),
-            MySqlSslMode::VerifyIdentity
-        ));
-    }
+    assert_eq!(
+        build_connection_key(&app, Some("conn-1")),
+        "mysql:conn:conn-1:app:ssl:required::::clear:false:pipes:true"
+    );
+    assert_eq!(
+        build_connection_key(&audit, Some("conn-1")),
+        "mysql:conn:conn-1:audit:ssl:required::::clear:false:pipes:true"
+    );
+    assert_ne!(
+        build_connection_key(&app, Some("conn-1")),
+        build_connection_key(&audit, Some("conn-1"))
+    );
+}
 
-    #[test]
-    fn adhoc_mysql_pool_key_changes_when_username_changes() {
-        // No connection_id → ad-hoc key. Bastions like Warpgate share one
-        // host:port across targets and select the backend by username, so two
-        // usernames must never resolve to the same pool.
-        let mut alice = mysql_params("required");
-        alice.username = Some("alice".to_string());
-        let mut bob = mysql_params("required");
-        bob.username = Some("bob".to_string());
+#[test]
+fn mysql_options_default_force_pipes_as_concat() {
+    // Unset => keep sqlx's default behavior (force the sql_mode).
+    let params = mysql_params("required");
+    let options = build_mysql_options(&params, None).unwrap();
+    let dbg = format!("{options:?}");
+    assert!(
+        dbg.contains("pipes_as_concat: true") && dbg.contains("no_engine_substitution: true"),
+        "expected forced sql_mode by default, got: {dbg}"
+    );
+}
 
-        assert_ne!(
-            build_connection_key(&alice, None),
-            build_connection_key(&bob, None)
-        );
-    }
+#[test]
+fn mysql_pool_key_changes_when_cleartext_plugin_changes() {
+    let mut plain = mysql_params("required");
+    plain.enable_cleartext_plugin = Some(false);
+    let mut cleartext = mysql_params("required");
+    cleartext.enable_cleartext_plugin = Some(true);
 
-    #[test]
-    fn pool_key_changes_when_database_changes_for_saved_connection() {
-        let mut app = mysql_params("required");
-        app.database = DatabaseSelection::Single("app".to_string());
-        let mut audit = app.clone();
-        audit.database = DatabaseSelection::Single("audit".to_string());
+    assert_ne!(
+        build_connection_key(&plain, Some("conn-1")),
+        build_connection_key(&cleartext, Some("conn-1"))
+    );
+}
 
-        assert_eq!(
-            build_connection_key(&app, Some("conn-1")),
-            "mysql:conn:conn-1:app:ssl:required::::clear:false:pipes:true"
-        );
-        assert_eq!(
-            build_connection_key(&audit, Some("conn-1")),
-            "mysql:conn:conn-1:audit:ssl:required::::clear:false:pipes:true"
-        );
-        assert_ne!(
-            build_connection_key(&app, Some("conn-1")),
-            build_connection_key(&audit, Some("conn-1"))
-        );
-    }
+#[test]
+fn mysql_options_disable_pipes_as_concat_for_vitess() {
+    // Some(false) => do not force the sql_mode (Vitess/PlanetScale).
+    let mut params = mysql_params("required");
+    params.pipes_as_concat = Some(false);
+    let options = build_mysql_options(&params, None).unwrap();
+    let dbg = format!("{options:?}");
+    assert!(
+        dbg.contains("pipes_as_concat: false") && dbg.contains("no_engine_substitution: false"),
+        "expected sql_mode forcing disabled, got: {dbg}"
+    );
+}
 
-    #[test]
-    fn mysql_options_default_force_pipes_as_concat() {
-        // Unset => keep sqlx's default behavior (force the sql_mode).
-        let params = mysql_params("required");
-        let options = build_mysql_options(&params, None).unwrap();
-        let dbg = format!("{options:?}");
-        assert!(
-            dbg.contains("pipes_as_concat: true") && dbg.contains("no_engine_substitution: true"),
-            "expected forced sql_mode by default, got: {dbg}"
-        );
-    }
+#[test]
+fn cleartext_plugin_rejected_without_tls() {
+    let mut params = mysql_params("disabled");
+    params.enable_cleartext_plugin = Some(true);
 
-    #[test]
-    fn mysql_pool_key_changes_when_cleartext_plugin_changes() {
-        let mut plain = mysql_params("required");
-        plain.enable_cleartext_plugin = Some(false);
-        let mut cleartext = mysql_params("required");
-        cleartext.enable_cleartext_plugin = Some(true);
+    assert!(build_mysql_options(&params, None).is_err());
+}
 
-        assert_ne!(
-            build_connection_key(&plain, Some("conn-1")),
-            build_connection_key(&cleartext, Some("conn-1"))
-        );
-    }
+#[test]
+fn cleartext_plugin_rejected_with_preferred_tls() {
+    // `Preferred` only attempts TLS and silently falls back to plaintext,
+    // so cleartext credentials could still cross an unencrypted link.
+    let mut params = mysql_params("preferred");
+    params.enable_cleartext_plugin = Some(true);
 
-    #[test]
-    fn mysql_options_disable_pipes_as_concat_for_vitess() {
-        // Some(false) => do not force the sql_mode (Vitess/PlanetScale).
-        let mut params = mysql_params("required");
-        params.pipes_as_concat = Some(false);
-        let options = build_mysql_options(&params, None).unwrap();
-        let dbg = format!("{options:?}");
-        assert!(
-            dbg.contains("pipes_as_concat: false") && dbg.contains("no_engine_substitution: false"),
-            "expected sql_mode forcing disabled, got: {dbg}"
-        );
-    }
+    assert!(build_mysql_options(&params, None).is_err());
+}
 
-    #[test]
-    fn cleartext_plugin_rejected_without_tls() {
-        let mut params = mysql_params("disabled");
+#[test]
+fn cleartext_plugin_allowed_with_enforced_tls() {
+    for mode in ["required", "verify_ca", "verify_identity"] {
+        let mut params = mysql_params(mode);
         params.enable_cleartext_plugin = Some(true);
 
-        assert!(build_mysql_options(&params, None).is_err());
-    }
-
-    #[test]
-    fn cleartext_plugin_rejected_with_preferred_tls() {
-        // `Preferred` only attempts TLS and silently falls back to plaintext,
-        // so cleartext credentials could still cross an unencrypted link.
-        let mut params = mysql_params("preferred");
-        params.enable_cleartext_plugin = Some(true);
-
-        assert!(build_mysql_options(&params, None).is_err());
-    }
-
-    #[test]
-    fn cleartext_plugin_allowed_with_enforced_tls() {
-        for mode in ["required", "verify_ca", "verify_identity"] {
-            let mut params = mysql_params(mode);
-            params.enable_cleartext_plugin = Some(true);
-
-            assert!(
-                build_mysql_options(&params, None).is_ok(),
-                "cleartext should be allowed with enforced TLS mode {mode}"
-            );
-        }
-    }
-
-    #[test]
-    fn mysql_pool_key_differs_on_pipes_as_concat() {
-        let forced = mysql_params("required");
-        let mut disabled = mysql_params("required");
-        disabled.pipes_as_concat = Some(false);
-
-        assert_ne!(
-            build_connection_key(&forced, Some("conn-1")),
-            build_connection_key(&disabled, Some("conn-1"))
+        assert!(
+            build_mysql_options(&params, None).is_ok(),
+            "cleartext should be allowed with enforced TLS mode {mode}"
         );
     }
+}
 
-    #[test]
-    fn detects_pipes_as_concat_unsupported_error() {
-        // Vitess/PlanetScale reject sqlx's forced sql_mode; the message that
-        // triggers the auto-fallback retry.
-        assert!(is_pipes_as_concat_unsupported(
-            "setting the PIPES_AS_CONCAT sql_mode is unsupported"
-        ));
-        assert!(is_pipes_as_concat_unsupported(
-            "VT05006: unsupported NO_ENGINE_SUBSTITUTION"
-        ));
-        // Matching is case-insensitive.
-        assert!(is_pipes_as_concat_unsupported("pipes_as_concat rejected"));
-        // Unrelated failures must not trigger a fallback.
-        assert!(!is_pipes_as_concat_unsupported(
-            "Access denied for user 'root'@'localhost'"
-        ));
-    }
+#[test]
+fn mysql_pool_key_differs_on_pipes_as_concat() {
+    let forced = mysql_params("required");
+    let mut disabled = mysql_params("required");
+    disabled.pipes_as_concat = Some(false);
+
+    assert_ne!(
+        build_connection_key(&forced, Some("conn-1")),
+        build_connection_key(&disabled, Some("conn-1"))
+    );
+}
+
+#[test]
+fn detects_pipes_as_concat_unsupported_error() {
+    // Vitess/PlanetScale reject sqlx's forced sql_mode; the message that
+    // triggers the auto-fallback retry.
+    assert!(is_pipes_as_concat_unsupported(
+        "setting the PIPES_AS_CONCAT sql_mode is unsupported"
+    ));
+    assert!(is_pipes_as_concat_unsupported(
+        "VT05006: unsupported NO_ENGINE_SUBSTITUTION"
+    ));
+    // Matching is case-insensitive.
+    assert!(is_pipes_as_concat_unsupported("pipes_as_concat rejected"));
+    // Unrelated failures must not trigger a fallback.
+    assert!(!is_pipes_as_concat_unsupported(
+        "Access denied for user 'root'@'localhost'"
+    ));
 }
 
 #[cfg(test)]
@@ -495,7 +492,7 @@ mod postgres_tls_connector_tests {
         let file_path = temp_dir.join("test_verify_ca_ca.pem");
         {
             // Write a minimal valid PEM certificate block for testing
-            let cert_pem = include_bytes!("../tests/test_ca.pem");
+            let cert_pem = include_bytes!("../../tests/test_ca.pem");
             let mut file = std::fs::File::create(&file_path).unwrap();
             file.write_all(cert_pem).unwrap();
         }

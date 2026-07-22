@@ -40,7 +40,6 @@
     "apps/desktop/src-tauri/src/dump_commands.rs",
     "apps/desktop/src-tauri/src/dump_commands_tests.rs",
     "apps/desktop/src-tauri/src/dump_utils.rs",
-    "apps/desktop/src-tauri/src/explain_import_tests.rs",
     "apps/desktop/src-tauri/src/export_import_tests.rs",
     "apps/desktop/src-tauri/src/group_tree_tests.rs",
     "apps/desktop/src-tauri/src/json_viewer.rs",
@@ -48,7 +47,6 @@
     "apps/desktop/src-tauri/src/mcp/install.rs",
     "apps/desktop/src-tauri/src/paths.rs",
     "apps/desktop/src-tauri/src/plugins/driver.rs",
-    "apps/desktop/src-tauri/src/pool_manager_tests.rs",
     "apps/desktop/src-tauri/src/results_window.rs",
     "apps/desktop/src-tauri/src/updater.rs"
   ],

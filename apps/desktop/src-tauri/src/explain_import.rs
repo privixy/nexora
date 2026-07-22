@@ -597,3 +597,6 @@ fn apply_text_attribute(node: &mut ExplainNode, content: &str) {
         );
     }
 }
+
+#[cfg(test)]
+mod tests;
