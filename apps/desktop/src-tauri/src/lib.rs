@@ -5,6 +5,9 @@ pub mod ai_approval_watcher;
 pub mod ai_commands;
 pub mod ai_notebook_export;
 pub mod ai_schema_context;
+#[cfg(test)]
+#[path = "app_setup_legacy/tests.rs"]
+mod app_setup_legacy;
 pub mod askpass;
 pub mod cli;
 pub mod clipboard_import;
@@ -46,6 +49,7 @@ pub mod theme_commands;
 pub mod theme_models;
 pub mod updater;
 pub mod window_title;
+
 pub mod drivers {
     pub mod common;
     pub mod driver_trait;

@@ -10,6 +10,9 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::{AppHandle, Runtime};
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Deserialize, Debug)]
 pub struct ClipboardImportRequest {
     pub connection_id: String,
@@ -86,6 +89,14 @@ pub async fn execute_clipboard_import<R: Runtime>(
         .await
         .ok_or_else(|| format!("Unsupported driver: {}", saved_conn.params.driver))?;
 
+    execute_with_driver(drv.as_ref(), &params, &req).await
+}
+
+async fn execute_with_driver(
+    drv: &dyn DatabaseDriver,
+    params: &crate::models::ConnectionParams,
+    req: &ClipboardImportRequest,
+) -> Result<ClipboardImportResult, String> {
     let schema_ref = req.schema.as_deref();
     let tbl_ref = table_ref(&req.table_name, schema_ref);
     let mut table_created = false;
@@ -99,8 +110,8 @@ pub async fn execute_clipboard_import<R: Runtime>(
                     .map_err(|e| format!("Failed to drop existing table: {e}"))?;
             }
             IfExistsStrategy::Append => {
-                add_new_columns(drv.as_ref(), &params, &req, schema_ref, &tbl_ref).await?;
-                return insert_rows(drv.as_ref(), &params, &req, schema_ref, &tbl_ref, false).await;
+                add_new_columns(drv, &params, &req, schema_ref, &tbl_ref).await?;
+                return insert_rows(drv, &params, &req, schema_ref, &tbl_ref, false).await;
             }
             IfExistsStrategy::Fail => {}
         }
@@ -117,18 +128,10 @@ pub async fn execute_clipboard_import<R: Runtime>(
         }
         table_created = true;
     } else {
-        add_new_columns(drv.as_ref(), &params, &req, schema_ref, &tbl_ref).await?;
+        add_new_columns(drv, &params, &req, schema_ref, &tbl_ref).await?;
     }
 
-    insert_rows(
-        drv.as_ref(),
-        &params,
-        &req,
-        schema_ref,
-        &tbl_ref,
-        table_created,
-    )
-    .await
+    insert_rows(drv, &params, &req, schema_ref, &tbl_ref, table_created).await
 }
 
 async fn add_new_columns(

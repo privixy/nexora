@@ -20,6 +20,9 @@ use crate::connection_import::{
 use crate::models::ExportPayload;
 use crate::persistence;
 
+#[cfg(test)]
+mod tests;
+
 /// Caches the most recent envelope per source so `apply` doesn't re-read the
 /// keychain (and re-prompt) after `preview`.
 #[derive(Default)]

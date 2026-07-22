@@ -6,6 +6,9 @@ use once_cell::sync::Lazy;
 use tauri::Emitter;
 use tokio::sync::{oneshot, Mutex, RwLock};
 
+#[cfg(test)]
+mod tests;
+
 static ACTIVE_CONNECTIONS: Lazy<Arc<RwLock<HashSet<String>>>> =
     Lazy::new(|| Arc::new(RwLock::new(HashSet::new())));
 

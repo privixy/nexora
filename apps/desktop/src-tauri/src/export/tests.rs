@@ -4,6 +4,26 @@ use super::format::{
 use super::progress::ProgressEmitter;
 use super::sink::{CsvSink, JsonSink, RowSink};
 use serde_json::{json, Value};
+use std::fs;
+
+#[test]
+fn legacy_export_orchestration_contract_is_preserved() {
+    let source = fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/src/export.rs")).unwrap();
+    assert!(source.contains("query.trim().trim_end_matches(';').to_string()"));
+    assert!(source.contains("params.database = crate::models::DatabaseSelection::Single(db)"));
+    assert!(source.contains("const EXPORT_PROGRESS_EVENT: &str = \"export_progress\""));
+    assert!(source.contains("rows_processed: count"));
+    assert!(source.contains("\"mysql\" => mysql::export::stream_query"));
+    assert!(source.contains("\"postgres\" => postgres::export::stream_query"));
+    assert!(source.contains("\"sqlite\" => sqlite::export::stream_query"));
+    assert!(source.contains("other => stream_query_via_plugin"));
+    assert!(source.contains("const PAGE_SIZE: u32 = 1000"));
+    assert!(source.contains(".execute_query(params, query, Some(PAGE_SIZE), page, None)"));
+    assert!(source.contains("register_abort_handle"));
+    assert!(source.contains("unregister_abort_handle"));
+    assert!(source.contains("Err(_) => Err(\"Export cancelled\".into())"));
+    assert!(source.contains("Ok(res) => res"));
+}
 
 // ---------------------------------------------------------------------------
 // ExportFormat::parse

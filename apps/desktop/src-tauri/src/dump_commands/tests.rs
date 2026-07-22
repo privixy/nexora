@@ -1,9 +1,34 @@
 use super::*;
 use serde_json::json;
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::Write;
 use tempfile::tempdir;
 use zip::write::FileOptions;
+
+#[test]
+fn legacy_dump_import_orchestration_contract_is_preserved() {
+    let source =
+        fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/src/dump_commands.rs")).unwrap();
+    assert!(source.contains("params.database = crate::models::DatabaseSelection::Single(db)"));
+    assert!(source.contains("schema.unwrap_or_else(|| \"public\".to_string())"));
+    assert!(source.contains("writeln!(writer, \"-- Nexora Dump\")"));
+    assert!(source.contains("-- Structure for table {}"));
+    assert!(source.contains("drop_table_if_exists"));
+    assert!(source.contains("-- Data for table {}"));
+    assert!(source.contains("insert_into_statement"));
+    assert!(source.contains("if zipped_file.name().ends_with(\".sql\")"));
+    assert!(source.contains("Error at statement {}: {}\\nQuery: {}"));
+    assert!(source.contains("const PROGRESS_EMIT_INTERVAL: usize = 500"));
+    assert!(source.contains("\"Starting import...\".to_string()"));
+    assert!(source.contains("\"Import completed\".to_string()"));
+    assert!(source.contains("fn import_slot_key(connection_id: &str)"));
+    assert!(source.contains("format!(\"{}_import\", connection_id)"));
+    assert!(source.contains("for handle in entries {\n        handle.abort();"));
+    assert!(source.contains("No active dump process found"));
+    assert!(source.contains("No active import process found"));
+    assert!(source.contains("Err(_) => Err(\"Dump cancelled\".into())"));
+    assert!(source.contains("Err(_) => Err(\"Import cancelled\".into())"));
+}
 
 #[test]
 fn test_zip_import_logic() {
