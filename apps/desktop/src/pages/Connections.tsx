@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 import { useDatabase } from "../hooks/useDatabase";
 import { useDrivers } from "../hooks/useDrivers";
-import { useSettings } from "../hooks/useSettings";
+import { useSettings } from "../features/settings/hooks/useSettings";
 import clsx from "clsx";
 import { ContextMenu } from "../components/ui/ContextMenu";
 import type { SavedConnection } from "../features/connections";

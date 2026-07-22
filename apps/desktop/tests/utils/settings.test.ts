@@ -20,8 +20,8 @@ import {
   type FontCache,
   type DetectedAIConfig,
 } from '../../src/utils/settings';
-import { DEFAULT_SETTINGS } from '../../src/contexts/SettingsContext';
-import type { Settings, AppLanguage, AiProvider } from '../../src/contexts/SettingsContext';
+import { DEFAULT_SETTINGS } from '../../src/features/settings/state/SettingsContext';
+import type { Settings, AppLanguage, AiProvider } from '../../src/features/settings/state/SettingsContext';
 
 describe('settings', () => {
   const localStorageMock = {

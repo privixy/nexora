@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
 
 import type { InstalledPluginInfo, PluginManifest } from "../types/plugins";
-import { useSettings } from "./useSettings";
+import { useSettings } from "../features/settings/hooks/useSettings";
 
 const FALLBACK_DRIVERS: PluginManifest[] = [
   {

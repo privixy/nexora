@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { SqlEditorWrapper } from "../ui/SqlEditorWrapper";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { NotebookAiButtons } from "./NotebookAiButtons";
 import { CellSectionHeader } from "./CellSectionHeader";
 

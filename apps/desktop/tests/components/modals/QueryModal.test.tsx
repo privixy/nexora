@@ -14,14 +14,14 @@ vi.mock("@monaco-editor/react", () => ({
 }));
 
 // Mock useTheme
-vi.mock("../../../src/hooks/useTheme", () => ({
+vi.mock("../../../src/features/settings/hooks/useTheme", () => ({
   useTheme: vi.fn(() => ({
     currentTheme: { id: "nexora-dark" },
     allThemes: [{ id: "nexora-dark" }],
   })),
 }));
 
-vi.mock("../../../src/hooks/useSettings", () => ({
+vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: vi.fn(() => ({
     settings: {},
   })),

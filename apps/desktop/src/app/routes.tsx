@@ -7,11 +7,14 @@ import { JsonViewerPage } from "../pages/JsonViewerPage";
 import { McpPage } from "../pages/McpPage";
 import { ResultsWindowPage } from "../pages/ResultsWindowPage";
 import { SchemaDiagramPage } from "../pages/SchemaDiagramPage";
-import { Settings } from "../pages/Settings";
+import { SettingsPage } from "../features/settings";
 import { TaskManagerPage } from "../pages/TaskManagerPage";
 import { VisualExplainPage } from "../pages/VisualExplainPage";
+import { useLegacyPluginSettingsComposition } from "./legacy/pluginSettingsComposition";
 
 export function AppRoutes() {
+  const pluginSettingsComposition = useLegacyPluginSettingsComposition();
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
@@ -29,7 +32,10 @@ export function AppRoutes() {
           }
         />
         <Route path="mcp" element={<McpPage />} />
-        <Route path="settings" element={<Settings />} />
+        <Route
+          path="settings"
+          element={<SettingsPage {...pluginSettingsComposition} />}
+        />
       </Route>
       <Route
         path="/schema-diagram"

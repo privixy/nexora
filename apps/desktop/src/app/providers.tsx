@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ConnectionHealthMonitor } from "../components/ConnectionHealthMonitor";
-import { AiApprovalGate } from "../components/modals/AiApprovalGate";
+import { AiApprovalGate } from "../features/settings";
 import { SshAskpassGate } from "../components/modals/SshAskpassGate";
 import { UpdateNotificationModal } from "../components/modals/UpdateNotificationModal";
 import { WhatsNewModal } from "../components/modals/WhatsNewModal";

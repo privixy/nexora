@@ -17,7 +17,7 @@ vi.mock('../../src/utils/autocomplete', () => ({
   clearAutocompleteCache: vi.fn(),
 }));
 
-vi.mock('../../src/hooks/useSettings', () => ({
+vi.mock('../../src/features/settings/hooks/useSettings', () => ({
   useSettings: () => ({
     settings: { activeExternalDrivers: [] },
     updateSetting: vi.fn(),

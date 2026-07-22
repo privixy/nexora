@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { PluginSlotProvider } from "../../src/contexts/PluginSlotProvider";
 import { PluginSlotContext } from "../../src/contexts/PluginSlotContext";
-import { SettingsContext, DEFAULT_SETTINGS } from "../../src/contexts/SettingsContext";
+import { SettingsContext, DEFAULT_SETTINGS } from "../../src/features/settings/state/SettingsContext";
 import { SlotAnchor } from "../../src/components/ui/SlotAnchor";
 import type { SlotComponentProps } from "../../src/types/pluginSlots";
 

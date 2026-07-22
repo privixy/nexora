@@ -4,9 +4,9 @@ import { message } from "@tauri-apps/plugin-dialog";
 import { openUrl as openExternal } from "@tauri-apps/plugin-opener";
 import { useTranslation } from "react-i18next";
 
-import { ThemeContext } from "../contexts/ThemeContext";
+import { ThemeContext } from "../features/settings/state/ThemeContext";
 import { DatabaseContext } from "../contexts/DatabaseContext";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { SettingsContext } from "../features/settings/state/SettingsContext";
 import { PluginModalContext } from "../contexts/PluginModalContext";
 import type { PluginModalOptions } from "../contexts/PluginModalContext";
 import { toErrorMessage } from "../utils/errors";

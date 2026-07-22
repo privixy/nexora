@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plug2, Settings, Cpu, PanelLeft, Layers, Star, Clock, BookOpen } from "lucide-react";
 import { useDatabase } from "../../hooks/useDatabase";
-import { useTheme } from "../../hooks/useTheme";
+import { useTheme } from "../../features/settings/hooks/useTheme";
 import { SlotAnchor } from "../ui/SlotAnchor";
 
 // Sub-components

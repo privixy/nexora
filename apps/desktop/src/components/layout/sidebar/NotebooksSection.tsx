@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { save, open } from "@tauri-apps/plugin-dialog";
 import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
-import { useSettings } from "../../../hooks/useSettings";
+import { useSettings } from "../../../features/settings/hooks/useSettings";
 import { useAlert } from "../../../hooks/useAlert";
 import { formatHistoryTime } from "../../../utils/dateGroups";
 import {

@@ -3,7 +3,7 @@ import { render, act } from "@testing-library/react";
 import { useContext } from "react";
 import { PluginSlotProvider } from "../../src/contexts/PluginSlotProvider";
 import { PluginSlotContext } from "../../src/contexts/PluginSlotContext";
-import { SettingsContext, DEFAULT_SETTINGS } from "../../src/contexts/SettingsContext";
+import { SettingsContext, DEFAULT_SETTINGS } from "../../src/features/settings/state/SettingsContext";
 import type { PluginSlotRegistryType } from "../../src/contexts/PluginSlotContext";
 import type { SlotContribution, SlotComponentProps } from "../../src/types/pluginSlots";
 

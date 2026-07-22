@@ -19,10 +19,10 @@ import {
   OpenCodeIcon,
   WindsurfIcon,
 } from "../components/icons/ClientIcons";
-import { AiActivityPanel } from "../components/settings/AiActivityPanel";
+import { AiActivityPanel } from "../features/settings/components/AiActivityPanel";
 import { McpSafetySection } from "../components/modals/mcp/McpSafetySection";
 import { useAlert } from "../hooks/useAlert";
-import { useEditorTheme } from "../hooks/useEditorTheme";
+import { useEditorTheme } from "../features/settings/hooks/useEditorTheme";
 import { loadMonacoTheme } from "../themes/themeUtils";
 
 interface McpClientStatus {

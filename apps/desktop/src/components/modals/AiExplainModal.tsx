@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Loader2, BookOpen } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../hooks/useSettings";
-import { useEditorTheme } from "../../hooks/useEditorTheme";
+import { useSettings } from "../../features/settings/hooks/useSettings";
+import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
 import { getAiExplanationLanguage } from "../../i18n/language";
 import { Modal } from "../ui/Modal";
 import MonacoEditor, { type BeforeMount } from "@monaco-editor/react";

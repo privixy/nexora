@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FileJson, X, Loader2, RotateCcw } from "lucide-react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
 import { invoke } from "@tauri-apps/api/core";
-import { useEditorTheme } from "../../hooks/useEditorTheme";
+import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
 import { loadMonacoTheme } from "../../themes/themeUtils";
 import { Modal } from "../ui/Modal";
 import { ConfirmModal } from "./ConfirmModal";

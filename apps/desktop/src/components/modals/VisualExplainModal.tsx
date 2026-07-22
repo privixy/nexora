@@ -7,7 +7,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useDatabase } from "../../hooks/useDatabase";
 import { useDrivers } from "../../hooks/useDrivers";
 import type { ExplainPlan } from "../../types/explain";

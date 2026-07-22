@@ -51,7 +51,7 @@ const mockEditorTheme: { current: Theme } = {
   current: makeTheme("nexora-dark"),
 };
 
-vi.mock("../../../src/hooks/useEditorTheme", () => ({
+vi.mock("../../../src/features/settings/hooks/useEditorTheme", () => ({
   useEditorTheme: () => mockEditorTheme.current,
 }));
 

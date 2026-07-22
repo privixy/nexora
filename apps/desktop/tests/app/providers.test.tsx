@@ -42,7 +42,7 @@ vi.mock("../../src/components/modals/WhatsNewModal", () => ({
     return <div data-testid="whats-new-modal" />;
   },
 }));
-vi.mock("../../src/components/modals/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
+vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
 vi.mock("../../src/components/modals/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
 
 describe("AppProviders", () => {

@@ -20,8 +20,8 @@ import { Loader2, ArrowLeftRight, ArrowUpDown, Maximize2, Focus } from "lucide-r
 import { useTranslation } from "react-i18next";
 import { ContextMenu } from "./ContextMenu";
 import { useSearchParams } from "react-router-dom";
-import { useSettings } from "../../hooks/useSettings";
-import { DEFAULT_SETTINGS } from "../../contexts/SettingsContext";
+import { useSettings } from "../../features/settings/hooks/useSettings";
+import { DEFAULT_SETTINGS } from "../../features/settings/state/SettingsContext";
 
 const nodeTypes = {
   schemaTable: SchemaTableNodeComponent,

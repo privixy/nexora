@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { ShieldCheck, Lock } from "lucide-react";
-import { useSettings } from "../../../hooks/useSettings";
+import { useSettings } from "../../../features/settings/hooks/useSettings";
 import {
   SettingRow,
   SettingSection,
   SettingToggle,
   SettingButtonGroup,
   SettingNumberInput,
-} from "../../settings/SettingControls";
-import type { McpApprovalMode } from "../../../types/ai";
+} from "../../../features/settings/components/SettingControls";
+import type { McpApprovalMode } from "../../../features/settings/contracts/aiActivity";
 
 interface ConnectionItem {
   id: string;

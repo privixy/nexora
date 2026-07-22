@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import type { AiProvider } from '../../src/contexts/SettingsContext';
-import { getProviderLabel } from '../../src/utils/settingsUI';
+import type { AiProvider } from '../../src/features/settings/state/SettingsContext';
+import { getProviderLabel } from '../../src/features/settings/lib/settingsUI';
 import { detectAIProviderFromKeys } from '../../src/utils/settings';
 
 describe('MiniMax AI Provider Integration', () => {

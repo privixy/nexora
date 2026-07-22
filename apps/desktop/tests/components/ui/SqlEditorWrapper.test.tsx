@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SqlEditorWrapper } from '../../../src/components/ui/SqlEditorWrapper';
-import { SettingsContext, DEFAULT_SETTINGS } from '../../../src/contexts/SettingsContext';
+import { SettingsContext, DEFAULT_SETTINGS } from '../../../src/features/settings/state/SettingsContext';
 import type { ReactNode } from 'react';
 
 // Mock MonacoEditor
@@ -21,7 +21,7 @@ vi.mock('@monaco-editor/react', async () => {
 });
 
 // Mock useTheme hook
-vi.mock('../../../src/hooks/useTheme', () => ({
+vi.mock('../../../src/features/settings/hooks/useTheme', () => ({
   useTheme: vi.fn(() => ({
     currentTheme: { id: 'nexora-dark' },
   })),

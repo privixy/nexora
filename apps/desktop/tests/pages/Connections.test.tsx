@@ -3,18 +3,18 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Connections } from "../../src/pages/Connections";
 import { useDatabase } from "../../src/hooks/useDatabase";
-import { useSettings } from "../../src/hooks/useSettings";
+import { useSettings } from "../../src/features/settings/hooks/useSettings";
 import { useDrivers } from "../../src/hooks/useDrivers";
 import { useOpenConnectionInNewWindow } from "../../src/hooks/useOpenConnectionInNewWindow";
 import type { SavedConnection } from "../../src/contexts/DatabaseContext";
 import type { DriverCapabilities, PluginManifest } from "../../src/types/plugins";
-import { DEFAULT_SETTINGS } from "../../src/contexts/SettingsContext";
+import { DEFAULT_SETTINGS } from "../../src/features/settings/state/SettingsContext";
 
 vi.mock("../../src/hooks/useDatabase", () => ({
   useDatabase: vi.fn(),
 }));
 
-vi.mock("../../src/hooks/useSettings", () => ({
+vi.mock("../../src/features/settings/hooks/useSettings", () => ({
   useSettings: vi.fn(),
 }));
 

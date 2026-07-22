@@ -56,7 +56,7 @@ vi.mock("../../../src/components/ui/ContextMenu", () => ({
   ),
 }));
 
-vi.mock("../../../src/hooks/useSettings", () => ({
+vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { detectJsonInTextColumns: false } }),
 }));
 

@@ -29,7 +29,7 @@ import {
   Search,
 } from "lucide-react";
 import clsx from "clsx";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useDrivers } from "../../hooks/useDrivers";
 import { usePluginRegistry } from "../../hooks/usePluginRegistry";
 import { useDatabase } from "../../hooks/useDatabase";

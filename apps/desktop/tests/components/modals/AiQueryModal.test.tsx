@@ -18,7 +18,7 @@ vi.mock("../../../src/hooks/useDatabase", () => ({
   }),
 }));
 
-vi.mock("../../../src/hooks/useSettings", () => ({
+vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
       aiProvider: "custom-openai",

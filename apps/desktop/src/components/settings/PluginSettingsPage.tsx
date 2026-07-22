@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { FolderOpen, Check, RotateCcw } from "lucide-react";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useDatabase } from "../../hooks/useDatabase";
 import { useDrivers } from "../../hooks/useDrivers";
-import { SettingSection, SettingRow } from "./SettingControls";
+import { SettingSection, SettingRow } from "../../features/settings/components/SettingControls";
 import { Select } from "../ui/Select";
 import { SlotAnchor } from "../ui/SlotAnchor";
 import {

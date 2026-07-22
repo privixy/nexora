@@ -21,7 +21,7 @@ vi.mock("../../../src/hooks/useDrivers", () => ({
   useDrivers: vi.fn(),
 }));
 
-vi.mock("../../../src/hooks/useSettings", () => ({
+vi.mock("../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { compactMode: false } }),
 }));
 

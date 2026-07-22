@@ -17,7 +17,7 @@ vi.mock('../../../src/hooks/useEditor', () => ({
   useEditor: () => ({ getSchema: getSchemaMock }),
 }));
 
-vi.mock('../../../src/hooks/useSettings', () => ({
+vi.mock('../../../src/features/settings/hooks/useSettings', () => ({
   useSettings: () => ({ settings: {} }),
 }));
 

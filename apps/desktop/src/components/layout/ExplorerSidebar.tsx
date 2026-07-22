@@ -40,7 +40,7 @@ import {
 import { ask, open } from "@tauri-apps/plugin-dialog";
 import { toErrorMessage } from "../../utils/errors";
 import { useAlert } from "../../hooks/useAlert";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { useDatabase } from "../../hooks/useDatabase";
 import { useEditor } from "../../hooks/useEditor";
 import { useSavedQueries } from "../../hooks/useSavedQueries";

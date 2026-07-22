@@ -456,7 +456,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/AiTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/AiTab.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -464,7 +464,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/InfoTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/InfoTab.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -472,7 +472,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/InfoTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/InfoTab.tsx",
     "importTarget": "@tauri-apps/plugin-opener",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -480,7 +480,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/LogsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/LogsTab.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -488,7 +488,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/LogsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/LogsTab.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -528,7 +528,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/ai-activity/AiActivityEventsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -536,7 +536,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/ai-activity/AiActivityEventsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -544,7 +544,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/ai-activity/AiActivitySessionsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/ai-activity/AiActivitySessionsTab.tsx",
     "importTarget": "@tauri-apps/plugin-dialog",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -552,7 +552,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/components/settings/ai-activity/AiActivitySessionsTab.tsx",
+    "importer": "apps/desktop/src/features/settings/components/ai-activity/AiActivitySessionsTab.tsx",
     "importTarget": "@tauri-apps/plugin-fs",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -696,7 +696,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/SettingsProvider.tsx",
+    "importer": "apps/desktop/src/features/settings/state/SettingsProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -704,7 +704,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/ThemeProvider.tsx",
+    "importer": "apps/desktop/src/features/settings/state/ThemeProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -712,7 +712,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/UpdateProvider.tsx",
+    "importer": "apps/desktop/src/features/settings/state/UpdateProvider.tsx",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -720,7 +720,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/contexts/UpdateProvider.tsx",
+    "importer": "apps/desktop/src/features/settings/state/UpdateProvider.tsx",
     "importTarget": "@tauri-apps/api/event",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -728,7 +728,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useAiActivity.ts",
+    "importer": "apps/desktop/src/features/settings/hooks/useAiActivity.ts",
     "importTarget": "@tauri-apps/api/core",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",
@@ -736,7 +736,7 @@
     "removeByTask": 39
   },
   {
-    "importer": "apps/desktop/src/hooks/useAiActivity.ts",
+    "importer": "apps/desktop/src/features/settings/hooks/useAiActivity.ts",
     "importTarget": "@tauri-apps/api/event",
     "owner": "settings",
     "characterizationTest": "apps/desktop/tests/features/settings/pages/SettingsPage.test.tsx",

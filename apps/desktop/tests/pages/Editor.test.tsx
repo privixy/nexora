@@ -127,7 +127,7 @@ vi.mock("../../src/hooks/useDrivers", () => ({
   useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
 }));
 
-vi.mock("../../src/hooks/useSettings", () => ({
+vi.mock("../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
       resultPageSize: 50,

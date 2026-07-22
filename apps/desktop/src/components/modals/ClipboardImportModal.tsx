@@ -18,7 +18,7 @@ import { readText } from '@tauri-apps/plugin-clipboard-manager';
 import { Modal } from '../ui/Modal';
 import { Select } from '../ui/Select';
 import { useDatabase } from '../../hooks/useDatabase';
-import { useSettings } from '../../hooks/useSettings';
+import { useSettings } from '../../features/settings/hooks/useSettings';
 import { SchemaEditor, type SchemaColumn } from './ClipboardImport/SchemaEditor';
 import { DataPreview } from './ClipboardImport/DataPreview';
 import { TableNameInput } from './ClipboardImport/TableNameInput';

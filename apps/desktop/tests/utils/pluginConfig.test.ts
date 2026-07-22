@@ -6,7 +6,7 @@ import {
   resolveSettingsWithDefaults,
   validateSettings,
 } from "../../src/utils/pluginConfig";
-import type { PluginConfig } from "../../src/contexts/SettingsContext";
+import type { PluginConfig } from "../../src/features/settings/state/SettingsContext";
 import type { PluginSettingDefinition } from "../../src/types/plugins";
 
 describe("pluginConfig", () => {

@@ -41,7 +41,7 @@ import {
   serializePkKey,
   type MergedRow,
 } from "../../utils/dataGrid";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 import { isGeometricType, formatGeometricValue } from "../../utils/geometry";
 import { isBlobColumn, isBlobWireFormat } from "../../utils/blob";
 import { isJsonColumn, isJsonContent } from "../../utils/json";

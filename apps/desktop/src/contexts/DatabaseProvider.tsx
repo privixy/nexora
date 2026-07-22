@@ -17,7 +17,7 @@ import type { ReactNode } from 'react';
 import type { PluginManifest } from '../types/plugins';
 import { clearAutocompleteCache } from '../utils/autocomplete';
 import { toErrorMessage } from '../utils/errors';
-import { useSettings } from '../hooks/useSettings';
+import { useSettings } from '../features/settings/hooks/useSettings';
 import { findConnectionsForDrivers } from '../utils/connectionManager';
 import { isMultiDatabaseCapable, getEffectiveDatabase, getDatabaseList } from '../utils/database';
 import { formatWindowTitle } from '../utils/windowTitle';

@@ -7,7 +7,7 @@ vi.mock("../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../src/hooks/useEditorTheme", () => ({
+vi.mock("../../src/features/settings/hooks/useEditorTheme", () => ({
   useEditorTheme: () => "vs-dark",
 }));
 
@@ -15,7 +15,7 @@ vi.mock("../../src/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 
-vi.mock("../../src/components/settings/AiActivityPanel", () => ({
+vi.mock("../../src/features/settings/components/AiActivityPanel", () => ({
   AiActivityPanel: () => null,
 }));
 

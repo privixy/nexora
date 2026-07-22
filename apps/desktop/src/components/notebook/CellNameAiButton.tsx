@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles, Loader2 } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 
 interface CellNameAiButtonProps {
   content: string;

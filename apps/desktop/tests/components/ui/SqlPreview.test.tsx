@@ -12,7 +12,7 @@ vi.mock('@monaco-editor/react', () => ({
 }));
 
 // Mock useEditorTheme hook
-vi.mock('../../../src/hooks/useEditorTheme', () => ({
+vi.mock('../../../src/features/settings/hooks/useEditorTheme', () => ({
   useEditorTheme: vi.fn(() => ({ id: 'nexora-dark' })),
 }));
 

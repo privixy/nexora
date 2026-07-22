@@ -5,8 +5,8 @@ import { invoke } from "@tauri-apps/api/core";
 import { App } from "../../src/app/App";
 import { useChangelog } from "../../src/hooks/useChangelog";
 import { useResultTypeColors } from "../../src/hooks/useResultTypeColors";
-import { useSettings } from "../../src/hooks/useSettings";
-import { useUpdate } from "../../src/hooks/useUpdate";
+import { useSettings } from "../../src/features/settings/hooks/useSettings";
+import { useUpdate } from "../../src/features/settings/hooks/useUpdate";
 import { APP_VERSION } from "../../src/version";
 
 const providerNames = [
@@ -43,10 +43,10 @@ vi.mock("../../src/components/modals/WhatsNewModal", () => ({
     <div data-testid="whats-new-modal" data-open={String(isOpen)} data-entries={entries.map(({ version }) => version).join(",")} data-loading={String(isLoading)} />
   ),
 }));
-vi.mock("../../src/components/modals/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
+vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
 vi.mock("../../src/components/modals/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
-vi.mock("../../src/hooks/useUpdate", () => ({ useUpdate: vi.fn() }));
-vi.mock("../../src/hooks/useSettings", () => ({ useSettings: vi.fn() }));
+vi.mock("../../src/features/settings/hooks/useUpdate", () => ({ useUpdate: vi.fn() }));
+vi.mock("../../src/features/settings/hooks/useSettings", () => ({ useSettings: vi.fn() }));
 vi.mock("../../src/hooks/useChangelog", () => ({ useChangelog: vi.fn() }));
 vi.mock("../../src/hooks/useResultTypeColors", () => ({ useResultTypeColors: vi.fn() }));
 

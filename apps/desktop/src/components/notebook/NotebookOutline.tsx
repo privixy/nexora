@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type { NotebookCell } from "../../types/notebook";
 import { extractOutline } from "../../utils/notebookOutline";
 import { getUnnamedCellsWithContent } from "../../utils/notebookOutline";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettings } from "../../features/settings/hooks/useSettings";
 
 interface NotebookOutlineProps {
   cells: NotebookCell[];

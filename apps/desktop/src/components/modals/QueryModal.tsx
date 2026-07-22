@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import MonacoEditor, { type BeforeMount } from '@monaco-editor/react';
 import { useTranslation } from 'react-i18next';
-import { useEditorTheme } from '../../hooks/useEditorTheme';
+import { useEditorTheme } from '../../features/settings/hooks/useEditorTheme';
 import { loadMonacoTheme } from '../../themes/themeUtils';
 import { Modal } from '../ui/Modal';
 import { Select } from '../ui/Select';

@@ -115,7 +115,7 @@ import { useDrivers } from "../hooks/useDrivers";
 import { getConnectionAccent } from "../utils/driverUI";
 import { useSavedQueries } from "../hooks/useSavedQueries";
 import { useQueryHistory } from "../hooks/useQueryHistory";
-import { useSettings } from "../hooks/useSettings";
+import { useSettings } from "../features/settings/hooks/useSettings";
 import { useEditor } from "../hooks/useEditor";
 import { useConnectionLayoutContext } from "../hooks/useConnectionLayoutContext";
 import { useKeybindings } from "../hooks/useKeybindings";

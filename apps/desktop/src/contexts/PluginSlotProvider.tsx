@@ -10,7 +10,7 @@ import type { SlotContribution, SlotName, SlotContext } from "../types/pluginSlo
 import { VALID_SLOTS } from "../types/pluginSlots";
 import type { PluginManifest } from "../types/plugins";
 import * as pluginApi from "../pluginApi";
-import { useSettings } from "../hooks/useSettings";
+import { useSettings } from "../features/settings/hooks/useSettings";
 
 interface PluginSlotProviderProps {
   children: React.ReactNode;

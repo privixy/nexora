@@ -5,7 +5,7 @@ import MonacoEditor from "@monaco-editor/react";
 import type * as monaco from "monaco-editor";
 import type { ExplainPlan } from "../../types/explain";
 import { findExplainNode } from "../../utils/explainPlan";
-import { useEditorTheme } from "../../hooks/useEditorTheme";
+import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
 import { loadMonacoTheme } from "../../themes/themeUtils";
 import {
   ExplainSummaryBar,

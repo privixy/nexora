@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { useUpdate } from "../hooks/useUpdate";
+import { useSettings, useUpdate } from "../features/settings";
 import { useChangelog } from "../hooks/useChangelog";
-import { useSettings } from "../hooks/useSettings";
 import { useResultTypeColors } from "../hooks/useResultTypeColors";
 import { APP_VERSION } from "../version";
 import { isVersionAtMost, isVersionNewer } from "../utils/versionCompare";
