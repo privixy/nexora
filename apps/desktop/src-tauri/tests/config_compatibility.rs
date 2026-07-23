@@ -42,5 +42,8 @@ fn target_config_modules_and_facades_exist() {
     assert!(!root_facade.contains("#[tauri::command]"));
 
     let command_adapter = std::fs::read_to_string(root.join("commands/config.rs")).unwrap();
-    assert!(command_adapter.contains("#[tauri::command]"));
+    assert!(command_adapter.contains("pub use crate::infrastructure::command_services::config::*"));
+    let command_owner =
+        std::fs::read_to_string(root.join("infrastructure/command_services/config.rs")).unwrap();
+    assert!(command_owner.contains("#[tauri::command]"));
 }
