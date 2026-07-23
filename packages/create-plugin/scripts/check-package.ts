@@ -53,7 +53,7 @@ try {
     if (!existsSync(absolute) || statSync(absolute).size === 0) throw new Error(`Scaffolded packed template is incomplete: ${path}`);
   }
   const output = execFileSync(process.execPath, [cli, "--version"], { encoding: "utf8" });
-  if (output !== "0.1.0\n") throw new Error("Packed CLI version contract changed");
+  if (output !== `${packageJson.version}\n`) throw new Error(`Packed CLI version does not match package.json: ${output.trim()}`);
 } finally {
   rmSync(unpack, { recursive: true, force: true });
 }

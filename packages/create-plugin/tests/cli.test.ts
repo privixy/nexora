@@ -1,10 +1,12 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const cli = resolve(process.cwd(), "src/cli.ts");
+const root = process.cwd();
+const cli = resolve(root, "src/cli.ts");
+const packageVersion = (JSON.parse(readFileSync(resolve(root, "package.json"), "utf8")) as { version: string }).version;
 
 function run(args: string[]): { output: string; status: number } {
   try {
@@ -16,9 +18,9 @@ function run(args: string[]): { output: string; status: number } {
 }
 
 describe("CLI contract", () => {
-  it("preserves the dedicated CLI version", () => {
-    expect(run(["--version"])).toEqual({ output: "0.1.0\n", status: 0 });
-    expect(run(["-v"])).toEqual({ output: "0.1.0\n", status: 0 });
+  it("reports the current package version", () => {
+    expect(run(["--version"])).toEqual({ output: `${packageVersion}\n`, status: 0 });
+    expect(run(["-v"])).toEqual({ output: `${packageVersion}\n`, status: 0 });
   });
 
   it("preserves help and invalid-input exit behavior", () => {

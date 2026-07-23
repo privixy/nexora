@@ -16,6 +16,11 @@ function run(command: string, commandArgs: string[], cwd: string): void {
   execFileSync(command, commandArgs, { cwd, stdio: "inherit" });
 }
 
+function runCargo(cwd: string): void {
+  const rustc = execFileSync("rustup", ["which", "--toolchain", "stable", "rustc"], { encoding: "utf8" }).trim();
+  execFileSync("rustup", ["run", "stable", "cargo", "check", "--quiet"], { cwd, env: { ...process.env, RUSTC: rustc }, stdio: "inherit" });
+}
+
 function requireFiles(target: string, paths: string[]): void {
   for (const path of paths) {
     const absolute = join(target, path);
@@ -44,7 +49,7 @@ function scaffold(smokeRoot: string, kind: "network" | "file" | "folder" | "api"
   run(process.execPath, [cli, `${kind}-driver`, `--db-type=${kind}`, "--no-git", `--dir=${target}`, ...(withUi ? ["--with-ui"] : [])], smokeRoot);
   requireFiles(target, ["Cargo.toml", "manifest.json", "src/main.rs", "justfile"]);
   if (withUi) validateUi(target);
-  if (!skipCargo) run("mise", ["exec", "rust", "--", "cargo", "check", "--quiet"], target);
+  if (!skipCargo) runCargo(target);
   console.log(`${kind}${withUi ? "+ui" : ""} validated`);
   return target;
 }

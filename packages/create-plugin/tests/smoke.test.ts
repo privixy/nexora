@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +13,13 @@ function run(args: string[]) {
 }
 
 describe("create-plugin smoke runner", () => {
+  it("uses cargo directly with the generated rustup toolchain instead of mise", () => {
+    const source = readFileSync(smoke, "utf8");
+    expect(source).toContain('execFileSync("rustup", ["run", "stable", "cargo", "check", "--quiet"]');
+    expect(source).toContain('RUSTC: rustc');
+    expect(source).not.toContain('run("mise"');
+  });
+
   it("supports the complete static matrix with cargo skipped", () => {
     execFileSync("pnpm", ["build"], { cwd: root });
     const result = run(["--skip-cargo"]);

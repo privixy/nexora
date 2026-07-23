@@ -35,6 +35,21 @@ describe("create-plugin package lifecycle", () => {
     expect(`${result.stdout}${result.stderr}`).toContain("stale");
   });
 
+  it("rejects stale recursively nested template inputs", () => {
+    execFileSync("pnpm", ["build"], { cwd: root });
+    const nestedTemplate = resolve(root, "templates/rust-driver/src/handlers/query.rs");
+    const original = statSync(nestedTemplate);
+    const fresh = new Date(Date.now() + 10_000);
+    try {
+      utimesSync(nestedTemplate, fresh, fresh);
+      const result = run(stage);
+      expect(result.status).not.toBe(0);
+      expect(`${result.stdout}${result.stderr}`).toContain("templates/rust-driver/src/handlers/query.rs");
+    } finally {
+      utimesSync(nestedTemplate, original.atime, original.mtime);
+    }
+  });
+
   it("rejects a mutated canonical tarball", () => {
     execFileSync("pnpm", ["build"], { cwd: root });
     expect(run(stage).status).toBe(0);

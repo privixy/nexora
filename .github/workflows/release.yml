@@ -45,7 +45,7 @@ jobs:
               owner,
               repo,
               tag_name: tag,
-              target_commitish: context.sha,
+              target_commitish: tag,
               name: tag,
               generate_release_notes: true,
               draft: true,
@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'

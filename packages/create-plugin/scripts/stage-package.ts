@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, relative, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -12,11 +12,23 @@ const output = resolve(root, ".tmp/package");
 const name = `nexora-create-plugin-${pkg.version}.tgz`;
 const buildCli = resolve(build, "cli.js");
 if (!existsSync(buildCli)) throw new Error("Fresh .tmp/build/cli.js is required before staging");
-const inputs = ["package.json", "README.md", "LICENSE", "tsup.config.ts", "src/cli.ts", "src/print.ts", "src/scaffold.ts", "src/substitute.ts", "src/validate.ts", "templates/rust-driver/manifest.json.tmpl", "templates/ui-extension/package.json.tmpl"]
-  .map((path) => resolve(root, path));
-const newestInput = Math.max(...inputs.map((path) => statSync(path).mtimeMs));
-for (const path of [buildCli, resolve(root, ".tmp/templates")]) {
-  if (!existsSync(path) || statSync(path).mtimeMs < newestInput) throw new Error(`Build output is stale: ${relative(root, path)}`);
+
+function filesRecursively(path: string): string[] {
+  if (!statSync(path).isDirectory()) return [path];
+  return readdirSync(path, { withFileTypes: true }).flatMap((entry) => filesRecursively(resolve(path, entry.name)));
+}
+
+const buildInputs = ["package.json", "tsup.config.ts", "src"].flatMap((path) => filesRecursively(resolve(root, path)));
+const templateInputs = filesRecursively(resolve(root, "templates"));
+const newestBuildInput = Math.max(...buildInputs.map((path) => statSync(path).mtimeMs));
+if (statSync(buildCli).mtimeMs < newestBuildInput) throw new Error(`Build output is stale: ${relative(root, buildCli)}`);
+const stagedTemplates = resolve(root, ".tmp/templates");
+if (!existsSync(stagedTemplates)) throw new Error(`Build output is stale: ${relative(root, stagedTemplates)}`);
+for (const input of templateInputs) {
+  const staged = resolve(stagedTemplates, relative(resolve(root, "templates"), input));
+  if (!existsSync(staged) || statSync(staged).mtimeMs < statSync(input).mtimeMs) {
+    throw new Error(`Build output is stale for template input: ${relative(root, input)}`);
+  }
 }
 rmSync(output, { recursive: true, force: true });
 rmSync(staging, { recursive: true, force: true });
