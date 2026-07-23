@@ -81,7 +81,28 @@ function collectPackageManifests(root, trackedFiles, packageDirectories) {
 
 function hasInlineRustTests(root, file) {
   const content = readFileSync(join(root, file), "utf8");
-  return /^[ \t]*#\[cfg\(test\)\](?:\s*#\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+tests\s*\{/m.test(content);
+  const modules = /^[ \t]*#\[cfg\(test\)\](?:\s*#\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*\{([\s\S]*?)}/gm;
+  return [...content.matchAll(modules)].some((match) => {
+    const body = match[1].trim();
+    return body.length > 0 || match[0].includes("\n");
+  });
+}
+
+function isRustTestSource(file) {
+  return file.split("/").includes("tests") || file.endsWith("/tests.rs");
+}
+
+function rustTestInclusionViolations(root, file) {
+  if (!isRustTestSource(file)) return [];
+  const source = readFileSync(join(root, file), "utf8");
+  const violations = [];
+  if (/\binclude!\s*\(/m.test(source)) {
+    violations.push(`${file}: include! is forbidden in Rust test sources`);
+  }
+  for (const match of source.matchAll(/#\[path\s*=\s*"([^"]+)"\]\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*;/gm)) {
+    violations.push(`${file}: test-to-test #[path] module inclusion is forbidden: ${match[1]}`);
+  }
+  return violations;
 }
 
 function canStartRegex(tokens) {
@@ -695,6 +716,10 @@ export function collectViolations(root, policy, inventory = {}) {
       } else if (lineCount > softLimit) {
         violations.push(`${file}: ${lineCount} lines exceeds soft limit ${softLimit}; split the file or add a ratcheted baseline with architecture approval`);
       }
+    }
+
+    if (extension === ".rs") {
+      violations.push(...rustTestInclusionViolations(root, file));
     }
 
     if (

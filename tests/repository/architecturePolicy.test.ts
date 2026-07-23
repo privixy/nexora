@@ -21,6 +21,22 @@ function writeFixture(rootPath: string, file: string, content: string) {
   writeFileSync(filePath, content);
 }
 
+function basePolicy(overrides: Record<string, unknown> = {}) {
+  return {
+    sourceRoots: [],
+    frontendTestRoots: [],
+    forbiddenFrontendTestRoots: [],
+    repositoryTestRoots: [],
+    rootTestRoots: [],
+    rustInlineTestAllowlist: [],
+    rustCrateLevelTestAllowlist: [],
+    rustIntegrationTests: {},
+    allowedWorkspaceDependencies: {},
+    fileSizeBaselines: {},
+    ...overrides,
+  };
+}
+
 function boundaryViolations(
   imports: Record<string, string>,
   temporaryExceptions: object[] = [],
@@ -504,6 +520,53 @@ describe("architecture policy", () => {
     }], [], {}, [{ owner: "editor", destination: "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx", task: 34 }], gateways)).toEqual(expect.arrayContaining([
       expect.stringContaining("removeByTask must be 39"),
     ]));
+  });
+
+  it("rejects nontrivial inline Rust test modules with any module name", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-inline-rust-tests-"));
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/named.rs": "#[cfg(test)]\nmod legacy_tests {\n #[test]\n fn legacy() {}\n}\n",
+        "apps/desktop/src-tauri/src/attributed.rs": "#[cfg(test)]\n#[allow(dead_code)]\nmod appearance_tests {\n fn helper() {}\n}\n",
+        "apps/desktop/src-tauri/src/canonical.rs": "#[cfg(test)]\nmod tests;\n",
+        "apps/desktop/src-tauri/src/empty.rs": "#[cfg(test)] mod tests {}\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+      const violations = collectViolations(tempRoot, basePolicy({ sourceRoots: ["apps/desktop/src-tauri/src"] }), {
+        trackedFiles: Object.keys(files), workspacePackageDirectories: [],
+      });
+      expect(violations).toEqual(expect.arrayContaining([
+        "inline Rust test module is forbidden: apps/desktop/src-tauri/src/named.rs",
+        "inline Rust test module is forbidden: apps/desktop/src-tauri/src/attributed.rs",
+      ]));
+      expect(violations).not.toContain(expect.stringContaining("canonical.rs"));
+      expect(violations).not.toContain(expect.stringContaining("empty.rs"));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects Rust test-source include and path duplicate inclusions", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-test-inclusions-"));
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/tests/included.rs": "include!(\"canonical.rs\");\n",
+        "apps/desktop/src-tauri/src/commands/tests/duplicate.rs": "#[path = \"canonical.rs\"]\nmod canonical_again;\n",
+        "apps/desktop/src-tauri/src/commands/tests/canonical.rs": "#[test]\nfn canonical() {}\n",
+        "apps/desktop/src-tauri/src/commands/production.rs": "include!(\"shared.rs\");\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+      const violations = collectViolations(tempRoot, basePolicy({ sourceRoots: ["apps/desktop/src-tauri/src"] }), {
+        trackedFiles: Object.keys(files), workspacePackageDirectories: [],
+      });
+      expect(violations).toEqual(expect.arrayContaining([
+        "apps/desktop/src-tauri/src/commands/tests/included.rs: include! is forbidden in Rust test sources",
+        "apps/desktop/src-tauri/src/commands/tests/duplicate.rs: test-to-test #[path] module inclusion is forbidden: canonical.rs",
+      ]));
+      expect(violations).not.toContain(expect.stringContaining("production.rs"));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
   });
 
   it("requires temporary exceptions to match an active exact import", () => {
