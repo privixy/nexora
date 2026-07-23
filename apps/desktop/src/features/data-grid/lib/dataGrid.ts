@@ -6,6 +6,7 @@
 import { formatGeometricValue, isGeometricType } from "../../../utils/geometry";
 import { formatBlobValue, isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
 import { isJsonColumn } from "../../../utils/json";
+import { formatBasicCellValue } from "../../../shared/lib/cellFormatting";
 
 /** Sentinel value indicating that the database DEFAULT value should be used */
 export const USE_DEFAULT_SENTINEL = "__USE_DEFAULT__";
@@ -89,23 +90,11 @@ export function formatCellValue(
     return formatBlobValue(value, columnType ?? "VARBINARY");
   }
 
-  if (value === null || value === undefined) {
-    return nullLabel;
-  }
-
-  if (columnType && isJsonColumn(columnType)) {
+  if (columnType && isJsonColumn(columnType) && value !== null && value !== undefined) {
     return JSON.stringify(value);
   }
 
-  if (typeof value === "boolean") {
-    return value ? "true" : "false";
-  }
-
-  if (typeof value === "object") {
-    return JSON.stringify(value);
-  }
-
-  return String(value);
+  return formatBasicCellValue(value, nullLabel);
 }
 
 export type ResultValueType = "number" | "string" | "date" | "boolean";

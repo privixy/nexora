@@ -2364,6 +2364,12 @@
     "moveTask": 40
   },
   {
+    "source": "apps/desktop/src/shared/lib/cellFormatting.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/lib/cellFormatting.ts",
+    "moveTask": 41
+  },
+  {
     "source": "apps/desktop/src/shared/lib/clipboard.ts",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/lib/clipboard.ts",

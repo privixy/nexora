@@ -1,8 +1,8 @@
-import { formatCellValue } from '../../features/data-grid/lib/dataGrid';
+import { formatBasicCellValue } from "./cellFormatting";
 
 export function rowToCSV(row: unknown[], nullLabel: string = "null", delimiter: string = ","): string {
   return row
-    .map((cell) => formatCellValue(cell, nullLabel))
+    .map((cell) => formatBasicCellValue(cell, nullLabel))
     .join(delimiter);
 }
 

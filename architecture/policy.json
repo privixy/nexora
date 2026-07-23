@@ -156,13 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/shared/lib/clipboard.ts",
-        "importTarget": "../../features/data-grid/lib/dataGrid",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/shared/types/explain.ts",
         "importTarget": "../../features/visual-explain",
         "owner": "legacy",
