@@ -43,6 +43,8 @@ export { useConnectionManager } from "./hooks/useConnectionManager";
 export { useOpenConnectionInNewWindow } from "./hooks/useOpenConnectionInNewWindow";
 export { isConnectionGrouped } from "./lib/connectionLayout";
 export type { SplitView } from "./lib/connectionLayout";
+export { resolveExplicitTableContext } from "./lib/tableContext";
+export type { ExplicitTableContextInput } from "./lib/tableContext";
 export { OpenConnectionItem } from "./components/sidebar/OpenConnectionItem";
 export { ConnectionGroupItem } from "./components/sidebar/ConnectionGroupItem";
 export { ConnectionLayoutContext } from "./state/ConnectionLayoutContext";

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { recordGateway } from "../../../platform/tauri/recordGateway";
+import { resolveExplicitTableContext } from "../../connections";
+import type { DriverCapabilities } from "../../plugins";
 import { buildPkMap, type MergedRow } from "../lib/dataGrid";
 
 export interface EditingCell {
@@ -16,6 +18,7 @@ interface UseCellEditingOptions {
   pkColumns?: string[] | null;
   pkIndexMaps: number[];
   connectionId?: string | null;
+  capabilities?: DriverCapabilities | null;
   database?: string | null;
   schema?: string | null;
   activeDatabase?: string | null;
@@ -41,6 +44,7 @@ export function useCellEditing({
   pkColumns,
   pkIndexMaps,
   connectionId,
+  capabilities,
   database,
   schema,
   onRefresh,
@@ -109,14 +113,18 @@ export function useCellEditing({
         setEditingCell(null);
         return;
       }
-      if (!connectionId || !database || !schema) return;
+      const context = resolveExplicitTableContext({
+        capabilities,
+        connectionId,
+        database,
+        schema,
+        table: tableName,
+      });
+      if (!context) return;
 
       try {
         await recordGateway.updateRecord({
-          connectionId,
-          database,
-          schema,
-          table: tableName,
+          ...context,
           pkMap: pkMapVal,
           colName,
           newVal: value,
@@ -142,6 +150,7 @@ export function useCellEditing({
     pkIndexMaps,
     pkColumns,
     connectionId,
+    capabilities,
     database,
     schema,
     onRefresh,

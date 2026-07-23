@@ -3966,7 +3966,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
                       onForeignKeyNavigate={handleForeignKeyNavigate}
                       onForeignKeyShowPanel={handleForeignKeyShowPanel}
                       onForeignKeyHidePanel={() => setActiveFkQuery(null)}
-                      connectionId={activeConnectionId} database={resolveTabDatabase(activeTab)} schema={resolveTabSchema(activeTab)}
+                       connectionId={activeConnectionId} capabilities={activeCapabilities} database={resolveTabDatabase(activeTab)} schema={resolveTabSchema(activeTab)}
                       onRefresh={handleRefresh}
                       pendingChanges={activeTab.pendingChanges}
                       pendingDeletions={activeTab.pendingDeletions}

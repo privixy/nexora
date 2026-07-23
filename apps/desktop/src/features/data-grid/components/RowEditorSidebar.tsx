@@ -22,6 +22,7 @@ export const RowEditorSidebar = ({
   focusField,
   detectJsonInTextColumns = false,
   connectionId,
+  capabilities,
   database,
   tableName,
   pkColumns,
@@ -159,6 +160,7 @@ export const RowEditorSidebar = ({
                   hasDefault={defaultValueColumns?.includes(column.name)}
                   isNullable={nullableColumns?.includes(column.name)}
                   connectionId={connectionId}
+                  capabilities={capabilities}
                   database={database}
                   tableName={tableName}
                   pkMap={pkMap}

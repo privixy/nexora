@@ -1,5 +1,6 @@
 import type { PendingInsertion, TableColumn } from "../../shared/types/queryResults";
 import type { ForeignKey } from "../../shared/lib/foreignKeys";
+import type { DriverCapabilities } from "../plugins";
 
 export interface DataGridSelection {
   rows: number[];
@@ -19,6 +20,7 @@ export interface DataGridProps {
   onForeignKeyShowPanel?: (fk: ForeignKey, value: unknown) => void;
   onForeignKeyHidePanel?: () => void;
   connectionId?: string | null;
+  capabilities?: DriverCapabilities | null;
   database?: string;
   schema?: string;
   onRefresh?: () => void;
@@ -86,6 +88,7 @@ export interface RowEditorSidebarProps {
   focusField?: string;
   detectJsonInTextColumns?: boolean;
   connectionId?: string | null;
+  capabilities?: DriverCapabilities | null;
   database?: string | null;
   tableName?: string | null;
   pkColumns?: string[] | null;

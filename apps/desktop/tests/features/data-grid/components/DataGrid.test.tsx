@@ -97,7 +97,10 @@ const mockDatabaseContext = vi.hoisted(() => ({
 vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: () => mockDatabaseContext,
 }));
-vi.mock("../../../../src/features/connections", () => ({
+vi.mock("../../../../src/features/connections", async () => ({
+  ...(await import(
+    "../../../../src/features/connections/lib/tableContext"
+  )),
   useDatabase: () => mockDatabaseContext,
 }));
 
@@ -389,15 +392,69 @@ describe("DataGrid operations", () => {
     });
   });
 
-  it("passes explicit table-tab context for immediate record operations", async () => {
-    mockDatabaseContext.activeDatabase = "app";
-    mockDatabaseContext.activeSchema = "public";
+  it.each([
+    {
+      name: "schema-only",
+      capabilities: { schemas: true, multiple_databases: false },
+      database: undefined,
+      schema: "reporting",
+    },
+    {
+      name: "database-only",
+      capabilities: { schemas: false, multiple_databases: true },
+      database: "analytics",
+      schema: undefined,
+    },
+    {
+      name: "full-tuple",
+      capabilities: { schemas: true, multiple_databases: true },
+      database: "analytics",
+      schema: "reporting",
+    },
+  ])(
+    "passes explicit $name table-tab context for immediate record operations",
+    async ({ capabilities, database, schema }) => {
+      mockDatabaseContext.activeDatabase = "stale_database";
+      mockDatabaseContext.activeSchema = "stale_schema";
+      const onRefresh = vi.fn();
+      renderGrid({
+        onPendingChange: undefined,
+        onRefresh,
+        capabilities,
+        database,
+        schema,
+      });
+
+      fireEvent.doubleClick(screen.getByText("Alice"));
+      const input = screen.getByDisplayValue("Alice");
+      fireEvent.change(input, { target: { value: "Alicia" } });
+      fireEvent.keyDown(input, { key: "Enter" });
+
+      await waitFor(() => {
+        expect(recordGateway.updateRecord).toHaveBeenCalledWith({
+          connectionId: "conn-1",
+          table: "users",
+          pkMap: { id: 1 },
+          colName: "name",
+          newVal: "Alicia",
+          database,
+          schema,
+        });
+      });
+      expect(onRefresh).toHaveBeenCalled();
+    },
+  );
+
+  it("blocks a mutation missing a required explicit dimension without using stale globals", async () => {
+    mockDatabaseContext.activeDatabase = "stale_database";
+    mockDatabaseContext.activeSchema = "stale_schema";
     const onRefresh = vi.fn();
     renderGrid({
       onPendingChange: undefined,
       onRefresh,
+      capabilities: { schemas: true, multiple_databases: true },
       database: "analytics",
-      schema: "reporting",
+      schema: undefined,
     });
 
     fireEvent.doubleClick(screen.getByText("Alice"));
@@ -406,16 +463,9 @@ describe("DataGrid operations", () => {
     fireEvent.keyDown(input, { key: "Enter" });
 
     await waitFor(() => {
-      expect(recordGateway.updateRecord).toHaveBeenCalledWith({
-        connectionId: "conn-1",
-        table: "users",
-        pkMap: { id: 1 },
-        colName: "name",
-        newVal: "Alicia",
-        database: "analytics",
-        schema: "reporting",
-      });
+      expect(recordGateway.updateRecord).not.toHaveBeenCalled();
     });
-    expect(onRefresh).toHaveBeenCalled();
+    expect(onRefresh).not.toHaveBeenCalled();
+    expect(screen.getByText("Alice")).toBeInTheDocument();
   });
 });

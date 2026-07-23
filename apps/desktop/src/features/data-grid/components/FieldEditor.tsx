@@ -23,6 +23,7 @@ import {
 } from "../../../shared/lib/text";
 import { getDateInputMode } from "../lib/dateInput";
 import { USE_DEFAULT_SENTINEL } from "../lib/dataGrid";
+import type { DriverCapabilities } from "../../plugins";
 
 export interface FieldEditorProps {
   name: string;
@@ -39,6 +40,7 @@ export interface FieldEditorProps {
   originalValue?: unknown;
   detectJsonInTextColumns?: boolean;
   connectionId?: string | null;
+  capabilities?: DriverCapabilities | null;
   database?: string | null;
   tableName?: string | null;
   pkMap?: Record<string, unknown> | null;
@@ -64,6 +66,7 @@ export const FieldEditor = ({
   originalValue,
   detectJsonInTextColumns = false,
   connectionId,
+  capabilities,
   database,
   tableName,
   pkMap,
@@ -124,6 +127,7 @@ export const FieldEditor = ({
         onChange={(newValue) => onChange(newValue)}
         placeholder={defaultPlaceholder}
         connectionId={connectionId}
+        capabilities={capabilities}
         database={database}
         tableName={tableName}
         pkMap={pkMap}

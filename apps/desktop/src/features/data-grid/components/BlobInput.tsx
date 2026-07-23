@@ -12,7 +12,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { queryGateway } from "../../../platform/tauri/queryGateway";
-
+import { resolveExplicitTableContext } from "../../connections";
+import type { DriverCapabilities } from "../../plugins";
 
 import {
   extractBlobMetadata,
@@ -31,6 +32,7 @@ export interface BlobInputProps {
   placeholder?: string;
   className?: string;
   connectionId?: string | null;
+  capabilities?: DriverCapabilities | null;
   database?: string | null;
   tableName?: string | null;
   pkMap?: Record<string, unknown> | null;
@@ -51,6 +53,7 @@ export const BlobInput = ({
   placeholder,
   className = "",
   connectionId,
+  capabilities,
   database,
   tableName,
   pkMap,
@@ -67,15 +70,24 @@ export const BlobInput = ({
 
   const isImage = metadata?.mimeType.startsWith("image/") ?? false;
 
-  const canFetchFull =
+  const explicitTableContext = useMemo(
+    () =>
+      resolveExplicitTableContext({
+        capabilities,
+        connectionId,
+        database,
+        schema,
+        table: tableName,
+      }),
+    [capabilities, connectionId, database, schema, tableName],
+  );
+  const canFetchFull = Boolean(
     metadata?.isTruncated &&
-    connectionId &&
-    database &&
-    schema &&
-    tableName &&
-    pkMap &&
-    Object.keys(pkMap).length > 0 &&
-    colName;
+      explicitTableContext &&
+      pkMap &&
+      Object.keys(pkMap).length > 0 &&
+      colName,
+  );
 
   // Build a data URL for image preview from the BLOB wire format (non-file-ref, non-truncated)
   const imageDataUrl = useMemo(() => {
@@ -123,10 +135,7 @@ export const BlobInput = ({
     }
     let cancelled = false;
     queryGateway.invoke<string>("fetch_blob_as_data_url", {
-      connectionId,
-      database,
-      schema,
-      table: tableName,
+      ...explicitTableContext!,
       colName,
       pkMap,
     })
@@ -139,7 +148,7 @@ export const BlobInput = ({
     return () => {
       cancelled = true;
     };
-  }, [isImage, canFetchFull, connectionId, database, tableName, colName, pkMap, schema]);
+  }, [isImage, canFetchFull, explicitTableContext, colName, pkMap]);
 
   const effectiveImageDataUrl =
     imageDataUrl ?? fileRefPreviewUrl ?? dbPreviewUrl;
@@ -192,10 +201,7 @@ export const BlobInput = ({
       setIsDownloading(true);
       try {
         await queryGateway.invoke("save_blob_to_file", {
-          connectionId,
-          database,
-          schema,
-          table: tableName,
+          ...explicitTableContext!,
           colName,
           pkMap,
           filePath,

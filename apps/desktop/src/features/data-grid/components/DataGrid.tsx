@@ -61,6 +61,7 @@ export const DataGrid = React.memo(
     onForeignKeyShowPanel,
     onForeignKeyHidePanel,
     connectionId,
+    capabilities,
     database,
     schema,
     onRefresh,
@@ -324,6 +325,7 @@ export const DataGrid = React.memo(
       pkColumns,
       pkIndexMaps,
       connectionId,
+      capabilities,
       database,
       schema,
       onRefresh,
@@ -1165,6 +1167,7 @@ export const DataGrid = React.memo(
                   nullableColumns={nullableColumns}
                   focusField={sidebarRowData.focusField}
                   connectionId={connectionId}
+                  capabilities={capabilities}
                   database={database}
                   tableName={tableName}
                   pkColumns={pkColumns}
