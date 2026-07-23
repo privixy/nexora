@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
-import { resolve } from "node:path";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const cli = resolve(process.cwd(), "src/cli.ts");
@@ -26,5 +28,15 @@ describe("CLI contract", () => {
     expect(run(["demo", "--db-type=invalid"]).status).toBe(1);
     expect(run(["demo", "--quote=invalid"]).status).toBe(1);
     expect(run(["--unknown"]).status).toBe(1);
+  });
+
+  it("rejects UI scaffolding for non-network plugins", () => {
+    for (const kind of ["file", "folder", "api"]) {
+      const root = mkdtempSync(join(tmpdir(), "create-plugin-cli-"));
+      const result = run(["demo", `--db-type=${kind}`, "--with-ui", `--dir=${join(root, "demo")}`]);
+      expect(result.status).toBe(1);
+      expect(result.output).toContain("--with-ui requires --db-type=network");
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

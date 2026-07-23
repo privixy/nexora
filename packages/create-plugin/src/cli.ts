@@ -66,6 +66,11 @@ function main(argv: string[]): number {
     return 1;
   }
 
+  if (parsed.values["with-ui"] && dbType !== "network") {
+    printError("--with-ui requires --db-type=network");
+    return 1;
+  }
+
   const slug = nameCheck.slug;
   const targetDir = resolve(
     (parsed.values.dir as string | undefined) ?? slug,
