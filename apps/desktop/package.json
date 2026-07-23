@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "typecheck:plugin-contract": "tsc --noEmit -p tsconfig.plugin-contract.json",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "tauri": "tauri"
   },

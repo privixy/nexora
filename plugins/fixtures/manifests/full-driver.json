@@ -1,0 +1,53 @@
+{
+  "id": "full-driver",
+  "name": "Full Driver",
+  "version": "1.2.3",
+  "description": "Full compatibility fixture",
+  "default_port": 5432,
+  "is_builtin": false,
+  "default_username": "demo",
+  "color": "#123456",
+  "icon": "database",
+  "executable": "full-driver",
+  "interpreter": "python3",
+  "capabilities": {
+    "schemas": true,
+    "multiple_databases": true,
+    "views": true,
+    "materialized_views": true,
+    "routines": true,
+    "routine_management": true,
+    "triggers": true,
+    "file_based": false,
+    "folder_based": false,
+    "connection_string": true,
+    "connection_string_example": "driver://localhost",
+    "identifier_quote": "\"",
+    "sql_dialect": "postgres",
+    "alter_primary_key": true,
+    "auto_increment_keyword": "",
+    "serial_type": "SERIAL",
+    "inline_pk": false,
+    "alter_column": true,
+    "create_database": true,
+    "drop_database": true,
+    "rename_database": true,
+    "create_schema": true,
+    "truncate_table": true,
+    "create_foreign_keys": true,
+    "no_connection_required": false,
+    "manage_tables": true,
+    "readonly": false,
+    "supports_ssl": true,
+    "unknown_capability": true
+  },
+  "settings": [{ "key": "mode", "label": "Mode", "type": "select", "default": "safe", "required": true, "options": ["safe", "fast"] }],
+  "data_types": [
+    { "name": "VARCHAR", "category": "string", "requires_length": true, "requires_precision": false, "default_length": "255" },
+    { "name": "DECIMAL", "category": "numeric", "requires_length": false, "requires_precision": true }
+  ],
+  "ui_extensions": [
+    { "slot": "data-grid.toolbar.actions", "module": "ui/index.js", "order": 10, "driver": "full-driver" },
+    { "slot": "sidebar.footer.actions", "module": "ui/index.js" }
+  ]
+}

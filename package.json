@@ -23,6 +23,7 @@
     "test:repository": "vitest --config vitest.config.ts --project repository",
     "test:desktop": "vitest --config vitest.config.ts --project desktop",
     "check:architecture": "node scripts/check-architecture.mjs",
+    "test:plugin-contract": "pnpm exec vitest run --project repository tests/repository/pluginManifestSchema.test.ts && pnpm --filter @nexora/desktop typecheck:plugin-contract && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml plugins::tests::manifest",
     "typecheck": "pnpm --filter @nexora/desktop typecheck",
     "test:coverage": "pnpm --filter @nexora/desktop test:coverage",
     "test:rust": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "ajv": "^8.17.1",
     "conventional-changelog": "^8.1.0",
     "conventional-changelog-angular": "^9.2.1",
     "eslint": "^10.7.0",
