@@ -9,7 +9,7 @@ import {
   type ShortcutDef,
   type KeyMatch,
   type UserOverrides,
-} from '../../../src/shared/lib/keybindings';
+} from '../../src/utils/keybindings';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

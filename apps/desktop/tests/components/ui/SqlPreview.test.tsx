@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SqlPreview } from '../../../src/shared/ui/SqlPreview';
+import { SqlPreview } from '../../../src/components/ui/SqlPreview';
 
 // Mock MonacoEditor
 vi.mock('@monaco-editor/react', () => ({

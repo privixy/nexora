@@ -3,7 +3,7 @@ import {
   validateDumpOptions,
   toggleTableSelection,
   selectAllTables,
-} from "../../../src/shared/lib/dumpUtils";
+} from "../../src/utils/dumpUtils";
 
 describe("Dump Utils", () => {
   describe("validateDumpOptions", () => {

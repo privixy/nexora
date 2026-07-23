@@ -8,7 +8,7 @@ import {
   parseBlobFileRef,
   extractBase64Payload,
   blobPayloadToBytes,
-} from "../../../src/shared/lib/blob";
+} from "../../src/utils/blob";
 
 describe("blob utilities", () => {
   describe("isBlobType", () => {

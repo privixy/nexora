@@ -19,7 +19,7 @@ import {
   getLanguageForI18n,
   type FontCache,
   type DetectedAIConfig,
-} from '../../../src/shared/lib/settings';
+} from '../../src/utils/settings';
 import { DEFAULT_SETTINGS } from '../../src/features/settings/state/SettingsContext';
 import type { Settings, AppLanguage, AiProvider } from '../../src/features/settings/state/SettingsContext';
 

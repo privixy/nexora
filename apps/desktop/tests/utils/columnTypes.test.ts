@@ -9,7 +9,7 @@ import {
   parseSetValues,
   parseSetMembers,
   serializeSetMembers,
-} from '../../../src/shared/lib/columnTypes';
+} from '../../src/utils/columnTypes';
 import type { DataTypeInfo } from '../../src/types/dataTypes';
 
 const makeType = (

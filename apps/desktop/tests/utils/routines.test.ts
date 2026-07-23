@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groupRoutinesByType, type GroupedRoutines } from '../../../src/shared/lib/routines';
+import { groupRoutinesByType, type GroupedRoutines } from '../../src/utils/routines';
 import type { RoutineInfo } from '../../src/features/connections/state/DatabaseContext';
 
 describe('groupRoutinesByType', () => {

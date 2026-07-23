@@ -6,7 +6,7 @@ import {
   isOutputOnly,
   type RoutineArgInput,
   type RoutineParameterInfo,
-} from "../../../src/shared/lib/routineCall";
+} from "../../src/utils/routineCall";
 
 function param(
   overrides: Partial<RoutineParameterInfo> = {},

@@ -5,7 +5,7 @@ import {
   formatJsonForEditor,
   validateJson,
   parseJsonEditorValue,
-} from "../../../src/shared/lib/json";
+} from "../../src/utils/json";
 
 describe("json", () => {
   describe("isJsonColumn", () => {

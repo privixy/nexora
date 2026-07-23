@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatSql, toFormatterLanguage } from '../../../src/shared/lib/sqlFormat';
+import { formatSql, toFormatterLanguage } from '../../src/utils/sqlFormat';
 
 describe('sqlFormat', () => {
   describe('toFormatterLanguage', () => {
