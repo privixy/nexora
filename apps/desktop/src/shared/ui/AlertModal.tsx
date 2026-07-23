@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, Info, AlertCircle, X } from "lucide-react";
 import { Modal } from "../ui/Modal";
-import type { AlertKind } from "../../app/AlertContext";
+import type { AlertKind } from "../alert";
 
 interface AlertModalProps {
   isOpen: boolean;

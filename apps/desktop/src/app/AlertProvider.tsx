@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { AlertContext, type AlertKind } from "./AlertContext";
+import { AlertContext, type AlertKind } from "../shared/alert";
 import { AlertModal } from "../shared/ui/AlertModal";
 
 interface AlertState {

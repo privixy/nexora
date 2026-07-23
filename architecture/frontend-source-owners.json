@@ -1,11 +1,5 @@
 [
   {
-    "source": "apps/desktop/src/app/AlertContext.ts",
-    "owner": "app",
-    "destination": "apps/desktop/src/app/AlertContext.ts",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/app/AlertProvider.tsx",
     "owner": "app",
     "destination": "apps/desktop/src/app/AlertProvider.tsx",
@@ -2326,6 +2320,12 @@
     "owner": "platform",
     "destination": "apps/desktop/src/platform/tauri/windowGateway.ts",
     "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/shared/alert.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/alert.ts",
+    "moveTask": 41
   },
   {
     "source": "apps/desktop/src/shared/hooks/useAlert.ts",
