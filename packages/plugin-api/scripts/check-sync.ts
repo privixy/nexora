@@ -23,7 +23,7 @@ const host = extractPublicContract(
   resolve(repositoryRoot, "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx"),
 );
 const pkg = extractPublicContract(resolve(packageRoot, "src/index.ts"), resolve(packageRoot, "src/version.ts"));
-const emitted = extractPublicContract(resolve(packageRoot, "dist/index.d.ts"));
+const emitted = extractPublicContract(resolve(packageRoot, ".tmp/build/index.d.ts"));
 const comparison = comparePublicContracts(host, pkg, baseline);
 for (const [key, expected, actual] of [
   ["emittedContract", baseline.emittedContract, emitted],

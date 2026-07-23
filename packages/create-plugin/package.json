@@ -33,7 +33,7 @@
   "scripts": {
     "test": "vitest run --exclude tests/package-lifecycle.test.ts --exclude tests/smoke.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.test.json",
-    "build": "rm -rf .tmp/templates-stage && cp -R templates .tmp/templates-stage && rm -rf .tmp/templates && mv .tmp/templates-stage .tmp/templates && tsup --out-dir .tmp/build",
+    "build": "mkdir -p .tmp && rm -rf .tmp/templates-stage && cp -R templates .tmp/templates-stage && rm -rf .tmp/templates && mv .tmp/templates-stage .tmp/templates && tsup --out-dir .tmp/build",
     "clean": "rm -rf .tmp/build .tmp/templates",
     "smoke": "tsx scripts/smoke.ts",
     "smoke:static": "tsx scripts/smoke.ts --skip-cargo",

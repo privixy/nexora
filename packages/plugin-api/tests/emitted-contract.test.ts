@@ -11,9 +11,9 @@ const baseline = JSON.parse(readFileSync(resolve(root, "contracts/public-contrac
 };
 
 describe("canonical public contract evidence", () => {
-  it("records and verifies the checked-in emitted declaration contract", () => {
+  it("records and verifies the staged build declaration contract", () => {
     expect(baseline.emittedContract).not.toBeNull();
-    expect(extractPublicContract(resolve(root, "dist/index.d.ts"))).toEqual(baseline.emittedContract);
+    expect(extractPublicContract(resolve(root, ".tmp/build/index.d.ts"))).toEqual(baseline.emittedContract);
   });
 
   it("records a non-null canonical packed/public contract", () => {

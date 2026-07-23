@@ -59,7 +59,7 @@
       },
       "SlotContextMap": {
         "kind": "type",
-        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
+        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
       },
       "SlotName": {
         "kind": "type",
@@ -130,7 +130,7 @@
         "declaration": "(pluginId:string):PluginTranslator"
       }
     },
-    "sourceHash": "f4a89b5b7207fc02305fa9ff28fae9d156f30e2bf493dd897ac7191281ecd846"
+    "sourceHash": "02ba5239ae96cf4ae047ec6d238488b389e06d46071ef92091ffd57d1a3e394e"
   },
   "publishedContract": {
     "symbols": {
@@ -188,7 +188,7 @@
       },
       "SlotContextMap": {
         "kind": "type",
-        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
+        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;database:string|null;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
       },
       "SlotName": {
         "kind": "type",
@@ -259,7 +259,7 @@
         "declaration": "(pluginId:string):PluginTranslator"
       }
     },
-    "sourceHash": "f4a89b5b7207fc02305fa9ff28fae9d156f30e2bf493dd897ac7191281ecd846"
+    "sourceHash": "02ba5239ae96cf4ae047ec6d238488b389e06d46071ef92091ffd57d1a3e394e"
   },
   "differences": [
     {

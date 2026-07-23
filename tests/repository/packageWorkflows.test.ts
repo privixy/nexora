@@ -14,6 +14,22 @@ describe("workspace package workflows", () => {
     expect(workflow).not.toMatch(/run: (npm|yarn) /);
   });
 
+  it("makes create-plugin CI self-contained before full smoke validation", () => {
+    const workflow = read(".github/workflows/ci.yml");
+    const createPluginJob = workflow.slice(workflow.indexOf("  create-plugin:"), workflow.indexOf("  rust:"));
+    const commands = [
+      "pnpm --filter @nexora/plugin-api build",
+      "pnpm --filter @nexora/plugin-api check:sync",
+      "pnpm --filter @nexora/plugin-api pack:stage",
+      "pnpm --filter @nexora/plugin-api pack:check",
+      "pnpm --filter @nexora/create-plugin check",
+    ];
+    for (const [index, command] of commands.entries()) {
+      expect(createPluginJob).toContain(`run: ${command}`);
+      if (index > 0) expect(createPluginJob.indexOf(commands[index - 1]!)).toBeLessThan(createPluginJob.indexOf(command));
+    }
+  });
+
   it("runs the complete plugin contract in package-plan lifecycle order", () => {
     const rootPackage = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
     expect(rootPackage.scripts["test:plugin-contract"]).toBe(

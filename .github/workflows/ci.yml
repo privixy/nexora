@@ -76,6 +76,10 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
       - uses: dtolnay/rust-toolchain@stable
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @nexora/plugin-api build
+      - run: pnpm --filter @nexora/plugin-api check:sync
+      - run: pnpm --filter @nexora/plugin-api pack:stage
+      - run: pnpm --filter @nexora/plugin-api pack:check
       - run: pnpm --filter @nexora/create-plugin check
   rust:
     runs-on: ubuntu-latest

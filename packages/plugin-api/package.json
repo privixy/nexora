@@ -34,13 +34,14 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "vitest run --exclude tests/package-lifecycle.test.ts",
+    "test": "vitest run --exclude tests/package-lifecycle.test.ts --exclude tests/emitted-contract.test.ts",
+    "test:emitted": "vitest run tests/emitted-contract.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.contract.json",
     "build": "tsup --out-dir .tmp/build",
     "check:sync": "tsx scripts/check-sync.ts",
     "pack:stage": "tsx scripts/stage-package.ts",
     "pack:check": "tsx scripts/check-package.ts",
-    "check": "pnpm test && pnpm typecheck && pnpm build && pnpm check:sync && pnpm pack:stage && pnpm pack:check",
+    "check": "pnpm test && pnpm typecheck && pnpm build && pnpm test:emitted && pnpm check:sync && pnpm pack:stage && pnpm pack:check",
     "clean": "rm -rf .tmp/build",
     "prepack": "pnpm check",
     "prepublishOnly": "pnpm check"

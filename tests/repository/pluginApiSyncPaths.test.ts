@@ -14,4 +14,9 @@ describe("plugin API host synchronization", () => {
     expect(source).toContain('"apps/desktop/src/features/plugins/lib/pluginApi.ts"');
     expect(source).not.toContain('resolve(REPO_ROOT, "src/pluginApi.ts")');
   });
+
+  it("validates the declaration emitted into the staging build", () => {
+    expect(source).toContain('resolve(packageRoot, ".tmp/build/index.d.ts")');
+    expect(source).not.toContain('resolve(packageRoot, "dist/index.d.ts")');
+  });
 });
