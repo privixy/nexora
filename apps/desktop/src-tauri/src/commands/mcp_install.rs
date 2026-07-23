@@ -276,17 +276,17 @@ pub async fn get_mcp_status<R: Runtime>(
                 "command" => c
                     .config_path
                     .as_ref()
-                    .map(|p| is_command_client_installed(p))
+                    .map(is_command_client_installed)
                     .unwrap_or(false),
                 "opencode" => c
                     .config_path
                     .as_ref()
-                    .map(|p| is_opencode_client_installed(p))
+                    .map(is_opencode_client_installed)
                     .unwrap_or(false),
                 _ => c
                     .config_path
                     .as_ref()
-                    .map(|p| is_nexora_in_mcp_servers(p))
+                    .map(is_nexora_in_mcp_servers)
                     .unwrap_or(false),
             };
             McpClientStatus {

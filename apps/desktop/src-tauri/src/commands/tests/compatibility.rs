@@ -918,7 +918,7 @@ fn cascade_delete_removes_parent_descendants_and_connections() {
         group("grand", Some("child")),
         group("sibling", None),
     ];
-    let connections = vec![
+    let connections = [
         conn("c1", Some("root")),
         conn("c2", Some("child")),
         conn("c3", Some("grand")),
@@ -953,7 +953,7 @@ fn cascade_delete_subgroup_leaves_parent_and_other_subgroups_alone() {
         group("drop", Some("root")),
         group("grand", Some("drop")),
     ];
-    let connections = vec![
+    let connections = [
         conn("c1", Some("root")),
         conn("c2", Some("drop")),
         conn("c3", Some("grand")),

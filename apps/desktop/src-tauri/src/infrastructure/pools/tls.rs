@@ -99,21 +99,21 @@ pub(crate) fn build_postgres_tls_connector(
         }
         "verify-full" => {
             // Validate certificate chain AND hostname.
-            if user_ca.is_none() {
-                // Use platform verifier for full validation.
-                ClientConfig::builder()
-                    .with_platform_verifier()
-                    .map_err(|e| format!("Failed to build platform TLS verifier: {}", e))?
-                    .with_no_client_auth()
-            } else {
+            if let Some(user_ca) = user_ca {
                 // Use custom CA with full hostname verification.
-                let roots = load_roots_from_pem(user_ca.unwrap())?;
+                let roots = load_roots_from_pem(user_ca)?;
                 let verifier = WebPkiServerVerifier::builder(Arc::new(roots))
                     .build()
                     .map_err(|e| format!("Failed to build certificate verifier: {e}"))?;
                 ClientConfig::builder()
                     .dangerous()
                     .with_custom_certificate_verifier(verifier)
+                    .with_no_client_auth()
+            } else {
+                // Use platform verifier for full validation.
+                ClientConfig::builder()
+                    .with_platform_verifier()
+                    .map_err(|e| format!("Failed to build platform TLS verifier: {}", e))?
                     .with_no_client_auth()
             }
         }

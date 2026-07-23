@@ -181,7 +181,7 @@ fn copy_icon_for_duplicate_produces_new_filename() {
     // Set up a fake source icon (a tiny PNG)
     let src_rel = "connection-icons/original-abcd.png";
     let src_path = dir.join(src_rel);
-    std::fs::write(&src_path, &[0x89, b'P', b'N', b'G', 0, 0, 0, 0, 0, 0, 0, 0]).unwrap();
+    std::fs::write(&src_path, [0x89, b'P', b'N', b'G', 0, 0, 0, 0, 0, 0, 0, 0]).unwrap();
     let new_rel =
         crate::connection_appearance::copy_icon_for_duplicate(&dir, src_rel, "newid").unwrap();
     assert_ne!(new_rel, src_rel);

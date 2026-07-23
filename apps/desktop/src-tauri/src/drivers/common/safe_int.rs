@@ -16,7 +16,7 @@ pub const JS_MAX_SAFE_UINT: u64 = 9_007_199_254_740_991;
 /// counts and timestamps as ordinary numbers.
 #[inline]
 pub fn i64_to_json(value: i64) -> JsonValue {
-    if value > JS_MAX_SAFE_INTEGER || value < -JS_MAX_SAFE_INTEGER {
+    if !(-JS_MAX_SAFE_INTEGER..=JS_MAX_SAFE_INTEGER).contains(&value) {
         JsonValue::String(value.to_string())
     } else {
         JsonValue::from(value)
@@ -49,7 +49,7 @@ pub fn u64_to_json(value: u64) -> JsonValue {
 #[inline]
 pub fn parse_unsafe_bigint_string(s: &str) -> Option<i64> {
     let parsed: i64 = s.parse().ok()?;
-    if parsed > JS_MAX_SAFE_INTEGER || parsed < -JS_MAX_SAFE_INTEGER {
+    if !(-JS_MAX_SAFE_INTEGER..=JS_MAX_SAFE_INTEGER).contains(&parsed) {
         Some(parsed)
     } else {
         None

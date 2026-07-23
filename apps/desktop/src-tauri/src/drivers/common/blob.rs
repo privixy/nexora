@@ -102,10 +102,10 @@ pub fn decode_blob_wire_format(value: &str, max_size: u64) -> Option<Vec<u8>> {
     let rest = value.strip_prefix("BLOB:")?;
 
     // Skip the size field
-    let after_size = rest.splitn(2, ':').nth(1)?;
+    let after_size = rest.split_once(':')?.1;
 
     // Skip the mime field — split only on the first colon after mime
-    let base64_data = after_size.splitn(2, ':').nth(1)?;
+    let base64_data = after_size.split_once(':')?.1;
 
     base64::Engine::decode(&base64::engine::general_purpose::STANDARD, base64_data).ok()
 }

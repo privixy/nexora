@@ -1,5 +1,3 @@
-use super::*;
-
 #[test]
 fn deferred_provider_contract_is_declared() {
     let source = include_str!("../bootstrap.rs");

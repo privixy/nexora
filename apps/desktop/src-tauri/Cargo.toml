@@ -9,6 +9,14 @@ repository = "https://github.com/privixy/nexora"
 edition = "2021"
 rust-version = "1.85"
 
+[lints.rust]
+warnings = "deny"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+too_many_arguments = "allow"
+large_enum_variant = "allow"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]

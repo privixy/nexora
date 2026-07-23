@@ -190,7 +190,7 @@ fn token_matches(tok: &str, kw: &str) -> bool {
         Some(rest) => rest
             .chars()
             .next()
-            .map_or(true, |c| !(c.is_ascii_alphanumeric() || c == '_')),
+            .is_none_or(|c| !(c.is_ascii_alphanumeric() || c == '_')),
     }
 }
 

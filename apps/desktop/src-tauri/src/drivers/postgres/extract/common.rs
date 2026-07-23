@@ -36,7 +36,7 @@ pub fn split_at_value_len<'a>(buf: &mut &'a [u8]) -> Result<Option<&'a [u8]>, ()
 
         None => {
             log::error!("Failed to split buffer at value length");
-            return Err(());
+            Err(())
         }
     }
 }

@@ -15,17 +15,10 @@ use super::{driver_map, resolve_key_path, ForeignAppImporter, ForeignImportError
 const KEYCHAIN_SERVICE: &str = "com.tableplus.TablePlus";
 const KNOWN_BUNDLE_IDS: &[&str] = &["com.tinyapp.TablePlus", "com.tinyapp.TablePlus-setapp"];
 
+#[derive(Default)]
 pub struct TablePlusImporter {
     /// Override of the TablePlus `Data` directory; `None` = auto-discover.
     data_dir_override: Option<PathBuf>,
-}
-
-impl Default for TablePlusImporter {
-    fn default() -> Self {
-        Self {
-            data_dir_override: None,
-        }
-    }
 }
 
 #[async_trait::async_trait]

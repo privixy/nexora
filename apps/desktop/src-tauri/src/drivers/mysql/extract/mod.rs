@@ -21,7 +21,7 @@ pub fn extract_value(
     let col_type = col.map(|c| c.type_info().name()).unwrap_or("unknown");
     let effective_type = resolve_effective_type(col_type, known_type);
 
-    if let Some(value_ref) = row.try_get_raw(index).ok() {
+    if let Ok(value_ref) = row.try_get_raw(index) {
         if value_ref.is_null() {
             return serde_json::Value::Null;
         }

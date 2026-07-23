@@ -18,8 +18,9 @@ fn target_interfaces_are_available() {
     let _ = std::mem::size_of::<JsonSink<Vec<u8>>>();
     let _ = std::mem::size_of::<ProgressEmitter<fn(u64)>>();
     let _ = std::mem::size_of::<SqlStatementStream<std::io::Cursor<Vec<u8>>>>();
-    let _: fn(std::fs::File, &str) -> Result<Box<dyn std::io::BufRead + Send>, String> =
-        create_sql_reader;
+    type SqlReaderFactory =
+        fn(std::fs::File, &str) -> Result<Box<dyn std::io::BufRead + Send>, String>;
+    let _: SqlReaderFactory = create_sql_reader;
     let _ = load_keybindings;
     let _ = save_keybindings;
     let _ = register_connection;

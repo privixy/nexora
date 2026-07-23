@@ -128,15 +128,17 @@ fn editor_fields_default_to_none() {
 
 #[test]
 fn editor_fields_serialize_with_camel_case() {
-    let mut config = AppConfig::default();
-    config.editor_font_family = Some("JetBrains Mono".to_string());
-    config.editor_font_size = Some(16);
-    config.editor_line_height = Some(1.5);
-    config.editor_tab_size = Some(4);
-    config.editor_word_wrap = Some(false);
-    config.editor_show_line_numbers = Some(true);
-    config.editor_theme = Some("nexora-light".to_string());
-    config.editor_accept_suggestion_on_enter = Some(true);
+    let config = AppConfig {
+        editor_font_family: Some("JetBrains Mono".to_string()),
+        editor_font_size: Some(16),
+        editor_line_height: Some(1.5),
+        editor_tab_size: Some(4),
+        editor_word_wrap: Some(false),
+        editor_show_line_numbers: Some(true),
+        editor_theme: Some("nexora-light".to_string()),
+        editor_accept_suggestion_on_enter: Some(true),
+        ..Default::default()
+    };
 
     let json = serde_json::to_string(&config).unwrap();
     assert!(json.contains("editorFontFamily"));
@@ -200,17 +202,19 @@ fn ai_safety_fields_default_to_none() {
 
 #[test]
 fn ai_safety_fields_serialize_with_camel_case() {
-    let mut config = AppConfig::default();
-    config.ai_audit_enabled = Some(true);
-    config.ai_audit_max_entries = Some(1000);
-    config.ai_session_gap_minutes = Some(5);
-    config.mcp_readonly_default = Some(true);
-    config.mcp_readonly_connections = Some(vec!["c1".into()]);
-    config.mcp_approval_mode = Some("all".into());
-    config.mcp_approval_timeout_seconds = Some(60);
-    config.mcp_preflight_explain = Some(false);
-    config.mcp_approval_always_on_top = Some(true);
-    config.mcp_approval_notify_sound = Some(true);
+    let config = AppConfig {
+        ai_audit_enabled: Some(true),
+        ai_audit_max_entries: Some(1000),
+        ai_session_gap_minutes: Some(5),
+        mcp_readonly_default: Some(true),
+        mcp_readonly_connections: Some(vec!["c1".into()]),
+        mcp_approval_mode: Some("all".into()),
+        mcp_approval_timeout_seconds: Some(60),
+        mcp_preflight_explain: Some(false),
+        mcp_approval_always_on_top: Some(true),
+        mcp_approval_notify_sound: Some(true),
+        ..Default::default()
+    };
 
     let json = serde_json::to_string(&config).unwrap();
     assert!(json.contains("aiAuditEnabled"));
@@ -274,18 +278,22 @@ fn is_connection_readonly_default_false_no_override_returns_false() {
 
 #[test]
 fn is_connection_readonly_default_false_with_inclusion_list() {
-    let mut config = AppConfig::default();
-    config.mcp_readonly_default = Some(false);
-    config.mcp_readonly_connections = Some(vec!["c1".into()]);
+    let config = AppConfig {
+        mcp_readonly_default: Some(false),
+        mcp_readonly_connections: Some(vec!["c1".into()]),
+        ..Default::default()
+    };
     assert!(is_connection_readonly(&config, "c1"));
     assert!(!is_connection_readonly(&config, "c2"));
 }
 
 #[test]
 fn is_connection_readonly_default_true_with_exclusion_list() {
-    let mut config = AppConfig::default();
-    config.mcp_readonly_default = Some(true);
-    config.mcp_readonly_connections = Some(vec!["c1".into()]);
+    let config = AppConfig {
+        mcp_readonly_default: Some(true),
+        mcp_readonly_connections: Some(vec!["c1".into()]),
+        ..Default::default()
+    };
     assert!(!is_connection_readonly(&config, "c1"));
     assert!(is_connection_readonly(&config, "c2"));
 }

@@ -32,11 +32,7 @@ pub async fn get_ssh_connections<R: Runtime>(
     for ssh in &mut ssh_connections {
         if ssh.auth_type.is_none() {
             ssh.auth_type = Some(
-                if ssh
-                    .key_file
-                    .as_ref()
-                    .map_or(false, |k| !k.trim().is_empty())
-                {
+                if ssh.key_file.as_ref().is_some_and(|k| !k.trim().is_empty()) {
                     "ssh_key".to_string()
                 } else {
                     "password".to_string()

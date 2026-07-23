@@ -517,7 +517,7 @@ async fn exec_on_sqlite_conn(
     if !crate::drivers::common::returns_result_set(query) {
         use sqlx::Executor;
         let exec_result = conn
-            .execute(sqlx::query(&query))
+            .execute(sqlx::query(query))
             .await
             .map_err(|e| e.to_string())?;
         return Ok(QueryResult {
@@ -535,9 +535,7 @@ async fn exec_on_sqlite_conn(
     let final_query: String;
     let mut manual_limit = limit;
 
-    if is_select && limit.is_some() {
-        let l = limit.unwrap();
-
+    if let (true, Some(l)) = (is_select, limit) {
         final_query = crate::drivers::common::build_paginated_query(query, l, page);
 
         pagination = Some(Pagination {
@@ -614,7 +612,7 @@ pub async fn execute_query(
 ) -> Result<QueryResult, String> {
     let pool = get_sqlite_pool(params).await?;
     let mut conn = pool.acquire().await.map_err(|e| e.to_string())?;
-    exec_on_sqlite_conn(&mut *conn, query, limit, page).await
+    exec_on_sqlite_conn(&mut conn, query, limit, page).await
 }
 
 /// Runs a sequence of statements on a single pooled connection so
@@ -633,7 +631,7 @@ pub async fn execute_batch(
     let mut results = Vec::with_capacity(queries.len());
     for (idx, q) in queries.iter().enumerate() {
         let start = std::time::Instant::now();
-        let outcome = exec_on_sqlite_conn(&mut *conn, q, limit, page).await;
+        let outcome = exec_on_sqlite_conn(&mut conn, q, limit, page).await;
         let res = crate::models::BatchStatementResult::from_outcome(start, outcome);
         if let Some(cb) = on_progress {
             cb(idx, &res);
@@ -831,7 +829,7 @@ pub async fn get_trigger_definition(
 
 pub async fn create_trigger(params: &ConnectionParams, trigger_sql: &str) -> Result<(), String> {
     let pool = get_sqlite_pool(params).await?;
-    sqlx::query(&trigger_sql)
+    sqlx::query(trigger_sql)
         .execute(&pool)
         .await
         .map_err(|e| format!("Failed to create trigger: {}", e))?;
@@ -863,6 +861,12 @@ use std::collections::HashMap;
 
 pub struct SqliteDriver {
     manifest: PluginManifest,
+}
+
+impl Default for SqliteDriver {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl SqliteDriver {
@@ -1243,7 +1247,7 @@ impl DatabaseDriver for SqliteDriver {
                     def.push_str(" AUTOINCREMENT");
                 }
             }
-            if !col.is_nullable && !(col.is_pk && single_pk) {
+            if !(col.is_nullable || col.is_pk && single_pk) {
                 def.push_str(" NOT NULL");
             }
             if let Some(default) = &col.default_value {

@@ -5,7 +5,7 @@ use crate::drivers::postgres::extract::common::split_at_value_len;
 
 #[inline]
 pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
-    if buf.len() < 1 {
+    if buf.is_empty() {
         return JsonValue::Null;
     };
 
@@ -20,21 +20,17 @@ pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
 
     range.push(get_lower_bound(flag));
 
-    if flag & (1 << 3) == 0 {
-        if let Err(_) = try_extract_bound_into(ty, buf, &mut range) {
-            range.push_str("null, null");
-            range.push(get_upper_bound(flag));
-            return JsonValue::String(range);
-        };
-    };
+    if flag & (1 << 3) == 0 && try_extract_bound_into(ty, buf, &mut range).is_err() {
+        range.push_str("null, null");
+        range.push(get_upper_bound(flag));
+        return JsonValue::String(range);
+    }
 
     range.push_str(", ");
 
-    if flag & (1 << 4) == 0 {
-        if let Err(_) = try_extract_bound_into(ty, buf, &mut range) {
-            range.push_str("null");
-        };
-    }
+    if flag & (1 << 4) == 0 && try_extract_bound_into(ty, buf, &mut range).is_err() {
+        range.push_str("null");
+    };
 
     range.push(get_upper_bound(flag));
 

@@ -101,13 +101,13 @@ async fn execute_with_driver(
         match req.if_exists {
             IfExistsStrategy::Replace => {
                 let drop_sql = format!("DROP TABLE IF EXISTS {}", tbl_ref);
-                drv.execute_query(&params, &drop_sql, None, 1, schema_ref)
+                drv.execute_query(params, &drop_sql, None, 1, schema_ref)
                     .await
                     .map_err(|e| format!("Failed to drop existing table: {e}"))?;
             }
             IfExistsStrategy::Append => {
-                add_new_columns(drv, &params, &req, schema_ref, &tbl_ref).await?;
-                return insert_rows(drv, &params, &req, schema_ref, &tbl_ref, false).await;
+                add_new_columns(drv, params, req, schema_ref, &tbl_ref).await?;
+                return insert_rows(drv, params, req, schema_ref, &tbl_ref, false).await;
             }
             IfExistsStrategy::Fail => {}
         }
@@ -118,16 +118,16 @@ async fn execute_with_driver(
             .map_err(|e| format!("Failed to generate CREATE TABLE SQL: {e}"))?;
 
         for stmt in &stmts {
-            drv.execute_query(&params, stmt, None, 1, schema_ref)
+            drv.execute_query(params, stmt, None, 1, schema_ref)
                 .await
                 .map_err(|e| format!("Failed to create table: {e}"))?;
         }
         table_created = true;
     } else {
-        add_new_columns(drv, &params, &req, schema_ref, &tbl_ref).await?;
+        add_new_columns(drv, params, req, schema_ref, &tbl_ref).await?;
     }
 
-    insert_rows(drv, &params, &req, schema_ref, &tbl_ref, table_created).await
+    insert_rows(drv, params, req, schema_ref, &tbl_ref, table_created).await
 }
 
 async fn add_new_columns(

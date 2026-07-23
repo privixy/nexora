@@ -29,9 +29,11 @@ fn resolution_with_id_preserves_database_and_sets_pool_identity() {
     assert_eq!(resolved.connection_id.as_deref(), Some("conn-1"));
 }
 
+type CapturedContext = (String, Option<String>, Option<String>, Option<String>);
+
 #[derive(Default)]
 struct CapturingResolver {
-    contexts: std::sync::Mutex<Vec<(String, Option<String>, Option<String>, Option<String>)>>,
+    contexts: std::sync::Mutex<Vec<CapturedContext>>,
 }
 
 #[async_trait::async_trait]

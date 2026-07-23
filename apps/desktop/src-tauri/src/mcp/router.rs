@@ -104,11 +104,7 @@ async fn expand_ssh_params_for_mcp(
 
     if ssh.auth_type.is_none() {
         ssh.auth_type = Some(
-            if ssh
-                .key_file
-                .as_ref()
-                .map_or(false, |k| !k.trim().is_empty())
-            {
+            if ssh.key_file.as_ref().is_some_and(|k| !k.trim().is_empty()) {
                 "ssh_key".to_string()
             } else {
                 "password".to_string()
@@ -267,12 +263,6 @@ async fn resolve_db_params(
     Ok((conn, db_params))
 }
 
-/// Populate the driver registry for the standalone MCP subprocess: the three
-/// built-in drivers plus any installed plugin drivers, honoring the user's
-/// `active_external_drivers` preference. Without this, MCP can only reach
-/// mysql/postgres/sqlite connections — every other driver fails with
-/// "Unsupported driver".
-
 /// Resolve the driver for an MCP-known connection. Returns the connection,
 /// the resolved DB params, and the registered driver. Errors with a JSON-RPC
 /// "Unsupported driver" payload when no driver matches the connection's
@@ -312,9 +302,9 @@ pub(crate) async fn run_mcp_server() {
 
     let stdin = io::stdin();
     let mut stdout = io::stdout();
-    let mut iterator = stdin.lock().lines();
+    let iterator = stdin.lock().lines();
 
-    while let Some(line_result) = iterator.next() {
+    for line_result in iterator {
         match line_result {
             Ok(line) => {
                 if line.trim().is_empty() {

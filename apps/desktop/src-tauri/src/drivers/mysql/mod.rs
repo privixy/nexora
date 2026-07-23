@@ -438,10 +438,7 @@ pub async fn get_all_columns_batch(
             character_maximum_length,
         };
 
-        result
-            .entry(table_name)
-            .or_insert_with(Vec::new)
-            .push(column);
+        result.entry(table_name).or_default().push(column);
     }
 
     Ok(result)
@@ -491,7 +488,7 @@ pub async fn get_all_foreign_keys_batch(
             on_delete: mysql_row_str_opt(row, 6),
         };
 
-        result.entry(table_name).or_insert_with(Vec::new).push(fk);
+        result.entry(table_name).or_default().push(fk);
     }
 
     Ok(result)
@@ -1115,15 +1112,13 @@ pub async fn get_routine_parameters(
     if let Some(info) = routine_info {
         let data_type = mysql_row_str(&info, 0);
         let routine_type = mysql_row_str(&info, 1);
-        if routine_type == "FUNCTION" {
-            if !data_type.is_empty() {
-                parameters.push(RoutineParameter {
-                    name: "".to_string(), // Empty name for return value
-                    data_type,
-                    mode: "OUT".to_string(),
-                    ordinal_position: 0,
-                });
-            }
+        if routine_type == "FUNCTION" && !data_type.is_empty() {
+            parameters.push(RoutineParameter {
+                name: "".to_string(), // Empty name for return value
+                data_type,
+                mode: "OUT".to_string(),
+                ordinal_position: 0,
+            });
         }
     }
 
@@ -1245,9 +1240,7 @@ async fn exec_on_mysql_conn(
     let mut manual_limit = limit;
     let mut truncated = false;
 
-    if is_select && limit.is_some() {
-        let l = limit.unwrap();
-
+    if let (true, Some(l)) = (is_select, limit) {
         final_query = crate::drivers::common::build_paginated_query(query, l, page);
 
         pagination = Some(Pagination {
@@ -1369,7 +1362,7 @@ pub async fn execute_query(
     // `exec_on_mysql_conn` runs the user's SQL verbatim (no literal inlining),
     // so it only needs to know whether to use the text protocol.
     let text = TextProto::protocol_only(force_text_protocol(params));
-    exec_on_mysql_conn(&mut *conn, query, limit, page, text).await
+    exec_on_mysql_conn(&mut conn, query, limit, page, text).await
 }
 
 /// Runs a sequence of statements on a single pooled connection so that
@@ -1396,7 +1389,7 @@ pub async fn execute_batch(
     let mut results = Vec::with_capacity(queries.len());
     for (idx, q) in queries.iter().enumerate() {
         let start = std::time::Instant::now();
-        let outcome = exec_on_mysql_conn(&mut *conn, q, limit, page, text).await;
+        let outcome = exec_on_mysql_conn(&mut conn, q, limit, page, text).await;
         let res = crate::models::BatchStatementResult::from_outcome(start, outcome);
         if let Some(cb) = on_progress {
             cb(idx, &res);
@@ -1545,6 +1538,12 @@ fn mysql_numeric_setting(key: &str, default: u64) -> u64 {
 
 pub struct MysqlDriver {
     manifest: PluginManifest,
+}
+
+impl Default for MysqlDriver {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MysqlDriver {

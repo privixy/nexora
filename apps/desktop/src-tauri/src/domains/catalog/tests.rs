@@ -1,5 +1,3 @@
-use super::*;
-
 #[test]
 fn catalog_service_is_tauri_independent_and_owns_driver_delegation() {
     let source = include_str!("mod.rs");

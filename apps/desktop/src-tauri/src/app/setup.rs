@@ -8,15 +8,15 @@ pub(crate) fn attach_setup(
         crate::askpass::set_app_handle(app.handle().clone());
 
         let active_ext_drivers =
-            crate::config::load_config_internal(&app.handle()).active_external_drivers;
+            crate::config::load_config_internal(app.handle()).active_external_drivers;
 
         tauri::async_runtime::block_on(crate::drivers::bootstrap::register_all_drivers(|| {
-            let config = crate::config::load_config_internal(&app.handle());
+            let config = crate::config::load_config_internal(app.handle());
             (config.plugins.unwrap_or_default(), active_ext_drivers)
         }));
 
         {
-            let config = crate::config::load_config_internal(&app.handle());
+            let config = crate::config::load_config_internal(app.handle());
             let interval = config
                 .ping_interval
                 .unwrap_or(crate::health_check::DEFAULT_PING_INTERVAL);
@@ -29,7 +29,7 @@ pub(crate) fn attach_setup(
         crate::ai_approval_watcher::spawn(app.handle().clone());
         crate::heartbeat::spawn();
 
-        if crate::config::load_config_internal(&app.handle())
+        if crate::config::load_config_internal(app.handle())
             .start_maximized
             .unwrap_or(false)
         {

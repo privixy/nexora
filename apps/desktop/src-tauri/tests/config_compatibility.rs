@@ -18,15 +18,15 @@ fn public_config_api_remains_available() {
     assert!(!is_connection_readonly(&config, "connection-1"));
     assert!(plugin.interpreter.is_none());
     assert!(!status.configured);
-    assert!(DEFAULT_AI_AUDIT_ENABLED);
+    assert_eq!(DEFAULT_AI_AUDIT_ENABLED.to_string(), "true");
     assert_eq!(DEFAULT_AI_AUDIT_MAX_ENTRIES, 5000);
     assert_eq!(DEFAULT_AI_SESSION_GAP_MINUTES, 10);
-    assert!(!DEFAULT_MCP_READONLY_DEFAULT);
+    assert_eq!(DEFAULT_MCP_READONLY_DEFAULT.to_string(), "false");
     assert_eq!(DEFAULT_MCP_APPROVAL_MODE, "writes_only");
     assert_eq!(DEFAULT_MCP_APPROVAL_TIMEOUT_SECONDS, 120);
-    assert!(DEFAULT_MCP_PREFLIGHT_EXPLAIN);
-    assert!(DEFAULT_MCP_APPROVAL_ALWAYS_ON_TOP);
-    assert!(DEFAULT_MCP_APPROVAL_NOTIFY_SOUND);
+    assert_eq!(DEFAULT_MCP_PREFLIGHT_EXPLAIN.to_string(), "true");
+    assert_eq!(DEFAULT_MCP_APPROVAL_ALWAYS_ON_TOP.to_string(), "true");
+    assert_eq!(DEFAULT_MCP_APPROVAL_NOTIFY_SOUND.to_string(), "true");
 }
 
 #[test]

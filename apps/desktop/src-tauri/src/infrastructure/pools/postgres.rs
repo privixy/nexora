@@ -8,7 +8,7 @@ pub(crate) fn build_postgres_configurations(params: &ConnectionParams) -> PgConf
         .password(params.password.as_deref().unwrap_or_default())
         .port(params.port.unwrap_or(5432))
         .host(params.host.as_deref().unwrap_or_default())
-        .dbname(&format!("{}", params.database));
+        .dbname(format!("{}", params.database));
 
     if let Some(ssl_mode) = params.ssl_mode.as_deref() {
         match ssl_mode {

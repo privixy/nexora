@@ -21,14 +21,14 @@ pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
 
     for _ in 0..count - 1 {
         // skip range length
-        if let Err(_) = advance_buf(buf, 4) {
+        if advance_buf(buf, 4).is_err() {
             ranges.push('}');
             return JsonValue::String(ranges);
         };
 
         match super::range::extract_or_null(ty, buf) {
             JsonValue::String(r) => ranges.push_str(&r),
-            r @ _ => {
+            r => {
                 log::error!("range::extract_or_null must return a string or null");
                 ranges.push_str(&r.to_string())
             }
@@ -38,14 +38,14 @@ pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
     }
 
     // skip range length
-    if let Err(_) = advance_buf(buf, 4) {
+    if advance_buf(buf, 4).is_err() {
         ranges.push('}');
         return JsonValue::String(ranges);
     };
 
     match super::range::extract_or_null(ty, buf) {
         JsonValue::String(r) => ranges.push_str(&r),
-        r @ _ => {
+        r => {
             log::error!("range::extract_or_null must return a string or null");
             ranges.push_str(&r.to_string())
         }

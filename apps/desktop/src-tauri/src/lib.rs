@@ -87,7 +87,7 @@ pub fn run() {
     #[cfg(target_os = "linux")]
     {
         if std::env::var("WAYLAND_DISPLAY").is_ok()
-            || std::env::var("XDG_SESSION_TYPE").map_or(false, |v| v == "wayland")
+            || std::env::var("XDG_SESSION_TYPE").is_ok_and(|v| v == "wayland")
         {
             std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
         }

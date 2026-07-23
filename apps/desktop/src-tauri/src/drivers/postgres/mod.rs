@@ -130,7 +130,7 @@ pub async fn get_columns(
         ORDER BY c.ordinal_position
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema, &table_name]).await?;
+    let rows = query_all(&pool, query, &[&schema, &table_name]).await?;
 
     Ok(rows
         .iter()
@@ -223,7 +223,7 @@ pub async fn get_foreign_keys(
         ORDER BY con.conname, cols.src_attnum
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema, &table_name]).await?;
+    let rows = query_all(&pool, query, &[&schema, &table_name]).await?;
 
     Ok(rows
         .iter()
@@ -272,7 +272,7 @@ pub async fn get_all_columns_batch(
         ORDER BY c.table_name, c.ordinal_position
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema]).await?;
+    let rows = query_all(&pool, query, &[&schema]).await?;
 
     let mut result: HashMap<String, Vec<TableColumn>> = HashMap::new();
 
@@ -314,10 +314,7 @@ pub async fn get_all_columns_batch(
             character_maximum_length,
         };
 
-        result
-            .entry(table_name)
-            .or_insert_with(Vec::new)
-            .push(column);
+        result.entry(table_name).or_default().push(column);
     }
 
     Ok(result)
@@ -373,7 +370,7 @@ pub async fn get_all_foreign_keys_batch(
         ORDER BY src_cl.relname, con.conname, cols.src_attnum
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema]).await?;
+    let rows = query_all(&pool, query, &[&schema]).await?;
 
     let mut result: HashMap<String, Vec<ForeignKey>> = HashMap::new();
 
@@ -389,7 +386,7 @@ pub async fn get_all_foreign_keys_batch(
             on_delete: row.try_get("delete_rule").ok(),
         };
 
-        result.entry(table_name).or_insert_with(Vec::new).push(fk);
+        result.entry(table_name).or_default().push(fk);
     }
 
     Ok(result)
@@ -425,7 +422,7 @@ pub async fn get_indexes(
             seq_in_index
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema, &table_name]).await?;
+    let rows = query_all(&pool, query, &[&schema, &table_name]).await?;
 
     Ok(rows
         .iter()
@@ -928,8 +925,7 @@ async fn exec_on_pg_client(
     let mut manual_limit = limit;
     let mut truncated = false;
 
-    let (final_query, pagination_meta) = if is_select && limit.is_some() {
-        let l = limit.unwrap();
+    let (final_query, pagination_meta) = if let (true, Some(l)) = (is_select, limit) {
         let data_query = crate::drivers::common::build_paginated_query(query, l, page);
         manual_limit = None;
         (data_query, Some((l, page)))
@@ -1212,7 +1208,7 @@ pub async fn get_view_columns(
         ORDER BY c.ordinal_position
     "#;
 
-    let rows = query_all(&pool, &query, &[&schema, &view_name]).await?;
+    let rows = query_all(&pool, query, &[&schema, &view_name]).await?;
 
     Ok(rows
         .iter()
@@ -1512,7 +1508,7 @@ pub async fn get_routine_definition(
             LIMIT 1
         "#;
 
-    let row = query_one(&pool, &query, &[&schema, &routine_name]).await?;
+    let row = query_one(&pool, query, &[&schema, &routine_name]).await?;
 
     let definition: String = row.try_get("definition").unwrap_or_default();
     Ok(definition)
@@ -1667,6 +1663,12 @@ use std::collections::HashMap;
 
 pub struct PostgresDriver {
     manifest: PluginManifest,
+}
+
+impl Default for PostgresDriver {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl PostgresDriver {

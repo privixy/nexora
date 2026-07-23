@@ -4,8 +4,8 @@ use tokio_postgres::types::{Field, Kind};
 use super::common::split_at_value_len;
 
 #[inline]
-pub fn extract_or_null(fields: &Vec<Field>, buf: &mut &[u8]) -> JsonValue {
-    if buf.len() == 0 {
+pub fn extract_or_null(fields: &[Field], buf: &mut &[u8]) -> JsonValue {
+    if buf.is_empty() {
         // receiving an empty buffer is an error but it indicates a null value
         // log::error!("received empty buffer");
         return JsonValue::Null;
@@ -18,13 +18,9 @@ pub fn extract_or_null(fields: &Vec<Field>, buf: &mut &[u8]) -> JsonValue {
     JsonValue::Object(map)
 }
 
-fn extract_or_fill_nulls_into(
-    fields: &Vec<Field>,
-    buf: &mut &[u8],
-    map: &mut Map<String, JsonValue>,
-) {
+fn extract_or_fill_nulls_into(fields: &[Field], buf: &mut &[u8], map: &mut Map<String, JsonValue>) {
     // skip the composite length we already have fields
-    if let Err(_) = super::common::advance_buf(buf, 4) {
+    if super::common::advance_buf(buf, 4).is_err() {
         fill_nulls(fields, map);
         return;
     };
@@ -34,7 +30,7 @@ fn extract_or_fill_nulls_into(
         field = &fields[i];
 
         // skip the field type OID
-        if let Err(_) = super::common::advance_buf(buf, 4) {
+        if super::common::advance_buf(buf, 4).is_err() {
             fill_nulls(&fields[i..], map);
             return;
         }

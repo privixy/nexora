@@ -116,11 +116,10 @@ pub async fn open_json_viewer_window(
         None => format!("{} \u{2014} JSON Viewer", col_name),
     };
 
-    let remembered = store
+    let remembered = *store
         .last_bounds
         .lock()
-        .map_err(|e| format!("Failed to acquire bounds lock: {}", e))?
-        .clone();
+        .map_err(|e| format!("Failed to acquire bounds lock: {}", e))?;
 
     let mut builder = WebviewWindowBuilder::new(&app, &window_label, WebviewUrl::App(url.into()))
         .title(&title)

@@ -49,9 +49,6 @@ impl Default for QueryCancellationState {
     }
 }
 
-/// Trims trailing semicolons and normalises Unicode smart quotes that some
-/// editors insert when the user pastes a query. Called on every query the
-/// UI hands off to a driver.
 // --- Persistence Helpers ---
 
 /// Check if a string option is empty or contains only whitespace.
@@ -281,29 +278,6 @@ pub(crate) fn get_k8s_config_path<R: Runtime>(app: &AppHandle<R>) -> Result<Path
     Ok(config_dir.join("k8s_connections.json"))
 }
 
-/// Fetches a BLOB column from the database and returns it as a data: URL for image preview.
-/// Same query logic as save_blob_to_file but returns the data in-memory instead of writing to disk.
-
-/// Detects the MIME type of base64-encoded binary data using magic-byte analysis
-/// and returns the canonical blob wire format: "BLOB:<size>:<mime>:<base64>".
-/// Called by the frontend after the user selects a file to upload.
-
-/// Prepares a file for BLOB upload by returning only metadata and a file reference.
-/// The actual file content is NOT transferred over IPC, avoiding massive string allocations.
-/// The file content will be read directly from disk when needed (e.g., during INSERT/UPDATE).
-/// Returns a special "BLOB_FILE_REF" format that includes file path, size, and MIME type.
-
-/// Detects the MIME type from a small base64-encoded header (first ~8KB).
-/// Returns only the MIME type string — the frontend constructs the wire format
-/// locally, avoiding a full round-trip of the entire file over IPC.
-
-/// Gets file statistics (size and MIME type) without reading the entire file.
-/// Used after streaming upload to construct the final wire format.
-
-/// Reads a file from disk and returns it as a base64-encoded data URL.
-/// Used for image preview of BLOB_FILE_REF values without requiring frontend FS permissions.
-/// Only available for image files; returns an error for non-image MIME types.
-
 pub(crate) fn cancel_query_impl(
     state: &QueryCancellationState,
     connection_id: &str,
@@ -331,35 +305,11 @@ pub(crate) struct BatchStatementEvent<'a> {
     pub(crate) statement: &'a BatchStatementResult,
 }
 
-/// Runs a sequence of statements that share a single physical database
-/// connection. Use this — not multiple parallel `execute_query` calls —
-/// whenever statements depend on connection-local session state
-/// (`SET @var`, `LAST_INSERT_ID()` / `LASTVAL()`, `BEGIN`/`COMMIT`,
-/// `TEMPORARY TABLE`, `PREPARE`/`EXECUTE`, `SET FOREIGN_KEY_CHECKS = 0`).
-///
-/// The whole batch shares one cancellation handle so `cancel_query`
-/// aborts the entire batch atomically.
-///
-/// When `batch_id` is supplied, a `batch-statement-complete` event is emitted
-/// after each statement so the UI updates result tabs progressively. The full
-/// `Vec` is still returned at the end for final reconciliation / fallback.
-
 // --- Explain Query Plan ---
 
 // --- Count Query ---
 
 // --- Window Title Management ---
-
-/// Sets the window title with Wayland workaround
-///
-/// WORKAROUND: This is a temporary fix for tauri-apps/tauri#13749
-/// On Wayland (Linux), the standard `window.setTitle()` API doesn't properly update
-/// the window title in the window manager's title bar due to an upstream dependency issue.
-/// This command directly manipulates the GTK HeaderBar to ensure the title is visible.
-///
-/// See: https://github.com/tauri-apps/tauri/issues/13749
-///
-/// This workaround should be removed once the upstream issue is resolved.
 
 /// Builds a connection URL for a database driver.
 #[cfg(test)]
@@ -476,17 +426,7 @@ pub(crate) fn resolve_ssh_test_password(
 
 // ==================== View Management Commands ====================
 
-/// Register a connection as active for health-check pinging.
-
-/// Snapshot of connection ids currently open in the shared backend (across all
-/// windows). Used by each window to render cross-window connection status.
-
-/// Disconnect from a database connection by closing its connection pool
-
 // --- Type Registry ---
-
-/// Maps generic inferred types (emitted by the clipboard parser) to
-/// driver-specific type names. Returns names in the same order as `kinds`.
 
 // --- DDL generation commands ---
 
@@ -518,17 +458,6 @@ pub(crate) fn find_child_group<'a>(
         .iter()
         .find(|g| g.name.to_lowercase() == name_lower && g.parent_id == *parent_id)
 }
-
-/// Creates a nested group hierarchy from a `/`-separated path.
-///
-/// Each segment of `path` becomes one group. Existing segments are reused
-/// (looked up case-insensitively among the children of the current parent);
-/// missing segments are created in order. The final segment is returned.
-/// The hierarchy is created atomically: either every missing segment is
-/// persisted or none are.
-
-/// Re-parent a group. Pass `Some(id)` to make it a child of that group,
-/// or `None` to make it a top-level root. Cycles are rejected.
 
 /// Reject re-parenting that would create a cycle: `target` must not be a
 /// descendant of `group_id`. Walks up from `target` looking for `group_id`.

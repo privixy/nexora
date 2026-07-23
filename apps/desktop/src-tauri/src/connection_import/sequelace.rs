@@ -12,16 +12,9 @@ use super::types::{
 };
 use super::{resolve_key_path, ForeignAppImporter, ForeignImportError};
 
+#[derive(Default)]
 pub struct SequelAceImporter {
     favorites_override: Option<PathBuf>,
-}
-
-impl Default for SequelAceImporter {
-    fn default() -> Self {
-        Self {
-            favorites_override: None,
-        }
-    }
 }
 
 #[async_trait::async_trait]

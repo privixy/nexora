@@ -246,14 +246,12 @@ impl SshTunnel {
             let log = stdout_log.clone();
             thread::spawn(move || {
                 let reader = BufReader::new(stdout);
-                for line in reader.lines() {
-                    if let Ok(l) = line {
-                        #[cfg(debug_assertions)]
-                        println!("[SSH System Out] {}", l);
+                for l in reader.lines().map_while(Result::ok) {
+                    #[cfg(debug_assertions)]
+                    println!("[SSH System Out] {}", l);
 
-                        if let Ok(mut g) = log.lock() {
-                            g.push(l);
-                        }
+                    if let Ok(mut g) = log.lock() {
+                        g.push(l);
                     }
                 }
             });
@@ -263,14 +261,12 @@ impl SshTunnel {
             let log = stderr_log.clone();
             thread::spawn(move || {
                 let reader = BufReader::new(stderr);
-                for line in reader.lines() {
-                    if let Ok(l) = line {
-                        #[cfg(debug_assertions)]
-                        eprintln!("[SSH System Err] {}", l);
+                for l in reader.lines().map_while(Result::ok) {
+                    #[cfg(debug_assertions)]
+                    eprintln!("[SSH System Err] {}", l);
 
-                        if let Ok(mut g) = log.lock() {
-                            g.push(l);
-                        }
+                    if let Ok(mut g) = log.lock() {
+                        g.push(l);
                     }
                 }
             });

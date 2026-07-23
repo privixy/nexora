@@ -45,7 +45,7 @@ fn records_manifest_fixture_deserialization_and_defaults() {
 
     let minimal = parse(fixtures[0].0);
     assert_eq!(minimal.id, "fixture-driver");
-    assert_eq!(minimal.capabilities.connection_string, true);
+    assert!(minimal.capabilities.connection_string);
     assert!(minimal.ui_extensions.is_none());
 
     assert!(serde_json::from_str::<ConfigManifest>(fixtures[2].0).is_err());

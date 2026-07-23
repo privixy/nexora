@@ -5,7 +5,7 @@ use super::common::split_at_value_len;
 
 pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
     // array must be at least 12 bytes (header) except if it is `NULL`
-    if buf.len() == 0 {
+    if buf.is_empty() {
         return JsonValue::Null;
     };
 
@@ -90,7 +90,7 @@ pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
 
     let mut vec = Vec::with_capacity(arr_lengths[0]);
 
-    let _ = extract_recursively_or_fill_nulls_into(&mut vec, &arr_lengths, 1, &ty, buf);
+    let _ = extract_recursively_or_fill_nulls_into(&mut vec, &arr_lengths, 1, ty, buf);
 
     JsonValue::Array(vec)
 }
@@ -122,13 +122,15 @@ fn extract_recursively_or_fill_nulls_into(
             let len = arr_lengths[depth - 1];
             for i in 0..len {
                 let mut sub_vec = Vec::with_capacity(len);
-                if let Err(_) = extract_recursively_or_fill_nulls_into(
+                if extract_recursively_or_fill_nulls_into(
                     &mut sub_vec,
                     arr_lengths,
                     depth + 1,
                     ty,
                     buf,
-                ) {
+                )
+                .is_err()
+                {
                     vec.push(JsonValue::Array(sub_vec));
                     fill_nulls(vec, len - 1 - i);
                     return Err(());

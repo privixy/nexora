@@ -65,10 +65,7 @@ impl<'a> FromSql<'a> for Xid8 {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::XID8 => true,
-            _ => false,
-        }
+        matches!(*ty, Type::XID8)
     }
 }
 
@@ -100,10 +97,7 @@ impl<'a> FromSql<'a> for Tid {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::TID => true,
-            _ => false,
-        }
+        matches!(*ty, Type::TID)
     }
 }
 
@@ -144,10 +138,7 @@ impl<'a> FromSql<'a> for Point {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::POINT => true,
-            _ => false,
-        }
+        matches!(*ty, Type::POINT)
     }
 }
 
@@ -179,10 +170,7 @@ impl<'a> FromSql<'a> for Lseg {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::LSEG => true,
-            _ => false,
-        }
+        matches!(*ty, Type::LSEG)
     }
 }
 
@@ -217,10 +205,7 @@ impl<'a> FromSql<'a> for PgBox {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::BOX => true,
-            _ => false,
-        }
+        matches!(*ty, Type::BOX)
     }
 }
 
@@ -276,9 +261,9 @@ impl<'a> FromSql<'a> for Polygon {
         }
 
         let mut points = Vec::with_capacity(num_points);
-        let mut buf = raw[4..].chunks_exact(16);
+        let buf = raw[4..].chunks_exact(16);
 
-        while let Some(chunk) = buf.next() {
+        for chunk in buf {
             points.push(Point::extract(chunk)?);
         }
 
@@ -286,10 +271,7 @@ impl<'a> FromSql<'a> for Polygon {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::POLYGON => true,
-            _ => false,
-        }
+        matches!(*ty, Type::POLYGON)
     }
 }
 
@@ -360,8 +342,8 @@ impl<'a> FromSql<'a> for Path {
         }
 
         let mut points = Vec::with_capacity(num_points);
-        let mut buf = raw[5..].chunks_exact(16);
-        while let Some(chunk) = buf.next() {
+        let buf = raw[5..].chunks_exact(16);
+        for chunk in buf {
             points.push(Point::extract(chunk)?);
         }
 
@@ -369,10 +351,7 @@ impl<'a> FromSql<'a> for Path {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::PATH => true,
-            _ => false,
-        }
+        matches!(*ty, Type::PATH)
     }
 }
 
@@ -424,10 +403,7 @@ impl<'a> FromSql<'a> for Line {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::LINE => true,
-            _ => false,
-        }
+        matches!(*ty, Type::LINE)
     }
 }
 
@@ -455,10 +431,7 @@ impl<'a> FromSql<'a> for Circle {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::CIRCLE => true,
-            _ => false,
-        }
+        matches!(*ty, Type::CIRCLE)
     }
 }
 
@@ -489,10 +462,7 @@ impl<'a> FromSql<'a> for MacAddr {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::MACADDR => true,
-            _ => false,
-        }
+        matches!(*ty, Type::MACADDR)
     }
 }
 
@@ -526,10 +496,7 @@ impl<'a> FromSql<'a> for MacAddr8 {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::MACADDR8 => true,
-            _ => false,
-        }
+        matches!(*ty, Type::MACADDR8)
     }
 }
 
@@ -605,21 +572,16 @@ impl<'a> FromSql<'a> for CidrOrInet {
                 Ok(Self { addr, netmask })
             }
 
-            _ => {
-                return Err(format!(
-                    "expected IP family to be 2 (IPv4) or 3 (IPv6) got {}",
-                    family
-                )
-                .into())
-            }
+            _ => Err(format!(
+                "expected IP family to be 2 (IPv4) or 3 (IPv6) got {}",
+                family
+            )
+            .into()),
         }
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::CIDR | Type::INET => true,
-            _ => false,
-        }
+        matches!(*ty, Type::CIDR | Type::INET)
     }
 }
 
@@ -686,10 +648,7 @@ impl<'a> FromSql<'a> for BitOrVarBit {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::BIT | Type::VARBIT => true,
-            _ => false,
-        }
+        matches!(*ty, Type::BIT | Type::VARBIT)
     }
 }
 
@@ -774,10 +733,7 @@ impl<'a> FromSql<'a> for TimeTz {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::TIMETZ => true,
-            _ => false,
-        }
+        matches!(*ty, Type::TIMETZ)
     }
 }
 
@@ -787,7 +743,7 @@ impl From<TimeTz> for JsonValue {
 
         if value.microseconds > 0 {
             time.push('.');
-            time.push_str(&value.microseconds.to_string().trim_end_matches('0'));
+            time.push_str(value.microseconds.to_string().trim_end_matches('0'));
         };
 
         time.push_str(&format!("{}{:02}", value.offset_sign, value.offset_hrs));
@@ -826,8 +782,8 @@ impl<'a> FromSql<'a> for Interval {
         let mut months = i32::from_be_bytes(raw[12..].try_into().unwrap());
         let mut years = 0;
 
-        if months > 11 || months < -11 {
-            years = (months / 12) as i32;
+        if !(-11..=11).contains(&months) {
+            years = months / 12;
             months %= 12;
         };
 
@@ -848,7 +804,7 @@ impl<'a> FromSql<'a> for Interval {
 
         let microseconds = (microseconds % (1000 * 1000)) as u32;
 
-        if hrs > 23 || hrs < -23 {
+        if !(-23..=23).contains(&hrs) {
             days += (hrs / 24) as i32;
             hrs %= 24;
         };
@@ -866,10 +822,7 @@ impl<'a> FromSql<'a> for Interval {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::INTERVAL => true,
-            _ => false,
-        }
+        matches!(*ty, Type::INTERVAL)
     }
 }
 
@@ -934,10 +887,7 @@ impl<'a> FromSql<'a> for Money {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::MONEY => true,
-            _ => false,
-        }
+        matches!(*ty, Type::MONEY)
     }
 }
 
@@ -986,7 +936,7 @@ pub struct JsonPath {
 
 impl<'a> FromSql<'a> for JsonPath {
     fn from_sql(_ty: &Type, raw: &[u8]) -> Result<Self, Box<dyn std::error::Error + Sync + Send>> {
-        if raw.len() < 1 {
+        if raw.is_empty() {
             return Err("invalid JSON path".into());
         }
 
@@ -999,10 +949,7 @@ impl<'a> FromSql<'a> for JsonPath {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::JSONPATH => true,
-            _ => false,
-        }
+        matches!(*ty, Type::JSONPATH)
     }
 }
 
@@ -1119,10 +1066,7 @@ impl<'a> FromSql<'a> for TsVector {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::TS_VECTOR => true,
-            _ => false,
-        }
+        matches!(*ty, Type::TS_VECTOR)
     }
 }
 
@@ -1144,7 +1088,7 @@ impl From<TsVector> for JsonValue {
                 };
             };
 
-            while let Some((position, weight)) = positions_weights.next() {
+            for (position, weight) in positions_weights {
                 s.push_str(&format!(",{}", position));
                 if weight != 'D' {
                     s.push(weight);
@@ -1185,10 +1129,7 @@ impl<'a> FromSql<'a> for TsQuery {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::TSQUERY => true,
-            _ => false,
-        }
+        matches!(*ty, Type::TSQUERY)
     }
 }
 
@@ -1224,10 +1165,7 @@ impl<'a> FromSql<'a> for GtsVector {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::GTS_VECTOR => true,
-            _ => false,
-        }
+        matches!(*ty, Type::GTS_VECTOR)
     }
 }
 
@@ -1245,7 +1183,7 @@ impl From<GtsVector> for JsonValue {
 }
 
 fn try_extract_ts_query(buf: &mut &[u8], pre_lvl: u8) -> Result<String, String> {
-    if buf.len() == 0 {
+    if buf.is_empty() {
         return Err("fail to extract ts_query: buffer is empty".into());
     };
 
@@ -1346,12 +1284,10 @@ fn try_extract_ts_query(buf: &mut &[u8], pre_lvl: u8) -> Result<String, String> 
             }
         }
 
-        _ => {
-            return Err(format!(
-                "fail to extract ts_query: expected 1 or 2 got: {}",
-                buf[0]
-            ));
-        }
+        _ => Err(format!(
+            "fail to extract ts_query: expected 1 or 2 got: {}",
+            buf[0]
+        )),
     }
 }
 
@@ -1396,10 +1332,7 @@ impl<'a> FromSql<'a> for PgLsn {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::PG_LSN => true,
-            _ => false,
-        }
+        matches!(*ty, Type::PG_LSN)
     }
 }
 
@@ -1452,7 +1385,7 @@ impl<'a> FromSql<'a> for TxidSnapshotOrPgSnapshot {
 
         let count = count as usize;
 
-        let mut chunks = (&raw[20..]).chunks_exact(8);
+        let chunks = raw[20..].chunks_exact(8);
 
         if chunks.len() < count {
             return Err(format!(
@@ -1463,9 +1396,9 @@ impl<'a> FromSql<'a> for TxidSnapshotOrPgSnapshot {
             .into());
         };
 
-        let mut active_xids = Vec::with_capacity(count as usize);
+        let mut active_xids = Vec::with_capacity(count);
 
-        while let Some(chunk) = chunks.next() {
+        for chunk in chunks {
             let xid = i64::from_be_bytes(chunk.try_into().unwrap());
             active_xids.push(xid);
         }
@@ -1478,10 +1411,7 @@ impl<'a> FromSql<'a> for TxidSnapshotOrPgSnapshot {
     }
 
     fn accepts(ty: &Type) -> bool {
-        match *ty {
-            Type::TXID_SNAPSHOT | Type::PG_SNAPSHOT => true,
-            _ => false,
-        }
+        matches!(*ty, Type::TXID_SNAPSHOT | Type::PG_SNAPSHOT)
     }
 }
 

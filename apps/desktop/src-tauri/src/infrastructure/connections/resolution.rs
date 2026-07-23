@@ -43,7 +43,7 @@ async fn get_ssh_connection_by_id<R: Runtime>(
             if ssh
                 .key_file
                 .as_ref()
-                .map_or(false, |key| !key.trim().is_empty())
+                .is_some_and(|key| !key.trim().is_empty())
             {
                 "ssh_key".to_string()
             } else {
