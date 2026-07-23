@@ -1,3 +1,5 @@
+use serde_json::Value;
+use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -10,6 +12,41 @@ fn rust_files(directory: &Path, files: &mut Vec<PathBuf>) {
             files.push(path.canonicalize().unwrap());
         }
     }
+}
+
+fn legacy_transport_owners() -> HashSet<String> {
+    let policy: Value =
+        serde_json::from_str(include_str!("../../../../architecture/policy.json")).unwrap();
+    policy["rustBackendBoundaries"]["legacyTransferOwners"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .map(|path| {
+            path.strip_prefix("apps/desktop/src-tauri/src/")
+                .unwrap()
+                .to_string()
+        })
+        .collect()
+}
+
+fn uses_builtin_driver(source: &str) -> bool {
+    let mut aliases = vec!["drivers".to_string()];
+    for statement in source.split(';') {
+        let statement = statement.split_whitespace().collect::<Vec<_>>().join(" ");
+        if let Some(alias) = statement.strip_prefix("use crate::drivers as ") {
+            aliases.push(alias.trim().to_string());
+        }
+        if statement.starts_with("use crate::drivers::{") {
+            if let Some(alias) = statement.split("self as ").nth(1) {
+                aliases.push(alias.split([',', '}']).next().unwrap().trim().to_string());
+            }
+        }
+    }
+    aliases.iter().any(|alias| {
+        ["mysql", "postgres", "sqlite"]
+            .iter()
+            .any(|driver| source.contains(&format!("{alias}::{driver}")))
+    })
 }
 
 #[test]
@@ -30,11 +67,11 @@ fn command_modules_are_recursive_thin_adapters() {
         if relative == Path::new("shared.rs") {
             violations.push("commands/shared.rs is a forbidden catch-all owner".to_string());
         }
+        if uses_builtin_driver(&source) {
+            violations.push(format!("{} imports a built-in driver", file.display()));
+        }
         for forbidden in [
             "sqlx::",
-            "crate::drivers::mysql",
-            "crate::drivers::postgres",
-            "crate::drivers::sqlite",
             "get_mysql_pool",
             "get_postgres_pool",
             "get_sqlite_pool",
@@ -51,7 +88,7 @@ fn command_modules_are_recursive_thin_adapters() {
 fn tauri_handlers_have_explicit_transport_owners() {
     let source_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
     let commands_root = source_root.join("commands").canonicalize().unwrap();
-    let approved_legacy = ["export.rs", "dump_commands.rs", "clipboard_import.rs"];
+    let approved_legacy = legacy_transport_owners();
     let mut files = Vec::new();
     rust_files(&source_root, &mut files);
 
@@ -63,9 +100,7 @@ fn tauri_handlers_have_explicit_transport_owners() {
         }
         let relative = file.strip_prefix(&source_root).unwrap();
         if !file.starts_with(&commands_root)
-            && !approved_legacy
-                .iter()
-                .any(|owner| relative == Path::new(owner))
+            && !approved_legacy.contains(&relative.to_string_lossy().to_string())
         {
             violations.push(format!(
                 "{} owns a Tauri handler outside commands or an approved legacy root owner",

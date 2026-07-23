@@ -9,12 +9,10 @@ use crate::config::{
 use crate::credential_cache;
 use crate::drivers::driver_trait::DatabaseDriver;
 use crate::drivers::registry as driver_registry;
-use crate::drivers::{mysql, postgres, sqlite};
 use crate::heartbeat;
 use crate::models::{ConnectionParams, K8sConnection, SshConnection};
 use crate::paths;
 use crate::persistence;
-use crate::plugins;
 use serde_json::{json, Value};
 use std::io::{self, BufRead, Write};
 use std::sync::Arc;

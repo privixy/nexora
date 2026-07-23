@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use serde_json::{json, Value};
+use serde_json::json;
 
 use crate::drivers::driver_trait::{DatabaseDriver, PluginManifest};
 use crate::models::{

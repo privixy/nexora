@@ -596,7 +596,7 @@
     "apps/desktop/src-tauri/src/drivers/postgres/tests.rs": 959,
     "apps/desktop/src-tauri/src/drivers/postgres/types.rs": 837,
     "apps/desktop/src-tauri/src/drivers/sqlite/mod.rs": 1412,
-    "apps/desktop/src-tauri/src/mcp/router.rs": 1148,
+    "apps/desktop/src-tauri/src/mcp/router.rs": 1146,
     "apps/desktop/src-tauri/src/plugins/rpc_driver.rs": 820,
     "apps/desktop/src-tauri/src/ssh_tunnel.rs": 852,
     "apps/desktop/src/features/explorer/components/ExplorerSidebar.tsx": 2975,

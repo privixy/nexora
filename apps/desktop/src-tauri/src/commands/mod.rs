@@ -63,6 +63,7 @@ pub use keybindings::*;
 mod windows;
 pub use windows::*;
 
+#[allow(unused_imports)]
 pub(crate) use crate::domains::connections::*;
 pub use crate::domains::connections::{apply_export_payload, QueryCancellationState};
 pub(crate) use crate::infrastructure::cancellation::{

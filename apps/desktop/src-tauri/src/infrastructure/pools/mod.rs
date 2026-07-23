@@ -35,6 +35,7 @@ use tokio_postgres_rustls::MakeRustlsConnect;
 pub(crate) use key::build_connection_key;
 pub(crate) use mysql::{build_mysql_options, is_pipes_as_concat_unsupported};
 pub use mysql::{get_mysql_pool, get_mysql_pool_for_database, get_mysql_pool_with_id};
+#[allow(unused_imports)]
 pub(crate) use postgres::build_postgres_configurations;
 pub use postgres::{get_postgres_pool, get_postgres_pool_with_id};
 pub use registry::{
@@ -46,7 +47,9 @@ use startup_script::{
     run_mysql_startup_script, run_postgres_startup_script, run_sqlite_startup_script,
     startup_script, startup_script_error,
 };
-pub(crate) use tls::{build_postgres_tls_connector, format_error_chain, load_roots_from_pem};
+#[allow(unused_imports)]
+pub(crate) use tls::load_roots_from_pem;
+pub(crate) use tls::{build_postgres_tls_connector, format_error_chain};
 
 #[cfg(test)]
 mod tests;

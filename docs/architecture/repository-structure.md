@@ -6,7 +6,7 @@ Foundation architecture guards are current and enforced through `pnpm check:arch
 
 ## Target state
 
-The frontend modularization target is the current enforced structure. App shell, configuration, localization, styles, and cross-feature dependency injection live under `app`; domain code lives under named `features`; reusable presentation, contracts, and utilities live under `shared`; Tauri transport and adapters live under `platform/tauri`. Feature public entry points are the supported cross-feature API, the feature dependency graph is acyclic, and `architecture/frontend-source-owners.json` inventories every production source at its final path. `tests/repository/frontendSourceOwnership.test.ts` authoritatively assigns every current source to its final owner and destination; SQL and driver-specific frontend canaries freeze existing debt.
+The frontend modularization target is the current enforced structure. App shell, configuration, localization, styles, and cross-feature dependency injection live under `app`; domain code lives under named `features`; reusable presentation, contracts, and utilities live under `shared`; Tauri transport and adapters live under `platform/tauri`. Feature public entry points are the supported cross-feature API, the feature dependency graph is acyclic, and `architecture/frontend-source-owners.json` inventories every production source at its final path with unique source and destination rows. `tests/repository/frontendSourceOwnership.test.ts` authoritatively assigns every current source to its final owner and destination; SQL and driver-specific frontend canaries freeze existing debt.
 
 ## Dependency direction
 
@@ -15,7 +15,7 @@ The frontend modularization target is the current enforced structure. App shell,
 - Features may import `shared` and `platform`; shared modules may not import features.
 - Cross-feature imports use explicit feature public entry points and must preserve an acyclic feature graph.
 - App composition injects implementations for reverse dependencies such as editor UI used by connections/schema and visual explain UI used by editor.
-- Rust commands under `apps/desktop/src-tauri/src/commands/` are transport adapters and may depend on domains, models, and infrastructure adapter constructors, but not `sqlx`, built-in driver implementations, or pool constructors.
+- Rust commands under `apps/desktop/src-tauri/src/commands/` are recursive transport adapters and may depend on domains, models, and infrastructure adapter constructors, but not `sqlx`, built-in driver implementations (including alias-resolved imports), or pool constructors. Tauri transport ownership outside that tree is derived only from `rustBackendBoundaries.legacyTransferOwners`.
 - Tauri-independent domains own workflows and explicit database context; domains do not import Tauri, direct pools, or built-in drivers. Drivers own database semantics and do not import commands or domains. Infrastructure owns engine-neutral mechanisms and does not import commands.
 - Plugin process transport and the `RpcDriver` adapter are separate. Compatibility facades contain re-exports only and remain stable public entry points.
 
@@ -40,7 +40,7 @@ Run `pnpm check:architecture` to enforce `architecture/policy.json`. The checker
 - a peer `*_tests.rs`, non-trivial inline Rust test module, test-source `include!`, test-to-test `#[path]` inclusion, or unclassified crate integration suite is added;
 - desktop-owned source, assets, tests, manifests, dependencies, app-local configuration, or the Tauri crate are reintroduced at repository-root paths listed in `forbiddenRootDesktopPaths`.
 
-File-size baselines are maximum current line counts. Do not increase baselines; reduce or remove them when splitting files. Former oversized compatibility files `commands.rs`, `config.rs`, `health_check.rs`, `mcp/mod.rs`, `plugins/driver.rs`, and `pool_manager.rs` have no stale baseline; retained oversized implementation/test owners are explicitly ratcheted. Rust inline-test debt is closed with empty desktop and template inline-test allowlists. `rustIntegrationTests` records every crate integration suite with its classification, default mode, and explicit command.
+File-size baselines must equal current line counts for files still above the soft limit; stale values fail and baselines must be shrunk automatically during the change, while entries that fall below the limit must be removed. Former oversized compatibility files `commands.rs`, `config.rs`, `health_check.rs`, `mcp/mod.rs`, `plugins/driver.rs`, and `pool_manager.rs` have no stale baseline; retained oversized implementation/test owners are explicitly ratcheted. Rust inline-test debt is closed with empty desktop and template inline-test allowlists; detection covers `cfg(all(test))` and whitespace variants, and Rust test sources reject all `include!` delimiter and `#[path]` syntax variants. `rustIntegrationTests` records every crate integration suite with the supported classification enum, matching default mode, and exact explicit Cargo command. Cargo test inventory commands run through `mise exec -- cargo`.
 
 Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
 

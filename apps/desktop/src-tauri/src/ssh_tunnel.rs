@@ -95,16 +95,16 @@ pub static TUNNELS: OnceLock<Mutex<HashMap<String, SshTunnel>>> = OnceLock::new(
 pub fn get_tunnels() -> &'static Mutex<HashMap<String, SshTunnel>> {
     TUNNELS.get_or_init(|| Mutex::new(HashMap::new()))
 }
-
 fn create_ssh_command() -> Command {
-    let mut cmd = Command::new("ssh");
+    let command = Command::new("ssh");
     #[cfg(windows)]
-    {
+    let command = {
         use std::os::windows::process::CommandExt;
-        const CREATE_NO_WINDOW: u32 = 0x08000000;
-        cmd.creation_flags(CREATE_NO_WINDOW);
-    }
-    cmd
+        let mut command = command;
+        command.creation_flags(0x08000000);
+        command
+    };
+    command
 }
 
 impl SshTunnel {
