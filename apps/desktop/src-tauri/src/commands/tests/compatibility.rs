@@ -636,7 +636,7 @@ mod url_encoding_edge_cases {
 
 mod cancellation_legacy {
     use crate::commands::{
-        cancel_query_impl, register_abort_handle, unregister_abort_handle, QueryCancellationState,
+        register_abort_handle, unregister_abort_handle, QueryCancellationState, QueryService,
     };
     use std::sync::Arc;
     use std::time::Duration;
@@ -769,7 +769,7 @@ mod cancellation_legacy {
     #[tokio::test]
     async fn cancel_query_returns_err_when_no_slot() {
         let state = QueryCancellationState::default();
-        let err = cancel_query_impl(&state, "conn-1").unwrap_err();
+        let err = QueryService::cancel(&state, "conn-1").unwrap_err();
         assert_eq!(err, "No running query found");
     }
 
@@ -789,7 +789,7 @@ mod cancellation_legacy {
             Arc::new(task_b.abort_handle()),
         );
 
-        cancel_query_impl(&state, "conn-1").unwrap();
+        QueryService::cancel(&state, "conn-1").unwrap();
 
         assert!(task_a.await.unwrap_err().is_cancelled());
         assert!(task_b.await.unwrap_err().is_cancelled());
@@ -812,7 +812,7 @@ mod cancellation_legacy {
             Arc::new(explain_task.abort_handle()),
         );
 
-        cancel_query_impl(&state, "conn-1").unwrap();
+        QueryService::cancel(&state, "conn-1").unwrap();
 
         assert!(query_task.await.unwrap_err().is_cancelled());
         assert!(explain_task.await.unwrap_err().is_cancelled());

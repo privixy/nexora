@@ -1,3 +1,255 @@
+use std::sync::Arc;
+
+use crate::domains::connections::{
+    ConnectionContextResolver, DatabaseContext, QueryCancellationState,
+};
+use crate::drivers::driver_trait::BatchProgressFn;
+use crate::infrastructure::cancellation::{register_abort_handle, unregister_abort_handle};
+use crate::models::{BatchStatementResult, ExplainPlan, QueryResult};
+
+pub struct QueryService;
+
+impl QueryService {
+    pub fn cancel(state: &QueryCancellationState, connection_id: &str) -> Result<(), String> {
+        let entries =
+            crate::infrastructure::cancellation::abort_slot(&state.handles, connection_id);
+        if entries.is_empty() {
+            return Err("No running query found".into());
+        }
+        for handle in entries {
+            handle.abort();
+        }
+        Ok(())
+    }
+
+    pub async fn execute(
+        resolver: &impl ConnectionContextResolver,
+        state: &QueryCancellationState,
+        connection_id: &str,
+        query: &str,
+        limit: Option<u32>,
+        page: Option<u32>,
+        schema: Option<&str>,
+        database: Option<&str>,
+    ) -> Result<QueryResult, String> {
+        log::info!(
+            "Executing query on connection: {} | Query: {}",
+            connection_id,
+            query
+        );
+        let sanitized_query = sanitize_user_query(query);
+        let resolved = resolver
+            .resolve(DatabaseContext {
+                connection_id,
+                database,
+                schema,
+                table: None,
+            })
+            .await?;
+        let params = resolved.params;
+        let driver = resolved.driver;
+        let schema = schema.map(str::to_string);
+        let task = tokio::spawn(async move {
+            driver
+                .execute_query(
+                    &params,
+                    &sanitized_query,
+                    limit,
+                    page.unwrap_or(1),
+                    schema.as_deref(),
+                )
+                .await
+        });
+        let abort_handle = Arc::new(task.abort_handle());
+        register_abort_handle(
+            &state.handles,
+            connection_id.to_string(),
+            abort_handle.clone(),
+        );
+        let result = task.await;
+        unregister_abort_handle(&state.handles, connection_id, &abort_handle);
+        match result {
+            Ok(Ok(query_result)) => {
+                log::info!(
+                    "Query executed successfully, returned {} rows",
+                    query_result.rows.len()
+                );
+                Ok(query_result)
+            }
+            Ok(Err(error)) => {
+                log::error!("Query execution failed: {}", error);
+                Err(error)
+            }
+            Err(_) => {
+                log::warn!("Query was cancelled");
+                Err("Query cancelled".into())
+            }
+        }
+    }
+
+    pub async fn execute_batch(
+        resolver: &impl ConnectionContextResolver,
+        state: &QueryCancellationState,
+        connection_id: &str,
+        queries: Vec<String>,
+        limit: Option<u32>,
+        page: Option<u32>,
+        schema: Option<&str>,
+        database: Option<&str>,
+        progress: Option<Arc<BatchProgressFn>>,
+    ) -> Result<Vec<BatchStatementResult>, String> {
+        log::info!(
+            "Executing query batch on connection: {} | {} statement(s)",
+            connection_id,
+            queries.len()
+        );
+        let sanitized_queries = queries
+            .iter()
+            .map(|query| sanitize_user_query(query))
+            .collect::<Vec<_>>();
+        let resolved = resolver
+            .resolve(DatabaseContext {
+                connection_id,
+                database,
+                schema,
+                table: None,
+            })
+            .await?;
+        let params = resolved.params;
+        let driver = resolved.driver;
+        let schema = schema.map(str::to_string);
+        let task = tokio::spawn(async move {
+            driver
+                .execute_batch(
+                    &params,
+                    &sanitized_queries,
+                    limit,
+                    page.unwrap_or(1),
+                    schema.as_deref(),
+                    progress.as_deref(),
+                )
+                .await
+        });
+        let abort_handle = Arc::new(task.abort_handle());
+        register_abort_handle(
+            &state.handles,
+            connection_id.to_string(),
+            abort_handle.clone(),
+        );
+        let result = task.await;
+        unregister_abort_handle(&state.handles, connection_id, &abort_handle);
+        match result {
+            Ok(Ok(batch_results)) => {
+                let success_count = batch_results
+                    .iter()
+                    .filter(|result| result.result.is_some())
+                    .count();
+                log::info!(
+                    "Batch executed: {} succeeded, {} failed (of {} total)",
+                    success_count,
+                    batch_results.len() - success_count,
+                    batch_results.len()
+                );
+                Ok(batch_results)
+            }
+            Ok(Err(error)) => {
+                log::error!("Batch execution failed at setup: {}", error);
+                Err(error)
+            }
+            Err(_) => {
+                log::warn!("Batch was cancelled");
+                Err("Query cancelled".into())
+            }
+        }
+    }
+
+    pub async fn explain(
+        resolver: &impl ConnectionContextResolver,
+        state: &QueryCancellationState,
+        connection_id: &str,
+        query: &str,
+        analyze: bool,
+        schema: Option<&str>,
+        database: Option<&str>,
+    ) -> Result<ExplainPlan, String> {
+        log::info!(
+            "Explaining query on connection: {} | analyze: {} | Query: {}",
+            connection_id,
+            analyze,
+            query
+        );
+        let sanitized_query = sanitize_user_query(query);
+        if !crate::drivers::common::is_explainable_query(&sanitized_query) {
+            return Err(
+                "EXPLAIN is only supported for DML statements (SELECT, INSERT, UPDATE, DELETE, REPLACE). DDL statements like CREATE, DROP, or ALTER cannot be explained."
+                    .into(),
+            );
+        }
+        let resolved = resolver
+            .resolve(DatabaseContext {
+                connection_id,
+                database,
+                schema,
+                table: None,
+            })
+            .await?;
+        let params = resolved.params;
+        let driver = resolved.driver;
+        let schema = schema.map(str::to_string);
+        let task = tokio::spawn(async move {
+            driver
+                .explain_query(&params, &sanitized_query, analyze, schema.as_deref())
+                .await
+        });
+        let abort_handle = Arc::new(task.abort_handle());
+        register_abort_handle(
+            &state.handles,
+            connection_id.to_string(),
+            abort_handle.clone(),
+        );
+        let result = task.await;
+        unregister_abort_handle(&state.handles, connection_id, &abort_handle);
+        match result {
+            Ok(Ok(plan)) => {
+                log::info!("Explain query completed successfully");
+                Ok(plan)
+            }
+            Ok(Err(error)) => {
+                log::error!("Explain query failed: {}", error);
+                Err(error)
+            }
+            Err(_) => {
+                log::warn!("Explain query was cancelled");
+                Err("Explain query cancelled".into())
+            }
+        }
+    }
+
+    pub async fn count(
+        resolver: &impl ConnectionContextResolver,
+        connection_id: &str,
+        query: String,
+        schema: Option<&str>,
+        database: Option<&str>,
+    ) -> Result<u64, String> {
+        let resolved = resolver
+            .resolve(DatabaseContext {
+                connection_id,
+                database,
+                schema,
+                table: None,
+            })
+            .await?;
+        crate::count_query_compat::run(
+            resolved.driver,
+            resolved.params,
+            query,
+            schema.map(str::to_string),
+        )
+        .await
+    }
+}
+
 pub fn sanitize_user_query(query: &str) -> String {
     query
         .trim()

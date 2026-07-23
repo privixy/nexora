@@ -11,8 +11,8 @@ use crate::credential_cache;
 use crate::infrastructure::connections::{get_config_path, get_ssh_config_path};
 use crate::keychain_utils;
 use crate::models::{
-    BatchStatementResult, ConnectionGroup, ConnectionParams, ConnectionsFile, ExportPayload,
-    K8sConnection, SavedConnection, SshConnection,
+    ConnectionGroup, ConnectionParams, ConnectionsFile, ExportPayload, K8sConnection,
+    SavedConnection, SshConnection,
 };
 use crate::persistence;
 
@@ -276,33 +276,6 @@ pub(crate) fn get_k8s_config_path<R: Runtime>(app: &AppHandle<R>) -> Result<Path
         fs::create_dir_all(&config_dir).map_err(|e| e.to_string())?;
     }
     Ok(config_dir.join("k8s_connections.json"))
-}
-
-pub(crate) fn cancel_query_impl(
-    state: &QueryCancellationState,
-    connection_id: &str,
-) -> Result<(), String> {
-    let entries = crate::infrastructure::cancellation::abort_slot(&state.handles, connection_id);
-    if entries.is_empty() {
-        return Err("No running query found".into());
-    }
-    for handle in entries {
-        handle.abort();
-    }
-    Ok(())
-}
-
-/// Payload for the `batch-statement-complete` event, emitted once per
-/// statement the instant it finishes so the frontend can mark that result tab
-/// done in real time instead of waiting for the whole batch. `batch_id` lets a
-/// listener ignore events from other concurrent runs; `index` maps back to the
-/// statement's slot. Borrows the result so no clone of the (potentially large)
-/// row set is needed.
-#[derive(serde::Serialize, Clone)]
-pub(crate) struct BatchStatementEvent<'a> {
-    pub(crate) batch_id: &'a str,
-    pub(crate) index: usize,
-    pub(crate) statement: &'a BatchStatementResult,
 }
 
 // --- Explain Query Plan ---

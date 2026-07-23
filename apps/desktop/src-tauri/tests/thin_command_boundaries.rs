@@ -175,6 +175,46 @@ fn catalog_commands_are_one_call_transport_adapters() {
 }
 
 #[test]
+fn query_commands_are_thin_transport_adapters() {
+    let source =
+        fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("src/commands/queries.rs"))
+            .unwrap();
+    assert_eq!(source.matches("QueryService::").count(), 5);
+    assert_eq!(
+        source
+            .matches("TauriConnectionContextResolver::new(app)")
+            .count(),
+        4
+    );
+    assert_eq!(source.matches("#[tauri::command]").count(), 5);
+    for command in [
+        "cancel_query",
+        "execute_query",
+        "execute_query_batch",
+        "explain_query_plan",
+        "count_query",
+    ] {
+        assert!(source.contains(&format!("pub async fn {command}")));
+    }
+    for forbidden in [
+        ".resolve(",
+        ".driver",
+        ".execute_query(",
+        ".execute_batch(",
+        ".explain_query(",
+        "tokio::spawn",
+        "register_abort_handle",
+        "unregister_abort_handle",
+        "count_query_compat::run",
+    ] {
+        assert!(
+            !source.contains(forbidden),
+            "query command adapters must not contain {forbidden}"
+        );
+    }
+}
+
+#[test]
 fn domains_do_not_reexport_infrastructure() {
     let domains_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/domains");
     let mut files = Vec::new();
