@@ -21,6 +21,7 @@ const required = [
   "lint",
   "build",
   "test:rust",
+  "lint:rust",
   "build:plugin-api",
   "check:plugin-api",
   "build:create-plugin",
@@ -55,6 +56,9 @@ describe("root command contract", () => {
     expect(pkg.scripts.tauri).toBe("pnpm --filter @nexora/desktop tauri");
     expect(pkg.scripts["test:rust"]).toBe(
       "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
+    );
+    expect(pkg.scripts["lint:rust"]).toBe(
+      "cargo clippy --manifest-path apps/desktop/src-tauri/Cargo.toml --all-targets --all-features",
     );
   });
 

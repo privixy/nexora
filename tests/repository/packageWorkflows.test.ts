@@ -31,6 +31,9 @@ describe("workspace package workflows", () => {
 
     const rustJob = workflow.slice(workflow.indexOf("  rust:"));
     expect(rustJob.indexOf("run: pnpm test:plugin-contract")).toBeLessThan(
+      rustJob.indexOf("run: pnpm lint:rust"),
+    );
+    expect(rustJob.indexOf("run: pnpm lint:rust")).toBeLessThan(
       rustJob.indexOf("run: pnpm test:rust"),
     );
   });

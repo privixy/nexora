@@ -96,4 +96,5 @@ jobs:
           workspaces: apps/desktop/src-tauri
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:plugin-contract
+      - run: pnpm lint:rust
       - run: pnpm test:rust
