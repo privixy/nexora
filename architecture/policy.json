@@ -156,13 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
-        "importTarget": "../../../app/language",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/features/plugins/components/PluginsTab.tsx",
         "importTarget": "../../../app/config/version",
         "owner": "legacy",
@@ -172,34 +165,6 @@
       {
         "path": "apps/desktop/src/features/settings/components/InfoTab.tsx",
         "importTarget": "../../../app/config/version",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/features/settings/components/LocalizationTab.tsx",
-        "importTarget": "../../../app/config",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/features/settings/contracts.ts",
-        "importTarget": "../../app/config",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/features/settings/state/SettingsProvider.tsx",
-        "importTarget": "../../../app/config",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/features/visual-explain/components/visual-explain/ExplainAiAnalysis.tsx",
-        "importTarget": "../../../../app/language",
         "owner": "legacy",
         "reason": "Existing dependency graph retained after path-only ownership normalization",
         "removeByTask": 41

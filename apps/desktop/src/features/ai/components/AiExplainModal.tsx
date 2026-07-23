@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Loader2, BookOpen } from "lucide-react";
 import { aiGateway } from "../../../platform/tauri/aiGateway";
-import { useEditorTheme, useSettings } from "../../settings";
-import { getAiExplanationLanguage } from "../../../app/language";
+import { getAiExplanationLanguage, useEditorTheme, useSettings } from "../../settings";
 import { Modal } from "../../../shared/ui/Modal";
 import MonacoEditor, { type BeforeMount } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";

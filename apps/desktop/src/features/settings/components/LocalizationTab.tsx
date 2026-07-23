@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../hooks/useSettings";
-import { SUPPORTED_LANGUAGES, type AppLanguage } from "../../../app/config";
+import { SUPPORTED_LANGUAGES } from "../lib/languages";
+import type { AppLanguage } from "../contracts";
 import { SettingSection, SettingRow } from "./SettingControls";
 import { Select } from "../../../shared/ui/Select";
 

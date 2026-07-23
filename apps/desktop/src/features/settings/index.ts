@@ -47,3 +47,4 @@ export {
 } from "./components/SettingControls";
 export { AiApprovalGate } from "./components/AiApprovalGate";
 export type { ApprovalAttentionAdapter } from './components/AiApprovalGate';
+export { getAiExplanationLanguage, SUPPORTED_LANGUAGES } from "./lib/languages";

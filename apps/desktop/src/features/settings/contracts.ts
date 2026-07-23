@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import type { AppLanguage } from "../../app/config";
 import type { ExplainPlan } from "../../shared/types/explain";
 
-export type { AppLanguage };
+export type AppLanguage = "auto" | "en" | "it" | "es" | "zh" | "fr" | "de" | "ja" | "ru" | "ko" | "tl";
 export type CopyFormat = "csv" | "json" | "sql-insert";
 export type ApprovalExplainViewMode = "graph" | "table" | "raw" | "ai";
 export interface ApprovalExplainPlanRenderProps {

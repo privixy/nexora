@@ -7,7 +7,7 @@ import {
   type Settings,
 } from "./SettingsContext";
 import { getFontCSS } from "../../../utils/settings";
-import { SUPPORTED_LANGUAGES } from "../../../app/config";
+import { SUPPORTED_LANGUAGES } from "../lib/languages";
 
 const LANGUAGE_APPLICATION_TIMEOUT_MS = 3000;
 
