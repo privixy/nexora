@@ -17,7 +17,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CLI = resolve(__dirname, "../dist/cli.js");
+const CLI = resolve(__dirname, "../.tmp/build/cli.js");
 
 function step(label: string): void {
   console.log(`\n▶ ${label}`);

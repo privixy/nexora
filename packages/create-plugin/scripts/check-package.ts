@@ -1,0 +1,24 @@
+import { createHash } from "node:crypto";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8")) as { version: string };
+const name = `nexora-create-plugin-${pkg.version}.tgz`;
+const tarball = resolve(root, ".tmp/package", name);
+const checksum = `${tarball}.sha256`;
+if (!existsSync(tarball) || !existsSync(checksum)) throw new Error("Canonical create-plugin tarball and checksum are required");
+const expected = readFileSync(checksum, "utf8").trim().split(/\s+/)[0];
+const digest = () => createHash("sha256").update(readFileSync(tarball)).digest("hex");
+if (digest() !== expected) throw new Error("Create-plugin tarball checksum mismatch");
+const entries = execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" });
+for (const required of ["package/package.json", "package/dist/cli.js", "package/templates/rust-driver/manifest.json.tmpl"]) if (!entries.includes(required)) throw new Error(`Missing packed file: ${required}`);
+const unpack = mkdtempSync(join(tmpdir(), "create-plugin-pack-"));
+execFileSync("tar", ["-xzf", tarball, "-C", unpack]);
+const output = execFileSync(process.execPath, [resolve(unpack, "package/dist/cli.js"), "--version"], { encoding: "utf8" });
+if (output !== "0.1.0\n") throw new Error("Packed CLI version contract changed");
+rmSync(unpack, { recursive: true, force: true });
+if (digest() !== expected) throw new Error("Create-plugin tarball changed during inspection");
