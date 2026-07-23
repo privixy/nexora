@@ -6,6 +6,7 @@ import {
   catalogGateway,
   listenTauri,
   queryGateway,
+  recordGateway,
 } from "../../../../src/platform/tauri";
 import { EditorPage } from "../../../../src/features/editor/pages/EditorPage";
 import { useDatabase } from "../../../../src/features/connections";
@@ -112,13 +113,16 @@ vi.mock("../../../../src/features/plugins", () => ({
   SlotAnchor: () => null,
 }));
 
-vi.mock("../../../../src/features/data-grid", () => ({
-  PaginationControls: () => null,  TableToolbar: () => null,  DataGrid: ({ columns, data, onSort, onForeignKeyShowPanel, onPendingChange, onSelectionChange }: {
+vi.mock("../../../../src/features/data-grid", async (importOriginal) => ({
+  ...await importOriginal<typeof import("../../../../src/features/data-grid")>(),
+  PaginationControls: () => null,  TableToolbar: () => null,  DataGrid: ({ columns, data, onSort, onForeignKeyShowPanel, onPendingChange, onMarkForDeletion, onDuplicateRow, onSelectionChange }: {
     columns: string[];
     data: unknown[][];
     onSort?: (column: string) => void;
     onForeignKeyShowPanel?: (fk: { column_name: string; ref_table: string; ref_column: string }, value: unknown) => void;
     onPendingChange?: (pkVal: unknown, colName: string, value: unknown) => void;
+    onMarkForDeletion?: (pkVal: unknown) => void;
+    onDuplicateRow?: (row: Record<string, unknown>) => void;
     onSelectionChange?: (selection: Set<number>) => void;
   }) => (
     <div data-testid="data-grid">
@@ -126,7 +130,9 @@ vi.mock("../../../../src/features/data-grid", () => ({
       <span>{data.map((row) => row.join(":")).join("|")}</span>
       <button type="button" onClick={() => onSort?.("name")}>sort-name</button>
       <button type="button" onClick={() => onForeignKeyShowPanel?.({ column_name: "account_id", ref_table: "accounts", ref_column: "id" }, 42)}>preview-fk</button>
-      <button type="button" onClick={() => onPendingChange?.({ id: 1 }, "name", "Alicia")}>edit-name</button>
+      <button type="button" onClick={() => onPendingChange?.({ id: 1 }, "name", "Updated")}>stage-update</button>
+      <button type="button" onClick={() => onMarkForDeletion?.({ id: 2 })}>stage-delete</button>
+      <button type="button" onClick={() => onDuplicateRow?.({ id: 3, name: "Inserted" })}>stage-insert</button>
       <button type="button" onClick={() => onSelectionChange?.(new Set([0]))}>select-first-row</button>
     </div>
   ),
@@ -344,8 +350,24 @@ const baseConsoleTab: Tab = {
   schema: "public",
 };
 
-function createStatefulEditor(initialTabs: Tab[]) {
-  function Wrapper({ database = createDatabase() }: { database?: DatabaseContextType }) {
+const createTableTab = (overrides: Partial<Tab> = {}): Tab => ({
+  ...baseConsoleTab,
+  title: "users",
+  type: "table",
+  query: 'SELECT * FROM "tab_schema"."users"',
+  result: makeResult([[1, "Before"], [2, "Delete"]]),
+  activeTable: "users",
+  pkColumns: ["id"],
+  autoIncrementColumns: ["id"],
+  connectionId: "conn-current",
+  database: "tab_database",
+  schema: "tab_schema",
+  selectedRows: [],
+  ...overrides,
+});
+
+function createStatefulEditor(initialTabs: Tab[], initialDatabase = createDatabase()) {
+  function Wrapper({ database = initialDatabase }: { database?: DatabaseContextType }) {
     vi.mocked(useDatabase).mockReturnValue(database);
     const [tabs, setTabs] = React.useState(initialTabs);
     const [activeTabId, setActiveTabId] = React.useState(initialTabs[0]?.id ?? null);
@@ -412,6 +434,7 @@ beforeEach(() => {
   vi.mocked(queryGateway.executeBatch).mockResolvedValue([]);
   vi.mocked(catalogGateway.getColumns).mockResolvedValue([
     { name: "id", data_type: "integer", is_pk: true, is_nullable: false, is_auto_increment: true } satisfies TableColumn,
+    { name: "name", data_type: "text", is_pk: false, is_nullable: false, is_auto_increment: false } satisfies TableColumn,
   ]);
   vi.mocked(catalogGateway.getForeignKeys).mockResolvedValue([]);
 });
@@ -452,6 +475,83 @@ describe("Editor", () => {
       "Renamed notebook",
     ));
     expect(notebookRuntime.rename).toHaveBeenCalledTimes(1);
+  });
+
+  it("disables mutations when the active table tab lacks its explicit database and schema", () => {
+    createStatefulEditor([
+      createTableTab({ database: undefined, schema: undefined }),
+    ], createDatabase({
+      activeConnectionId: "conn-current",
+      activeDatabase: "stale_database",
+      activeSchema: "stale_schema",
+      selectedDatabases: ["stale_database", "tab_database"],
+    }));
+
+    fireEvent.click(screen.getByRole("button", { name: "stage-update" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "editor.applyToAll" }));
+
+    expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
+    expect(recordGateway.updateRecord).not.toHaveBeenCalled();
+  });
+
+  it("applies staged update, delete, and insert before refreshing with the tab-owned full tuple", async () => {
+    createStatefulEditor([createTableTab()], createDatabase({
+      activeConnectionId: "conn-current",
+      activeDatabase: "stale_database",
+      activeSchema: "stale_schema",
+      selectedDatabases: ["stale_database", "tab_database"],
+    }));
+
+    fireEvent.click(screen.getByRole("button", { name: "stage-update" }));
+    fireEvent.click(screen.getByRole("button", { name: "stage-delete" }));
+    fireEvent.click(screen.getByRole("button", { name: "stage-insert" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "editor.applyToAll" }));
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    await waitFor(() => expect(queryGateway.executeQuery).toHaveBeenCalled());
+
+    expect(catalogGateway.getColumns).toHaveBeenCalledWith({
+      connectionId: "conn-current",
+      tableName: "users",
+      database: "tab_database",
+      schema: "tab_schema",
+    });
+    expect(recordGateway.deleteRecord).toHaveBeenCalledWith({
+      connectionId: "conn-current",
+      table: "users",
+      pkMap: { id: 2 },
+      database: "tab_database",
+      schema: "tab_schema",
+    });
+    expect(recordGateway.updateRecord).toHaveBeenCalledWith({
+      connectionId: "conn-current",
+      table: "users",
+      pkMap: { id: 1 },
+      colName: "name",
+      newVal: "Updated",
+      database: "tab_database",
+      schema: "tab_schema",
+    });
+    expect(recordGateway.insertRecord).toHaveBeenCalledWith({
+      connectionId: "conn-current",
+      table: "users",
+      data: { name: "Inserted" },
+      database: "tab_database",
+      schema: "tab_schema",
+    });
+    expect(queryGateway.executeQuery).toHaveBeenCalledWith({
+      connectionId: "conn-current",
+      query: 'SELECT * FROM "tab_schema"."users"',
+      limit: 50,
+      page: 1,
+      database: "tab_database",
+      schema: "tab_schema",
+    });
+
+    const refreshOrder = vi.mocked(queryGateway.executeQuery).mock.invocationCallOrder[0];
+    expect(vi.mocked(recordGateway.deleteRecord).mock.invocationCallOrder[0]).toBeLessThan(refreshOrder);
+    expect(vi.mocked(recordGateway.updateRecord).mock.invocationCallOrder[0]).toBeLessThan(refreshOrder);
+    expect(vi.mocked(recordGateway.insertRecord).mock.invocationCallOrder[0]).toBeLessThan(refreshOrder);
   });
 
   it("executes the active query with connection, database, and schema and shows returned rows", async () => {
