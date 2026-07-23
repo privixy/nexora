@@ -5,6 +5,7 @@ use crate::models::{ConnectionGroup, ConnectionsFile, SavedConnection};
 use crate::persistence;
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::get_config_path;
 
 #[tauri::command]
 pub async fn get_connection_groups<R: Runtime>(

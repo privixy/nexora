@@ -1,6 +1,4 @@
-#![allow(unused_imports)]
-
-use nexora_lib::commands::{
+pub use nexora_lib::commands::{
     apply_export_payload, build_routine_call_sql, cancel_query, count_query,
     create_connection_group, create_database, create_group_path, create_schema, create_trigger,
     create_view, decrypt_export_payload, delete_connection, delete_connection_group, delete_record,
@@ -30,7 +28,9 @@ use nexora_lib::commands::{
 };
 
 #[test]
-fn public_command_imports_remain_available() {}
+fn public_command_imports_remain_available() {
+    assert!(std::mem::size_of::<QueryCancellationState>() > 0);
+}
 
 #[test]
 fn command_families_have_exact_single_owners() {

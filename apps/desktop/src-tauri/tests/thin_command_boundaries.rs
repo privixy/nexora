@@ -146,6 +146,50 @@ fn command_adapters_are_owned_by_their_focused_modules() {
 }
 
 #[test]
+fn catalog_commands_are_one_call_transport_adapters() {
+    let source =
+        fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("src/commands/catalog.rs"))
+            .unwrap();
+    assert_eq!(source.matches("CatalogService::").count(), 14);
+    assert_eq!(
+        source
+            .matches("TauriConnectionContextResolver::new(app)")
+            .count(),
+        14
+    );
+    for forbidden in [
+        ".resolve(",
+        ".driver",
+        ".get_tables(",
+        ".get_columns(",
+        ".get_foreign_keys(",
+        ".get_indexes(",
+        ".get_schema_snapshot(",
+        "format_for_prompt",
+    ] {
+        assert!(
+            !source.contains(forbidden),
+            "catalog command adapters must not contain {forbidden}"
+        );
+    }
+}
+
+#[test]
+fn domains_do_not_reexport_infrastructure() {
+    let domains_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/domains");
+    let mut files = Vec::new();
+    rust_files(&domains_root, &mut files);
+    let mut violations = Vec::new();
+    for file in files {
+        let source = fs::read_to_string(&file).unwrap();
+        if source.contains("pub use crate::infrastructure") {
+            violations.push(format!("{} re-exports infrastructure", file.display()));
+        }
+    }
+    assert!(violations.is_empty(), "{}", violations.join("\n"));
+}
+
+#[test]
 fn connection_workflows_have_no_catch_all_module() {
     let source_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
     let forbidden = source_root.join("infrastructure/connections/workflows/mod.rs");

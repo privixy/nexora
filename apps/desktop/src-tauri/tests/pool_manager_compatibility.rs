@@ -1,5 +1,3 @@
-#![allow(unused_imports)]
-
 use nexora_lib::pool_manager::{
     close_all_pools, close_pool, close_pool_with_id, get_mysql_pool, get_mysql_pool_for_database,
     get_mysql_pool_with_id, get_postgres_pool, get_postgres_pool_with_id, get_sqlite_pool,
@@ -7,7 +5,20 @@ use nexora_lib::pool_manager::{
 };
 
 #[test]
-fn public_pool_manager_api_remains_available() {}
+fn public_pool_manager_api_remains_available() {
+    let _ = close_all_pools;
+    let _ = close_pool;
+    let _ = close_pool_with_id;
+    let _ = get_mysql_pool;
+    let _ = get_mysql_pool_for_database;
+    let _ = get_mysql_pool_with_id;
+    let _ = get_postgres_pool;
+    let _ = get_postgres_pool_with_id;
+    let _ = get_sqlite_pool;
+    let _ = get_sqlite_pool_with_id;
+    let _ = has_pool;
+    let _ = has_pool_for_database;
+}
 
 #[test]
 fn target_pool_modules_exist() {

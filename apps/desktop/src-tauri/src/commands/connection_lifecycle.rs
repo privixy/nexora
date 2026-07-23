@@ -4,6 +4,10 @@ use crate::keychain_utils;
 use crate::models::TestConnectionRequest;
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::{
+    expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
+    resolve_connection_params, resolve_connection_params_with_id,
+};
 
 #[tauri::command]
 pub async fn test_connection<R: Runtime>(

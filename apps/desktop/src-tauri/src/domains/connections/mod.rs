@@ -9,11 +9,6 @@ mod service;
 pub(crate) mod storage;
 mod workflow_support;
 
-pub use crate::infrastructure::connections::{
-    expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
-    get_config_path, get_ssh_config_path, resolve_connection_params,
-    resolve_connection_params_with_id,
-};
 pub use context::{ConnectionContextResolver, DatabaseContext, ResolvedConnection};
 pub(crate) use credentials::*;
 pub(crate) use groups::*;

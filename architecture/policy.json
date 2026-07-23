@@ -688,7 +688,7 @@
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
-    "tests/repository/architecturePolicyChecker.test.ts": 1001,
+    "tests/repository/architecturePolicyChecker.test.ts": 1035,
     "apps/desktop/src/features/settings/components/AiTab.tsx": 665,
     "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx": 530,
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,

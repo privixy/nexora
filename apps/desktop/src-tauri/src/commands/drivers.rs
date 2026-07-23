@@ -1,4 +1,4 @@
-use crate::domains::connections::*;
+use crate::domains::connections::driver_for;
 
 #[tauri::command]
 pub async fn get_data_types(driver: String) -> Result<crate::models::DataTypeRegistry, String> {

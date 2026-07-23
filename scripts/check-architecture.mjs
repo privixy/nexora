@@ -548,6 +548,9 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
         if ((typeof pattern === "function" ? pattern(source) : pattern.test(source))) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
       }
     }
+    if (isUnderRoot(file, `${sourceRoot}/domains`) && /\bpub\s+use\s+crate::infrastructure(?:::|\b)/.test(source)) {
+      violations.push(`${file}: Rust domains may not re-export infrastructure`);
+    }
     if (tauriCommandAttributes(source) && !isUnderRoot(file, commandsRoot) && !approvedLegacyCommandOwners.has(file)) {
       violations.push(`${file}: Tauri handlers must live under commands or an approved legacy root owner`);
     }

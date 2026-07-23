@@ -3,6 +3,7 @@ use tauri::{AppHandle, Runtime};
 use crate::models::ColumnDefinition;
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::find_connection_by_id;
 
 #[tauri::command]
 pub async fn get_create_table_sql<R: Runtime>(

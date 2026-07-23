@@ -7,6 +7,7 @@ use crate::models::{ConnectionParams, SavedConnection};
 use crate::persistence;
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::{find_connection_by_id, get_config_path};
 
 #[tauri::command]
 pub async fn get_connection_by_id<R: Runtime>(

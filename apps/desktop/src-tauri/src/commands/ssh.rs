@@ -7,6 +7,7 @@ use crate::keychain_utils;
 use crate::models::{SshConnection, SshConnectionInput, SshTestParams};
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::get_ssh_config_path;
 
 #[tauri::command]
 pub async fn get_ssh_connections<R: Runtime>(

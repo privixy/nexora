@@ -63,9 +63,13 @@ pub use keybindings::*;
 mod windows;
 pub use windows::*;
 
-#[allow(unused_imports)]
-pub(crate) use crate::domains::connections::*;
 pub use crate::domains::connections::{apply_export_payload, QueryCancellationState};
+#[cfg(test)]
+pub(crate) use crate::domains::connections::{
+    build_connection_url, cancel_query_impl, find_child_group, merge_groups, parse_group_path,
+    reject_if_would_create_cycle, resolve_ssh_test_credential, resolve_ssh_test_password,
+    resolve_test_connection_password, sanitize_user_query, set_appearance_impl,
+};
 pub(crate) use crate::infrastructure::cancellation::{
     register_abort_handle, unregister_abort_handle, AbortHandleMap,
 };

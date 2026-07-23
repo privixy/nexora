@@ -6,6 +6,7 @@ use crate::models::{ExportPayload, SshConnection};
 use crate::persistence;
 
 use crate::domains::connections::*;
+use crate::infrastructure::connections::{get_config_path, get_ssh_config_path};
 
 #[tauri::command]
 pub async fn export_connections_payload<R: Runtime>(

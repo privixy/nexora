@@ -1,9 +1,11 @@
-#![allow(unused_imports)]
-
 use nexora_lib::plugins::driver::{PluginProcess, RpcDriver};
 
 #[test]
-fn legacy_plugin_driver_exports_remain_available() {}
+fn legacy_plugin_driver_exports_remain_available() {
+    fn compile_use<T>() {}
+    compile_use::<PluginProcess>();
+    compile_use::<RpcDriver>();
+}
 
 #[test]
 fn target_plugin_transport_and_adapter_are_separate() {

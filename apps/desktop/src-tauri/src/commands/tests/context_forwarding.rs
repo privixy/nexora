@@ -79,10 +79,6 @@ fn command_owners_route_exact_context_through_shared_resolver() {
 
     for (file, fields) in [
         (
-            "commands/catalog.rs",
-            ["database.as_deref()", "schema.as_deref()", "None"],
-        ),
-        (
             "commands/queries.rs",
             ["database.as_deref()", "schema.as_deref()", "None"],
         ),

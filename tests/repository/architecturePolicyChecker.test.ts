@@ -741,6 +741,40 @@ describe("architecture policy", () => {
     }
   });
 
+  it("rejects domain infrastructure re-exports", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-domain-infrastructure-"));
+
+    try {
+      const facade = "apps/desktop/src-tauri/src/domains/connections/mod.rs";
+      writeFixture(tempRoot, facade, "pub use crate::infrastructure::connections::find_connection_by_id;\n");
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: [],
+          legacyTransferOwners: {},
+          frozenSqlOwners: {},
+          commandBusinessLogicPatterns: [],
+          legacyThinCommandExceptions: {},
+        },
+      }, {
+        trackedFiles: [facade],
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toContain(`${facade}: Rust domains may not re-export infrastructure`);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
   it("rejects command business logic and expired legacy exceptions", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-thin-commands-"));
 
