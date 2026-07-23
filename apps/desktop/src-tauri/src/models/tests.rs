@@ -60,7 +60,9 @@ fn whitespace_previous_name_is_ignored() {
 
 #[test]
 fn icon_override_pack_roundtrip() {
-    let value = IconOverride::Pack { id: "server".into() };
+    let value = IconOverride::Pack {
+        id: "server".into(),
+    };
     let json = serde_json::to_string(&value).unwrap();
     assert_eq!(json, r#"{"type":"pack","id":"server"}"#);
     let roundtrip: IconOverride = serde_json::from_str(&json).unwrap();
@@ -69,7 +71,9 @@ fn icon_override_pack_roundtrip() {
 
 #[test]
 fn icon_override_emoji_roundtrip() {
-    let value = IconOverride::Emoji { value: "🐘".into() };
+    let value = IconOverride::Emoji {
+        value: "🐘".into()
+    };
     let json = serde_json::to_string(&value).unwrap();
     assert_eq!(json, r#"{"type":"emoji","value":"🐘"}"#);
     let roundtrip: IconOverride = serde_json::from_str(&json).unwrap();
@@ -78,11 +82,18 @@ fn icon_override_emoji_roundtrip() {
 
 #[test]
 fn icon_override_image_roundtrip() {
-    let value = IconOverride::Image { path: "connection-icons/abc.png".into() };
+    let value = IconOverride::Image {
+        path: "connection-icons/abc.png".into(),
+    };
     let json = serde_json::to_string(&value).unwrap();
-    assert_eq!(json, r#"{"type":"image","path":"connection-icons/abc.png"}"#);
+    assert_eq!(
+        json,
+        r#"{"type":"image","path":"connection-icons/abc.png"}"#
+    );
     let roundtrip: IconOverride = serde_json::from_str(&json).unwrap();
-    assert!(matches!(roundtrip, IconOverride::Image { path } if path == "connection-icons/abc.png"));
+    assert!(
+        matches!(roundtrip, IconOverride::Image { path } if path == "connection-icons/abc.png")
+    );
 }
 
 #[test]
@@ -94,6 +105,12 @@ fn saved_connection_without_appearance_deserializes() {
 
 #[test]
 fn connection_appearance_with_only_color_serializes_compactly() {
-    let appearance = ConnectionAppearance { icon: None, accent_color: Some("#ff0000".into()) };
-    assert_eq!(serde_json::to_string(&appearance).unwrap(), r##"{"accentColor":"#ff0000"}"##);
+    let appearance = ConnectionAppearance {
+        icon: None,
+        accent_color: Some("#ff0000".into()),
+    };
+    assert_eq!(
+        serde_json::to_string(&appearance).unwrap(),
+        r##"{"accentColor":"#ff0000"}"##
+    );
 }

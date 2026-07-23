@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use tauri::{AppHandle, Manager, Runtime};
 
-use crate::models::{ConnectionsFile, SavedConnection};
+use crate::models::SavedConnection;
 
 pub fn get_config_path<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, String> {
     let config_dir = app.path().app_config_dir().map_err(|e| e.to_string())?;
@@ -40,7 +40,9 @@ pub fn find_connection_by_id<R: Runtime>(
 
     let mut conn = match conn_cache.lookup(id) {
         crate::connection_cache::CacheLookup::Hit(connection) => connection,
-        crate::connection_cache::CacheLookup::Miss => return Err("Connection not found".to_string()),
+        crate::connection_cache::CacheLookup::Miss => {
+            return Err("Connection not found".to_string())
+        }
         crate::connection_cache::CacheLookup::Cold => {
             let path = get_config_path(app)?;
             let conn_file = crate::persistence::load_connections_file(&path).unwrap_or_default();
@@ -80,15 +82,4 @@ pub fn find_connection_by_id<R: Runtime>(
     }
 
     Ok(conn)
-}
-
-pub(crate) fn save_connections_and_invalidate<R: Runtime>(
-    app: &AppHandle<R>,
-    path: &std::path::Path,
-    file: &ConnectionsFile,
-) -> Result<(), String> {
-    crate::persistence::save_connections_file(path, file)?;
-    app.state::<std::sync::Arc<crate::connection_cache::ConnectionCache>>()
-        .invalidate();
-    Ok(())
 }

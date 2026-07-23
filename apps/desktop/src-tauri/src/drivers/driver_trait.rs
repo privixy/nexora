@@ -1,14 +1,14 @@
-use std::collections::HashMap;
-use async_trait::async_trait;
-use serde::{Deserialize, Serialize};
-use sqlx::any::AnyConnectOptions;
-use sqlx::{AnyConnection, Connection};
-use std::str::FromStr;
 use crate::models::{
     AiSchemaContext, BatchStatementResult, ColumnDefinition, ConnectionParams, DataTypeInfo,
     ExplainPlan, ForeignKey, Index, QueryResult, RoutineCallArg, RoutineInfo, RoutineParameter,
     TableColumn, TableInfo, TableSchema, TriggerInfo, ViewInfo,
 };
+use async_trait::async_trait;
+use serde::{Deserialize, Serialize};
+use sqlx::any::AnyConnectOptions;
+use sqlx::{AnyConnection, Connection};
+use std::collections::HashMap;
+use std::str::FromStr;
 /// Callback invoked the moment each statement in a batch finishes, with the
 /// statement's zero-based index and its outcome. Drivers call this — when one
 /// is supplied — after every statement so the UI can mark that result tab done

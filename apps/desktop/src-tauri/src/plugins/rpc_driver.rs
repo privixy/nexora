@@ -818,6 +818,3 @@ impl DatabaseDriver for RpcDriver {
         serde_json::from_value(res).map_err(|e| e.to_string())
     }
 }
-
-#[cfg(test)]
-mod tests;

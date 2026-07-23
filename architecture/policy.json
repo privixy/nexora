@@ -466,7 +466,7 @@
   },
   "fileSizeBaselines": {
     "tests/repository/architecturePolicy.test.ts": 611,
-    "apps/desktop/src-tauri/src/ai.rs": 1007,
+    "apps/desktop/src-tauri/src/commands/ai.rs": 1008,
     "apps/desktop/src-tauri/src/ai_activity.rs": 837,
     "apps/desktop/src-tauri/src/ai_activity/tests.rs": 862,
     "apps/desktop/src-tauri/src/commands/tests.rs": 995,
@@ -495,7 +495,7 @@
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
-    "tests/repository/architecturePolicyChecker.test.ts": 588,
+    "tests/repository/architecturePolicyChecker.test.ts": 592,
     "apps/desktop/src/features/settings/components/AiTab.tsx": 665,
     "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx": 545,
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,

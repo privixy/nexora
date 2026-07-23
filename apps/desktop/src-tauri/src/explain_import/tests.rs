@@ -1,6 +1,6 @@
 use crate::explain_import::{
-    detect_format, parse_explain, parse_postgres_json, parse_postgres_text,
-    ExplainSourceFormat, PendingExplainFile,
+    detect_format, parse_explain, parse_postgres_json, parse_postgres_text, ExplainSourceFormat,
+    PendingExplainFile,
 };
 
 const POSTGRES_SIMPLE: &str = r#"[

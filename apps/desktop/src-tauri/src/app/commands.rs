@@ -27,7 +27,7 @@ pub(crate) fn register_commands(builder: tauri::Builder<tauri::Wry>) -> tauri::B
         crate::commands::update_ssh_connection,
         crate::commands::delete_ssh_connection,
         crate::commands::test_ssh_connection,
-        crate::askpass::respond_ssh_askpass,
+        crate::commands::askpass::respond_ssh_askpass,
         crate::commands::get_k8s_connections,
         crate::commands::save_k8s_connection,
         crate::commands::update_k8s_connection,

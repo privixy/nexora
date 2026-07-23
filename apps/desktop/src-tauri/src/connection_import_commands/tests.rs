@@ -5,7 +5,7 @@ use std::fs;
 fn source_listing_preserves_availability_then_count_order_and_fields() {
     let source = fs::read_to_string(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/src/connection_import_commands.rs"
+        "/src/commands/connection_import.rs"
     ))
     .unwrap();
     let listing = source
@@ -32,7 +32,7 @@ fn source_listing_preserves_availability_then_count_order_and_fields() {
 fn foreign_preview_and_apply_preserve_one_shot_secret_cache_workflow() {
     let source = fs::read_to_string(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/src/connection_import_commands.rs"
+        "/src/commands/connection_import.rs"
     ))
     .unwrap();
     assert!(source.contains("format!(\"Unknown import source: {source_id}\")"));
@@ -77,7 +77,7 @@ fn foreign_preview_and_apply_preserve_one_shot_secret_cache_workflow() {
 fn nexora_preview_and_apply_preserve_load_transform_apply_order() {
     let source = fs::read_to_string(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/src/connection_import_commands.rs"
+        "/src/commands/connection_import.rs"
     ))
     .unwrap();
     let preview = source

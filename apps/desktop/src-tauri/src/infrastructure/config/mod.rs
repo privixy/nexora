@@ -1,4 +1,3 @@
-use crate::keychain_utils;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -512,10 +511,6 @@ pub fn set_selected_schemas_impl(
     }
 }
 
-
-
-
-
 /// Get the configured maximum BLOB size in bytes, or DEFAULT_MAX_BLOB_SIZE if not set
 pub fn get_max_blob_size<R: tauri::Runtime>(app: &AppHandle<R>) -> u64 {
     let config = load_config_internal(app);
@@ -610,10 +605,6 @@ pub fn get_ai_api_key_status(app: &AppHandle, provider: &str) -> AiKeyStatus {
         }
     }
 }
-
-
-
-
 
 const DEFAULT_SYSTEM_PROMPT: &str = "You are an expert SQL assistant. Your task is to generate a SQL query based on the user's request and the provided database schema.\nReturn ONLY the SQL query, without any markdown formatting, explanations, or code blocks.\n\nSchema:\n{{SCHEMA}}";
 const DEFAULT_EXPLAIN_PROMPT: &str =
@@ -711,8 +702,6 @@ pub fn get_config_json_impl(app: AppHandle) -> Result<String, String> {
     // Return empty JSON object if no config file exists yet
     Ok("{}".to_string())
 }
-
-
 
 pub fn save_config_json_impl(app: AppHandle, json: String) -> Result<(), String> {
     // Validate the JSON parses as a valid AppConfig

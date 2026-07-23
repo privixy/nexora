@@ -8,6 +8,5 @@ pub fn extract_or_null(buf: &[u8]) -> JsonValue {
     }
 }
 
-
 #[cfg(test)]
 mod tests;

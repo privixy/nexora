@@ -23,7 +23,7 @@ commands::save_ssh_connection
 commands::update_ssh_connection
 commands::delete_ssh_connection
 commands::test_ssh_connection
-askpass::respond_ssh_askpass
+commands::askpass::respond_ssh_askpass
 commands::get_k8s_connections
 commands::save_k8s_connection
 commands::update_k8s_connection

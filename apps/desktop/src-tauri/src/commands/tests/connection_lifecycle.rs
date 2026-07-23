@@ -17,7 +17,7 @@ fn server_time_owner_preserves_result_conversion_and_error() {
 
 #[test]
 fn lifecycle_commands_preserve_success_and_error_contracts() {
-    let source = include_str!("../../infrastructure/command_services/connection_lifecycle.rs");
+    let source = include_str!("../connection_lifecycle.rs");
     assert!(source.contains("Ok(\"Connection successful!\".to_string())"));
     assert!(source.contains("Database file not found: {}"));
     assert!(source.contains("driver_for(&resolved_params.driver).await?"));

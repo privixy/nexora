@@ -1,4 +1,5 @@
 mod manifest;
+mod rpc_driver;
 
 use std::collections::HashMap;
 use std::fs;

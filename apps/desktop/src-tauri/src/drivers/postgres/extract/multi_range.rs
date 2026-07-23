@@ -56,6 +56,5 @@ pub fn extract_or_null(ty: &Type, buf: &mut &[u8]) -> JsonValue {
     JsonValue::String(ranges)
 }
 
-
 #[cfg(test)]
 mod tests;

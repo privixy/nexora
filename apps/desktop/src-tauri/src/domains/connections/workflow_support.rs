@@ -3,18 +3,16 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Manager, Runtime};
+#[cfg(test)]
 use urlencoding::encode;
 use uuid::Uuid;
 
 use crate::credential_cache;
-pub use crate::infrastructure::connections::{
-    expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
-    get_config_path, get_ssh_config_path, resolve_connection_params,
-    resolve_connection_params_with_id,
-};
+use crate::infrastructure::connections::{get_config_path, get_ssh_config_path};
 use crate::keychain_utils;
 use crate::models::{
-    BatchStatementResult, ConnectionGroup, ConnectionParams, ConnectionsFile, ExportPayload, K8sConnection, SavedConnection, SshConnection,
+    BatchStatementResult, ConnectionGroup, ConnectionParams, ConnectionsFile, ExportPayload,
+    K8sConnection, SavedConnection, SshConnection,
 };
 use crate::persistence;
 
@@ -28,10 +26,12 @@ pub(crate) async fn driver_for(
         .ok_or_else(|| format!("Unsupported driver: {}", id))
 }
 
-const DEFAULT_MYSQL_PORT: u16 = 3306;
-const DEFAULT_POSTGRES_PORT: u16 = 5432;
-
 use crate::infrastructure::cancellation::AbortHandleMap;
+
+#[cfg(test)]
+const DEFAULT_MYSQL_PORT: u16 = 3306;
+#[cfg(test)]
+const DEFAULT_POSTGRES_PORT: u16 = 5432;
 
 /// Tracks abort handles for in-flight queries keyed by connection id. A
 /// slot can hold multiple handles when the UI fires several queries (or
@@ -52,16 +52,6 @@ impl Default for QueryCancellationState {
 /// Trims trailing semicolons and normalises Unicode smart quotes that some
 /// editors insert when the user pastes a query. Called on every query the
 /// UI hands off to a driver.
-pub(crate) fn sanitize_user_query(query: &str) -> String {
-    query
-        .trim()
-        .trim_end_matches(';')
-        .replace('\u{2018}', "'")
-        .replace('\u{2019}', "'")
-        .replace('\u{201C}', "\"")
-        .replace('\u{201D}', "\"")
-}
-
 // --- Persistence Helpers ---
 
 /// Check if a string option is empty or contains only whitespace.
@@ -372,6 +362,7 @@ pub(crate) struct BatchStatementEvent<'a> {
 /// This workaround should be removed once the upstream issue is resolved.
 
 /// Builds a connection URL for a database driver.
+#[cfg(test)]
 pub async fn build_connection_url(params: &ConnectionParams) -> Result<String, String> {
     let user = encode(params.username.as_deref().unwrap_or_default());
     let raw_pass = params.password.as_deref().unwrap_or_default();

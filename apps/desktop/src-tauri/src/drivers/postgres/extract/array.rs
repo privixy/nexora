@@ -167,6 +167,5 @@ fn try_extract_elem(ty: &Type, buf: &mut &[u8]) -> Result<JsonValue, ()> {
     })
 }
 
-
 #[cfg(test)]
 mod tests;

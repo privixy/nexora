@@ -86,6 +86,5 @@ fn try_extract_field(field: &Field, buf: &mut &[u8]) -> Result<JsonValue, ()> {
     })
 }
 
-
 #[cfg(test)]
 mod tests;

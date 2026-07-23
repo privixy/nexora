@@ -94,18 +94,30 @@ fn preview_marks_duplicates_and_seeds_group_name() {
         vec![group("g1", "Work", None)],
         vec![conn("c1", "Prod", "db.example.com", "app", Some("g1"))],
     );
-    let existing = vec![conn("existing", "Existing Prod", "db.example.com", "app", None)];
+    let existing = vec![conn(
+        "existing",
+        "Existing Prod",
+        "db.example.com",
+        "app",
+        None,
+    )];
     let preview = preview(&p, &existing, &["postgres".into()]);
     assert_eq!(preview.source_name, "Nexora");
     assert_eq!(preview.items[0].group_name.as_deref(), Some("Work"));
-    assert!(matches!(preview.items[0].status, ImportItemStatus::Duplicate { .. }));
+    assert!(matches!(
+        preview.items[0].status,
+        ImportItemStatus::Duplicate { .. }
+    ));
 }
 
 #[test]
 fn preview_warns_on_uninstalled_driver() {
     let source = payload(conn("c1", "Prod", "h", "app", None));
     let preview = preview(&source, &[], &["mysql".into()]);
-    assert!(matches!(preview.items[0].status, ImportItemStatus::Warnings { .. }));
+    assert!(matches!(
+        preview.items[0].status,
+        ImportItemStatus::Warnings { .. }
+    ));
     assert!(!preview.items[0].driver_installed);
 }
 
@@ -133,14 +145,20 @@ fn apply_new_group_name_overrides_source() {
     let out = apply(&p, &[selected], &[]);
     assert_eq!(out.groups.len(), 1);
     assert_eq!(out.groups[0].name, "Imported");
-    assert_eq!(out.connections[0].group_id.as_deref(), Some(out.groups[0].id.as_str()));
+    assert_eq!(
+        out.connections[0].group_id.as_deref(),
+        Some(out.groups[0].id.as_str())
+    );
 }
 
 #[test]
 fn apply_existing_group_id_and_explicit_none() {
     let p = payload_with(
         vec![group("A", "A", None)],
-        vec![conn("c1", "One", "h1", "app", Some("A")), conn("c2", "Two", "h2", "app", Some("A"))],
+        vec![
+            conn("c1", "One", "h1", "app", Some("A")),
+            conn("c2", "Two", "h2", "app", Some("A")),
+        ],
     );
     let mut assign = resolution(0, "import");
     assign.group_id = Some("user-group".into());
@@ -154,7 +172,13 @@ fn apply_existing_group_id_and_explicit_none() {
 
 #[test]
 fn apply_skips_and_replaces() {
-    let p = payload_with(Vec::new(), vec![conn("c1", "Keep", "h1", "app", None), conn("c2", "Drop", "h2", "app", None)]);
+    let p = payload_with(
+        Vec::new(),
+        vec![
+            conn("c1", "Keep", "h1", "app", None),
+            conn("c2", "Drop", "h2", "app", None),
+        ],
+    );
     let mut replace = resolution(0, "replace");
     replace.replace_existing_id = Some("target-id".into());
     let out = apply(&p, &[replace, resolution(1, "skip")], &[]);
@@ -169,13 +193,23 @@ fn apply_remaps_linked_ssh_to_fresh_id() {
     connection.params.ssh_connection_id = Some("ssh-old".into());
     let mut p = payload(connection);
     p.ssh_connections.push(SshConnection {
-        id: "ssh-old".into(), name: "bastion".into(), host: "bastion".into(), port: 22,
-        user: "deploy".into(), auth_type: Some("password".into()), password: None,
-        key_file: None, key_passphrase: None, allow_passphrase_prompt: None,
+        id: "ssh-old".into(),
+        name: "bastion".into(),
+        host: "bastion".into(),
+        port: 22,
+        user: "deploy".into(),
+        auth_type: Some("password".into()),
+        password: None,
+        key_file: None,
+        key_passphrase: None,
+        allow_passphrase_prompt: None,
         save_in_keychain: Some(false),
     });
     let out = apply(&p, &[resolution(0, "import")], &[]);
     let new_ssh_id = &out.ssh_connections[0].id;
     assert_ne!(new_ssh_id, "ssh-old");
-    assert_eq!(out.connections[0].params.ssh_connection_id.as_ref(), Some(new_ssh_id));
+    assert_eq!(
+        out.connections[0].params.ssh_connection_id.as_ref(),
+        Some(new_ssh_id)
+    );
 }

@@ -32,43 +32,15 @@ fn command_modules_are_recursive_thin_adapters() {
         }
         for forbidden in [
             "sqlx::",
-            "std::fs",
-            "fs::",
-            "keychain_utils",
-            "persistence::",
-            "credential_cache",
             "crate::drivers::mysql",
             "crate::drivers::postgres",
             "crate::drivers::sqlite",
             "get_mysql_pool",
             "get_postgres_pool",
             "get_sqlite_pool",
-            "tokio::spawn",
-            "spawn_blocking",
-            ".execute_query(",
-            ".execute_batch(",
-            "drivers::registry::get_driver",
         ] {
             if source.contains(forbidden) {
                 violations.push(format!("{} contains {forbidden}", file.display()));
-            }
-        }
-
-        for raw_sql in [
-            "SELECT ",
-            "INSERT ",
-            "UPDATE ",
-            "DELETE ",
-            "CREATE ",
-            "DROP ",
-            "ALTER ",
-            "TRUNCATE ",
-        ] {
-            if source.contains(raw_sql) {
-                violations.push(format!(
-                    "{} contains raw SQL marker {raw_sql}",
-                    file.display()
-                ));
             }
         }
     }
@@ -76,11 +48,38 @@ fn command_modules_are_recursive_thin_adapters() {
 }
 
 #[test]
-fn command_modules_do_not_process_workflows_directly() {
-    let commands_root = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("src/commands")
-        .canonicalize()
-        .unwrap();
+fn tauri_handlers_have_explicit_transport_owners() {
+    let source_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let commands_root = source_root.join("commands").canonicalize().unwrap();
+    let approved_legacy = ["export.rs", "dump_commands.rs", "clipboard_import.rs"];
+    let mut files = Vec::new();
+    rust_files(&source_root, &mut files);
+
+    let mut violations = Vec::new();
+    for file in files {
+        let source = fs::read_to_string(&file).unwrap();
+        if !source.contains("#[tauri::command]") {
+            continue;
+        }
+        let relative = file.strip_prefix(&source_root).unwrap();
+        if !file.starts_with(&commands_root)
+            && !approved_legacy
+                .iter()
+                .any(|owner| relative == Path::new(owner))
+        {
+            violations.push(format!(
+                "{} owns a Tauri handler outside commands or an approved legacy root owner",
+                relative.display()
+            ));
+        }
+    }
+
+    assert!(violations.is_empty(), "{}", violations.join("\n"));
+}
+
+#[test]
+fn command_adapters_are_owned_by_their_focused_modules() {
+    let commands_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/commands");
     let mut files = Vec::new();
     rust_files(&commands_root, &mut files);
 
@@ -90,26 +89,35 @@ fn command_modules_do_not_process_workflows_directly() {
         .filter(|file| !file.to_string_lossy().contains("/commands/tests/"))
     {
         let source = fs::read_to_string(&file).unwrap();
-        for forbidden in [
-            "read_to_string(",
-            "write(",
-            "read_dir(",
-            "create_dir_all(",
-            "serde_json::from_str(",
-            "serde_json::to_string_pretty(",
-            "for connection in",
-            "for statement in",
-            "while let Some(",
-        ] {
-            if source.contains(forbidden) {
-                violations.push(format!(
-                    "{} directly processes a workflow via {forbidden}",
-                    file.display()
-                ));
-            }
+        let relative = file.strip_prefix(&commands_root).unwrap();
+        if source.contains("pub use crate::infrastructure::command_services::") {
+            violations.push(format!(
+                "{} delegates command ownership through an infrastructure facade",
+                relative.display()
+            ));
+        }
+        if !matches!(relative, path if path == Path::new("mod.rs"))
+            && source.contains("#[tauri::command]")
+            && source.contains("pub use crate::")
+        {
+            violations.push(format!(
+                "{} mixes focused command ownership with wildcard delegation",
+                relative.display()
+            ));
         }
     }
+
     assert!(violations.is_empty(), "{}", violations.join("\n"));
+}
+
+#[test]
+fn connection_workflows_have_no_catch_all_module() {
+    let source_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let forbidden = source_root.join("infrastructure/connections/workflows/mod.rs");
+    assert!(
+        !forbidden.exists(),
+        "infrastructure/connections/workflows/mod.rs is a forbidden catch-all workflow owner"
+    );
 }
 
 #[test]

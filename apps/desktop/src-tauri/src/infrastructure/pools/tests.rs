@@ -1,7 +1,6 @@
 use crate::models::{ConnectionParams, DatabaseSelection};
 use crate::pool_manager::{
-    build_connection_key, build_mysql_options, format_error_chain,
-    is_pipes_as_concat_unsupported,
+    build_connection_key, build_mysql_options, format_error_chain, is_pipes_as_concat_unsupported,
 };
 use sqlx::mysql::MySqlSslMode;
 

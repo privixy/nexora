@@ -58,15 +58,8 @@ fn command_families_have_exact_single_owners() {
     for family in families {
         let source = std::fs::read_to_string(root.join(family))
             .unwrap_or_else(|_| panic!("missing command family: {family}"));
-        assert!(source.contains("pub use crate::infrastructure::command_services::"));
-        let owner = std::fs::read_to_string(
-            root.parent()
-                .unwrap()
-                .join("infrastructure/command_services")
-                .join(family),
-        )
-        .unwrap_or_else(|_| panic!("missing command service owner: {family}"));
-        assert!(owner.contains("#[tauri::command]"));
+        assert!(source.contains("#[tauri::command]"));
+        assert!(!source.contains("pub use crate::infrastructure::command_services::"));
         let module_name = family.trim_end_matches(".rs");
         assert!(module.contains(&format!("mod {module_name};")));
         assert!(module.contains(&format!("pub use {module_name}::*;")));

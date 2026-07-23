@@ -493,9 +493,7 @@ fn classify_cte_with_select() {
 #[test]
 fn classify_cte_with_update_is_write() {
     assert_eq!(
-        classify_query_kind(
-            "WITH x AS (SELECT id FROM o) UPDATE orders SET status = 'x' FROM x"
-        ),
+        classify_query_kind("WITH x AS (SELECT id FROM o) UPDATE orders SET status = 'x' FROM x"),
         "write"
     );
 }

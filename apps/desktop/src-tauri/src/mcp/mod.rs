@@ -1,8 +1,8 @@
+mod audit;
+mod connections;
 pub mod install;
 pub mod preflight;
 pub mod protocol;
-mod audit;
-mod connections;
 mod resources;
 mod router;
 mod server;

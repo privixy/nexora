@@ -416,10 +416,11 @@ describe("architecture policy", () => {
 
     try {
       const files = {
-        "apps/desktop/src-tauri/src/commands/query.rs": "use sqlx::Row;\n",
+        "apps/desktop/src-tauri/src/commands/query.rs": "use sqlx::Row;\npub use crate::infrastructure::command_services::query::*;\n",
         "apps/desktop/src-tauri/src/domains/query.rs": "use tauri::AppHandle;\n",
         "apps/desktop/src-tauri/src/drivers/mysql.rs": "use crate::commands;\n",
-        "apps/desktop/src-tauri/src/infrastructure/files.rs": "use crate::commands;\n",
+        "apps/desktop/src-tauri/src/infrastructure/files.rs": "use crate::commands;\n#[tauri::command]\nfn read_file() {}\n",
+        "apps/desktop/src-tauri/src/infrastructure/connections/workflows/mod.rs": "pub fn catch_all() {}\n",
         "apps/desktop/src-tauri/src/config.rs": "pub use crate::infrastructure::config::*;\nfn logic() {}\n",
         "apps/desktop/src-tauri/src/count_query_compat.rs": "#[tauri::command]\nfn run() { let _ = \"SELECT COUNT(*) FROM ({}) as count_wrapper\"; }\n",
       };
@@ -455,6 +456,9 @@ describe("architecture policy", () => {
         expect.stringContaining("domains/query.rs: Rust domains may not depend on tauri"),
         expect.stringContaining("drivers/mysql.rs: Rust drivers may not depend on commands or domains"),
         expect.stringContaining("infrastructure/files.rs: Rust infrastructure may not depend on commands"),
+        expect.stringContaining("infrastructure/files.rs: Tauri handlers must live under commands"),
+        expect.stringContaining("commands/query.rs: command modules must own adapters directly"),
+        expect.stringContaining("connections/workflows/mod.rs: catch-all workflow modules are forbidden"),
         expect.stringContaining("config.rs: compatibility facade must contain re-exports only"),
         expect.stringContaining("count_query_compat.rs: frozen SQL owner must not declare a Tauri command"),
       ]));

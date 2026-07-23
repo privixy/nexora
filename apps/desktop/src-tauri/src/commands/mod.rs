@@ -1,3 +1,25 @@
+pub mod ai;
+pub mod ai_commands;
+pub mod askpass;
+pub mod connection_appearance;
+pub mod connection_import;
+pub mod connection_window;
+pub mod debug;
+pub mod explain_import;
+pub mod json_viewer;
+pub mod logs;
+pub mod mcp_install;
+pub mod notebooks;
+pub mod plugin_commands;
+pub mod plugin_manager;
+pub mod preferences;
+pub mod query_history;
+pub mod results_window;
+pub mod saved_queries;
+pub mod task_manager;
+pub mod theme;
+pub mod updater;
+
 pub use crate::infrastructure::connections::{
     expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
     get_config_path, get_ssh_config_path, resolve_connection_params,
@@ -41,10 +63,11 @@ pub use keybindings::*;
 mod windows;
 pub use windows::*;
 
+pub(crate) use crate::domains::connections::*;
+pub use crate::domains::connections::{apply_export_payload, QueryCancellationState};
 pub(crate) use crate::infrastructure::cancellation::{
     register_abort_handle, unregister_abort_handle, AbortHandleMap,
 };
-pub use crate::infrastructure::connections::workflows::*;
 
 #[cfg(test)]
 mod tests;

@@ -7,10 +7,18 @@ fn ai_key_workflow_writes_keychain_before_cache_and_deletes_in_the_same_order() 
         "openai",
         "secret",
         |provider, key| {
-            events.lock().unwrap().push(format!("keychain:{provider}:{key}"));
+            events
+                .lock()
+                .unwrap()
+                .push(format!("keychain:{provider}:{key}"));
             Ok(())
         },
-        |provider, key| events.lock().unwrap().push(format!("cache:{provider}:{key}")),
+        |provider, key| {
+            events
+                .lock()
+                .unwrap()
+                .push(format!("cache:{provider}:{key}"))
+        },
     )
     .unwrap();
     ai_keys::delete_with(
@@ -19,7 +27,12 @@ fn ai_key_workflow_writes_keychain_before_cache_and_deletes_in_the_same_order() 
             events.lock().unwrap().push(format!("delete:{provider}"));
             Ok(())
         },
-        |provider| events.lock().unwrap().push(format!("invalidate:{provider}")),
+        |provider| {
+            events
+                .lock()
+                .unwrap()
+                .push(format!("invalidate:{provider}"))
+        },
     )
     .unwrap();
     assert_eq!(

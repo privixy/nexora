@@ -463,6 +463,7 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
     .sort();
   const sources = new Map(rustFiles.map((file) => [file, readFileSync(join(root, file), "utf8")]));
 
+  const domainWorkflowAdapters = `${sourceRoot}/domains/connections/workflow_support.rs`;
   const dependencyRules = [
     [`${sourceRoot}/commands`, [
       ["sqlx", /\bsqlx(?:::|\b)/],
@@ -482,13 +483,30 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
     ]],
   ];
 
+  const commandsRoot = `${sourceRoot}/commands`;
+  const approvedLegacyCommandOwners = new Set([
+    `${sourceRoot}/export.rs`,
+    `${sourceRoot}/dump_commands.rs`,
+    `${sourceRoot}/clipboard_import.rs`,
+  ]);
+
   for (const [file, source] of sources) {
     if (file.split("/").includes("tests") || file.endsWith("/tests.rs")) continue;
     for (const [directory, forbidden] of dependencyRules) {
       if (!isUnderRoot(file, directory)) continue;
       for (const [label, pattern] of forbidden) {
+        if (directory === `${sourceRoot}/domains` && label === "tauri" && isUnderRoot(file, domainWorkflowAdapters)) continue;
         if (pattern.test(source)) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
       }
+    }
+    if (source.includes("#[tauri::command]") && !isUnderRoot(file, commandsRoot) && !approvedLegacyCommandOwners.has(file)) {
+      violations.push(`${file}: Tauri handlers must live under commands or an approved legacy root owner`);
+    }
+    if (isUnderRoot(file, commandsRoot) && source.includes("pub use crate::infrastructure::command_services::")) {
+      violations.push(`${file}: command modules must own adapters directly instead of re-exporting infrastructure command services`);
+    }
+    if (file === `${sourceRoot}/infrastructure/connections/workflows/mod.rs`) {
+      violations.push(`${file}: catch-all workflow modules are forbidden`);
     }
   }
 

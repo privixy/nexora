@@ -1,6 +1,6 @@
 #[test]
 fn record_commands_forward_exact_context_and_driver_arguments() {
-    let source = include_str!("../../infrastructure/command_services/records.rs");
+    let source = include_str!("../records.rs");
     assert_eq!(source.matches("connection_id: &connection_id").count(), 3);
     assert_eq!(source.matches("database: database.as_deref()").count(), 3);
     assert_eq!(source.matches("schema: schema.as_deref()").count(), 3);
@@ -14,7 +14,7 @@ fn record_commands_forward_exact_context_and_driver_arguments() {
 
 #[test]
 fn record_commands_resolve_once_and_propagate_errors() {
-    let source = include_str!("../../infrastructure/command_services/records.rs");
+    let source = include_str!("../records.rs");
     assert_eq!(
         source
             .matches("TauriConnectionContextResolver::new(app)")

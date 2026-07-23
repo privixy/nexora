@@ -1,6 +1,6 @@
 use nexora_lib::config::{
-    is_connection_readonly, AiKeyStatus, AppConfig, PluginConfig,
-    DEFAULT_AI_AUDIT_ENABLED, DEFAULT_AI_AUDIT_MAX_ENTRIES, DEFAULT_AI_SESSION_GAP_MINUTES,
+    is_connection_readonly, AiKeyStatus, AppConfig, PluginConfig, DEFAULT_AI_AUDIT_ENABLED,
+    DEFAULT_AI_AUDIT_MAX_ENTRIES, DEFAULT_AI_SESSION_GAP_MINUTES,
     DEFAULT_MCP_APPROVAL_ALWAYS_ON_TOP, DEFAULT_MCP_APPROVAL_MODE,
     DEFAULT_MCP_APPROVAL_NOTIFY_SOUND, DEFAULT_MCP_APPROVAL_TIMEOUT_SECONDS,
     DEFAULT_MCP_PREFLIGHT_EXPLAIN, DEFAULT_MCP_READONLY_DEFAULT,
@@ -42,8 +42,6 @@ fn target_config_modules_and_facades_exist() {
     assert!(!root_facade.contains("#[tauri::command]"));
 
     let command_adapter = std::fs::read_to_string(root.join("commands/config.rs")).unwrap();
-    assert!(command_adapter.contains("pub use crate::infrastructure::command_services::config::*"));
-    let command_owner =
-        std::fs::read_to_string(root.join("infrastructure/command_services/config.rs")).unwrap();
-    assert!(command_owner.contains("#[tauri::command]"));
+    assert!(command_adapter.contains("#[tauri::command]"));
+    assert!(!command_adapter.contains("pub use crate::infrastructure::command_services::"));
 }

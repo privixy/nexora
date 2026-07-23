@@ -20,11 +20,22 @@ fn get_mysql_params() -> ConnectionParams {
 fn get_postgres_params() -> ConnectionParams {
     ConnectionParams {
         driver: "postgres".to_string(),
-        host: Some(std::env::var("NEXORA_TEST_PG_HOST").unwrap_or_else(|_| "127.0.0.1".to_string())),
-        port: std::env::var("NEXORA_TEST_PG_PORT").ok().and_then(|port| port.parse().ok()).or(Some(54320)),
-        username: Some(std::env::var("NEXORA_TEST_PG_USER").unwrap_or_else(|_| "postgres".to_string())),
-        password: Some(std::env::var("NEXORA_TEST_PG_PASSWORD").unwrap_or_else(|_| "password".to_string())),
-        database: DatabaseSelection::Single(std::env::var("NEXORA_TEST_PG_DB").unwrap_or_else(|_| "testdb".to_string())),
+        host: Some(
+            std::env::var("NEXORA_TEST_PG_HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
+        ),
+        port: std::env::var("NEXORA_TEST_PG_PORT")
+            .ok()
+            .and_then(|port| port.parse().ok())
+            .or(Some(54320)),
+        username: Some(
+            std::env::var("NEXORA_TEST_PG_USER").unwrap_or_else(|_| "postgres".to_string()),
+        ),
+        password: Some(
+            std::env::var("NEXORA_TEST_PG_PASSWORD").unwrap_or_else(|_| "password".to_string()),
+        ),
+        database: DatabaseSelection::Single(
+            std::env::var("NEXORA_TEST_PG_DB").unwrap_or_else(|_| "testdb".to_string()),
+        ),
         ..Default::default()
     }
 }
@@ -580,12 +591,12 @@ async fn test_concurrent_cancel_aborts_all_in_flight_queries() {
 #[tokio::test]
 #[ignore]
 async fn live_pg_update_record_handles_temporal_and_uuid_columns() {
-    assert!(
-        std::env::var("NEXORA_TEST_PG").is_ok(),
-        "live PostgreSQL regression requires NEXORA_TEST_PG=1 and a PostgreSQL service"
-    );
     let params = get_postgres_params();
-    require_integration_service(wait_for_postgres(&params).await, "PostgreSQL", params.port.unwrap_or(54320));
+    require_integration_service(
+        wait_for_postgres(&params).await,
+        "PostgreSQL",
+        params.port.unwrap_or(54320),
+    );
     let pool = nexora_lib::pool_manager::get_postgres_pool(&params)
         .await
         .expect("connect to test postgres");
@@ -596,19 +607,31 @@ async fn live_pg_update_record_handles_temporal_and_uuid_columns() {
     drop(client);
 
     let mut pk_map = HashMap::new();
-    pk_map.insert("id".to_string(), serde_json::json!("550e8400-e29b-41d4-a716-446655440000"));
+    pk_map.insert(
+        "id".to_string(),
+        serde_json::json!("550e8400-e29b-41d4-a716-446655440000"),
+    );
     for (column, value) in [
         ("created_at", serde_json::json!("2025-06-30T12:00:00+00:00")),
         ("due_date", serde_json::json!("2025-07-01")),
         ("start_time", serde_json::json!("09:30:00")),
     ] {
         let updated = postgres::update_record(
-            &params, "nexora_401_regression", &pk_map, column, value, "public", 10 * 1024 * 1024,
-        ).await.expect("update PostgreSQL temporal column");
+            &params,
+            "nexora_401_regression",
+            &pk_map,
+            column,
+            value,
+            "public",
+            10 * 1024 * 1024,
+        )
+        .await
+        .expect("update PostgreSQL temporal column");
         assert_eq!(updated, 1);
     }
 
-    let _ = postgres::execute_query(&params, "DROP TABLE nexora_401_regression", None, 1, None).await;
+    let _ =
+        postgres::execute_query(&params, "DROP TABLE nexora_401_regression", None, 1, None).await;
 }
 
 #[tokio::test]

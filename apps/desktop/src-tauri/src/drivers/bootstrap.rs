@@ -6,10 +6,12 @@ where
     ),
 {
     crate::drivers::registry::register_driver(crate::drivers::mysql::MysqlDriver::new()).await;
-    crate::drivers::registry::register_driver(crate::drivers::postgres::PostgresDriver::new()).await;
+    crate::drivers::registry::register_driver(crate::drivers::postgres::PostgresDriver::new())
+        .await;
     crate::drivers::registry::register_driver(crate::drivers::sqlite::SqliteDriver::new()).await;
     let (plugin_configs, enabled_ids) = load_external_driver_config();
-    crate::plugins::manager::load_plugins_with_configs(plugin_configs, enabled_ids.as_deref()).await;
+    crate::plugins::manager::load_plugins_with_configs(plugin_configs, enabled_ids.as_deref())
+        .await;
 }
 
 #[cfg(test)]

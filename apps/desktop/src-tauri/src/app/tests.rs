@@ -6,11 +6,19 @@ use std::fs;
 
 #[test]
 fn app_setup_legacy_preserves_builder_and_shutdown_order() {
-    let source = ["plugins.rs", "state.rs", "setup.rs", "commands.rs", "mod.rs"]
-        .into_iter()
-        .map(|file| fs::read_to_string(format!("{}/src/app/{file}", env!("CARGO_MANIFEST_DIR"))).unwrap())
-        .collect::<Vec<_>>()
-        .join("\n");
+    let source = [
+        "plugins.rs",
+        "state.rs",
+        "setup.rs",
+        "commands.rs",
+        "mod.rs",
+    ]
+    .into_iter()
+    .map(|file| {
+        fs::read_to_string(format!("{}/src/app/{file}", env!("CARGO_MANIFEST_DIR"))).unwrap()
+    })
+    .collect::<Vec<_>>()
+    .join("\n");
     let ordered = [
         ".plugin(tauri_plugin_updater::Builder::new().build())",
         ".plugin(tauri_plugin_clipboard_manager::init())",
@@ -38,21 +46,24 @@ fn app_setup_legacy_preserves_builder_and_shutdown_order() {
     assert_ordered(&source, &ordered);
 
     let setup = source.split(".setup(move |app|").nth(1).unwrap();
-    assert_ordered(setup, &[
-        "crate::config::load_config_internal",
-        "crate::drivers::bootstrap::register_all_drivers",
-        "crate::config::load_config_internal",
-        "crate::health_check::start_ping_loop",
-        "crate::ai_approval_watcher::spawn",
-        "crate::heartbeat::spawn",
-        ".start_maximized",
-        "window.maximize()",
-        "if args.debug",
-        "window.open_devtools()",
-        "if let Some(path) = args.explain.clone()",
-        "crate::explain_import::spawn_visual_explain_window",
-        "main.close()",
-    ]);
+    assert_ordered(
+        setup,
+        &[
+            "crate::config::load_config_internal",
+            "crate::drivers::bootstrap::register_all_drivers",
+            "crate::config::load_config_internal",
+            "crate::health_check::start_ping_loop",
+            "crate::ai_approval_watcher::spawn",
+            "crate::heartbeat::spawn",
+            ".start_maximized",
+            "window.maximize()",
+            "if args.debug",
+            "window.open_devtools()",
+            "if let Some(path) = args.explain.clone()",
+            "crate::explain_import::spawn_visual_explain_window",
+            "main.close()",
+        ],
+    );
 
     let run_body = source.split(".run(|_app_handle, event|").nth(1).unwrap();
     assert!(run_body.contains("if let tauri::RunEvent::Exit = event"));

@@ -36,6 +36,20 @@ fn blob_service_preserves_wire_mime_and_file_stats_contracts() {
     );
 }
 
+#[test]
+fn blob_service_preserves_exact_open_and_read_errors() {
+    use super::BlobService;
+
+    let missing = std::path::Path::new("missing-blob-file");
+    assert!(BlobService::get_file_stats(missing)
+        .unwrap_err()
+        .starts_with("Failed to open file: "));
+
+    let dir = tempfile::tempdir().unwrap();
+    let directory_error = BlobService::get_file_stats(dir.path()).unwrap_err();
+    assert!(directory_error.starts_with("Failed to read file header: "));
+}
+
 #[tokio::test]
 async fn blob_service_preserves_file_reference_and_data_url_workflow() {
     use super::BlobService;

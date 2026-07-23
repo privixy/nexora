@@ -193,8 +193,7 @@ fn cleanup_removes_old_files_only() {
     let old_time = std::time::SystemTime::now()
         .checked_sub(Duration::from_secs(3600))
         .unwrap();
-    let _ =
-        filetime::set_file_mtime(&stale_path, filetime::FileTime::from_system_time(old_time));
+    let _ = filetime::set_file_mtime(&stale_path, filetime::FileTime::from_system_time(old_time));
     let deleted = cleanup_expired_in(tmp.path(), 60).unwrap();
     assert_eq!(deleted, 1);
     assert!(!stale_path.exists());

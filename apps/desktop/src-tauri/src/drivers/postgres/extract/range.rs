@@ -82,6 +82,5 @@ fn get_upper_bound(flag: u8) -> char {
     }
 }
 
-
 #[cfg(test)]
 mod tests;

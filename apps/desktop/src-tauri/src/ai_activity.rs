@@ -8,12 +8,12 @@
 //!   - `ai_activity.jsonl` — active log (append-only, one event per line)
 //!   - `ai_activity.{1..5}.jsonl` — rotated archives (1 = most recent)
 //!   - `.mcp_session_state.json` — current session id + last activity timestamp
+use crate::paths::get_app_config_dir;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 use std::fs::{self, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
-use crate::paths::get_app_config_dir;
 const ACTIVITY_FILENAME: &str = "ai_activity.jsonl";
 const SESSION_STATE_FILENAME: &str = ".mcp_session_state.json";
 const MAX_ROTATED_FILES: usize = 5;

@@ -93,8 +93,7 @@ fn test_truncated_composite_fills_remaining_with_nulls() {
         Field::new("first".to_string(), Type::INT4),
         Field::new("second".to_string(), Type::INT4),
     ];
-    let full_buf =
-        build_composite_buf(&[(Type::INT4.oid(), Some(1)), (Type::INT4.oid(), Some(2))]);
+    let full_buf = build_composite_buf(&[(Type::INT4.oid(), Some(1)), (Type::INT4.oid(), Some(2))]);
     let truncated = &full_buf[..16];
     let mut slice = truncated;
     let result = extract_or_null(&fields, &mut slice);

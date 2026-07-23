@@ -2,11 +2,7 @@ use tauri::{AppHandle, Manager, Runtime};
 
 pub use super::{get_ai_api_key, get_ai_api_key_status, AiKeyStatus};
 
-pub fn store<R: Runtime>(
-    app: &AppHandle<R>,
-    provider: &str,
-    key: &str,
-) -> Result<(), String> {
+pub fn store<R: Runtime>(app: &AppHandle<R>, provider: &str, key: &str) -> Result<(), String> {
     let cache = app.state::<std::sync::Arc<crate::credential_cache::CredentialCache>>();
     store_with(
         provider,
@@ -18,11 +14,9 @@ pub fn store<R: Runtime>(
 
 pub fn delete<R: Runtime>(app: &AppHandle<R>, provider: &str) -> Result<(), String> {
     let cache = app.state::<std::sync::Arc<crate::credential_cache::CredentialCache>>();
-    delete_with(
-        provider,
-        crate::keychain_utils::delete_ai_key,
-        |provider| crate::credential_cache::invalidate_ai_key(&cache, provider),
-    )
+    delete_with(provider, crate::keychain_utils::delete_ai_key, |provider| {
+        crate::credential_cache::invalidate_ai_key(&cache, provider)
+    })
 }
 
 pub(crate) fn store_with(
