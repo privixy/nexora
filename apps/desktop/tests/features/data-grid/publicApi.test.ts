@@ -2,10 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   DataGrid,
   JsonViewerPage,
-  getForeignKeyForPreview,
-  pickPrimaryForeignKeyByColumn,
-  ThemeContext,
-  useSettings,
   type DataGridProps,
   type JsonInputProps,
   type JsonTreeViewProps,
@@ -16,11 +12,6 @@ describe("data-grid public API", () => {
   it("publishes supported components and contracts", () => {
     expect(DataGrid).toBeDefined();
     expect(JsonViewerPage).toBeDefined();
-    expect(getForeignKeyForPreview).toBeDefined();
-    expect(pickPrimaryForeignKeyByColumn).toBeDefined();
-    expect(ThemeContext).toBeDefined();
-    expect(useSettings).toBeDefined();
-
     const dataGridProps = {} as DataGridProps;
     const jsonInputProps = {} as JsonInputProps;
     const jsonTreeViewProps = {} as JsonTreeViewProps;

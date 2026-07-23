@@ -5,7 +5,7 @@ import {
   resolveQueryVariables,
   findUnresolvedDependencies,
 } from "../../../../src/features/notebooks/lib/notebookVariables";
-import type { NotebookCell } from "../../../../src/types/notebook";
+import type { NotebookCell } from "../../../../src/features/notebooks";
 
 function makeCell(overrides: Partial<NotebookCell> = {}): NotebookCell {
   return {

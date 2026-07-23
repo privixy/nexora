@@ -30,7 +30,7 @@ import {
 } from "../../../notebooks";
 import { ConfirmModal } from "../../../../shared/ui/ConfirmModal";
 import { ContextMenu, type ContextMenuItem } from "../../../../shared/ui/ContextMenu";
-import type { NotebookMetadata } from "../../../../types/notebook";
+import type { NotebookMetadata } from "../../../notebooks";
 
 interface NotebooksSectionProps {
   /** Active connection — notebooks shown belong to it. */

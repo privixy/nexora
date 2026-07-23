@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { getConnectionAccent, getConnectionIcon } from "@/features/connections/lib/driverUI";
-import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "@/utils/connectionIconPack";
+import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "@/features/connections/lib/connectionIconPack";
 import type { SavedConnection } from "@/contexts/DatabaseContext";
 import type { PluginManifest } from "@/types/plugins";
 

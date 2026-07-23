@@ -1,4 +1,4 @@
-import type { Index } from "../../../types/schema";
+import type { Index } from "../contracts/schema";
 
 export type GroupedIndex = Index & { columns: string[] };
 

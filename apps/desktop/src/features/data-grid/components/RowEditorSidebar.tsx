@@ -1,31 +1,11 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
-import { FieldEditor } from "../../../components/ui/FieldEditor";
+import { FieldEditor } from "./FieldEditor";
 import { SlotAnchor } from "../../../features/plugins";
 import { useRowEditor } from "../hooks/useRowEditor";
 import { useRowEditorResize } from "../hooks/useRowEditorResize";
-
-export interface RowEditorSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  rowData: Record<string, unknown>;
-  originalRowData?: Record<string, unknown>;
-  rowIndex: number;
-  isInsertion: boolean;
-  columns: Array<{ name: string; type?: string; characterMaximumLength?: number }>;
-  autoIncrementColumns?: string[];
-  defaultValueColumns?: string[];
-  nullableColumns?: string[];
-  onChange: (colName: string, value: unknown) => void;
-  focusField?: string;
-  detectJsonInTextColumns?: boolean;
-  connectionId?: string | null;
-  database?: string | null;
-  tableName?: string | null;
-  pkColumns?: string[] | null;
-  schema?: string | null;
-}
+import type { RowEditorSidebarProps } from "../contracts";
 
 export const RowEditorSidebar = ({
   isOpen,

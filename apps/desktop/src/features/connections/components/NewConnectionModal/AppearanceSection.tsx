@@ -8,8 +8,8 @@ import EmojiPicker, { Theme, EmojiStyle, SuggestionMode, SkinTonePickerLocation,
 import clsx from "clsx";
 import { Check, Sparkles, Grid3x3, Smile, Image as ImageIcon, Pipette, Upload, Trash2 } from "lucide-react";
 import type { ConnectionAppearance, IconOverride } from "../..";
-import type { PluginManifest } from "../../../../types/plugins";
-import { ALL_ICON_NAMES, getLucideIconComponent, camelToKebab } from "../../../../utils/connectionIconPack";
+import type { PluginManifest } from "../../../plugins";
+import { ALL_ICON_NAMES, getLucideIconComponent, camelToKebab } from "../../lib/connectionIconPack";
 import { getConnectionIcon } from "../../lib/driverUI";
 import { ConnectionIconImage } from "../ConnectionIconImage";
 

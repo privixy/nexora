@@ -8,7 +8,7 @@ import {
 import type {
   CellExecutionEntry,
   NotebookCell,
-} from "../../../../src/types/notebook";
+} from "../../../../src/features/notebooks";
 
 function makeEntry(
   overrides: Partial<CellExecutionEntry> = {},

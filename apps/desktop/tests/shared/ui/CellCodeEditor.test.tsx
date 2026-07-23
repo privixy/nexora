@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render as testingRender, screen, fireEvent } from "@testing-library/react";
 import { CellCodeEditor } from "../../../src/shared/ui/CellCodeEditor";
 import { EditorThemeProvider } from "../../../src/shared/ui/EditorThemeProvider";
-import type { Theme } from "../../../src/types/theme";
+import type { Theme } from "../../../src/shared/types/theme";
 
 interface MonacoMockProps {
   value?: string;
@@ -38,7 +38,7 @@ vi.mock("@monaco-editor/react", () => {
   };
 });
 
-vi.mock("../../../src/themes/themeUtils", () => ({
+vi.mock("../../../src/features/settings/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 

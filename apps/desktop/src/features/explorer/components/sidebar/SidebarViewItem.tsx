@@ -15,7 +15,7 @@ import clsx from "clsx";
 import { SidebarColumnItem } from "./SidebarColumnItem";
 import { SidebarIndexList } from "./SidebarIndexList";
 import { groupIndexes } from "../../../schema";
-import type { TableColumn, Index } from "../../../../types/schema";
+import type { TableColumn, Index } from "../../../schema";
 import type { ContextMenuData } from "../../contracts";
 
 interface SidebarViewItemProps {

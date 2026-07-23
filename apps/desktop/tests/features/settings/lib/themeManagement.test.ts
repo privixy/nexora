@@ -23,7 +23,7 @@ import {
   getSystemThemeId,
   type ThemeMigrationResult,
 } from '../../../../src/features/settings/lib/themeManagement';
-import type { Theme, ThemeSettings } from '../../../../src/types/theme';
+import type { Theme, ThemeSettings } from '../../../../src/shared/types/theme';
 
 describe('themeManagement', () => {
   const localStorageMock = {

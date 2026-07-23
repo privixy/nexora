@@ -2,7 +2,7 @@ import type {
   NotebookCell,
   NotebookFile,
   NotebookParam,
-} from "../../../types/notebook";
+} from "..";
 import { generateCellId } from "./notebook";
 
 export function serializeNotebook(

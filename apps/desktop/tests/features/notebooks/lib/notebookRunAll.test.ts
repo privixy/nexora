@@ -7,7 +7,7 @@ import {
   addSkipped,
   formatRunAllSummary,
 } from "../../../../src/features/notebooks/lib/notebookRunAll";
-import type { NotebookCell } from "../../../../src/types/notebook";
+import type { NotebookCell } from "../../../../src/features/notebooks";
 
 function makeCell(overrides: Partial<NotebookCell> = {}): NotebookCell {
   return {

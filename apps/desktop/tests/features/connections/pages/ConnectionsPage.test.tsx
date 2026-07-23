@@ -7,7 +7,7 @@ import { useSettings } from "../../../../src/features/settings/hooks/useSettings
 import { useDrivers } from "../../../../src/features/plugins/hooks/useDrivers";
 import { useOpenConnectionInNewWindow } from "../../../../src/features/connections/hooks/useOpenConnectionInNewWindow";
 import type { SavedConnection } from "../../../../src/features/connections/state/DatabaseContext";
-import type { DriverCapabilities, PluginManifest } from "../../../../src/types/plugins";
+import type { DriverCapabilities, PluginManifest } from "../../../../src/features/plugins/contracts/plugins";
 import { DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
 
 vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({

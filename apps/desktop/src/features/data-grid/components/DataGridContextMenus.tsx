@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 import { ContextMenu, type ContextMenuItem } from "../../../shared/ui/ContextMenu";
 import { SlotAnchor } from "../../../features/plugins";
-import { getDateInputMode } from "../../../utils/dateInput";
-import { isJsonColumn } from "../../../utils/json";
+import { getDateInputMode } from "../lib/dateInput";
+import { isJsonColumn } from "../lib/json";
 import { supportsEmptyString } from "../../../shared/lib/text";
-import { getForeignKeyForPreview } from "../../schema";
-import type { ForeignKey } from "../../../types/editor";
+import { getForeignKeyForPreview } from "../../../shared/lib/foreignKeys";
+import type { ForeignKey } from "../../../shared/lib/foreignKeys";
 import type { MergedRow } from "../lib/dataGrid";
 
 export interface GridContextMenuState {

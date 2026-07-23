@@ -13,18 +13,17 @@ import {
   type ConnectionsFile,
 } from './DatabaseContext';
 import type { ReactNode } from 'react';
-import type { PluginManifest } from '../../../types/plugins';
-import { clearAutocompleteCache } from '../../../utils/autocomplete';
+import type { PluginManifest } from '../../plugins';
 import { toErrorMessage } from '../../../shared/lib/errors';
 import { useSettings } from '../../settings';
 import { findConnectionsForDrivers } from '../lib/connectionManager';
 import { isMultiDatabaseCapable, getEffectiveDatabase, getDatabaseList } from '../../plugins';
-import { formatWindowTitle } from '../../../utils/windowTitle';
+import { formatWindowTitle } from '../lib/windowTitle';
 import { createEmptyConnectionData } from './createEmptyConnectionData';
 
 const invoke = connectionGateway.invoke;
-
-export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
+const noopClearAutocompleteCache = () => {};
+export const DatabaseProvider = ({ children, clearAutocompleteCache = noopClearAutocompleteCache }: { children: ReactNode; clearAutocompleteCache?: (connectionId?: string) => void }) => {
   const { settings } = useSettings();
   const [activeConnectionId, setActiveConnectionId] = useState<string | null>(null);
   const [openConnectionIds, setOpenConnectionIds] = useState<string[]>([]);
@@ -1209,7 +1208,7 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
       setActiveTable(null);
       return null;
     });
-  }, [openConnectionIds]);
+  }, [openConnectionIds, clearAutocompleteCache]);
 
   const switchConnection = useCallback((connectionId: string) => {
     if (openConnectionIds.includes(connectionId)) {
@@ -1367,7 +1366,7 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
       },
     );
     return () => { unlisten.then(fn => fn()); };
-  }, []);
+  }, [clearAutocompleteCache]);
 
   // Track the set of connections open anywhere (across all windows). Seed from
   // the backend snapshot, then keep in sync via the broadcast event.

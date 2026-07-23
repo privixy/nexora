@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { settingsGateway } from "../platform/tauri/settingsGateway";
 import { useSettings, useUpdate } from "../features/settings";
-import { useChangelog } from "../hooks/useChangelog";
-import { useResultTypeColors } from "../hooks/useResultTypeColors";
+import { useChangelog } from "../features/settings";
+import { useResultTypeColors } from "../features/data-grid";
 import { APP_VERSION } from "./config/version";
 import { isVersionAtMost, isVersionNewer } from "../shared/lib/versionCompare";
 import { AppProviders } from "./providers";

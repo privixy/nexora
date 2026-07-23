@@ -1,4 +1,4 @@
-import type { NotebookCell, NotebookCellType, NotebookState } from "../../../types/notebook";
+import type { NotebookCell, NotebookCellType, NotebookState } from "..";
 
 export function generateCellId(): string {
   return `cell_${Math.random().toString(36).substring(2, 9)}`;

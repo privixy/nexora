@@ -16,31 +16,15 @@ import {
   formatJsonForEditor,
   parseJsonEditorValue,
   validateJson,
-} from "../../../utils/json";
+} from "../lib/json";
 import { CellCodeEditor } from "../../../shared/ui/CellCodeEditor";
 import { CellDiffEditor } from "../../../shared/ui/CellDiffEditor";
 import { JsonTreeView } from "./JsonTreeView";
+import type { JsonInputMode, JsonInputProps } from "../contracts";
 import {
   MIN_SIDE_BY_SIDE_WIDTH,
   useContainerWidth,
 } from "../../../shared/hooks/useContainerWidth";
-
-export type JsonInputMode = "code" | "tree" | "raw";
-
-export interface JsonInputProps {
-  value: unknown;
-  onChange: (value: unknown) => void;
-  placeholder?: string;
-  className?: string;
-  readOnly?: boolean;
-  // Hide the expand-to-window button. Used by JsonViewerPage to avoid recursion.
-  disableExpand?: boolean;
-  // Flex-fill the parent's height (needed inside JsonViewerPage where the
-  // surrounding container has explicit height). Off by default because in
-  // auto-height containers (sidebar) flex-fill collapses to 0.
-  fillHeight?: boolean;
-  originalValue?: unknown;
-}
 
 export const JsonInput: React.FC<JsonInputProps> = ({
   value,

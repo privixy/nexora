@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { emitTauri, listenTauri } from "../../../platform/tauri/events";
 import { MultiResultPanel } from "../components/MultiResultPanel";
-import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
+import { ResultEntryContent } from "../components/ResultEntryContent";
 import {
   RESULTS_SYNC_EVENT,
   RESULTS_ACTION_EVENT,

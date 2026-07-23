@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { NotebookState } from "../../../../src/types/notebook";
+import type { NotebookState } from "../../../../src/features/notebooks";
 import {
   createHistory,
   documentSignature,
@@ -12,7 +12,7 @@ import {
   HISTORY_LIMIT,
   COALESCE_MS,
 } from "../../../../src/features/notebooks/lib/notebookUndo";
-import type { NotebookCell } from "../../../../src/types/notebook";
+import type { NotebookCell } from "../../../../src/features/notebooks";
 
 function state(content: string, extra: Partial<NotebookState> = {}): NotebookState {
   return { cells: [{ id: "c1", type: "sql", content }], ...extra };
@@ -199,7 +199,7 @@ describe("notebookUndo", () => {
       content: "",
       ...over,
     });
-    const ns = (cells: NotebookCell[], over: Partial<typeof import("../../../../src/types/notebook")> = {}): NotebookState =>
+    const ns = (cells: NotebookCell[], over: Partial<typeof import("../../../../src/features/notebooks")> = {}): NotebookState =>
       ({ cells, ...(over as object) }) as NotebookState;
 
     it("detects an edited cell with a preview of the new content", () => {

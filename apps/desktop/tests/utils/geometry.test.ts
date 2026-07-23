@@ -4,7 +4,7 @@ import {
   isGeometricType,
   wkbHexToWkt,
   formatGeometricValue,
-} from "../../src/utils/geometry";
+} from "../../src/features/data-grid/lib/geometry";
 
 describe("geometry utils", () => {
   describe("isWkbHexString", () => {

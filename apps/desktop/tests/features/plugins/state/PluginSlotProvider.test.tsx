@@ -5,7 +5,7 @@ import { PluginSlotProvider } from "../../../../src/features/plugins/state/Plugi
 import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
 import { SettingsContext, DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
 import type { PluginSlotRegistryType } from "../../../../src/features/plugins/state/PluginSlotContext";
-import type { SlotContribution, SlotComponentProps } from "../../../../src/types/pluginSlots";
+import type { SlotContribution, SlotComponentProps } from "../../../../src/features/plugins/contracts/pluginSlots";
 
 const TestComponent = ({ context: _ctx, pluginId }: SlotComponentProps) => (
   <span data-testid="slot-component">{pluginId}</span>

@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { queryGateway } from '../../../platform/tauri';
-import type { ForeignKey, QueryResult } from '../../../types/editor';
+import type { QueryResult } from '..';
+import type { ForeignKey } from '../../schema';
 import { quoteTableRef } from '../../../shared/lib/identifiers';
 import {
   isForeignKeyValueNavigable,
   buildForeignKeyFilterClause,
-} from '../../schema';
+} from '../../../shared/lib/foreignKeys';
 
 export interface FetchReferencedRecordParams {
   connectionId: string;

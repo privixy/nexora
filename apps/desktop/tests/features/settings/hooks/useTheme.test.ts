@@ -3,7 +3,7 @@ import { useTheme } from '../../../../src/features/settings/hooks/useTheme';
 import { ThemeContext } from '../../../../src/features/settings/state/ThemeContext';
 import { renderHook } from '@testing-library/react';
 import React, { type ReactNode } from 'react';
-import type { Theme, ThemeSettings } from '../../../../src/types/theme';
+import type { Theme, ThemeSettings } from '../../../../src/shared/types/theme';
 import type { ThemeContextType } from '../../../../src/features/settings/state/ThemeContext';
 
 describe('useTheme', () => {

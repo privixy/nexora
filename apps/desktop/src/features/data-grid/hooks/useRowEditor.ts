@@ -1,14 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-
-export interface UseRowEditorOptions {
-  initialData: Record<string, unknown>;
-  onChange?: (fieldName: string, value: unknown) => void;
-}
-
-export interface UseRowEditorReturn {
-  editedData: Record<string, unknown>;
-  updateField: (fieldName: string, value: unknown) => void;
-}
+import type { UseRowEditorOptions, UseRowEditorReturn } from "../contracts";
 
 /**
  * Hook to manage row editing state

@@ -9,7 +9,7 @@
 export { usePluginQuery, usePluginConnection, usePluginToast, usePluginSetting, usePluginModal, usePluginTheme, usePluginTranslation, openUrl } from "../hooks/usePluginApi";
 
 // Types
-export type { SlotComponentProps, SlotContext, SlotName } from "../../../types/pluginSlots";
+export type { SlotComponentProps, SlotContext, SlotName } from "../contracts/pluginSlots";
 export type { PluginTranslator, UsePluginThemeReturn } from "../contracts";
 export type { PluginModalOptions } from "../state/PluginModalContext";
 

@@ -14,7 +14,7 @@ import {
   validateDumpOptions,
   toggleTableSelection,
   selectAllTables,
-} from "../../../utils/dumpUtils";
+} from "../lib/dumpUtils";
 import { formatElapsedTime } from "../../../shared/lib/formatTime";
 
 interface DumpDatabaseModalProps {

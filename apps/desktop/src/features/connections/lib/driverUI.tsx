@@ -1,10 +1,10 @@
 import { Network, Database, FolderOpen, Plug } from "lucide-react";
-import { getLucideIconComponent, camelToKebab } from "../../../utils/connectionIconPack";
+import { getLucideIconComponent, camelToKebab } from "./connectionIconPack";
 import { lazy, Suspense } from "react";
 import type { ReactNode } from "react";
-import type { PluginManifest } from "../../../types/plugins";
+import type { PluginManifest } from "../../plugins";
 import type { SavedConnection } from "..";
-import { PostgreSQLIcon, MySQLIcon, SQLiteIcon } from "../../../utils/driverIcons";
+import { PostgreSQLIcon, MySQLIcon, SQLiteIcon } from "./driverIcons";
 
 const FALLBACK_COLOR = "#64748b"; // slate-500
 

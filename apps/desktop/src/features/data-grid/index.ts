@@ -7,11 +7,12 @@ export {
   validatePendingInsertion,
 } from "./lib/pendingInsertions";
 export { JsonViewerPage } from "./pages/JsonViewerPage";
-export { ThemeContext, useSettings } from "../settings";
-export {
-  getForeignKeyForPreview,
-  pickPrimaryForeignKeyByColumn,
-} from "../schema";
+export { GeometryInput } from "./components/GeometryInput";
+export { MiniResultGrid } from "./components/MiniResultGrid";
+export { PaginationControls } from "./components/PaginationControls";
+export { TableToolbar } from "./components/TableToolbar";
+export { useResultTypeColors } from "./hooks/useResultTypeColors";
+export { isGeometricType } from "./lib/geometry";
 export type {
   DataGridProps,
   DataGridSelection,

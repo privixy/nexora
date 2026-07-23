@@ -8,7 +8,7 @@ import {
 import type {
   QueryHistoryRecoveryNotice,
   QueryHistoryResponse,
-} from "../../../types/queryHistory";
+} from "../contracts.queryHistory";
 
 export const QueryHistoryProvider = ({
   children,

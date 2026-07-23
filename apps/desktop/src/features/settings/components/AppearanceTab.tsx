@@ -4,7 +4,7 @@ import { Monitor, Code2 } from "lucide-react";
 import clsx from "clsx";
 import { useSettings } from "../hooks/useSettings";
 import { useTheme } from "../hooks/useTheme";
-import { getFontCSS } from "../../../utils/settings";
+import { getFontCSS } from "../lib/settings";
 import {
   SettingSection,
   SettingRow,

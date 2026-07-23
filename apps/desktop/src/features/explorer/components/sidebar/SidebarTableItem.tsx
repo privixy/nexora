@@ -18,7 +18,7 @@ import { SidebarIndexList } from "./SidebarIndexList";
 import { dragState } from "../../../editor";
 import { areTableItemPropsEqual, getSidebarTableContext } from "../../lib/sidebarTableItem";
 import { groupIndexes } from "../../../schema";
-import type { TableColumn, ForeignKey, Index } from "../../../../types/schema";
+import type { TableColumn, ForeignKey, Index } from "../../../schema";
 import type { ContextMenuData } from "../../contracts";
 
 interface SidebarTableItemProps {

@@ -6,7 +6,7 @@ import {
   insertionToBackendData,
   filterInsertionsBySelection,
 } from "../../../../src/features/data-grid/lib/pendingInsertions";
-import type { TableColumn, PendingInsertion } from "../../../../src/types/editor";
+import type { TableColumn, PendingInsertion } from "../../../../src/features/editor";
 
 describe("pendingInsertions", () => {
   describe("generateTempId", () => {

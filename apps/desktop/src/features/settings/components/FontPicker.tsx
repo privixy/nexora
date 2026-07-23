@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2 } from "lucide-react";
 import clsx from "clsx";
-import { AVAILABLE_FONTS } from "../../../utils/settings";
+import { AVAILABLE_FONTS } from "../lib/settings";
 
 interface FontPickerProps {
   value: string;

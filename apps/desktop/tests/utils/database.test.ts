@@ -5,7 +5,7 @@ import {
   getDatabaseList,
   getEffectiveDatabase,
 } from '../../src/features/plugins/lib/databaseCapabilities';
-import type { DriverCapabilities } from '../../src/types/plugins';
+import type { DriverCapabilities } from '../../src/features/plugins/contracts/plugins';
 
 const baseCapabilities: DriverCapabilities = {
   schemas: false,

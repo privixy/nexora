@@ -6,8 +6,8 @@ import {
   darken,
   generateColorScale,
 } from "../../src/features/settings/themes/colorUtils";
-import { generateMonacoTheme, applyThemeToCSS } from "../../src/themes/themeUtils";
-import type { Theme } from "../../src/types/theme";
+import { generateMonacoTheme, applyThemeToCSS } from "../../src/features/settings/themes/themeUtils";
+import type { Theme } from "../../src/shared/types/theme";
 
 describe("themeUtils", () => {
   const mockTheme: Theme = {

@@ -1,5 +1,5 @@
 import { notebookGateway } from "../../../platform/tauri/notebookGateway";
-import type { NotebookMetadata, NotebookState } from "../../../types/notebook";
+import type { NotebookMetadata, NotebookState } from "..";
 import { createDefaultNotebookState } from "./notebook";
 import { serializeNotebook, deserializeNotebook } from "./notebookFile";
 

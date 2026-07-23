@@ -1,5 +1,5 @@
-import type { NotebookCell } from "../../../types/notebook";
-import type { CellChartConfig } from "../../../types/notebook";
+import type { NotebookCell } from "..";
+import type { CellChartConfig } from "..";
 import { SqlCellEditor } from "./SqlCellEditor";
 import { SqlCellResult } from "./SqlCellResult";
 

@@ -28,9 +28,21 @@ const aiApprovalGateMock = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({ BrowserRouter: provider("BrowserRouter") }));
 vi.mock("../../src/app/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
-vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: provider("KeybindingsProvider") }));
-vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
-vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
+vi.mock("../../src/features/settings", () => ({
+  KeybindingsProvider: provider("KeybindingsProvider"),
+  WhatsNewModal: (props: ComponentProps<"div">) => {
+    whatsNewModalMock(props);
+    return <div data-testid="whats-new-modal" />;
+  },
+  AiApprovalGate: (props: { attentionAdapter: unknown; renderExplainPlan: unknown }) => {
+    aiApprovalGateMock(props);
+    return <div data-testid="ai-approval-gate" />;
+  },
+}));
+vi.mock("../../src/features/plugins", () => ({
+  PluginSlotProvider: provider("PluginSlotProvider"),
+  PluginModalProvider: provider("PluginModalProvider"),
+}));
 vi.mock("../../src/app/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
 vi.mock("../../src/features/editor", () => ({
   EditorProvider: ({ children, notebookAdapter }: { children: ReactNode; notebookAdapter: unknown }) => {
@@ -40,8 +52,9 @@ vi.mock("../../src/features/editor", () => ({
   QueryHistoryProvider: provider("QueryHistoryProvider"),
   SavedQueriesProvider: provider("SavedQueriesProvider"),
 }));
-vi.mock("../../src/features/connections/components/ConnectionHealthMonitor", () => ({
+vi.mock("../../src/features/connections", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,
+  SshAskpassGate: () => <div data-testid="ssh-askpass-gate" />,
 }));
 vi.mock("../../src/shared/ui/UpdateNotificationModal", () => ({
   UpdateNotificationModal: (props: ComponentProps<"div">) => {
@@ -49,21 +62,8 @@ vi.mock("../../src/shared/ui/UpdateNotificationModal", () => ({
     return <div data-testid="update-modal" />;
   },
 }));
-vi.mock("../../src/shared/ui/WhatsNewModal", () => ({
-  WhatsNewModal: (props: ComponentProps<"div">) => {
-    whatsNewModalMock(props);
-    return <div data-testid="whats-new-modal" />;
-  },
-}));
-vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({
-  AiApprovalGate: (props: { attentionAdapter: unknown; renderExplainPlan: unknown }) => {
-    aiApprovalGateMock(props);
-    return <div data-testid="ai-approval-gate" />;
-  },
-}));
 vi.mock("../../src/features/mcp", () => ({ mcpApprovalAttentionAdapter: { focusWindowForApproval: vi.fn() } }));
 vi.mock("../../src/features/visual-explain", () => ({ ApprovalExplainPlanView: vi.fn() }));
-vi.mock("../../src/shared/ui/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
 
 describe("AppProviders", () => {
   it("preserves provider order, children placement, global render order, and prop forwarding", () => {

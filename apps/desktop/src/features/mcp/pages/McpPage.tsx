@@ -23,7 +23,7 @@ import { AiActivityPanel } from "../../settings";
 import { McpSafetySection } from "../components/McpSafetySection";
 import { useAlert } from "../../../shared/hooks/useAlert";
 import { useEditorTheme } from "../../settings";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../../settings";
 
 interface McpClientStatus {
   client_id: string;

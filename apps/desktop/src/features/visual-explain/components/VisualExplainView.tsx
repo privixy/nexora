@@ -6,7 +6,7 @@ import type * as monaco from "monaco-editor";
 import type { ExplainPlan } from "../contracts";
 import { findExplainNode } from "../lib/explainPlan";
 import { useEditorTheme } from "../../settings";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../../settings";
 import {
   ExplainSummaryBar,
   type ExplainViewMode,

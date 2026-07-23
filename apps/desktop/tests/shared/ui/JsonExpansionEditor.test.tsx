@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { JsonExpansionEditor } from "../../../src/shared/ui/JsonExpansionEditor";
+import { JsonExpansionEditor } from "../../../src/features/data-grid/components/JsonExpansionEditor";
 
 vi.mock("../../../src/shared/ui/CellCodeEditor", () => ({
   CellCodeEditor: ({

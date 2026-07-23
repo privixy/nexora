@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { cleanTabForStorage, restoreTabFromStorage } from '../../../../src/features/editor/lib/tabCleaner';
-import type { Tab } from '../../../../src/types/editor';
+import type { Tab } from '../../../../src/features/editor';
 
 describe('tabCleaner', () => {
   describe('cleanTabForStorage', () => {

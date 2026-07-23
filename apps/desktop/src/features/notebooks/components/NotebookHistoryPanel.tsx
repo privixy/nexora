@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { History, X, Check } from "lucide-react";
-import type { NotebookState } from "../../../types/notebook";
+import type { NotebookState } from "..";
 import { describeChange, type ChangeDescriptor } from "../../notebooks/lib/notebookUndo";
 
 interface NotebookHistoryPanelProps {

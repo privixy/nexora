@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Check, ShieldAlert, X, Pencil, Maximize2, Minimize2 } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { useEditorTheme } from "../hooks/useEditorTheme";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../themes/themeUtils";
 import type { ExplainPlan } from "../../../shared/types/explain";
 import type { PendingApproval } from "../contracts/aiActivity";
 import { QueryKindBadge } from "./ai-activity/QueryKindBadge";

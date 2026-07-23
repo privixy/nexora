@@ -2,15 +2,15 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Save, Loader2, AlertTriangle, Columns, Plus } from "lucide-react";
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
-import { SqlPreview } from "../../../../components/ui/SqlPreview";
+import { SqlPreview } from "../../../../shared/ui/SqlPreview";
 import { useDatabase } from "../../../connections";
-import { useDataTypes } from "../../../../hooks/useDataTypes";
+import { useDataTypes } from "../../hooks/useDataTypes";
 import { useDrivers } from "../../../plugins";
 import { Modal } from "../../../../shared/ui/Modal";
 import { Select } from "../../../../shared/ui/Select";
-import { supportsAlterColumn } from "../../../../utils/driverCapabilities";
-import { parseColumnType, buildColumnDefinition } from "../../../../utils/columnTypes";
-import type { ColumnFormData } from "../../../../utils/columnTypes";
+import { supportsAlterColumn } from "../../../plugins";
+import { parseColumnType, buildColumnDefinition } from "../../../../shared/lib/columnTypes";
+import type { ColumnFormData } from "../../../../shared/lib/columnTypes";
 
 type ColumnDef = ColumnFormData;
 

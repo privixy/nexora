@@ -9,8 +9,8 @@ import {
   parseSetValues,
   parseSetMembers,
   serializeSetMembers,
-} from '../../src/utils/columnTypes';
-import type { DataTypeInfo } from '../../src/types/dataTypes';
+} from '../../src/shared/lib/columnTypes';
+import type { DataTypeInfo } from '../../src/features/schema/contracts/dataTypes';
 
 const makeType = (
   name: string,

@@ -7,7 +7,7 @@ import {
   validateSettings,
 } from "../../../../src/features/plugins/lib/pluginConfig";
 import type { PluginConfig } from "../../../../src/features/settings/state/SettingsContext";
-import type { PluginSettingDefinition } from "../../../../src/types/plugins";
+import type { PluginSettingDefinition } from "../../../../src/features/plugins/contracts/plugins";
 
 describe("pluginConfig", () => {
   describe("resolvePluginConfig", () => {

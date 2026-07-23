@@ -1,4 +1,4 @@
-import type { NotebookCell, RunAllResult } from "../../../types/notebook";
+import type { NotebookCell, RunAllResult } from "..";
 
 export function getExecutableCells(
   cells: NotebookCell[],

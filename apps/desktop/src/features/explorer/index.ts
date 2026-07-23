@@ -10,3 +10,4 @@ export type {
   SavedQuery,
 } from "./contracts";
 export type { SidebarTab } from "./components/ExplorerSidebar";
+export { useSidebarResize } from "./hooks/useSidebarResize";

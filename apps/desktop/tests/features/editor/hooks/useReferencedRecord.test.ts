@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
-import type { ForeignKey } from '../../../../src/types/schema';
+import type { ForeignKey } from '../../../../src/features/schema/contracts/schema';
 import { fetchReferencedRecord } from '../../../../src/features/editor/hooks/useReferencedRecord';
 
 vi.mock('@tauri-apps/api/core', () => ({

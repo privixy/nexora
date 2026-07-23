@@ -6,7 +6,7 @@ import {
   createCellDragPreview,
   computeAutoScrollSpeed,
 } from "../../../../src/features/notebooks/lib/notebookDnd";
-import type { NotebookCell } from "../../../../src/types/notebook";
+import type { NotebookCell } from "../../../../src/features/notebooks";
 
 function makeCell(id: string): NotebookCell {
   return {

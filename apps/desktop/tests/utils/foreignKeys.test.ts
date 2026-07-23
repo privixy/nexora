@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import type { ForeignKey } from "../../src/types/schema";
+import type { ForeignKey } from "../../src/features/schema/contracts/schema";
 import {
   pickPrimaryForeignKeyByColumn,
   isForeignKeyValueNavigable,
   isNumericColumnType,
   buildForeignKeyFilterClause,
   getForeignKeyForPreview,
-} from "../../src/features/schema/lib/foreignKeys";
+} from "../../src/shared/lib/foreignKeys";
 
 const fk = (
   name: string,

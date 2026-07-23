@@ -3,7 +3,7 @@ import { X, Save } from 'lucide-react';
 import MonacoEditor, { type BeforeMount } from '@monaco-editor/react';
 import { useTranslation } from 'react-i18next';
 import { useEditorTheme } from '../../../settings';
-import { loadMonacoTheme } from '../../../../themes/themeUtils';
+import { loadMonacoTheme } from '../../../settings';
 import { Modal } from '../../../../shared/ui/Modal';
 import { Select } from '../../../../shared/ui/Select';
 

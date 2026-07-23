@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useConnectionWindowLifecycle } from "../../src/hooks/useConnectionWindowLifecycle";
+import { useConnectionWindowLifecycle } from "../../src/features/connections/hooks/useConnectionWindowLifecycle";
 
 const closeMock = vi.fn();
 let windowLabel = "main";

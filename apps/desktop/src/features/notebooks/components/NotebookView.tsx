@@ -6,14 +6,14 @@ import { notebookGateway } from "../../../platform/tauri";
 
 
 import { BookOpen, Loader2 } from "lucide-react";
-import type { Tab, QueryResult } from "../../../types/editor";
+import type { Tab, QueryResult } from "../../editor";
 import type {
   NotebookCell,
   NotebookCellType,
   NotebookParam,
   NotebookState,
   RunAllResult,
-} from "../../../types/notebook";
+} from "..";
 import {
   updateCellInCells,
   addCellToCells,
@@ -64,11 +64,11 @@ import { useSqlAutocompleteRegistration } from "../../editor";
 import { isMultiDatabaseCapable } from "../../plugins";
 import { useSettings } from "../../settings";
 import { useAlert } from "../../../shared/hooks/useAlert";
-import { useKeybindings } from "../../../hooks/useKeybindings";
+import { useKeybindings } from "../../settings";
 import {
-  useDangerousQueryGuard,
-  DANGEROUS_QUERY_I18N,
+  useDangerousQueryGuard, DANGEROUS_QUERY_I18N,
 } from "../../editor";
+import { SqlPreview } from "../../../shared/ui/SqlPreview";
 import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import { NotebookToolbar } from "./NotebookToolbar";
 import { NotebookHistoryPanel } from "./NotebookHistoryPanel";
@@ -853,7 +853,7 @@ export function NotebookView({
             ? DANGEROUS_QUERY_I18N[dangerousQuery.kind].message
             : "editor.dangerousQueryMessage",
         )}
-        sql={dangerousQuery?.sql}
+        sql={dangerousQuery?.sql} renderSqlPreview={(sql) => <SqlPreview sql={sql} height="120px" />}
         confirmLabel={t("editor.dangerousQueryConfirm")}
         variant="danger"
         confirmDelaySeconds={5}

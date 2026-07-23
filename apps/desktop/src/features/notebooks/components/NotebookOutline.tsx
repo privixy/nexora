@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { List, ChevronDown, Sparkles, Loader2 } from "lucide-react";
 import { notebookGateway } from "../../../platform/tauri/notebookGateway";
-import type { NotebookCell } from "../../../types/notebook";
+import type { NotebookCell } from "..";
 import { extractOutline } from "../../notebooks/lib/notebookOutline";
 import { getUnnamedCellsWithContent } from "../../notebooks/lib/notebookOutline";
 import { useSettings } from "../../settings";

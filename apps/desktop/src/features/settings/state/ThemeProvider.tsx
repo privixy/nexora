@@ -7,8 +7,8 @@ import {
 } from "react";
 import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import { ThemeContext } from "./ThemeContext";
-import { themeRegistry } from "../../../themes/themeRegistry";
-import { applyThemeToCSS } from "../../../themes/themeUtils";
+import { themeRegistry } from "../themes/themeRegistry";
+import { applyThemeToCSS } from "../themes/themeUtils";
 import type { Theme, ThemeSettings } from "../../../shared/types/theme";
 
 const DEFAULT_THEME_SETTINGS: ThemeSettings = {

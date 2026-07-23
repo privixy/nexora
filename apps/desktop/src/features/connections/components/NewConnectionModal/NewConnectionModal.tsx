@@ -30,7 +30,7 @@ import { useDrivers } from "../../../plugins";
 import { usePluginSlotRegistry } from "../../../plugins";
 import { Modal } from "../../../../shared/ui/Modal";
 import type { SqlEditorComponent } from "../../../../shared/types/sqlEditor";
-import type { PluginManifest } from "../../../../types/plugins";
+import type { PluginManifest } from "../../../plugins";
 import { loadSshConnections, type SshConnection } from "../../lib/ssh";
 import {
   loadK8sConnections,

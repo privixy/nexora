@@ -1,4 +1,4 @@
-import type { Tab } from '../../../types/editor';
+import type { Tab } from '..';
 
 /**
  * Interface representing a cleaned tab with only persistent data

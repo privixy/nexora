@@ -47,5 +47,13 @@ export {
 } from "./components/SettingControls";
 export { AiApprovalGate } from "./components/AiApprovalGate";
 export { SettingsEditorThemeProvider } from "./components/SettingsEditorThemeProvider";
+export { OpenSourceLibrariesModal } from "./components/OpenSourceLibrariesModal";
+export { WhatsNewModal } from "./components/WhatsNewModal";
 export type { ApprovalAttentionAdapter } from './components/AiApprovalGate';
 export { getAiExplanationLanguage, SUPPORTED_LANGUAGES } from "./lib/languages";
+
+export { KeybindingsProvider } from "./state/KeybindingsProvider";
+export { useKeybindings } from "./hooks/useKeybindings";
+export { useChangelog } from "./hooks/useChangelog";
+export { loadMonacoTheme, applyThemeToCSS, generateMonacoTheme } from "./themes/themeUtils";
+export { AVAILABLE_FONTS, getFontCSS, detectAIProviderFromKeys, ROADMAP } from "./lib/settings";

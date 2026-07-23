@@ -24,8 +24,8 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { queryGateway } from "../../../platform/tauri/queryGateway";
-import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
-import { StackedResultItem } from "../../../components/ui/StackedResultItem";
+import { ResultEntryContent } from "./ResultEntryContent";
+import { StackedResultItem } from "./StackedResultItem";
 import { ContextMenu } from "../../../shared/ui/ContextMenu";
 import { formatDuration } from "../../../shared/lib/formatTime";
 import { getTabScrollState } from "../lib/tabScroll";
@@ -37,7 +37,7 @@ import {
   getEntryDisplayLabel,
 } from "../lib/multiResult";
 import { useSettings } from "../../settings";
-import type { QueryResultEntry } from "../../../types/editor";
+import type { QueryResultEntry } from "..";
 
 interface MultiResultPanelProps {
   results: QueryResultEntry[];

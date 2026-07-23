@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { X, AlertTriangle, CheckCircle2 } from "lucide-react";
-import type { RunAllResult } from "../../../types/notebook";
+import type { RunAllResult } from "..";
 
 interface RunAllSummaryProps {
   result: RunAllResult;

@@ -3,7 +3,7 @@ import {
   getOpenSourceLibraryTotal,
   getOpenSourceLibraryUrl,
   OPEN_SOURCE_LIBRARY_SECTIONS,
-} from "../../src/utils/openSourceLibraries";
+} from "../../src/features/settings/lib/openSourceLibraries";
 
 describe("openSourceLibraries", () => {
   it("should expose all direct dependencies declared by the project manifests", () => {

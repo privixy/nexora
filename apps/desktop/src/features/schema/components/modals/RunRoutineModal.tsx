@@ -11,7 +11,7 @@ import {
   isOutputOnly,
   type RoutineArgInput,
   type RoutineParameterInfo,
-} from "../../../../utils/routineCall";
+} from "../../lib/routineCall";
 
 interface RunRoutineModalProps {
   isOpen: boolean;

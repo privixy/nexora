@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { NotebookCell } from "../../../types/notebook";
-import type { CellChartConfig } from "../../../types/notebook";
+import type { NotebookCell } from "..";
+import type { CellChartConfig } from "..";
 import { restoreFromHistory, getHistorySize } from "../../notebooks/lib/notebookHistory";
 import { NotebookCellHeader } from "./NotebookCellHeader";
 import { SqlCell } from "./SqlCell";

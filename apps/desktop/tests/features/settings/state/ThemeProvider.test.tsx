@@ -4,11 +4,11 @@ import { ThemeProvider } from "../../../../src/features/settings/state/ThemeProv
 import { useTheme } from "../../../../src/features/settings/hooks/useTheme";
 import { invoke } from "@tauri-apps/api/core";
 import React from "react";
-import type { Theme } from "../../../../src/types/theme";
+import type { Theme } from "../../../../src/shared/types/theme";
 
 vi.mock("@tauri-apps/api/core");
 
-vi.mock("../../../../src/themes/themeUtils", () => ({
+vi.mock("../../../../src/features/settings/themes/themeUtils", () => ({
   applyThemeToCSS: vi.fn(),
 }));
 
@@ -109,7 +109,7 @@ const createMockTheme = (id: string, name: string): Theme => ({
 const mockDarkTheme = createMockTheme("nexora-dark", "Nexora Dark");
 const mockLightTheme = createMockTheme("nexora-light", "Nexora Light");
 
-vi.mock("../../../../src/themes/themeRegistry", () => ({
+vi.mock("../../../../src/features/settings/themes/themeRegistry", () => ({
   themeRegistry: {
     getDefault: () => mockDarkTheme,
     getAllPresets: () => [mockDarkTheme, mockLightTheme],

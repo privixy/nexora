@@ -2,8 +2,8 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Keyboard, Lock, RotateCcw, Loader2, X } from "lucide-react";
 import clsx from "clsx";
-import { useKeybindings } from "../../../hooks/useKeybindings";
-import { formatEvent, formatMatch, parseCombo } from "../../../utils/keybindings";
+import { useKeybindings } from "../hooks/useKeybindings";
+import { formatEvent, formatMatch, parseCombo } from "../lib/keybindings";
 import { SettingSection } from "./SettingControls";
 
 /* ── Edit modal ── */

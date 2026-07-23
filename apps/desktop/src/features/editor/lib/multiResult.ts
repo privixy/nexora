@@ -1,4 +1,4 @@
-import type { QueryResult, QueryResultEntry } from "../../../types/editor";
+import type { QueryResult, QueryResultEntry } from "..";
 
 /**
  * Creates initial QueryResultEntry array from a list of queries.

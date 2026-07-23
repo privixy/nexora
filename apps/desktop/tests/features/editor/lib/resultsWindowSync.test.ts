@@ -9,7 +9,7 @@ import {
   type ResultsWindowActionHandlers,
   type ResultsSyncPayload,
 } from "../../../../src/features/editor/lib/resultsWindowSync";
-import type { Tab, QueryResult, QueryResultEntry } from "../../../../src/types/editor";
+import type { Tab, QueryResult, QueryResultEntry } from "../../../../src/features/editor";
 
 const settings: ResultsDisplaySettings = {
   connectionId: "conn-1",

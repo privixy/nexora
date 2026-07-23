@@ -27,7 +27,7 @@ vi.mock("../../../../../src/features/settings/hooks/useSettings", () => ({
   })),
 }));
 
-vi.mock("../../../../../src/themes/themeUtils", () => ({
+vi.mock("../../../../../src/features/settings/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ContextMenu } from '../../../src/shared/ui/ContextMenu';
-import * as ContextMenuUtils from '../../../src/utils/contextMenu';
+import * as ContextMenuUtils from '../../../src/shared/lib/contextMenu';
 
 // Mock the contextMenu utilities
-vi.mock('../../../src/utils/contextMenu', () => ({
+vi.mock('../../../src/shared/lib/contextMenu', () => ({
   calculateContextMenuPosition: vi.fn((constraints) => ({
     top: constraints.clickY,
     left: constraints.clickX,

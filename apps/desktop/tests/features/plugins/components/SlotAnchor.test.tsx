@@ -4,7 +4,7 @@ import { PluginSlotProvider } from "../../../../src/features/plugins/state/Plugi
 import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
 import { SettingsContext, DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
 import { SlotAnchor } from "../../../../src/features/plugins/components/SlotAnchor";
-import type { SlotComponentProps } from "../../../../src/types/pluginSlots";
+import type { SlotComponentProps } from "../../../../src/features/plugins/contracts/pluginSlots";
 
 const settingsValue = {
   settings: DEFAULT_SETTINGS,

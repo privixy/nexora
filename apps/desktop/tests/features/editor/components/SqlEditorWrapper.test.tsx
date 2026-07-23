@@ -28,14 +28,14 @@ vi.mock('../../../../src/features/settings/hooks/useTheme', () => ({
 }));
 
 // Mock useKeybindings hook
-vi.mock('../../../../src/hooks/useKeybindings', () => ({
+vi.mock('../../../../src/features/settings/hooks/useKeybindings', () => ({
   useKeybindings: vi.fn(() => ({
     matchesShortcut: vi.fn(() => false),
   })),
 }));
 
 // Mock themeUtils
-vi.mock('../../../../src/themes/themeUtils', () => ({
+vi.mock('../../../../src/features/settings/themes/themeUtils', () => ({
   loadMonacoTheme: vi.fn(),
 }));
 

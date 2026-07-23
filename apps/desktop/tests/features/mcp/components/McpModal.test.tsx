@@ -3,9 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 import { McpModal } from "../../../../src/features/mcp/components/McpModal";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn().mockResolvedValue([]) }));
-vi.mock("../../../../src/hooks/useAlert", () => ({ useAlert: () => ({ showAlert: vi.fn() }) }));
+vi.mock("../../../../src/shared/hooks/useAlert", () => ({ useAlert: () => ({ showAlert: vi.fn() }) }));
 vi.mock("../../../../src/features/settings/hooks/useEditorTheme", () => ({ useEditorTheme: () => ({ id: "vs-dark" }) }));
-vi.mock("../../../../src/themes/themeUtils", () => ({ loadMonacoTheme: vi.fn() }));
+vi.mock("../../../../src/features/settings/themes/themeUtils", () => ({ loadMonacoTheme: vi.fn() }));
 vi.mock("../../../../src/features/mcp/components/McpSafetySection", () => ({ McpSafetySection: () => <div>safety</div> }));
 
 describe("McpModal", () => {

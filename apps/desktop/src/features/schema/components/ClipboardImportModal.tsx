@@ -21,12 +21,12 @@ import { Select } from '../../../shared/ui/Select';
 import { useDatabase } from '../../connections';
 import { useSettings } from '../../settings';
 import { SchemaEditor, type SchemaColumn } from './ClipboardImport/SchemaEditor';
-import { DataPreview } from '../../../components/modals/ClipboardImport/DataPreview';
-import { TableNameInput } from '../../../components/modals/ClipboardImport/TableNameInput';
-import { ParseSummary } from '../../../components/modals/ClipboardImport/ParseSummary';
-import { ModeToggle } from '../../../components/modals/ClipboardImport/ModeToggle';
-import { useDataTypes } from '../../../hooks/useDataTypes';
-import type { TableColumn } from '../../../utils/sqlGenerator';
+import { DataPreview } from './ClipboardImport/DataPreview';
+import { TableNameInput } from './ClipboardImport/TableNameInput';
+import { ParseSummary } from './ClipboardImport/ParseSummary';
+import { ModeToggle } from './ClipboardImport/ModeToggle';
+import { useDataTypes } from '../hooks/useDataTypes';
+import type { TableColumn } from '../../../shared/types/queryResults';
 import {
   parseClipboardText,
   reParseWithHeaderOption,

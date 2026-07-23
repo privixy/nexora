@@ -44,8 +44,8 @@ import { useEditor } from "../../editor";
 import { useSavedQueries } from "../../editor";
 import { useQueryHistory } from "../../editor";
 import type { SavedQuery } from "../../editor";
-import type { QueryHistoryEntry } from "../../../types/queryHistory";
-import type { NotebookMetadata } from "../../../types/notebook";
+import type { QueryHistoryEntry } from "../../editor";
+import type { NotebookMetadata } from "../../notebooks";
 import { ContextMenu, type ContextMenuItem } from "../../../shared/ui/ContextMenu";
 import { SchemaModal } from "../../schema";
 import { CreateTableModal } from "../../schema";
@@ -53,7 +53,7 @@ import { QueryModal } from "../../editor";
 import { ModifyColumnModal } from "../../schema";
 import { CreateIndexModal } from "../../schema";
 import { CreateForeignKeyModal } from "../../schema";
-import { GenerateSQLModal } from "../../../components/modals/GenerateSQLModal";
+import { GenerateSQLModal } from "../../editor";
 import { DumpDatabaseModal } from "./DumpDatabaseModal";
 import { ImportDatabaseModal } from "./ImportDatabaseModal";
 import { ClipboardImportModal } from "../../schema";
@@ -78,13 +78,13 @@ import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT 
 import { useConnectionLayoutContext } from "../../connections";
 import { useDrivers } from "../../plugins";
 import { getConnectionAccent } from "../../connections";
-import type { TableColumn } from "../../../types/schema";
+import type { TableColumn } from "../../schema";
 import type { ContextMenuData } from "../contracts";
 import type { RoutineInfo, TriggerInfo } from "../../connections";
-import { groupRoutinesByType } from "../../../utils/routines";
+import { groupRoutinesByType } from "../../schema";
 import { formatObjectCount } from "../../schema";
 import { groupByDate, formatHistoryTime } from "../../../shared/lib/dateGroups";
-import { SqlHighlight } from "../../../components/ui/SqlHighlight";
+import { SqlHighlight } from "../../editor";
 import { isMultiDatabaseCapable } from "../../plugins";
 import {
   supportsCreateDatabase,
@@ -93,7 +93,7 @@ import {
   supportsManageTables,
   supportsRenameDatabase,
   supportsTruncateTable,
-} from "../../../utils/driverCapabilities";
+} from "../../plugins";
 import { newConsoleForDatabase, newConsoleForTable } from "../../editor";
 import {
   DEFAULT_CREATE_TABLE_TARGET,

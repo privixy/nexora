@@ -1,4 +1,4 @@
-import type { NotebookCell, NotebookCellType } from "../../../types/notebook";
+import type { NotebookCell, NotebookCellType } from "..";
 
 export function reorderCells(
   cells: NotebookCell[],

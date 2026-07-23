@@ -11,26 +11,26 @@ import {
   type ColumnDisplayInfo,
   type MergedRow,
 } from "../lib/dataGrid";
-import { isGeometricType } from "../../../utils/geometry";
+import { isGeometricType } from "../lib/geometry";
 import {
   isEnumType,
   parseEnumValues,
   isSetType,
   parseSetValues,
-} from "../../../utils/columnTypes";
-import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
+} from "../../../shared/lib/columnTypes";
+import { isBlobColumn, isBlobWireFormat } from "../lib/blob";
 import { isLongTextCellTarget, truncateCellPreview } from "../../../shared/lib/text";
-import { getForeignKeyForPreview } from "../../schema";
-import { getDateInputMode } from "../../../utils/dateInput";
+import { getForeignKeyForPreview } from "../../../shared/lib/foreignKeys";
+import { getDateInputMode } from "../lib/dateInput";
 import { renderDefaultCellContent } from "../lib/dataGridCell";
-import { GeometryInput } from "../../../components/ui/GeometryInput";
-import { DateInput } from "../../../components/ui/DateInput";
-import { JsonCell } from "../../../components/ui/JsonCell";
-import { JsonExpansionEditor } from "../../../shared/ui/JsonExpansionEditor";
+import { GeometryInput } from "./GeometryInput";
+import { DateInput } from "./DateInput";
+import { JsonCell } from "./JsonCell";
+import { JsonExpansionEditor } from "./JsonExpansionEditor";
 import { TextCell } from "../../../shared/ui/TextCell";
 import { TextExpansionEditor } from "../../../shared/ui/TextExpansionEditor";
-import { EnumSetInput } from "../../../components/ui/EnumSetInput";
-import type { ForeignKey } from "../../../types/editor";
+import { EnumSetInput } from "./EnumSetInput";
+import type { ForeignKey } from "../../../shared/lib/foreignKeys";
 
 /**
  * Stable, per-grid dependencies shared by every row. Bundled into a single

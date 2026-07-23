@@ -18,11 +18,11 @@ import clsx from "clsx";
 import { useSettings } from "../hooks/useSettings";
 import { useTheme } from "../hooks/useTheme";
 import { useUpdate } from "../hooks/useUpdate";
-import { useChangelog } from "../../../hooks/useChangelog";
-import { ROADMAP } from "../../../utils/settings";
+import { useChangelog } from "../hooks/useChangelog";
+import { ROADMAP } from "../lib/settings";
 import { SettingRow, SettingSection, SettingToggle } from "./SettingControls";
-import { WhatsNewModal } from "../../../shared/ui/WhatsNewModal";
-import { OpenSourceLibrariesModal } from "../../../shared/ui/OpenSourceLibrariesModal";
+import { WhatsNewModal } from "../../../features/settings";
+import { OpenSourceLibrariesModal } from "..";
 
 export function InfoTab({ appVersion }: { appVersion: string }) {
   const { t } = useTranslation();

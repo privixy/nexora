@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { listen, type EventCallback } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
-import { useSshAskpass } from "../../src/hooks/useSshAskpass";
-import type { SshAskpassRequest } from "../../src/types/askpass";
+import { useSshAskpass } from "../../src/features/connections/hooks/useSshAskpass";
+import type { SshAskpassRequest } from "../../src/features/connections/contracts/askpass";
 
 vi.mock("@tauri-apps/api/event", () => ({
   listen: vi.fn(),

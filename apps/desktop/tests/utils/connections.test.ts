@@ -10,7 +10,7 @@ import {
   type ConnectionParams,
   type DatabaseDriver,
 } from '../../src/features/connections/lib/connections';
-import type { DriverCapabilities } from '../../src/types/plugins';
+import type { DriverCapabilities } from '../../src/features/plugins/contracts/plugins';
 import type { SavedConnection } from '../../src/features/connections/state/DatabaseContext';
 
 const makeFileCaps = (): DriverCapabilities => ({

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { useAutoConnectFromUrl } from "../../src/hooks/useAutoConnectFromUrl";
+import { useAutoConnectFromUrl } from "../../src/features/connections/hooks/useAutoConnectFromUrl";
 
 const navigateMock = vi.fn();
 const handleConnectMock = vi.fn<(id: string) => Promise<void>>();

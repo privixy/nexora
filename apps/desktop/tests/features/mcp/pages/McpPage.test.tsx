@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { McpPage } from "../../../../src/features/mcp/pages/McpPage";
 
-vi.mock("../../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/shared/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
@@ -11,7 +11,7 @@ vi.mock("../../../../src/features/settings/hooks/useEditorTheme", () => ({
   useEditorTheme: () => "vs-dark",
 }));
 
-vi.mock("../../../../src/themes/themeUtils", () => ({
+vi.mock("../../../../src/features/settings/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 

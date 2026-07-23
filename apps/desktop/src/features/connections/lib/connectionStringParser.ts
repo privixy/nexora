@@ -3,8 +3,8 @@
  * The supported protocols are derived from driver capabilities when provided.
  */
 
-import type { DriverCapabilities } from "../../../types/plugins";
-import { isLocalDriver } from "../../../utils/driverCapabilities";
+import type { DriverCapabilities } from "../../plugins";
+import { isLocalDriver } from "../../plugins";
 import type { ConnectionParams, DatabaseDriver } from "./connections";
 import { BUILTIN_DRIVER_IDS } from "./connections";
 

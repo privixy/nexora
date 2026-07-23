@@ -15,7 +15,7 @@ import {
   Zap,
   History,
 } from "lucide-react";
-import type { NotebookCellType } from "../../../types/notebook";
+import type { NotebookCellType } from "..";
 import { CellNameAiButton } from "./CellNameAiButton";
 
 interface NotebookCellHeaderProps {

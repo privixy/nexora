@@ -4,7 +4,7 @@ import {
   calculateContextMenuPosition,
   calculateSubmenuOffsetY,
   type ViewportConstraints,
-} from '../../utils/contextMenu';
+} from '../lib/contextMenu';
 
 export interface ContextMenuItem {
   label?: string;

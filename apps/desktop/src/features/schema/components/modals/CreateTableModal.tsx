@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { X, Plus, Trash2, Save, Loader2, AlertTriangle } from 'lucide-react';
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useDatabase } from '../../../connections';
-import { SqlPreview } from '../../../../components/ui/SqlPreview';
-import { useDataTypes } from '../../../../hooks/useDataTypes';
+import { SqlPreview } from '../../../../shared/ui/SqlPreview';
+import { useDataTypes } from '../../hooks/useDataTypes';
 import { Modal } from '../../../../shared/ui/Modal';
 import { Select } from '../../../../shared/ui/Select';
-import { getRequiredExtensions } from '../../../../utils/columnTypes';
+import { getRequiredExtensions } from '../../../../shared/lib/columnTypes';
 import { resolveCreateTableSchema } from '../../lib/createTable';
 
 interface ColumnDef {

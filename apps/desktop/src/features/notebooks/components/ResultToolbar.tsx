@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 
 import { Download } from "lucide-react";
-import type { QueryResult } from "../../../types/editor";
+import type { QueryResult } from "../../editor";
 import { resultToCsv, resultToJson } from "../../notebooks/lib/notebookExport";
 
 interface ResultToolbarProps {

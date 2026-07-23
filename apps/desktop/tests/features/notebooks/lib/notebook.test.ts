@@ -9,7 +9,7 @@ import {
   moveCellInCells,
   extractSqlFromCells,
 } from '../../../../src/features/notebooks/lib/notebook';
-import type { NotebookCell } from '../../../../src/types/notebook';
+import type { NotebookCell } from '../../../../src/features/notebooks';
 
 function makeCell(overrides: Partial<NotebookCell> = {}): NotebookCell {
   return {

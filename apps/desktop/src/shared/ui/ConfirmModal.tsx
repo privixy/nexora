@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, X } from "lucide-react";
 import { Modal } from "../ui/Modal";
-import { SqlPreview } from "../../components/ui/SqlPreview";
 
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   message: string;
-  /** Optional SQL shown in a read-only preview below the message. */
   sql?: string;
+  renderSqlPreview?: (sql: string) => React.ReactNode;
   confirmLabel?: string;
   confirmClassName?: string;
   onConfirm: () => void;
@@ -31,6 +30,7 @@ export const ConfirmModal = ({
   title,
   message,
   sql,
+  renderSqlPreview,
   confirmLabel,
   confirmClassName,
   onConfirm,
@@ -98,7 +98,7 @@ export const ConfirmModal = ({
         {/* Content */}
         <div className="p-6 space-y-4">
           <p className="text-sm text-secondary leading-relaxed">{message}</p>
-          {sql && <SqlPreview sql={sql} height="120px" />}
+          {sql && renderSqlPreview?.(sql)}
         </div>
 
         {/* Footer */}

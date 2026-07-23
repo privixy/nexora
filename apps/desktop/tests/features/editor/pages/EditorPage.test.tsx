@@ -11,8 +11,8 @@ import { EditorPage } from "../../../../src/features/editor/pages/EditorPage";
 import { useDatabase } from "../../../../src/features/connections";
 import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
 import { EditorContext, type EditorContextType } from "../../../../src/features/editor/state/EditorContext";
-import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../../../src/types/editor";
-import type { PluginManifest } from "../../../../src/types/plugins";
+import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../../../src/features/editor";
+import type { PluginManifest } from "../../../../src/features/plugins/contracts/plugins";
 vi.mock("../../../../src/platform/tauri", () => ({
   catalogGateway: {
     getColumns: vi.fn(),
@@ -103,17 +103,17 @@ vi.mock("../../../../src/features/editor/components/SqlEditorWrapper", () => ({
 vi.mock("../../../../src/features/connections", () => ({
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
   getConnectionAccent: () => "#3b82f6",
-  useDatabase: vi.fn(),
+  formatWindowTitle: () => "Nexora",  useDatabase: vi.fn(),
 }));
 
 vi.mock("../../../../src/features/plugins", () => ({
   isMultiDatabaseCapable: () => false,
-  useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
+  isReadonly: () => false,  useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
   SlotAnchor: () => null,
 }));
 
 vi.mock("../../../../src/features/data-grid", () => ({
-  DataGrid: ({ columns, data, onSort, onForeignKeyShowPanel, onPendingChange, onSelectionChange }: {
+  PaginationControls: () => null,  TableToolbar: () => null,  DataGrid: ({ columns, data, onSort, onForeignKeyShowPanel, onPendingChange, onSelectionChange }: {
     columns: string[];
     data: unknown[][];
     onSort?: (column: string) => void;
@@ -132,7 +132,7 @@ vi.mock("../../../../src/features/data-grid", () => ({
   ),
 }));
 
-vi.mock("../../../../src/components/ui/TableToolbar", () => ({
+vi.mock("../../../../src/features/data-grid/components/TableToolbar", () => ({
   TableToolbar: ({ initialFilter, initialSort, initialLimit, onUpdate }: { initialFilter?: string; initialSort?: string; initialLimit?: number; onUpdate: (filter: string, sort: string, limit?: number) => void }) => (
     <div data-testid="table-toolbar">
       <span>{initialFilter}</span>
@@ -176,7 +176,7 @@ vi.mock("../../../../src/features/settings", () => ({
       aiEnabled: false,
     },
   }),
-}));
+  useKeybindings: () => ({ matchesShortcut: vi.fn(() => false), isMac: false }),}));
 
 vi.mock("../../../../src/features/visual-explain", () => ({
   VisualExplainModal: () => <div />,
@@ -202,7 +202,7 @@ vi.mock("../../../../src/features/editor/hooks/useQueryHistory", () => ({
   useQueryHistory: () => ({ addEntry: vi.fn() }),
 }));
 
-vi.mock("../../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/shared/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
@@ -210,7 +210,7 @@ vi.mock("../../../../src/shared/hooks/useConnectionLayoutContext", () => ({
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
 }));
 
-vi.mock("../../../../src/hooks/useKeybindings", () => ({
+vi.mock("../../../../src/features/settings/hooks/useKeybindings", () => ({
   useKeybindings: () => ({ matchesShortcut: vi.fn(() => false), isMac: false }),
 }));
 

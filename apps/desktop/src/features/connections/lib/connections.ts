@@ -3,9 +3,9 @@
  * Extracted from Connections.tsx for testability
  */
 
-import type { DriverCapabilities } from "../../../types/plugins";
+import type { DriverCapabilities } from "../../plugins";
 import type { SavedConnection, SingleDatabaseConnectionParams } from "..";
-import { isLocalDriver } from "../../../utils/driverCapabilities";
+import { isLocalDriver } from "../../plugins";
 
 export type DatabaseDriver = string;
 

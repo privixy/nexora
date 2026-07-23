@@ -1,4 +1,4 @@
-import type { QueryResult } from "../../../types/editor";
+import type { QueryResult } from "../../editor";
 
 export function resultToCsv(result: QueryResult): string {
   const escapeCsvField = (value: unknown): string => {

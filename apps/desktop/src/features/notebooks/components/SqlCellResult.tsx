@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "../../data-grid";
 import { ErrorDisplay } from "../../../shared/ui/ErrorDisplay";
-import type { QueryResult } from "../../../types/editor";
-import type { CellChartConfig } from "../../../types/notebook";
+import type { QueryResult } from "../../editor";
+import type { CellChartConfig } from "..";
 import { canRenderChart, buildDefaultChartConfig } from "../lib/notebookChart";
 import { ResultToolbar } from "./ResultToolbar";
-import { ResizeHandle } from "./ResizeHandle";
+import { ResizeHandle } from "../../../shared/ui/ResizeHandle";
 import { CellChart } from "./CellChart";
 import { CellSectionHeader } from "./CellSectionHeader";
 

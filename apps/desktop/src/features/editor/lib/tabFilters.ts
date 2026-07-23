@@ -1,4 +1,4 @@
-import type { Tab } from '../../../types/editor';
+import type { Tab } from '..';
 
 export function filterTabsByConnection(tabs: Tab[], connectionId: string | null): Tab[] {
   if (!connectionId) return [];

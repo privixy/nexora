@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SidebarDatabaseItem } from "../../../../../src/features/explorer/components/sidebar/SidebarDatabaseItem";
 import type { DatabaseData } from "../../../../src/features/connections/state/DatabaseContext";
-import type { DriverCapabilities } from "../../../../src/types/plugins";
+import type { DriverCapabilities } from "../../../../src/features/plugins";
 
 vi.mock("react-i18next", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-i18next")>();

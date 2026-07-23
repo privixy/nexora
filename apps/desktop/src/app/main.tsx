@@ -7,6 +7,7 @@ import { App } from './App';
 import './index.css';
 import './config';
 import { DatabaseProvider } from '../features/connections';
+import { clearAutocompleteCache } from '../features/editor';
 import { SettingsEditorThemeProvider, SettingsProvider, ThemeProvider, UpdateProvider } from '../features/settings';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -15,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <ThemeProvider>
         <SettingsProvider>
           <SettingsEditorThemeProvider>
-            <DatabaseProvider>
+            <DatabaseProvider clearAutocompleteCache={clearAutocompleteCache}>
               <App />
             </DatabaseProvider>
           </SettingsEditorThemeProvider>

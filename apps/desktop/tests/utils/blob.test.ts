@@ -8,7 +8,7 @@ import {
   parseBlobFileRef,
   extractBase64Payload,
   blobPayloadToBytes,
-} from "../../src/utils/blob";
+} from "../../src/features/data-grid/lib/blob";
 
 describe("blob utilities", () => {
   describe("isBlobType", () => {

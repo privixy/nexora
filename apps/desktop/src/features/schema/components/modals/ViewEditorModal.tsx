@@ -8,7 +8,7 @@ import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useAlert } from "../../../../shared/hooks/useAlert";
 import { extractEditableViewDefinition } from "../../lib/viewDefinition";
 import type { SqlEditorComponent } from "../../../../shared/types/sqlEditor";
-import { formatSql } from "../../../../utils/sqlFormat";
+import { formatSql } from "../../../../shared/lib/sqlFormat";
 import { useDatabase } from "../../../connections";
 import { Modal } from "../../../../shared/ui/Modal";
 

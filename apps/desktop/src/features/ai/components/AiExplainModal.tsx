@@ -5,7 +5,7 @@ import { getAiExplanationLanguage, useEditorTheme, useSettings } from "../../set
 import { Modal } from "../../../shared/ui/Modal";
 import MonacoEditor, { type BeforeMount } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../../settings";
 import type { AiExplainModalProps } from '../contracts';
 
 export const AiExplainModal = ({ isOpen, onClose, query }: AiExplainModalProps) => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { exportNotebookToHtml } from "../../../../src/features/notebooks/lib/notebookHtmlExport";
-import type { NotebookCell } from "../../../../src/types/notebook";
+import type { NotebookCell } from "../../../../src/features/notebooks";
 
 function makeCell(overrides: Partial<NotebookCell> = {}): NotebookCell {
   return {

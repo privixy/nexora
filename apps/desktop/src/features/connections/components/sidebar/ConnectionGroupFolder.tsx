@@ -3,7 +3,7 @@ import { Folder, FolderOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { ConnectionGroup } from "../..";
 import type { ConnectionStatus } from "../../hooks/useConnectionManager";
-import type { PluginManifest } from "../../../../types/plugins";
+import type { PluginManifest } from "../../../plugins";
 import { OpenConnectionItem } from "./OpenConnectionItem";
 import clsx from "clsx";
 

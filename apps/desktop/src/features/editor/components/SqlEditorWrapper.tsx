@@ -2,11 +2,11 @@ import React, { useRef, useCallback, useEffect } from "react";
 import MonacoEditor, { type OnMount, type BeforeMount } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
 import { useEditorTheme } from "../../settings";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../../settings";
 import { clipboardAdapter } from "../../../platform/tauri/clipboardAdapter";
 import { useSettings } from "../../settings";
-import { useKeybindings } from "../../../hooks/useKeybindings";
-import { getFontCSS } from "../../../utils/settings";
+import { useKeybindings } from "../../settings";
+import { getFontCSS } from "../../settings";
 
 export interface SqlEditorWrapperProps {
   initialValue: string;

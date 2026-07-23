@@ -11,21 +11,7 @@ import {
 } from "json-edit-react";
 import { ThemeContext } from "../../settings";
 import type { Theme } from "../../../shared/types/theme";
-
-export interface JsonTreeViewProps {
-  value: unknown;
-  onChange?: (next: unknown) => void;
-  readOnly?: boolean;
-  searchQuery?: string;
-  onCopy?: (text: string) => void;
-  /**
-   * When true, the root becomes a flex column that fills its parent height
-   * and the tree area scrolls internally. Use for tall containers like the
-   * JsonViewerPage. Default (false) keeps the natural, content-sized layout
-   * used by the row-editor sidebar.
-   */
-  fillHeight?: boolean;
-}
+import type { JsonTreeViewProps } from "../contracts";
 
 function isThemeDark(theme: Theme | undefined): boolean {
   if (!theme) return true;

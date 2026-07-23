@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { DiffEditor, type DiffOnMount } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";
-import { loadMonacoTheme } from "../../themes/themeUtils";
+import { MonacoThemeLoaderContext, noopMonacoThemeLoader } from "./EditorThemeContext";
 import { useInjectedEditorTheme } from "./useInjectedEditorTheme";
 
 interface CellDiffEditorProps {
@@ -24,6 +24,7 @@ export const CellDiffEditor = ({
   language = "json",
 }: CellDiffEditorProps) => {
   const editorTheme = useInjectedEditorTheme();
+  const loadMonacoTheme = useContext(MonacoThemeLoaderContext) ?? noopMonacoThemeLoader;
   const monacoRef = useRef<typeof MonacoTypes | null>(null);
   const editorRef = useRef<MonacoTypes.editor.IStandaloneDiffEditor | null>(
     null,
@@ -33,7 +34,7 @@ export const CellDiffEditor = ({
     if (monacoRef.current) {
       loadMonacoTheme(editorTheme, monacoRef.current);
     }
-  }, [editorTheme]);
+  }, [editorTheme, loadMonacoTheme]);
 
   const handleMount: DiffOnMount = (editor, monaco) => {
     monacoRef.current = monaco;

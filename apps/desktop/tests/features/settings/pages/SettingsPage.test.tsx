@@ -12,11 +12,11 @@ vi.mock("../../../../src/features/settings/components/ConfigJsonModal", () => ({
   ConfigJsonModal: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/GeneralTab", () => ({
+vi.mock("../../../../src/features/settings/components/GeneralTab", () => ({
   GeneralTab: () => <div>general tab</div>,
 }));
 
-vi.mock("../../../../src/components/settings/AppearanceTab", () => ({
+vi.mock("../../../../src/features/settings/components/AppearanceTab", () => ({
   AppearanceTab: () => null,
 }));
 
@@ -24,19 +24,19 @@ vi.mock("../../../../src/features/settings/components/LocalizationTab", () => ({
   LocalizationTab: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/AiTab", () => ({
+vi.mock("../../../../src/features/settings/components/AiTab", () => ({
   AiTab: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/LogsTab", () => ({
+vi.mock("../../../../src/features/settings/components/LogsTab", () => ({
   LogsTab: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/ShortcutsTab", () => ({
+vi.mock("../../../../src/features/settings/components/ShortcutsTab", () => ({
   ShortcutsTab: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/PluginsTab", () => ({
+vi.mock("../../../../src/features/plugins/components/PluginsTab", () => ({
   PluginsTab: ({
     onOpenPluginSettings,
     onPluginsChanged,
@@ -72,7 +72,7 @@ vi.mock("../../../../src/components/settings/PluginsTab", () => ({
   ),
 }));
 
-vi.mock("../../../../src/components/settings/SshTab", () => ({
+vi.mock("../../../../src/features/settings/components/SshTab", () => ({
   SshTab: () => null,
 }));
 
@@ -80,11 +80,11 @@ vi.mock("../../../../src/features/settings/components/AiActivityPanel", () => ({
   AiActivityPanel: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/InfoTab", () => ({
+vi.mock("../../../../src/features/settings/components/InfoTab", () => ({
   InfoTab: () => null,
 }));
 
-vi.mock("../../../../src/components/settings/PluginSettingsPage", () => ({
+vi.mock("../../../../src/features/plugins/components/PluginSettingsPage", () => ({
   PluginSettingsPage: ({ pluginId }: { pluginId: string }) => (
     <div>plugin settings: {pluginId}</div>
   ),

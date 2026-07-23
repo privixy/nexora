@@ -5,7 +5,7 @@ import { X, Check, Copy, Cpu, Terminal } from "lucide-react";
 import { useAlert } from "../../../shared/hooks/useAlert";
 import Editor from "@monaco-editor/react";
 import { useEditorTheme } from "../../settings";
-import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { loadMonacoTheme } from "../../settings";
 import { Modal } from "../../../shared/ui/Modal";
 import {
   AnthropicIcon,

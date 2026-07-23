@@ -1,5 +1,5 @@
-import type { NotebookCell } from "../../../types/notebook";
-import type { QueryResult } from "../../../types/editor";
+import type { NotebookCell } from "..";
+import type { QueryResult } from "../../editor";
 
 const CELL_REF_PATTERN = /\{\{cell_(\d+)\}\}/g;
 

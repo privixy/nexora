@@ -1,5 +1,5 @@
-import type { CellExecutionEntry, NotebookCell } from "../../../types/notebook";
-import type { QueryResult } from "../../../types/editor";
+import type { CellExecutionEntry, NotebookCell } from "..";
+import type { QueryResult } from "../../editor";
 
 const MAX_HISTORY_SIZE = 10;
 

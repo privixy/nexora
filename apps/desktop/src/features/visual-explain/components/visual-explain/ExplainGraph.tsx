@@ -12,7 +12,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import type { ExplainPlan } from "../../contracts";
 import { explainPlanToFlow } from "../../lib/explainPlan";
-import { ExplainPlanNodeComponent } from "../../../../components/ui/ExplainPlanNode";
+import { ExplainPlanNodeComponent } from "./ExplainPlanNode";
 
 const nodeTypes = {
   explainPlan: ExplainPlanNodeComponent,

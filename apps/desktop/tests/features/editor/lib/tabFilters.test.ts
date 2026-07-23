@@ -6,7 +6,7 @@ import {
   hasTabsForConnection,
   countTabsForConnection,
 } from '../../../../src/features/editor/lib/tabFilters';
-import type { Tab } from '../../../../src/types/editor';
+import type { Tab } from '../../../../src/features/editor';
 
 const createMockTab = (id: string, connectionId: string, title: string = 'Tab'): Tab => ({
   id,

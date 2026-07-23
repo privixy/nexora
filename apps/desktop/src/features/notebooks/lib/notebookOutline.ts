@@ -1,4 +1,4 @@
-import type { NotebookCell } from "../../../types/notebook";
+import type { NotebookCell } from "..";
 
 export interface OutlineEntry {
   level: number;

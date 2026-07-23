@@ -9,7 +9,7 @@ import { RunRoutineModal } from "../../../src/features/schema/components/modals/
 import { SchemaModal } from "../../../src/features/schema/components/modals/SchemaModal";
 import { TriggerEditorModal } from "../../../src/features/schema/components/modals/TriggerEditorModal";
 import { ViewEditorModal } from "../../../src/features/schema/components/modals/ViewEditorModal";
-import { useDataTypes } from "../../../src/hooks/useDataTypes";
+import { useDataTypes } from "../../../src/features/schema/hooks/useDataTypes";
 
 const database = vi.hoisted(() => ({
   activeConnectionId: "connection",
@@ -34,13 +34,15 @@ vi.mock("../../../src/features/plugins", () => ({
   useDrivers: () => ({
     allDrivers: [{ id: "postgres", capabilities: { create_foreign_keys: true } }],
   }),
+  getCapabilitiesForDriver: () => ({ create_foreign_keys: true }),
+  supportsCreateForeignKeys: () => true,
 }));
 
 vi.mock("../../../src/features/settings", () => ({
   useSettings: () => ({ settings }),
 }));
 
-vi.mock("../../../src/hooks/useAlert", () => ({
+vi.mock("../../../src/shared/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
@@ -57,7 +59,7 @@ vi.mock("../../../src/shared/ui/Select", () => ({
   Select: () => null,
 }));
 
-vi.mock("../../../src/components/ui/SqlPreview", () => ({
+vi.mock("../../../src/shared/ui/SqlPreview", () => ({
   SqlPreview: () => null,
 }));
 

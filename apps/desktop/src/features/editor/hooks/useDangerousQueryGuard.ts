@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import {
   classifyDangerousQuery,
   type DangerousQueryKind,
-} from "../../../utils/sqlAnalysis";
+} from "../lib/sqlAnalysis";
 
 /** Details about the dangerous statement that triggered a confirmation. */
 export interface DangerousQueryInfo {

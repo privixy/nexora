@@ -1,5 +1,5 @@
-import type { QueryResult } from "../../../types/editor";
-import type { CellChartConfig, ChartType } from "../../../types/notebook";
+import type { QueryResult } from "../../editor";
+import type { CellChartConfig, ChartType } from "..";
 
 export interface ChartDataPoint {
   label: string;

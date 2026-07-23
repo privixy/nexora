@@ -19,23 +19,20 @@ import {
   type MergedRow,
 } from "../lib/dataGrid";
 import { useSettings } from "../../settings";
-import { isGeometricType, formatGeometricValue } from "../../../utils/geometry";
-import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
-import { isJsonColumn, isJsonContent } from "../../../utils/json";
-import { pickPrimaryForeignKeyByColumn } from "../../schema";
+import { isGeometricType, formatGeometricValue } from "../lib/geometry";
+import { isBlobColumn, isBlobWireFormat } from "../lib/blob";
+import { isJsonColumn, isJsonContent } from "../lib/json";
+import { pickPrimaryForeignKeyByColumn } from "../../../shared/lib/foreignKeys";
 import {
   getDateInputMode,
   parseDateTime,
   formatDateTime,
-} from "../../../utils/dateInput";
+} from "../lib/dateInput";
 import { RowEditorSidebar } from "./RowEditorSidebar";
 import { useDatabase } from "../../connections";
 import { getSelectedRows, copyTextToClipboard } from "../../../shared/lib/clipboard";
-import type {
-  PendingInsertion,
-  TableColumn,
-  ForeignKey,
-} from "../../../types/editor";
+import type { DataGridProps } from "../contracts";
+import type { ForeignKey } from "../../../shared/lib/foreignKeys";
 import type { RowCtx } from "./DataGridRow";
 import { useGridSelection } from "../hooks/useGridSelection";
 import { useJsonViewerSession } from "../hooks/useJsonViewerSession";
@@ -48,50 +45,6 @@ import {
   type GridContextMenuState,
   type GridHeaderContextMenuState,
 } from "./DataGridContextMenus";
-
-export interface DataGridProps {
-  columns: string[];
-  data: unknown[][];
-  tableName?: string | null;
-  pkColumns?: string[] | null;
-  autoIncrementColumns?: string[];
-  defaultValueColumns?: string[];
-  nullableColumns?: string[];
-  columnMetadata?: TableColumn[];
-  foreignKeys?: ForeignKey[];
-  onForeignKeyNavigate?: (fk: ForeignKey, value: unknown) => void;
-  onForeignKeyShowPanel?: (fk: ForeignKey, value: unknown) => void;
-  onForeignKeyHidePanel?: () => void;
-  connectionId?: string | null;
-  database?: string;
-  schema?: string;
-  onRefresh?: () => void;
-  pendingChanges?: Record<
-    string,
-    { pkOriginalValue: unknown; changes: Record<string, unknown> }
-  >;
-  pendingDeletions?: Record<string, unknown>;
-  pendingInsertions?: Record<string, PendingInsertion>;
-  onPendingChange?: (pkVal: unknown, colName: string, value: unknown) => void;
-  onPendingInsertionChange?: (
-    tempId: string,
-    colName: string,
-    value: unknown,
-  ) => void;
-  onDiscardInsertion?: (tempId: string) => void;
-  onRevertDeletion?: (pkVal: unknown) => void;
-  onMarkForDeletion?: (pkVal: unknown) => void;
-  onMarkMultipleForDeletion?: (pkVals: unknown[]) => void;
-  onDuplicateRow?: (rowData: Record<string, unknown>) => void;
-  selectedRows?: Set<number>;
-  onSelectionChange?: (indices: Set<number>) => void;
-  copyFormat?: "csv" | "json" | "sql-insert";
-  csvDelimiter?: string;
-  csvIncludeHeaders?: boolean;
-  sortClause?: string;
-  onSort?: (colName: string) => void;
-  readonly?: boolean;
-}
 
 export const DataGrid = React.memo(
   ({

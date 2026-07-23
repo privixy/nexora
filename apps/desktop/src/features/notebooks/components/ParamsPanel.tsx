@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, X, Variable } from "lucide-react";
-import type { NotebookParam } from "../../../types/notebook";
+import type { NotebookParam } from "..";
 import {
   validateParamName,
   createParam,

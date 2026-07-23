@@ -6,6 +6,7 @@ export type {
   SchemaTable,
   TableColumn,
 } from './contracts';
+export type { DataTypeInfo } from "./contracts/dataTypes";
 
 export { SchemaDiagramPage } from "./pages/SchemaDiagramPage";
 export { ClipboardImportModal } from "./components/ClipboardImportModal";
@@ -24,9 +25,4 @@ export { formatObjectCount } from "./lib/schema";
 export { extractEditableViewDefinition } from "./lib/viewDefinition";
 export { groupIndexes } from "./lib/indexes";
 export type { GroupedIndex } from "./lib/indexes";
-export {
-  buildForeignKeyFilterClause,
-  getForeignKeyForPreview,
-  isForeignKeyValueNavigable,
-  pickPrimaryForeignKeyByColumn,
-} from "./lib/foreignKeys";
+export { groupRoutinesByType } from "./lib/routines";

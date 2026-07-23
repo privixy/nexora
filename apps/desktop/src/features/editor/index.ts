@@ -42,3 +42,8 @@ export { extractEditableViewDefinition, splitQueries, statementLabel } from "./l
 export { isExplainable } from "./lib/sqlSplitter";
 export type { Dialect } from "./lib/sqlSplitter";
 export type { SavedQuery } from "./state/SavedQueriesContext";
+export type { QueryHistoryEntry, QueryHistoryRecoveryNotice } from "./contracts.queryHistory";
+export { GenerateSQLModal } from "./components/modals/GenerateSQLModal";
+export { SqlHighlight } from "./components/SqlHighlight";
+export { clearAutocompleteCache } from "./lib/autocomplete";
+export { formatSqlPreview } from "./lib/sqlHighlight";

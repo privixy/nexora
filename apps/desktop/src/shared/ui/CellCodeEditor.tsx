@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import MonacoEditor, {
   type BeforeMount,
   type OnValidate,
 } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";
-import { loadMonacoTheme } from "../../themes/themeUtils";
+import { MonacoThemeLoaderContext, noopMonacoThemeLoader } from "./EditorThemeContext";
 import { useInjectedEditorTheme } from "./useInjectedEditorTheme";
 
 interface CellCodeEditorProps {
@@ -25,13 +25,14 @@ export const CellCodeEditor = ({
   language = "json",
 }: CellCodeEditorProps) => {
   const editorTheme = useInjectedEditorTheme();
+  const loadMonacoTheme = useContext(MonacoThemeLoaderContext) ?? noopMonacoThemeLoader;
   const monacoRef = useRef<typeof MonacoTypes | null>(null);
 
   useEffect(() => {
     if (monacoRef.current) {
       loadMonacoTheme(editorTheme, monacoRef.current);
     }
-  }, [editorTheme]);
+  }, [editorTheme, loadMonacoTheme]);
 
   const handleBeforeMount: BeforeMount = (monaco) => {
     monacoRef.current = monaco;

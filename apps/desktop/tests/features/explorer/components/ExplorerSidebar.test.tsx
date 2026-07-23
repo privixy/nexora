@@ -9,7 +9,7 @@ import { useDatabase } from "../../../../src/features/connections/hooks/useDatab
 import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
 import { useDrivers } from "../../../../src/features/plugins/hooks/useDrivers";
 import type { DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
-import type { DriverCapabilities } from "../../../../src/types/plugins";
+import type { DriverCapabilities } from "../../../../src/features/plugins/contracts/plugins";
 
 vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
   useDatabase: vi.fn(),
@@ -27,7 +27,7 @@ vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { compactMode: false } }),
 }));
 
-vi.mock("../../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/shared/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 

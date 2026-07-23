@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   clearAutocompleteCache,
   registerSqlAutocomplete,
-} from '../../src/utils/autocomplete';
+} from '../../src/features/editor/lib/autocomplete';
 import type { TableInfo } from '../../src/features/connections/state/DatabaseContext';
 
 // Mock @tauri-apps/api/core
@@ -11,7 +11,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 }));
 
 // Mock sqlAnalysis
-vi.mock('../../src/utils/sqlAnalysis', () => ({
+vi.mock('../../src/features/editor/lib/sqlAnalysis', () => ({
   getCurrentStatement: vi.fn((model) => model.getValue()),
   parseTablesFromQuery: vi.fn(() => new Map()),
 }));
@@ -366,7 +366,7 @@ describe('autocomplete', () => {
         { name: 'name', data_type: 'VARCHAR' },
       ]);
 
-      const { parseTablesFromQuery } = await import('../../src/utils/sqlAnalysis');
+      const { parseTablesFromQuery } = await import('../../src/features/editor/lib/sqlAnalysis');
       const mockParseTables = parseTablesFromQuery as unknown as ReturnType<typeof vi.fn>;
       
       // Simulate that we have a table in context to trigger column fetching
@@ -454,7 +454,7 @@ describe('autocomplete', () => {
         { name: 'email', data_type: 'VARCHAR' },
       ]);
 
-      const { parseTablesFromQuery } = await import('../../src/utils/sqlAnalysis');
+      const { parseTablesFromQuery } = await import('../../src/features/editor/lib/sqlAnalysis');
       const mockParseTables = parseTablesFromQuery as unknown as ReturnType<typeof vi.fn>;
       mockParseTables.mockReturnValue(new Map([['u', { name: 'users' }]])); // alias -> ParsedTableRef
 
@@ -484,7 +484,7 @@ describe('autocomplete', () => {
       const mockInvoke = invoke as unknown as ReturnType<typeof vi.fn>;
       mockInvoke.mockResolvedValue([{ name: 'CreatedAt', data_type: 'timestamp' }]);
 
-      const { parseTablesFromQuery } = await import('../../src/utils/sqlAnalysis');
+      const { parseTablesFromQuery } = await import('../../src/features/editor/lib/sqlAnalysis');
       (parseTablesFromQuery as ReturnType<typeof vi.fn>).mockReturnValue(
         new Map([['ael', { name: 'AccountEventLog' }]]),
       );
@@ -511,7 +511,7 @@ describe('autocomplete', () => {
       const mockInvoke = invoke as unknown as ReturnType<typeof vi.fn>;
       mockInvoke.mockResolvedValue([{ name: 'email', data_type: 'varchar' }]);
 
-      const { parseTablesFromQuery } = await import('../../src/utils/sqlAnalysis');
+      const { parseTablesFromQuery } = await import('../../src/features/editor/lib/sqlAnalysis');
       (parseTablesFromQuery as ReturnType<typeof vi.fn>).mockReturnValue(
         new Map([['u', { name: 'users' }]]),
       );

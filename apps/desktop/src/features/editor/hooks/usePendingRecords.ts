@@ -1,4 +1,4 @@
-import type { PendingInsertion, Tab } from "../../../types/editor";
+import type { PendingInsertion, Tab } from "..";
 
 export interface PendingRecords {
   pendingChanges?: Tab["pendingChanges"];

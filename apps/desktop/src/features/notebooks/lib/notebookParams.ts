@@ -1,4 +1,4 @@
-import type { NotebookParam } from "../../../types/notebook";
+import type { NotebookParam } from "..";
 
 const PARAM_PATTERN = /@(\w+)/g;
 

@@ -10,7 +10,7 @@ vi.mock("@monaco-editor/react", () => ({
   ),
 }));
 
-vi.mock("../../../src/themes/themeUtils", () => ({
+vi.mock("../../../src/features/settings/themes/themeUtils", () => ({
   loadMonacoTheme: vi.fn(),
 }));
 

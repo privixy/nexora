@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { useChangelog } from "../../src/hooks/useChangelog";
+import { useChangelog } from "../../src/features/settings/hooks/useChangelog";
 
 describe("useChangelog", () => {
   it("loads entries from the bundled changelog", () => {

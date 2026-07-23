@@ -1,11 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MultiResultPanel } from "../../../../src/features/editor/components/MultiResultPanel";
-import type { QueryResultEntry, QueryResult } from "../../../../src/types/editor";
+import type { QueryResultEntry, QueryResult } from "../../../../src/features/editor";
 
 // Mock DataGrid
 vi.mock("../../../../src/features/data-grid", () => ({
   DataGrid: vi.fn(() => <div data-testid="data-grid" />),
+  PaginationControls: ({ pagination, onPageChange }: { pagination: { page: number }; onPageChange: (page: number) => void }) => (
+    <div>
+      <button title="pagination.firstPage" onClick={() => onPageChange(1)} />
+      <button title="pagination.nextPage" onClick={() => onPageChange(pagination.page + 1)} />
+    </div>
+  ),
 }));
 
 // Mock ErrorDisplay

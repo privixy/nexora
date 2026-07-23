@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import Markdown from "react-markdown";
 import { useTranslation } from "react-i18next";
-import type { NotebookCell } from "../../../types/notebook";
+import type { NotebookCell } from "..";
 
 interface MarkdownCellProps {
   cell: NotebookCell;

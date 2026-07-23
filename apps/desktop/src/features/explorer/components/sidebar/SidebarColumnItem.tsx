@@ -9,7 +9,7 @@ import { useAlert } from "../../../../shared/hooks/useAlert";
 import { Key, Columns, Edit, Copy, Trash2 } from "lucide-react";
 import clsx from "clsx";
 import { ContextMenu } from "../../../../shared/ui/ContextMenu";
-import type { TableColumn } from "../../../../types/schema";
+import type { TableColumn } from "../../../schema";
 import { quoteIdentifier, quoteTableRef } from "../../../../shared/lib/identifiers";
 
 interface SidebarColumnItemProps {

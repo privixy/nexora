@@ -1,4 +1,9 @@
-import type { PluginManifest } from "../../types/plugins";
+interface IdentifierQuoteSource {
+  id?: string;
+  capabilities?: {
+    identifier_quote?: string;
+  };
+}
 
 /**
  * Returns the appropriate quote character for SQL identifiers based on the database driver.
@@ -7,7 +12,7 @@ import type { PluginManifest } from "../../types/plugins";
  * MySQL/MariaDB use backticks (`), while PostgreSQL and SQLite use double quotes (").
  */
 export function getQuoteChar(
-  driver: string | PluginManifest | null | undefined,
+  driver: string | IdentifierQuoteSource | null | undefined,
 ): string {
   if (typeof driver === "object" && driver?.capabilities?.identifier_quote) {
     return driver.capabilities.identifier_quote;

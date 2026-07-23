@@ -1,5 +1,5 @@
-import type { Tab } from "../../../types/editor";
-import type { DriverCapabilities } from "../../../types/plugins";
+import type { Tab } from "..";
+import type { DriverCapabilities } from "../../plugins";
 import { isMultiDatabaseCapable } from "../../plugins";
 
 export interface EditorExecutionContext {

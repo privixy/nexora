@@ -1,4 +1,4 @@
-import type { QueryResult, QueryResultEntry, Tab } from "../../../types/editor";
+import type { QueryResult, QueryResultEntry, Tab } from "..";
 
 /**
  * Protocol for syncing query results between the main editor window and a

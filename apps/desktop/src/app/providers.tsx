@@ -5,12 +5,12 @@ import { EditorProvider, QueryHistoryProvider, SavedQueriesProvider } from "../f
 import { AiApprovalGate } from "../features/settings";
 import { mcpApprovalAttentionAdapter } from '../features/mcp';
 import { ApprovalExplainPlanView } from '../features/visual-explain';
-import { SshAskpassGate } from "../shared/ui/SshAskpassGate";
+import { SshAskpassGate } from "../features/connections";
 import { UpdateNotificationModal } from "../shared/ui/UpdateNotificationModal";
-import { WhatsNewModal } from "../shared/ui/WhatsNewModal";
+import { WhatsNewModal } from "../features/settings";
 import { AlertProvider } from "./AlertProvider";
 import { ConnectionLayoutProvider } from "./ConnectionLayoutProvider";
-import { KeybindingsProvider } from "../contexts/KeybindingsProvider";
+import { KeybindingsProvider } from "../features/settings";
 import { PluginModalProvider, PluginSlotProvider } from "../features/plugins";
 import { editorNotebookAdapter } from "../features/notebooks";
 

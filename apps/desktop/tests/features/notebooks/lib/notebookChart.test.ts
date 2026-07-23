@@ -6,8 +6,8 @@ import {
   buildDefaultChartConfig,
   transformResultToChartData,
 } from "../../../../src/features/notebooks/lib/notebookChart";
-import type { QueryResult } from "../../../../src/types/editor";
-import type { CellChartConfig } from "../../../../src/types/notebook";
+import type { QueryResult } from "../../../../src/features/editor";
+import type { CellChartConfig } from "../../../../src/features/notebooks";
 
 function makeResult(overrides: Partial<QueryResult> = {}): QueryResult {
   return {

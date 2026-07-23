@@ -13,8 +13,8 @@ import {
   validatePendingInsertion,
 } from "../../data-grid";
 import { isMultiDatabaseCapable } from "../../plugins";
-import { isReadonly } from "../../../utils/driverCapabilities";
-import { formatWindowTitle } from "../../../utils/windowTitle";
+import { isReadonly } from "../../plugins";
+import { formatWindowTitle } from "../../connections";
 import {
   useDangerousQueryGuard,
   DANGEROUS_QUERY_I18N,
@@ -72,10 +72,10 @@ import {
   recordGateway,
   windowGateway,
 } from "../../../platform/tauri";
-import { TableToolbar } from "../../../components/ui/TableToolbar";
+import { TableToolbar } from "../../data-grid";
 import { MultiResultPanel } from "../components/MultiResultPanel";
 import { ErrorDisplay } from "../../../shared/ui/ErrorDisplay";
-import { NewRowModal } from "../../../components/modals/NewRowModal";
+import { NewRowModal } from "../components/modals/NewRowModal";
 import { QuerySelectionModal } from "../components/modals/QuerySelectionModal";
 import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import { ExplainSelectionModal } from "../components/modals/ExplainSelectionModal";
@@ -116,7 +116,7 @@ import {
   type ResultsActionEnvelope,
   type ResultsClosedPayload,
 } from "../lib/resultsWindowSync";
-import { SqlEditorWrapper } from "../components/SqlEditorWrapper";
+import { SqlEditorWrapper } from "../components/SqlEditorWrapper"; import { SqlPreview } from "../../../shared/ui/SqlPreview";
 import { useSqlAutocompleteRegistration } from "../hooks/useSqlAutocompleteRegistration";
 import { type OnMount, type Monaco } from "@monaco-editor/react";
 import { useAlert } from "../../../shared/hooks/useAlert";
@@ -128,18 +128,18 @@ import { useQueryHistory } from "..";
 import { useSettings } from "../../settings";
 import { useEditor } from "..";
 import { useConnectionLayoutContext } from "../../connections";
-import { useKeybindings } from "../../../hooks/useKeybindings";
+import { useKeybindings } from "../../settings";
 import type {
   BatchStatementResult,
   QueryResult,
   Tab,
   PendingInsertion,
   TableColumn,
-  ForeignKey,
-} from "../../../types/editor";
-import { buildForeignKeyFilterClause } from "../../schema";
+} from "..";
+import type { ForeignKey } from "../../schema";
+import { buildForeignKeyFilterClause } from "../../../shared/lib/foreignKeys";
 import { formatSqlIdentifier } from "../../../shared/lib/identifiers";
-import { RelatedRecordsPanel } from "../../../components/ui/RelatedRecordsPanel";
+import { RelatedRecordsPanel } from "../components/RelatedRecordsPanel";
 import {
   getTabScrollState,
   getAdjacentTabIndex,
@@ -4048,7 +4048,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
             ? DANGEROUS_QUERY_I18N[dangerousQuery.kind].message
             : "editor.dangerousQueryMessage",
         )}
-        sql={dangerousQuery?.sql}
+        sql={dangerousQuery?.sql} renderSqlPreview={(sql) => <SqlPreview sql={sql} height="120px" />}
         confirmLabel={t("editor.dangerousQueryConfirm")}
         variant="danger"
         confirmDelaySeconds={5}

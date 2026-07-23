@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseChangelog } from "@/utils/changelog";
+import { parseChangelog } from "../../src/features/settings/lib/changelog";
 
 describe("parseChangelog", () => {
   it("parses minor releases written as level-one headings", () => {

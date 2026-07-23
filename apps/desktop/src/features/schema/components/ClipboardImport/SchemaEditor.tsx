@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { AlertTriangle, Maximize2, Minimize2, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Select } from '../../../../shared/ui/Select';
-import type { DataTypeInfo } from '../../../../types/dataTypes';
-import { useColumnResize } from '../../../../hooks/useColumnResize';
+import type { DataTypeInfo } from '../../contracts/dataTypes';
+import { useColumnResize } from '../../../../shared/hooks/useColumnResize';
 
 export interface SchemaColumn {
   name: string;

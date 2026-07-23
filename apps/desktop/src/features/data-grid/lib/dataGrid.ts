@@ -3,9 +3,9 @@
  * Extracted for testability
  */
 
-import { formatGeometricValue, isGeometricType } from "../../../utils/geometry";
-import { formatBlobValue, isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
-import { isJsonColumn } from "../../../utils/json";
+import { formatGeometricValue, isGeometricType } from "./geometry";
+import { formatBlobValue, isBlobColumn, isBlobWireFormat } from "./blob";
+import { isJsonColumn } from "./json";
 import { formatBasicCellValue } from "../../../shared/lib/cellFormatting";
 
 /** Sentinel value indicating that the database DEFAULT value should be used */

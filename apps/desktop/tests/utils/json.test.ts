@@ -5,7 +5,7 @@ import {
   formatJsonForEditor,
   validateJson,
   parseJsonEditorValue,
-} from "../../src/utils/json";
+} from "../../src/features/data-grid/lib/json";
 
 describe("json", () => {
   describe("isJsonColumn", () => {

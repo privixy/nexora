@@ -3,7 +3,7 @@ import {
   resultToCsv,
   resultToJson,
 } from "../../../../src/features/notebooks/lib/notebookExport";
-import type { QueryResult } from "../../../../src/types/editor";
+import type { QueryResult } from "../../../../src/features/editor";
 
 function makeResult(overrides: Partial<QueryResult> = {}): QueryResult {
   return {

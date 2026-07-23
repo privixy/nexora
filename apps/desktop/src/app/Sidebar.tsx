@@ -20,13 +20,13 @@ import { NavItem } from "./components/NavItem";
 import { ExplorerSidebar, type SidebarTab } from "../features/explorer";
 import { PanelDatabaseProvider } from "./shell/PanelDatabaseProvider";
 import { QuickNavigatorModal } from "../features/explorer";
-import { GenerateSQLModal } from "../components/modals/GenerateSQLModal";
+import { GenerateSQLModal } from "../features/editor";
 import { SchemaModal } from "../features/schema";
 
 // Hooks & Utils
-import { useSidebarResize } from "../hooks/useSidebarResize";
+import { useSidebarResize } from "../features/explorer";
 import { useDrivers } from "../features/plugins";
-import { useKeybindings } from "../hooks/useKeybindings";
+import { useKeybindings } from "../features/settings";
 
 export const Sidebar = () => {
   const { t } = useTranslation();

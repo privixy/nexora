@@ -3,7 +3,7 @@ import type {
   SchemaCache,
   TableSchema,
   EditorPreferences,
-} from "../../../types/editor";
+} from "..";
 import { quoteTableRef } from "../../../shared/lib/identifiers";
 import { queryGateway } from "../../../platform/tauri/queryGateway";
 import { cleanTabForStorage, restoreTabFromStorage } from "./tabCleaner";

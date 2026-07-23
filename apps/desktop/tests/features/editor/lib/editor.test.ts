@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { Tab, TableSchema, SchemaCache } from "../../../../src/types/editor";
+import type { Tab, TableSchema, SchemaCache } from "../../../../src/features/editor";
 import {
   generateTabId,
   createInitialTabState,

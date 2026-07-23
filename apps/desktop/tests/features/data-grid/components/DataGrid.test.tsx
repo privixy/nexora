@@ -5,11 +5,11 @@ import { recordGateway } from "../../../../src/platform/tauri/recordGateway";
 import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
 import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
-import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
+import { TableToolbar } from "../../../../src/features/data-grid/components/TableToolbar";
 import { reconstructTableQuery } from "../../../../src/features/editor/lib/editor";
 import type { PluginSlotRegistryType, SlotComponentProps } from "../../../../src/features/plugins";
-import type { Tab } from "../../../../src/types/editor";
-import type { ForeignKey, TableColumn } from "../../../../src/types/editor";
+import type { Tab } from "../../../../src/features/editor";
+import type { ForeignKey, TableColumn } from "../../../../src/features/editor";
 
 class MockResizeObserver {
   observe() {}
@@ -83,7 +83,7 @@ vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: () => ({ settings: { detectJsonInTextColumns: false } }),
 }));
 
-vi.mock("../../../../src/hooks/useAlert", () => ({
+vi.mock("../../../../src/shared/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 

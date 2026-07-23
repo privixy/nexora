@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Save, Loader2, ListTree, AlertTriangle } from 'lucide-react';
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
-import { SqlPreview } from '../../../../components/ui/SqlPreview';
+import { SqlPreview } from '../../../../shared/ui/SqlPreview';
 import { useDatabase } from '../../../connections';
 import { Modal } from '../../../../shared/ui/Modal';
 

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SqlPreview } from '../../../src/components/ui/SqlPreview';
+import { SqlPreview } from '../../../src/shared/ui/SqlPreview';
+import { EditorThemeProvider } from '../../../src/shared/ui/EditorThemeProvider';
+import type { Theme } from '../../../src/shared/types/theme';
 
 // Mock MonacoEditor
 vi.mock('@monaco-editor/react', () => ({
@@ -17,18 +19,23 @@ vi.mock('../../../src/features/settings/hooks/useEditorTheme', () => ({
 }));
 
 // Mock themeUtils
-vi.mock('../../../src/themes/themeUtils', () => ({
+vi.mock('../../../src/features/settings/themes/themeUtils', () => ({
   loadMonacoTheme: vi.fn(),
 }));
 
+const theme = { id: 'nexora-dark' } as Theme;
+const renderPreview = (element: React.ReactNode) => render(
+  <EditorThemeProvider theme={theme}>{element}</EditorThemeProvider>,
+);
+
 describe('SqlPreview', () => {
   it('renders with SQL content', () => {
-    render(<SqlPreview sql="SELECT * FROM users" />);
+    renderPreview(<SqlPreview sql="SELECT * FROM users" />);
     expect(screen.getByText('SELECT * FROM users')).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
-    const { container } = render(
+    const { container } = renderPreview(
       <SqlPreview sql="SELECT 1" className="custom-class" />
     );
     const wrapper = container.querySelector('.sql-preview-wrapper');
@@ -39,30 +46,30 @@ describe('SqlPreview', () => {
     const sql = `SELECT id, name
 FROM users
 WHERE status = 'active'`;
-    render(<SqlPreview sql={sql} />);
+    renderPreview(<SqlPreview sql={sql} />);
     expect(screen.getByText(/SELECT id, name/)).toBeInTheDocument();
     expect(screen.getByText(/FROM users/)).toBeInTheDocument();
   });
 
   it('renders with empty SQL', () => {
-    render(<SqlPreview sql="" />);
+    renderPreview(<SqlPreview sql="" />);
     expect(screen.getByTestId('monaco-editor')).toHaveAttribute('data-value', '');
   });
 
   it('renders with special SQL characters', () => {
     const sql = "SELECT * FROM table WHERE name LIKE '%test%' AND id > 5";
-    render(<SqlPreview sql={sql} />);
+    renderPreview(<SqlPreview sql={sql} />);
     expect(screen.getByText(sql)).toBeInTheDocument();
   });
 
   it('renders with SQL containing quotes', () => {
     const sql = `SELECT * FROM users WHERE name = 'John O''Brien'`;
-    render(<SqlPreview sql={sql} />);
+    renderPreview(<SqlPreview sql={sql} />);
     expect(screen.getByText(/John O''Brien/)).toBeInTheDocument();
   });
 
   it('wrapper has correct CSS classes', () => {
-    const { container } = render(<SqlPreview sql="SELECT 1" />);
+    const { container } = renderPreview(<SqlPreview sql="SELECT 1" />);
     const wrapper = container.querySelector('.sql-preview-wrapper');
     expect(wrapper).toHaveClass('rounded-lg');
     expect(wrapper).toHaveClass('overflow-hidden');
@@ -80,7 +87,7 @@ WHERE status = 'active'`;
     ];
 
     queries.forEach((sql) => {
-      const { unmount } = render(<SqlPreview sql={sql} />);
+      const { unmount } = renderPreview(<SqlPreview sql={sql} />);
       expect(screen.getByText(sql)).toBeInTheDocument();
       unmount();
     });

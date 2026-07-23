@@ -14,7 +14,7 @@ import {
   getEntryDisplayLabel,
   getStackedGridHeight,
 } from "../../../../src/features/editor/lib/multiResult";
-import type { QueryResult, QueryResultEntry } from "../../../../src/types/editor";
+import type { QueryResult, QueryResultEntry } from "../../../../src/features/editor";
 
 function makeEntry(overrides: Partial<QueryResultEntry> = {}): QueryResultEntry {
   return {

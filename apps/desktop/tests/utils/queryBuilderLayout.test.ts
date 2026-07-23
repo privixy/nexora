@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { layoutQueryBuilderGraph } from '../../src/utils/queryBuilderLayout';
+import { layoutQueryBuilderGraph } from '../../src/features/editor/query-builder/queryBuilderLayout';
 import type { Node, Edge } from '@xyflow/react';
 import type { TableNodeData } from '../../src/features/editor/query-builder/TableNode';
 

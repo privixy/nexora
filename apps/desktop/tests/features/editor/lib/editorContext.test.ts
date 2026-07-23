@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resolveEditorContext } from '../../../../src/features/editor/lib/editorContext';
-import type { DriverCapabilities } from '../../../../src/types/plugins';
+import type { DriverCapabilities } from '../../../../src/features/plugins/contracts/plugins';
 
 const multiDbSchemas: DriverCapabilities = {
   multiple_databases: true,

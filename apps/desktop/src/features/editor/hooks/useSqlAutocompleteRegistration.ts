@@ -3,7 +3,7 @@ import type { Monaco } from "@monaco-editor/react";
 import { loader } from "@monaco-editor/react";
 import { useDatabase } from "../../connections";
 import { isMultiDatabaseCapable } from "../../plugins";
-import { registerSqlAutocomplete, disposeSqlAutocomplete } from "../../../utils/autocomplete";
+import { registerSqlAutocomplete, disposeSqlAutocomplete } from "../lib/autocomplete";
 
 type Options = {
   monaco?: Monaco | null;

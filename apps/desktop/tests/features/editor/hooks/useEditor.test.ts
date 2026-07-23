@@ -3,7 +3,7 @@ import { useEditor } from '../../../../src/features/editor/hooks/useEditor';
 import { EditorContext, type EditorContextType } from '../../../../src/features/editor/state/EditorContext';
 import { renderHook } from '@testing-library/react';
 import React, { type ReactNode } from 'react';
-import type { Tab } from '../../../../src/types/editor';
+import type { Tab } from '../../../../src/features/editor';
 
 describe('useEditor', () => {
   it('should throw error when used outside EditorProvider', () => {

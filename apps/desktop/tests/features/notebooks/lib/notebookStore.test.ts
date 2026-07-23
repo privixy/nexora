@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { NotebookState } from "../../../../src/types/notebook";
+import type { NotebookState } from "../../../../src/features/notebooks";
 
 // Mock Tauri invoke
 vi.mock("@tauri-apps/api/core", () => ({

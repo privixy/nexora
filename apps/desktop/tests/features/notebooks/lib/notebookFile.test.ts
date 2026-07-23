@@ -4,7 +4,7 @@ import {
   deserializeNotebook,
   validateNotebookFile,
 } from '../../../../src/features/notebooks/lib/notebookFile';
-import type { NotebookCell } from '../../../../src/types/notebook';
+import type { NotebookCell } from '../../../../src/features/notebooks';
 
 function makeCells(): NotebookCell[] {
   return [

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supportsManageTables } from "../../../../utils/driverCapabilities";
+import { supportsManageTables } from "../../../plugins";
 import { useTranslation } from "react-i18next";
 import {
   Loader2,
@@ -22,10 +22,10 @@ import { SidebarRoutineGroupHeader } from "./SidebarRoutineGroupHeader";
 import { SidebarTriggerItem } from "./SidebarTriggerItem";
 import { SidebarSchemaItem } from "./SidebarSchemaItem";
 import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../connections";
-import type { TableColumn } from "../../../../types/schema";
+import type { TableColumn } from "../../../schema";
 import type { ContextMenuData } from "../../contracts";
-import type { DriverCapabilities } from "../../../../types/plugins";
-import { groupRoutinesByType } from "../../../../utils/routines";
+import type { DriverCapabilities } from "../../../plugins";
+import { groupRoutinesByType } from "../../../schema";
 import { formatObjectCount } from "../../../schema";
 import { fuzzyFilter } from "../../../../shared/lib/fuzzy";
 

@@ -9,7 +9,7 @@ import {
   type SettingsContextType,
   type Settings,
 } from '../../../../src/features/settings/state/SettingsContext';
-import type { Theme, ThemeSettings } from '../../../../src/types/theme';
+import type { Theme, ThemeSettings } from '../../../../src/shared/types/theme';
 
 const makeTheme = (id: string): Theme => ({
   id,

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { RotateCcw, X } from "lucide-react";
-import type { CellExecutionEntry } from "../../../types/notebook";
+import type { CellExecutionEntry } from "..";
 
 interface CellHistoryPanelProps {
   history: CellExecutionEntry[];

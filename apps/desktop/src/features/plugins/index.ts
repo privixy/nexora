@@ -38,3 +38,16 @@ export {
   getEffectiveDatabase,
   isMultiDatabaseCapable,
 } from "./lib/databaseCapabilities";
+export {
+  getCapabilitiesForDriver,
+  isLocalDriver,
+  isReadonly,
+  supportsAlterColumn,
+  supportsCreateDatabase,
+  supportsCreateForeignKeys,
+  supportsCreateSchema,
+  supportsDropDatabase,
+  supportsManageTables,
+  supportsRenameDatabase,
+  supportsTruncateTable,
+} from "./lib/driverCapabilities";

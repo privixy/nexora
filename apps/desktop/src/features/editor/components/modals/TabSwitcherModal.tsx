@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { X, FileCode, Network, BookOpen } from "lucide-react";
 import { Table as TableIcon } from "lucide-react";
-import type { Tab } from "../../../../types/editor";
+import type { Tab } from "../..";
 import { getTabSwitcherRowClassName } from "../../lib/tabScroll";
 
 interface TabSwitcherModalProps {

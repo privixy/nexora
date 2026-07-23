@@ -9,7 +9,7 @@ import {
   removeParam,
   addParam,
 } from "../../../../src/features/notebooks/lib/notebookParams";
-import type { NotebookParam } from "../../../../src/types/notebook";
+import type { NotebookParam } from "../../../../src/features/notebooks";
 
 describe("notebookParams", () => {
   describe("extractParamReferences", () => {
