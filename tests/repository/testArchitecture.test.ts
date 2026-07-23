@@ -38,8 +38,11 @@ describe("test architecture", () => {
 
   it("keeps command test inventories disjoint", () => {
     const listedTests = execFileSync(
-      "cargo",
+      "mise",
       [
+        "exec",
+        "--",
+        "cargo",
         "test",
         "--manifest-path",
         "apps/desktop/src-tauri/Cargo.toml",

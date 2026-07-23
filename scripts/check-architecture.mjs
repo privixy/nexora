@@ -81,11 +81,13 @@ function collectPackageManifests(root, trackedFiles, packageDirectories) {
 
 function hasInlineRustTests(root, file) {
   const content = readFileSync(join(root, file), "utf8");
-  const modules = /^[ \t]*#\[cfg\(test\)\](?:\s*#\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*\{([\s\S]*?)}/gm;
-  return [...content.matchAll(modules)].some((match) => {
-    const body = match[1].trim();
-    return body.length > 0 || match[0].includes("\n");
-  });
+  const cfgTest = /#\s*\[\s*cfg\s*\(\s*(?:test\b|all\s*\([^)]*\btest\b[^)]*\))[^)]*\)\s*\]/g;
+  for (const match of content.matchAll(cfgTest)) {
+    const remainder = content.slice(match.index + match[0].length);
+    const module = remainder.match(/^(?:\s*#\s*\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*([;{])/);
+    if (module?.[1] === "{") return true;
+  }
+  return false;
 }
 
 function isRustTestSource(file) {
@@ -96,10 +98,10 @@ function rustTestInclusionViolations(root, file) {
   if (!isRustTestSource(file)) return [];
   const source = readFileSync(join(root, file), "utf8");
   const violations = [];
-  if (/\binclude!\s*\(/m.test(source)) {
+  if (/\binclude\s*!\s*[({\[]/m.test(source)) {
     violations.push(`${file}: include! is forbidden in Rust test sources`);
   }
-  for (const match of source.matchAll(/#\[path\s*=\s*"([^"]+)"\]\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*;/gm)) {
+  for (const match of source.matchAll(/#\s*\[\s*path\s*=\s*(?:r#*)?"([^"]+)"#*\s*\]\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*;/gm)) {
     violations.push(`${file}: test-to-test #[path] module inclusion is forbidden: ${match[1]}`);
   }
   return violations;
@@ -303,6 +305,15 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
   const plannedCharacterizationTests = boundaries.plannedCharacterizationTests ?? [];
   const tauriGatewayOwnership = boundaries.tauriGatewayOwnership ?? [];
   const featureEdges = new Map();
+  const sourceOwnerSources = new Set();
+  const sourceOwnerDestinations = new Set();
+
+  for (const row of sourceOwners) {
+    if (sourceOwnerSources.has(row?.source)) violations.push(`${row?.source}: duplicate frontend source-owner source row`);
+    if (sourceOwnerDestinations.has(row?.destination)) violations.push(`${row?.destination}: duplicate frontend source-owner destination row`);
+    sourceOwnerSources.add(row?.source);
+    sourceOwnerDestinations.add(row?.destination);
+  }
 
   for (const exception of [...exceptions, ...tauriExceptions]) {
     const isTauriException = tauriExceptions.includes(exception);
@@ -454,6 +465,21 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
   return violations;
 }
 
+function rustDriverAliases(source) {
+  const aliases = new Set(["drivers"]);
+  for (const match of source.matchAll(/\buse\s+crate::drivers\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) aliases.add(match[1]);
+  for (const match of source.matchAll(/\buse\s+crate::drivers::\{[\s\S]*?\bself\s+as\s+([A-Za-z_][A-Za-z0-9_]*)[\s\S]*?};/g)) aliases.add(match[1]);
+  return aliases;
+}
+
+function usesBuiltInRustDriver(source) {
+  for (const alias of rustDriverAliases(source)) {
+    const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (new RegExp(`\\b${escaped}::(?:mysql|postgres|sqlite)(?:::|\\b)`).test(source)) return true;
+  }
+  return /\bcrate::drivers::(?:mysql|postgres|sqlite)(?:::|\b)/.test(source);
+}
+
 function collectRustBackendViolations(root, trackedFiles, boundaries) {
   if (!boundaries) return [];
   const violations = [];
@@ -467,12 +493,12 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
   const dependencyRules = [
     [`${sourceRoot}/commands`, [
       ["sqlx", /\bsqlx(?:::|\b)/],
-      ["built-in drivers", /\bdrivers::(?:mysql|postgres|sqlite)(?:::|\b)/],
+      ["built-in drivers", usesBuiltInRustDriver],
       ["pool constructors", /\b(?:get|create)_(?:mysql|postgres|sqlite)_pool\b/],
     ]],
     [`${sourceRoot}/domains`, [
       ["tauri", /\btauri(?:::|\b)/],
-      ["built-in drivers", /\bdrivers::(?:mysql|postgres|sqlite)(?:::|\b)/],
+      ["built-in drivers", usesBuiltInRustDriver],
       ["direct pools", /\b(?:get|create)_(?:mysql|postgres|sqlite)_pool\b/],
     ]],
     [`${sourceRoot}/drivers`, [
@@ -484,11 +510,16 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
   ];
 
   const commandsRoot = `${sourceRoot}/commands`;
-  const approvedLegacyCommandOwners = new Set([
-    `${sourceRoot}/export.rs`,
-    `${sourceRoot}/dump_commands.rs`,
-    `${sourceRoot}/clipboard_import.rs`,
-  ]);
+  const approvedLegacyCommandOwners = new Set(Object.keys(boundaries.legacyTransferOwners ?? {}));
+  for (const [ownerPath, metadata] of Object.entries(boundaries.legacyTransferOwners ?? {})) {
+    if (!isExactRepositoryPath(ownerPath, /^apps\/desktop\/src-tauri\/src\/[^/]+\.rs$/)) {
+      violations.push(`${ownerPath}: legacy transfer owner must be an exact Rust root source path`);
+    }
+    if (!sources.has(ownerPath)) violations.push(`${ownerPath}: legacy transfer owner points to a missing tracked file`);
+    if (typeof metadata?.owner !== "string" || typeof metadata?.removeAfter !== "string") {
+      violations.push(`${ownerPath}: legacy transfer owner requires owner and removeAfter metadata`);
+    }
+  }
 
   for (const [file, source] of sources) {
     if (file.split("/").includes("tests") || file.endsWith("/tests.rs")) continue;
@@ -496,7 +527,7 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
       if (!isUnderRoot(file, directory)) continue;
       for (const [label, pattern] of forbidden) {
         if (directory === `${sourceRoot}/domains` && label === "tauri" && isUnderRoot(file, domainWorkflowAdapters)) continue;
-        if (pattern.test(source)) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
+        if ((typeof pattern === "function" ? pattern(source) : pattern.test(source))) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
       }
     }
     if (source.includes("#[tauri::command]") && !isUnderRoot(file, commandsRoot) && !approvedLegacyCommandOwners.has(file)) {
@@ -580,6 +611,9 @@ export function countLines(content) {
 
 export function collectViolations(root, policy, inventory = {}) {
   const violations = [];
+  if (Object.hasOwn(policy, "rustLegacyTransferOwners")) {
+    violations.push("rustLegacyTransferOwners is forbidden; define legacyTransferOwners only under rustBackendBoundaries");
+  }
   const trackedFiles = new Set(inventory.trackedFiles ?? collectTrackedFiles(root));
   const sourceRoots = policy.sourceRoots ?? [];
   const files = [...trackedFiles]
@@ -730,6 +764,10 @@ export function collectViolations(root, policy, inventory = {}) {
       if (typeof baseline === "number") {
         if (lineCount > baseline) {
           violations.push(`${file}: ${lineCount} lines exceeds ratcheted baseline ${baseline}`);
+        } else if (lineCount <= softLimit) {
+          violations.push(`${file}: ${lineCount} lines no longer exceeds soft limit ${softLimit}; remove its ratcheted baseline`);
+        } else if (lineCount < baseline) {
+          violations.push(`${file}: ratcheted baseline ${baseline} is stale; current line count is ${lineCount}`);
         }
       } else if (lineCount > softLimit) {
         violations.push(`${file}: ${lineCount} lines exceeds soft limit ${softLimit}; split the file or add a ratcheted baseline with architecture approval`);
@@ -772,9 +810,25 @@ export function collectViolations(root, policy, inventory = {}) {
     }
   }
 
-  for (const file of Object.keys(rustIntegrationTests)) {
+  const integrationClassifications = new Set(["external-infrastructure", "public-api-contract", "source-contract"]);
+  for (const [file, metadata] of Object.entries(rustIntegrationTests)) {
     if (!trackedFiles.has(file) || !existsSync(join(root, file))) {
       violations.push(`${file}: rustIntegrationTests entry points to a missing tracked file`);
+    }
+    const testName = file.match(/^apps\/desktop\/src-tauri\/tests\/([^/]+)\.rs$/)?.[1];
+    const defaultMode = metadata?.defaultMode;
+    const expectedRun = testName
+      ? `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test ${testName}${defaultMode === "ignored" ? " -- --ignored" : ""}`
+      : undefined;
+    if (
+      !metadata
+      || Object.keys(metadata).sort().join(",") !== "classification,defaultMode,explicitRun"
+      || !integrationClassifications.has(metadata.classification)
+      || !["enabled", "ignored"].includes(defaultMode)
+      || metadata.explicitRun !== expectedRun
+      || (metadata.classification === "external-infrastructure") !== (defaultMode === "ignored")
+    ) {
+      violations.push(`${file}: rustIntegrationTests entry must use a supported classification/defaultMode and exact explicitRun command`);
     }
   }
 

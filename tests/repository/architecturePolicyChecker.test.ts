@@ -376,6 +376,69 @@ describe("architecture policy", () => {
     }
   });
 
+  it("detects cfg(all(test)) inline Rust tests and whitespace variants", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-inline-rust-tests-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/all.rs": "#[cfg(all(test))] mod tests { fn bad() {} }\n",
+        "apps/desktop/src-tauri/src/spaced.rs": "# [ cfg ( all ( test , feature = \"x\" ) ) ]\nmod checks\n{\n fn bad() {}\n}\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      for (const file of Object.keys(files)) {
+        expect(violations).toContain(`inline Rust test module is forbidden: ${file}`);
+      }
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects include and path inclusion syntax variants in Rust tests", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-inclusions-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/tests/include.rs": "include ! { \"canonical.rs\" }\n",
+        "apps/desktop/src-tauri/src/commands/tests/path.rs": "# [ path = r\"canonical.rs\" ]\npub(crate) mod duplicate;\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toEqual(expect.arrayContaining([
+        expect.stringContaining("include! is forbidden"),
+        expect.stringContaining("test-to-test #[path] module inclusion is forbidden: canonical.rs"),
+      ]));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
   it("does not allow template inline-test exceptions to exempt desktop Rust", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "nexora-architecture-"));
 
@@ -462,6 +525,138 @@ describe("architecture policy", () => {
         expect.stringContaining("config.rs: compatibility facade must contain re-exports only"),
         expect.stringContaining("count_query_compat.rs: frozen SQL owner must not declare a Tauri command"),
       ]));
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("resolves aliased Rust driver imports in command modules", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-aliases-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/query.rs": "use crate::drivers as db;\nuse db::mysql::MysqlDriver;\n",
+        "apps/desktop/src-tauri/src/commands/nested/query.rs": "use crate::drivers::{self as engine};\nfn run() { engine::postgres::connect(); }\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: [],
+          legacyTransferOwners: {},
+          frozenSqlOwners: {},
+        },
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      for (const file of Object.keys(files)) {
+        expect(violations).toContain(`${file}: Rust commands may not depend on built-in drivers`);
+      }
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("validates Rust integration classification schema", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-integration-schema-"));
+
+    try {
+      const file = "apps/desktop/src-tauri/tests/contract.rs";
+      writeFixture(tempRoot, file, "#[test]\nfn contract() {}\n");
+      const base = {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: [],
+      };
+      const inventory = { trackedFiles: [file], workspacePackageDirectories: [] };
+
+      for (const metadata of [
+        { classification: "unknown", defaultMode: "enabled", explicitRun: "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test contract" },
+        { classification: "source-contract", defaultMode: "sometimes", explicitRun: "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test contract" },
+        { classification: "source-contract", defaultMode: "enabled", explicitRun: "cargo test" },
+        { classification: "source-contract", defaultMode: "ignored", explicitRun: "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test contract" },
+      ]) {
+        expect(collectViolations(tempRoot, { ...base, rustIntegrationTests: { [file]: metadata } }, inventory)).toContain(
+          `${file}: rustIntegrationTests entry must use a supported classification/defaultMode and exact explicitRun command`,
+        );
+      }
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("enforces one legacy transfer owner manifest", () => {
+    const violations = collectViolations("/tmp", {
+      frontendTestRoots: [],
+      forbiddenFrontendTestRoots: [],
+      repositoryTestRoots: [],
+      rootTestRoots: [],
+      allowedWorkspaceDependencies: {},
+      fileSizeBaselines: {},
+      sourceRoots: [],
+      rustLegacyTransferOwners: {},
+      rustBackendBoundaries: { legacyTransferOwners: {} },
+    }, { trackedFiles: [], workspacePackageDirectories: [] });
+
+    expect(violations).toContain("rustLegacyTransferOwners is forbidden; define legacyTransferOwners only under rustBackendBoundaries");
+  });
+
+  it("rejects duplicate frontend source-owner rows", () => {
+    const source = "apps/desktop/src/app/App.tsx";
+    const violations = collectViolations("/tmp", {
+      frontendTestRoots: [],
+      forbiddenFrontendTestRoots: [],
+      repositoryTestRoots: [],
+      rootTestRoots: [],
+      allowedWorkspaceDependencies: {},
+      fileSizeBaselines: {},
+      sourceRoots: [],
+      frontendBoundaries: {
+        sourceOwners: [
+          { source, destination: source, owner: "app", moveTask: 1 },
+          { source, destination: source, owner: "app", moveTask: 2 },
+        ],
+      },
+    }, { trackedFiles: [], workspacePackageDirectories: [] });
+
+    expect(violations).toContain(`${source}: duplicate frontend source-owner source row`);
+    expect(violations).toContain(`${source}: duplicate frontend source-owner destination row`);
+  });
+
+  it("requires file-size ratchets to equal current counts and flags obsolete baselines", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-size-ratchets-"));
+
+    try {
+      const stale = "src/stale.ts";
+      const obsolete = "src/obsolete.ts";
+      writeFixture(tempRoot, stale, "line\n".repeat(501));
+      writeFixture(tempRoot, obsolete, "one\n");
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        sourceRoots: ["src"],
+        fileSizeBaselines: { [stale]: 502, [obsolete]: 1 },
+      }, { trackedFiles: [stale, obsolete], workspacePackageDirectories: [] });
+
+      expect(violations).toContain(`${stale}: ratcheted baseline 502 is stale; current line count is 501`);
+      expect(violations).toContain(`${obsolete}: 1 lines no longer exceeds soft limit 500; remove its ratcheted baseline`);
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });
     }

@@ -90,7 +90,9 @@ const policy = JSON.parse(readFileSync(resolve(root, "architecture/policy.json")
   rustTemplateInlineTestRoots: string[];
   rustTemplateInlineTestAllowlist: string[];
   rustCrateLevelTestAllowlist: string[];
-  rustLegacyTransferOwners: Record<string, { owner: string; removeAfter: string }>;
+  rustBackendBoundaries: {
+    legacyTransferOwners: Record<string, { owner: string; removeAfter: string }>;
+  };
   allowedWorkspaceDependencies: Record<string, string[]>;
   fileSizeBaselines: Record<string, number>;
   sourceRoots: string[];
@@ -160,7 +162,7 @@ describe("architecture policy", () => {
     ]);
     expect(policy.rustTemplateInlineTestAllowlist).toEqual([]);
     expect(policy.rustCrateLevelTestAllowlist).toEqual([]);
-    expect(policy.rustLegacyTransferOwners).toEqual({
+    expect(policy.rustBackendBoundaries.legacyTransferOwners).toEqual({
       "apps/desktop/src-tauri/src/export.rs": {
         owner: "future DatabaseDriver semantic transfer program",
         removeAfter: "behavior-approved DatabaseDriver export operations",
