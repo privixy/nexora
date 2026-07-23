@@ -2070,12 +2070,6 @@
     "moveTask": 40
   },
   {
-    "source": "apps/desktop/src/features/visual-explain/lib/isExplainableQuery.ts",
-    "owner": "visual-explain",
-    "destination": "apps/desktop/src/features/visual-explain/lib/isExplainableQuery.ts",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/features/visual-explain/pages/VisualExplainPage.tsx",
     "owner": "visual-explain",
     "destination": "apps/desktop/src/features/visual-explain/pages/VisualExplainPage.tsx",

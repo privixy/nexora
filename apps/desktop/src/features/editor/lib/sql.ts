@@ -10,7 +10,7 @@ export { splitQueries } from './sqlSplitter';
 
 export const stripLeadingSqlComments = stripLeadingComments;
 
-export { isExplainableQuery } from '../../visual-explain';
+export { isExplainable as isExplainableQuery } from './sqlSplitter';
 
 function isIdentifierChar(char: string): boolean {
   return /[A-Za-z0-9_$]/.test(char);
