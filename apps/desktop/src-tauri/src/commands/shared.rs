@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use tauri::{AppHandle, Emitter, Manager, Runtime, State};
+use tauri::{AppHandle, Manager, Runtime};
 use urlencoding::encode;
 use uuid::Uuid;
 
@@ -10,17 +10,12 @@ use crate::credential_cache;
 pub use crate::infrastructure::connections::{
     expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
     get_config_path, get_ssh_config_path, resolve_connection_params, resolve_connection_params_with_id,
-    resolve_k8s_params,
 };
 use crate::keychain_utils;
 use crate::models::{
-    BatchStatementResult, ColumnDefinition, ConnectionGroup, ConnectionParams, ConnectionsFile,
-    ExplainPlan, ExportPayload, ForeignKey, Index, K8sConnection, K8sConnectionInput, QueryResult,
-    RoutineInfo, RoutineParameter, SavedConnection, SshConnection, SshConnectionInput,
-    SshTestParams, TableColumn, TableInfo, TestConnectionRequest, TriggerInfo,
+    BatchStatementResult, ConnectionGroup, ConnectionParams, ConnectionsFile, ExportPayload, K8sConnection, SavedConnection, SshConnection,
 };
 use crate::persistence;
-use crate::window_title::format_window_title;
 
 // Constants
 /// Resolve the driver from the registry or return a descriptive error.

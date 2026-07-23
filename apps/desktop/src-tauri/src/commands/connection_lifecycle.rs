@@ -1,24 +1,7 @@
-use std::collections::HashMap;
-use std::fs;
-use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
-use tauri::{AppHandle, Emitter, Manager, Runtime, State};
-use tokio::task::AbortHandle;
-use urlencoding::encode;
-use uuid::Uuid;
+use tauri::{AppHandle, Runtime};
 
-use crate::connection_params::apply_database_override;
-use crate::credential_cache;
 use crate::keychain_utils;
-use crate::models::{
-    BatchStatementResult, ColumnDefinition, ConnectionGroup, ConnectionParams, ConnectionsFile,
-    ExplainPlan, ExportPayload, ForeignKey, Index, K8sConnection, K8sConnectionInput, QueryResult,
-    RoutineInfo, RoutineParameter, SavedConnection, SshConnection, SshConnectionInput,
-    SshTestParams, TableColumn, TableInfo, TestConnectionRequest, TriggerInfo,
-};
-use crate::persistence;
-use crate::ssh_tunnel::{get_tunnels, SshTunnel};
-use crate::window_title::format_window_title;
+use crate::models::TestConnectionRequest;
 
 use super::shared::*;
 
