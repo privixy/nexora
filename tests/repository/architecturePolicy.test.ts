@@ -158,10 +158,7 @@ describe("architecture policy", () => {
     expect(policy.rustTemplateInlineTestRoots).toEqual([
       "packages/create-plugin/templates/rust-driver/src",
     ]);
-    expect(policy.rustTemplateInlineTestAllowlist).toEqual([
-      "packages/create-plugin/templates/rust-driver/src/utils/identifiers.rs",
-      "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs",
-    ]);
+    expect(policy.rustTemplateInlineTestAllowlist).toEqual([]);
     expect(policy.rustCrateLevelTestAllowlist).toEqual([]);
     expect(policy.rustLegacyTransferOwners).toEqual({
       "apps/desktop/src-tauri/src/export.rs": {
