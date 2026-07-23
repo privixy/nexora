@@ -190,7 +190,7 @@ describe("architecture policy", () => {
   });
 
   it("ratchets file-size baselines to current tracked file sizes", () => {
-    expect(policy.fileSizeBaselines["apps/desktop/src-tauri/src/drivers/mysql/mod.rs"]).toBe(2340);
+    expect(policy.fileSizeBaselines["apps/desktop/src-tauri/src/drivers/mysql/mod.rs"]).toBe(2339);
   });
 
   it("confines legacy transfer behavior to exact root owners", () => {
@@ -375,6 +375,15 @@ describe("architecture policy", () => {
     expect(boundaryViolations({
       "apps/desktop/src/features/editor/index.ts": "`@tauri-apps/api/core`",
     })).toEqual(expect.arrayContaining([expect.stringContaining("direct Tauri import outside platform is forbidden")]));
+  });
+
+  it("keeps connection icon image imports consistently static", () => {
+    const driverUi = readFileSync(resolve(root, "apps/desktop/src/features/connections/lib/driverUI.tsx"), "utf8");
+    const appearanceSection = readFileSync(resolve(root, "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx"), "utf8");
+
+    expect(driverUi).toContain('import { ConnectionIconImage } from "../components/ConnectionIconImage";');
+    expect(driverUi).not.toContain('import("../components/ConnectionIconImage")');
+    expect(appearanceSection).toContain('import { ConnectionIconImage } from "../ConnectionIconImage";');
   });
 
   it("rejects every non-static dynamic import target but ignores ordinary template strings", () => {

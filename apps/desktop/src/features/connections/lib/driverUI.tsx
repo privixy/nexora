@@ -1,9 +1,10 @@
 import { Network, Database, FolderOpen, Plug } from "lucide-react";
 import { getLucideIconComponent, camelToKebab } from "./connectionIconPack";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import type { ReactNode } from "react";
 import type { PluginManifest } from "../../plugins";
 import type { SavedConnection } from "..";
+import { ConnectionIconImage } from "../components/ConnectionIconImage";
 import { PostgreSQLIcon, MySQLIcon, SQLiteIcon } from "./driverIcons";
 
 const FALLBACK_COLOR = "#64748b"; // slate-500
@@ -52,12 +53,6 @@ export function getDriverIcon(manifest: PluginManifest | undefined | null, size 
 export function getDriverColorStyle(manifest: PluginManifest | undefined | null): { backgroundColor: string } {
   return { backgroundColor: getDriverColor(manifest) };
 }
-
-// Lazy because ConnectionIconImage transitively imports @tauri-apps/api/path,
-// which we don't want to pull into the bundle until an image override is used.
-const ConnectionIconImage = lazy(() =>
-  import("../components/ConnectionIconImage").then(m => ({ default: m.ConnectionIconImage }))
-);
 
 /**
  * Returns the accent color for a connection, using the per-connection override

@@ -1,11 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { getConnectionAccent, getConnectionIcon } from "@/features/connections/lib/driverUI";
 import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "@/features/connections/lib/connectionIconPack";
 import type { SavedConnection } from "@/contexts/DatabaseContext";
 import type { PluginManifest } from "@/types/plugins";
 
-// Avoid loading the lazy ConnectionIconImage during tests (it pulls Tauri APIs that aren't available in vitest)
 vi.mock("@/features/connections/components/ConnectionIconImage", () => ({
   ConnectionIconImage: (props: { path: string; size: number }) =>
     <img data-testid="conn-icon-image" alt="" src={`mock://${props.path}`} width={props.size} height={props.size} />,
@@ -36,10 +35,10 @@ describe("getConnectionIcon", () => {
     // Smoke test: should not throw; icons are mocked to null in test env
     expect(() => render(<>{getConnectionIcon({ id: "1" } as SavedConnection, manifest, 16)}</>)).not.toThrow();
   });
-  it("renders the mocked image component for image overrides", async () => {
+  it("renders the mocked image component for image overrides", () => {
     const c = { id: "1", appearance: { icon: { type: "image", path: "connection-icons/foo.png" } } } as SavedConnection;
     render(<>{getConnectionIcon(c, manifest, 16)}</>);
-    await waitFor(() => expect(screen.getByTestId("conn-icon-image")).toBeInTheDocument());
+    expect(screen.getByTestId("conn-icon-image")).toBeInTheDocument();
   });
   it("falls back to manifest when pack id is unknown", () => {
     const c = { id: "1", appearance: { icon: { type: "pack", id: "this-icon-does-not-exist-xyz" } } } as SavedConnection;
