@@ -13,7 +13,7 @@ describe("scaffold matrix", () => {
     it(`preserves ${dbType}${withUi ? " with UI" : ""} output`, () => {
       const root = mkdtempSync(join(tmpdir(), "create-plugin-"));
       const targetDir = join(root, "fixture-driver");
-      scaffold({ slug: "fixture-driver", displayName: "Fixture Driver", dbType, quote: "double", withUi, targetDir, gitInit: false, pluginApiVersion: "0.1.0", minNexoraVersion: "0.9.20" });
+      scaffold({ slug: "fixture-driver", displayName: "Fixture Driver", dbType, quote: "\"", withUi, targetDir, gitInit: false, pluginApiVersion: "0.1.0", minNexoraVersion: "0.9.20" });
       const manifest = JSON.parse(readFileSync(join(targetDir, "manifest.json"), "utf8"));
       expect(manifest.id).toBe("fixture-driver");
       expect(manifest.capabilities.file_based).toBe(dbType === "file");
@@ -29,6 +29,6 @@ describe("scaffold matrix", () => {
   it("preserves non-empty target rejection", () => {
     const root = mkdtempSync(join(tmpdir(), "create-plugin-"));
     writeFileSync(join(root, "occupied"), "x");
-    expect(() => scaffold({ slug: "fixture", displayName: "Fixture", dbType: "network", quote: "double", withUi: false, targetDir: root, gitInit: false, pluginApiVersion: "0.1.0", minNexoraVersion: "0.9.20" })).toThrow();
+    expect(() => scaffold({ slug: "fixture", displayName: "Fixture", dbType: "network", quote: "\"", withUi: false, targetDir: root, gitInit: false, pluginApiVersion: "0.1.0", minNexoraVersion: "0.9.20" })).toThrow();
   });
 });

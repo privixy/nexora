@@ -33,8 +33,8 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.test.json",
-    "build": "tsup --out-dir .tmp/build",
-    "clean": "rm -rf .tmp/build",
+    "build": "rm -rf .tmp/templates && cp -R templates .tmp/templates && tsup --out-dir .tmp/build",
+    "clean": "rm -rf .tmp/build .tmp/templates",
     "smoke": "tsx scripts/smoke.ts",
     "smoke:static": "vitest run tests/scaffold.test.ts tests/cli.test.ts",
     "pack:stage": "tsx scripts/stage-package.ts",
