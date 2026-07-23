@@ -1,9 +1,7 @@
 mod blobs;
 mod compatibility;
-mod connection_groups;
 mod connection_lifecycle;
 mod connection_store;
-mod connection_transfer;
 mod context_forwarding;
 mod export_import;
 mod group_tree;

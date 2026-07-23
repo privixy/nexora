@@ -468,7 +468,7 @@
     "@nexora/create-plugin": []
   },
   "fileSizeBaselines": {
-    "tests/repository/architecturePolicy.test.ts": 555,
+    "tests/repository/architecturePolicy.test.ts": 611,
     "apps/desktop/src-tauri/src/ai.rs": 1007,
     "apps/desktop/src-tauri/src/ai_activity.rs": 837,
     "apps/desktop/src-tauri/src/ai_activity/tests.rs": 862,

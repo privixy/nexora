@@ -6,9 +6,6 @@ pub mod ai_commands;
 pub mod ai_notebook_export;
 pub mod ai_schema_context;
 pub mod app;
-#[cfg(test)]
-#[path = "app_setup_legacy/tests.rs"]
-mod app_setup_legacy;
 pub mod askpass;
 pub mod cli;
 pub mod clipboard_import;
