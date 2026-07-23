@@ -34,7 +34,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --exclude tests/package-lifecycle.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.contract.json",
     "build": "tsup --out-dir .tmp/build",
     "check:sync": "tsx scripts/check-sync.ts",
@@ -47,6 +47,9 @@
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

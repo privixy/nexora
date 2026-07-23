@@ -15,13 +15,24 @@ const baseline = JSON.parse(readFileSync(resolve(packageRoot, "contracts/public-
   pluginPackageVersion: string;
   pluginApiVersion: string;
   hostApiVersion: string;
+  emittedContract: ReturnType<typeof extractPublicContract> | null;
+  publishedContract: ReturnType<typeof extractPublicContract> | null;
 };
 const host = extractPublicContract(
   resolve(repositoryRoot, "apps/desktop/src/features/plugins/lib/pluginApi.ts"),
   resolve(repositoryRoot, "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx"),
 );
 const pkg = extractPublicContract(resolve(packageRoot, "src/index.ts"), resolve(packageRoot, "src/version.ts"));
+const emitted = extractPublicContract(resolve(packageRoot, "dist/index.d.ts"));
 const comparison = comparePublicContracts(host, pkg, baseline);
+for (const [key, expected, actual] of [
+  ["emittedContract", baseline.emittedContract, emitted],
+  ["publishedContract", baseline.publishedContract, emitted],
+] as const) {
+  if (expected === null || JSON.stringify(expected) !== JSON.stringify(actual)) {
+    comparison.versionMismatches.push(`${key} expected=${JSON.stringify(expected)} actual=${JSON.stringify(actual)}`);
+  }
+}
 if (packageJson.version !== baseline.pluginPackageVersion) {
   comparison.versionMismatches.push(`pluginPackageVersion=${packageJson.version} expected=${baseline.pluginPackageVersion}`);
 }

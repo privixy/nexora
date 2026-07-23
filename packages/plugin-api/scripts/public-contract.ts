@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
@@ -10,6 +11,7 @@ export interface PublicSymbol {
 export interface PublicContract {
   symbols: Record<string, PublicSymbol>;
   version?: string;
+  sourceHash?: string;
 }
 
 export interface ContractDrift {
@@ -51,7 +53,11 @@ export function extractPublicContract(entryPath: string, versionOwnerPath?: stri
   const config = configPath
     ? ts.parseJsonConfigFileContent(ts.readConfigFile(configPath, ts.sys.readFile).config, ts.sys, dirname(configPath))
     : { options: { target: ts.ScriptTarget.ES2022, moduleResolution: ts.ModuleResolutionKind.Bundler }, fileNames: [absoluteEntry] };
-  const program = ts.createProgram([...new Set([...config.fileNames, absoluteEntry])], config.options);
+  const declarationEntry = absoluteEntry.endsWith(".d.ts");
+  const program = ts.createProgram(
+    declarationEntry ? [absoluteEntry] : [...new Set([...config.fileNames, absoluteEntry])],
+    declarationEntry ? { ...config.options, rootDir: undefined } : config.options,
+  );
   const checker = program.getTypeChecker();
   const module = program.getSourceFile(absoluteEntry);
   if (!module) throw new Error(`Unable to load contract entry: ${absoluteEntry}`);
@@ -60,7 +66,9 @@ export function extractPublicContract(entryPath: string, versionOwnerPath?: stri
     const symbol = exported.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(exported) : exported;
     const declaration = symbol.valueDeclaration ?? symbol.declarations?.[0];
     if (!declaration) continue;
-    const type = checker.getTypeOfSymbolAtLocation(symbol, declaration);
+    const type = declarationEntry && declarationKind(symbol) === "type"
+      ? checker.getDeclaredTypeOfSymbol(symbol)
+      : checker.getTypeOfSymbolAtLocation(symbol, declaration);
     const signatures = checker.getSignaturesOfType(type, ts.SignatureKind.Call);
     const rendered = signatures.length > 0
       ? signatures.map((signature) => checker.signatureToString(signature, declaration, ts.TypeFormatFlags.NoTruncation)).join(" | ")
@@ -72,7 +80,10 @@ export function extractPublicContract(entryPath: string, versionOwnerPath?: stri
     const text = readFileSync(versionOwnerPath, "utf8");
     version = /(?:API_VERSION|HOST_API_VERSION)\s*=\s*["']([^"']+)["']/.exec(text)?.[1];
   }
-  return { symbols, version };
+  const sourceHash = absoluteEntry.endsWith(".d.ts")
+    ? createHash("sha256").update(readFileSync(absoluteEntry)).digest("hex")
+    : undefined;
+  return { symbols, version, sourceHash };
 }
 
 function observedDifferences(host: PublicContract, pkg: PublicContract): ContractDrift[] {

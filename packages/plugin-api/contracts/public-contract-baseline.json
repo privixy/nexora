@@ -3,8 +3,264 @@
   "pluginApiVersion": "0.1.0",
   "hostApiVersion": "0.1.0",
   "registryVersion": null,
-  "emittedContract": null,
-  "publishedContract": null,
+  "emittedContract": {
+    "symbols": {
+      "API_VERSION": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "assertHostCompat": {
+        "kind": "value",
+        "declaration": "(min?:string):void"
+      },
+      "defineSlot": {
+        "kind": "value",
+        "declaration": "<S extends SlotName>(slot:S,component:ComponentType<TypedSlotProps<S>>):{readonly __slot:S;readonly component:ComponentType<TypedSlotProps<S>>;}"
+      },
+      "getHost": {
+        "kind": "value",
+        "declaration": "():NexoraHostApi"
+      },
+      "MIN_HOST_VERSION": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "NexoraHostApi": {
+        "kind": "type",
+        "declaration": "NexoraHostApi"
+      },
+      "openUrl": {
+        "kind": "value",
+        "declaration": "(url:string):Promise<void>"
+      },
+      "PluginConfig": {
+        "kind": "type",
+        "declaration": "PluginConfig"
+      },
+      "PluginModalOptions": {
+        "kind": "type",
+        "declaration": "PluginModalOptions"
+      },
+      "PluginQueryResult": {
+        "kind": "type",
+        "declaration": "PluginQueryResult"
+      },
+      "PluginTranslator": {
+        "kind": "type",
+        "declaration": "(key:string,options?:Record<string,unknown>):string"
+      },
+      "SlotComponentProps": {
+        "kind": "type",
+        "declaration": "SlotComponentProps"
+      },
+      "SlotContext": {
+        "kind": "type",
+        "declaration": "SlotContext"
+      },
+      "SlotContextMap": {
+        "kind": "type",
+        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
+      },
+      "SlotName": {
+        "kind": "type",
+        "declaration": "keyof SlotContextMap"
+      },
+      "ThemeColors": {
+        "kind": "type",
+        "declaration": "ThemeColors"
+      },
+      "TypedSlotProps": {
+        "kind": "type",
+        "declaration": "TypedSlotProps<S>"
+      },
+      "UIExtensionDeclaration": {
+        "kind": "type",
+        "declaration": "UIExtensionDeclaration"
+      },
+      "usePluginConnection": {
+        "kind": "value",
+        "declaration": "():UsePluginConnectionReturn"
+      },
+      "UsePluginConnectionReturn": {
+        "kind": "type",
+        "declaration": "UsePluginConnectionReturn"
+      },
+      "usePluginModal": {
+        "kind": "value",
+        "declaration": "():UsePluginModalReturn"
+      },
+      "UsePluginModalReturn": {
+        "kind": "type",
+        "declaration": "UsePluginModalReturn"
+      },
+      "usePluginQuery": {
+        "kind": "value",
+        "declaration": "():UsePluginQueryReturn"
+      },
+      "UsePluginQueryReturn": {
+        "kind": "type",
+        "declaration": "UsePluginQueryReturn"
+      },
+      "usePluginSetting": {
+        "kind": "value",
+        "declaration": "(pluginId:string):UsePluginSettingReturn"
+      },
+      "UsePluginSettingReturn": {
+        "kind": "type",
+        "declaration": "UsePluginSettingReturn"
+      },
+      "usePluginTheme": {
+        "kind": "value",
+        "declaration": "():UsePluginThemeReturn"
+      },
+      "UsePluginThemeReturn": {
+        "kind": "type",
+        "declaration": "UsePluginThemeReturn"
+      },
+      "usePluginToast": {
+        "kind": "value",
+        "declaration": "():UsePluginToastReturn"
+      },
+      "UsePluginToastReturn": {
+        "kind": "type",
+        "declaration": "UsePluginToastReturn"
+      },
+      "usePluginTranslation": {
+        "kind": "value",
+        "declaration": "(pluginId:string):PluginTranslator"
+      }
+    },
+    "sourceHash": "f4a89b5b7207fc02305fa9ff28fae9d156f30e2bf493dd897ac7191281ecd846"
+  },
+  "publishedContract": {
+    "symbols": {
+      "API_VERSION": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "assertHostCompat": {
+        "kind": "value",
+        "declaration": "(min?:string):void"
+      },
+      "defineSlot": {
+        "kind": "value",
+        "declaration": "<S extends SlotName>(slot:S,component:ComponentType<TypedSlotProps<S>>):{readonly __slot:S;readonly component:ComponentType<TypedSlotProps<S>>;}"
+      },
+      "getHost": {
+        "kind": "value",
+        "declaration": "():NexoraHostApi"
+      },
+      "MIN_HOST_VERSION": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "NexoraHostApi": {
+        "kind": "type",
+        "declaration": "NexoraHostApi"
+      },
+      "openUrl": {
+        "kind": "value",
+        "declaration": "(url:string):Promise<void>"
+      },
+      "PluginConfig": {
+        "kind": "type",
+        "declaration": "PluginConfig"
+      },
+      "PluginModalOptions": {
+        "kind": "type",
+        "declaration": "PluginModalOptions"
+      },
+      "PluginQueryResult": {
+        "kind": "type",
+        "declaration": "PluginQueryResult"
+      },
+      "PluginTranslator": {
+        "kind": "type",
+        "declaration": "(key:string,options?:Record<string,unknown>):string"
+      },
+      "SlotComponentProps": {
+        "kind": "type",
+        "declaration": "SlotComponentProps"
+      },
+      "SlotContext": {
+        "kind": "type",
+        "declaration": "SlotContext"
+      },
+      "SlotContextMap": {
+        "kind": "type",
+        "declaration": "{\"row-edit-modal.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-edit-modal.footer.before\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;isInsertion:boolean;};\"row-editor-sidebar.field.after\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowData:Record<string,unknown>;rowIndex:number;};\"row-editor-sidebar.header.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;rowData:Record<string,unknown>;rowIndex:number;};\"data-grid.toolbar.actions\":{connectionId:string;tableName:string;schema:string|null;driver:string;};\"data-grid.context-menu.items\":{connectionId:string;tableName:string;schema:string|null;driver:string;columnName:string;rowIndex:number;rowData:Record<string,unknown>;};\"sidebar.footer.actions\":{connectionId:string;driver:string;};\"settings.plugin.actions\":{targetPluginId:string;};\"settings.plugin.before_settings\":{targetPluginId:string;};\"connection-modal.connection_content\":{driver:string;};}"
+      },
+      "SlotName": {
+        "kind": "type",
+        "declaration": "keyof SlotContextMap"
+      },
+      "ThemeColors": {
+        "kind": "type",
+        "declaration": "ThemeColors"
+      },
+      "TypedSlotProps": {
+        "kind": "type",
+        "declaration": "TypedSlotProps<S>"
+      },
+      "UIExtensionDeclaration": {
+        "kind": "type",
+        "declaration": "UIExtensionDeclaration"
+      },
+      "usePluginConnection": {
+        "kind": "value",
+        "declaration": "():UsePluginConnectionReturn"
+      },
+      "UsePluginConnectionReturn": {
+        "kind": "type",
+        "declaration": "UsePluginConnectionReturn"
+      },
+      "usePluginModal": {
+        "kind": "value",
+        "declaration": "():UsePluginModalReturn"
+      },
+      "UsePluginModalReturn": {
+        "kind": "type",
+        "declaration": "UsePluginModalReturn"
+      },
+      "usePluginQuery": {
+        "kind": "value",
+        "declaration": "():UsePluginQueryReturn"
+      },
+      "UsePluginQueryReturn": {
+        "kind": "type",
+        "declaration": "UsePluginQueryReturn"
+      },
+      "usePluginSetting": {
+        "kind": "value",
+        "declaration": "(pluginId:string):UsePluginSettingReturn"
+      },
+      "UsePluginSettingReturn": {
+        "kind": "type",
+        "declaration": "UsePluginSettingReturn"
+      },
+      "usePluginTheme": {
+        "kind": "value",
+        "declaration": "():UsePluginThemeReturn"
+      },
+      "UsePluginThemeReturn": {
+        "kind": "type",
+        "declaration": "UsePluginThemeReturn"
+      },
+      "usePluginToast": {
+        "kind": "value",
+        "declaration": "():UsePluginToastReturn"
+      },
+      "UsePluginToastReturn": {
+        "kind": "type",
+        "declaration": "UsePluginToastReturn"
+      },
+      "usePluginTranslation": {
+        "kind": "value",
+        "declaration": "(pluginId:string):PluginTranslator"
+      }
+    },
+    "sourceHash": "f4a89b5b7207fc02305fa9ff28fae9d156f30e2bf493dd897ac7191281ecd846"
+  },
   "differences": [
     {
       "key": "API_VERSION",

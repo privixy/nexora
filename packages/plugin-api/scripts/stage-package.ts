@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { basename, dirname, resolve } from "node:path";
+import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { basename, dirname, relative, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -15,8 +15,15 @@ const packageJson = JSON.parse(readFileSync(resolve(packageRoot, "package.json")
 const outputName = `nexora-plugin-api-${packageJson.version}.tgz`;
 const outputPath = resolve(outputRoot, outputName);
 
-if (!existsSync(resolve(buildRoot, "index.js")) || !existsSync(resolve(buildRoot, "index.d.ts"))) {
+const buildFiles = [resolve(buildRoot, "index.js"), resolve(buildRoot, "index.d.ts")];
+if (buildFiles.some((path) => !existsSync(path))) {
   throw new Error("Fresh .tmp/build/index.js and .tmp/build/index.d.ts are required before staging");
+}
+const inputs = ["package.json", "README.md", "LICENSE", "tsup.config.ts", "src/index.ts", "src/types.ts", "src/slots.ts", "src/hooks.ts", "src/host.ts", "src/version.ts"]
+  .map((path) => resolve(packageRoot, path));
+const newestInput = Math.max(...inputs.map((path) => statSync(path).mtimeMs));
+for (const path of buildFiles) {
+  if (statSync(path).mtimeMs < newestInput) throw new Error(`Build output is stale: ${relative(packageRoot, path)}`);
 }
 
 rmSync(outputRoot, { recursive: true, force: true });
