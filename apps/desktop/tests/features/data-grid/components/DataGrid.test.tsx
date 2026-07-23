@@ -4,8 +4,10 @@ import { listenTauri } from "../../../../src/platform/tauri/events";
 import { recordGateway } from "../../../../src/platform/tauri/recordGateway";
 import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
+import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
 import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
 import { reconstructTableQuery } from "../../../../src/features/editor/lib/editor";
+import type { PluginSlotRegistryType, SlotComponentProps } from "../../../../src/features/plugins";
 import type { Tab } from "../../../../src/types/editor";
 import type { ForeignKey, TableColumn } from "../../../../src/types/editor";
 
@@ -57,7 +59,13 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("../../../../src/shared/ui/ContextMenu", () => ({
-  ContextMenu: ({ items }: { items: Array<{ label?: string; action?: () => void; disabled?: boolean; separator?: boolean }> }) => (
+  ContextMenu: ({
+    items,
+    children,
+  }: {
+    items: Array<{ label?: string; action?: () => void; disabled?: boolean; separator?: boolean }>;
+    children?: React.ReactNode;
+  }) => (
     <div data-testid="context-menu">
       {items
         .filter((item) => !item.separator)
@@ -66,6 +74,7 @@ vi.mock("../../../../src/shared/ui/ContextMenu", () => ({
             {item.label}
           </button>
         ))}
+      {children}
     </div>
   ),
 }));
@@ -130,7 +139,10 @@ const foreignKeys: ForeignKey[] = [
   },
 ];
 
-function renderGrid(overrides: Partial<React.ComponentProps<typeof DataGrid>> = {}) {
+function renderGrid(
+  overrides: Partial<React.ComponentProps<typeof DataGrid>> = {},
+  pluginSlotRegistry?: PluginSlotRegistryType,
+) {
   const props: React.ComponentProps<typeof DataGrid> = {
     columns,
     data,
@@ -150,8 +162,29 @@ function renderGrid(overrides: Partial<React.ComponentProps<typeof DataGrid>> = 
     ...overrides,
   };
 
-  render(<DataGrid {...props} />);
+  render(
+    pluginSlotRegistry ? (
+      <PluginSlotContext.Provider value={pluginSlotRegistry}>
+        <DataGrid {...props} />
+      </PluginSlotContext.Provider>
+    ) : (
+      <DataGrid {...props} />
+    ),
+  );
   return props;
+}
+
+function createExtensionRegistry(
+  slot: "data-grid.context-menu.items" | "row-editor-sidebar.field.after",
+  component: React.ComponentType<SlotComponentProps>,
+): PluginSlotRegistryType {
+  return {
+    contributions: [],
+    register: () => () => {},
+    registerAll: () => () => {},
+    getSlotContributions: (name) =>
+      name === slot ? [{ pluginId: "audit-test", slot, component }] : [],
+  };
 }
 
 describe("DataGrid operations", () => {
@@ -206,6 +239,73 @@ describe("DataGrid operations", () => {
     await waitFor(() => {
       expect(props.onMarkForDeletion).toHaveBeenCalledWith({ id: 1 });
     });
+  });
+
+  it("runs a context-menu extension action with the explicit table-tab context when global selection is stale", () => {
+    const extensionAction = vi.fn();
+    const ContextMenuExtension = ({ context }: SlotComponentProps) => (
+      <button type="button" onClick={() => extensionAction(context)}>
+        Run context extension
+      </button>
+    );
+
+    mockDatabaseContext.activeDatabase = "stale-database";
+    mockDatabaseContext.activeSchema = "stale-schema";
+    renderGrid(
+      {
+        connectionId: "tab-connection",
+        database: "tab-database",
+        schema: "tab-schema",
+        tableName: "tab-table",
+      },
+      createExtensionRegistry("data-grid.context-menu.items", ContextMenuExtension),
+    );
+
+    fireEvent.contextMenu(screen.getByText("Alice"));
+    fireEvent.click(screen.getByText("Run context extension"));
+
+    expect(extensionAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        connectionId: "tab-connection",
+        database: "tab-database",
+        schema: "tab-schema",
+        tableName: "tab-table",
+      }),
+    );
+  });
+
+  it("runs a row-editor extension action with the explicit table-tab context when global selection is stale", () => {
+    const extensionAction = vi.fn();
+    const RowEditorExtension = ({ context }: SlotComponentProps) => (
+      <button type="button" onClick={() => extensionAction(context)}>
+        Run row editor extension
+      </button>
+    );
+
+    mockDatabaseContext.activeDatabase = "stale-database";
+    mockDatabaseContext.activeSchema = "stale-schema";
+    renderGrid(
+      {
+        connectionId: "tab-connection",
+        database: "tab-database",
+        schema: "tab-schema",
+        tableName: "tab-table",
+      },
+      createExtensionRegistry("row-editor-sidebar.field.after", RowEditorExtension),
+    );
+
+    fireEvent.contextMenu(screen.getByText("Alice"));
+    fireEvent.click(screen.getByText("contextMenu.openSidebar"));
+    fireEvent.click(screen.getAllByText("Run row editor extension")[0]);
+
+    expect(extensionAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        connectionId: "tab-connection",
+        database: "tab-database",
+        schema: "tab-schema",
+        tableName: "tab-table",
+      }),
+    );
   });
 
   it("passes the edited column and primary-key context when a visible cell edit is committed", () => {

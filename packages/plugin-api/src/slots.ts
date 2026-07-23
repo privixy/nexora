@@ -31,6 +31,7 @@ export type SlotContextMap = {
   };
   "row-editor-sidebar.field.after": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -40,6 +41,7 @@ export type SlotContextMap = {
   };
   "row-editor-sidebar.header.actions": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -54,6 +56,7 @@ export type SlotContextMap = {
   };
   "data-grid.context-menu.items": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -96,6 +99,7 @@ export interface TypedSlotProps<S extends SlotName> {
  */
 export interface SlotContext {
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   schema?: string | null;
   driver?: string | null;

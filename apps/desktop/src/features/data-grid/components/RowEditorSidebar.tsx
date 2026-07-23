@@ -21,6 +21,7 @@ export interface RowEditorSidebarProps {
   focusField?: string;
   detectJsonInTextColumns?: boolean;
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   pkColumns?: string[] | null;
   schema?: string | null;
@@ -41,6 +42,7 @@ export const RowEditorSidebar = ({
   focusField,
   detectJsonInTextColumns = false,
   connectionId,
+  database,
   tableName,
   pkColumns,
   schema,
@@ -123,6 +125,7 @@ export const RowEditorSidebar = ({
               name="row-editor-sidebar.header.actions"
               context={{
                 connectionId,
+                database,
                 tableName,
                 schema,
                 rowData,
@@ -184,6 +187,7 @@ export const RowEditorSidebar = ({
                   name="row-editor-sidebar.field.after"
                   context={{
                     connectionId,
+                    database,
                     tableName,
                     schema,
                     columnName: column.name,

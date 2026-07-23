@@ -127,6 +127,7 @@ export const VALID_SLOTS: ReadonlySet<string> = new Set<SlotName>([
 
 export interface SlotContext {
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   schema?: string | null;
   driver?: string | null;

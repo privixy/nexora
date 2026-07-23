@@ -73,6 +73,7 @@ interface DataGridContextMenusProps {
   onCopyHeaderNameQuoted: () => void;
   onCopyHeaderNameTable: () => void;
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   schema?: string | null;
   mergedRows: MergedRow[];
@@ -112,6 +113,7 @@ export function DataGridContextMenus({
   onCopyHeaderNameQuoted,
   onCopyHeaderNameTable,
   connectionId,
+  database,
   tableName,
   schema,
   mergedRows,
@@ -210,6 +212,7 @@ export function DataGridContextMenus({
           name="data-grid.context-menu.items"
           context={{
             connectionId,
+            database,
             tableName,
             schema,
             columnName: contextMenu.colName,

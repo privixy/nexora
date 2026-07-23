@@ -1165,9 +1165,9 @@ export const DataGrid = React.memo(
             onCopyHeaderName={copyHeaderName}
             onCopyHeaderNameQuoted={copyHeaderNameQuoted}
             onCopyHeaderNameTable={copyHeaderNameTable}
-            connectionId={connectionId}
+            connectionId={connectionId} database={database}
             tableName={tableName}
-            schema={activeSchema}
+            schema={schema}
             mergedRows={mergedRows}
             t={t}
           />
@@ -1214,9 +1214,10 @@ export const DataGrid = React.memo(
                   nullableColumns={nullableColumns}
                   focusField={sidebarRowData.focusField}
                   connectionId={connectionId}
+                  database={database}
                   tableName={tableName}
                   pkColumns={pkColumns}
-                  schema={activeSchema}
+                  schema={schema}
                   onChange={(colName, value) => {
                     // Get the merged row to determine if it's an insertion or existing row
                     const mergedRow = mergedRows[sidebarRowData.rowIndex];
