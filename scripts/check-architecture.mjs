@@ -469,7 +469,24 @@ function rustDriverAliases(source) {
   const aliases = new Set(["drivers"]);
   for (const match of source.matchAll(/\buse\s+crate::drivers\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) aliases.add(match[1]);
   for (const match of source.matchAll(/\buse\s+crate::drivers::\{[\s\S]*?\bself\s+as\s+([A-Za-z_][A-Za-z0-9_]*)[\s\S]*?};/g)) aliases.add(match[1]);
+  for (const match of source.matchAll(/\buse\s+crate::\{[\s\S]*?\bdrivers\s+as\s+([A-Za-z_][A-Za-z0-9_]*)[\s\S]*?};/g)) aliases.add(match[1]);
   return aliases;
+}
+
+function tauriCommandAttributes(source) {
+  const attributes = new Set(["tauri::command"]);
+  for (const match of source.matchAll(/\buse\s+tauri::command\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) attributes.add(match[1]);
+  for (const match of source.matchAll(/\buse\s+tauri::\{[\s\S]*?\bcommand\s+as\s+([A-Za-z_][A-Za-z0-9_]*)[\s\S]*?};/g)) attributes.add(match[1]);
+  for (const match of source.matchAll(/\buse\s+tauri\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) attributes.add(`${match[1]}::command`);
+  return [...attributes].some((attribute) => {
+    const escaped = attribute.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`#\\s*\\[\\s*${escaped}\\s*\\]`).test(source);
+  });
+}
+
+function rustProductionPathAttribute(source) {
+  return /#\s*\[\s*path\s*=/.test(source)
+    || /#\s*\[\s*cfg_attr\s*\([^\]]*\bpath\s*=/.test(source);
 }
 
 function usesBuiltInRustDriver(source) {
@@ -511,6 +528,7 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
 
   const commandsRoot = `${sourceRoot}/commands`;
   const approvedLegacyCommandOwners = new Set(Object.keys(boundaries.legacyTransferOwners ?? {}));
+  const thinCommandExceptions = boundaries.legacyThinCommandExceptions ?? {};
   for (const [ownerPath, metadata] of Object.entries(boundaries.legacyTransferOwners ?? {})) {
     if (!isExactRepositoryPath(ownerPath, /^apps\/desktop\/src-tauri\/src\/[^/]+\.rs$/)) {
       violations.push(`${ownerPath}: legacy transfer owner must be an exact Rust root source path`);
@@ -530,7 +548,7 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
         if ((typeof pattern === "function" ? pattern(source) : pattern.test(source))) violations.push(`${file}: Rust ${directory.slice(sourceRoot.length + 1)} may not depend on ${label}`);
       }
     }
-    if (source.includes("#[tauri::command]") && !isUnderRoot(file, commandsRoot) && !approvedLegacyCommandOwners.has(file)) {
+    if (tauriCommandAttributes(source) && !isUnderRoot(file, commandsRoot) && !approvedLegacyCommandOwners.has(file)) {
       violations.push(`${file}: Tauri handlers must live under commands or an approved legacy root owner`);
     }
     if (isUnderRoot(file, commandsRoot) && source.includes("pub use crate::infrastructure::command_services::")) {
@@ -538,6 +556,23 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
     }
     if (file === `${sourceRoot}/infrastructure/connections/workflows/mod.rs`) {
       violations.push(`${file}: catch-all workflow modules are forbidden`);
+    }
+    if (isUnderRoot(file, commandsRoot)) {
+      const exception = thinCommandExceptions[file];
+      const expired = exception && exception.expiresOn < (boundaries.today ?? new Date().toISOString().slice(0, 10));
+      if (expired) violations.push(`${file}: legacy thin-command exception expired on ${exception.expiresOn}`);
+      if (!exception || expired) {
+        for (const pattern of boundaries.commandBusinessLogicPatterns ?? []) {
+          if (source.includes(pattern)) violations.push(`${file}: Rust commands must delegate business logic outside the transport layer: ${pattern}`);
+        }
+      }
+    }
+  }
+
+  for (const [file, metadata] of Object.entries(thinCommandExceptions)) {
+    if (!sources.has(file)) violations.push(`${file}: legacy thin-command exception points to a missing tracked file`);
+    if (typeof metadata?.owner !== "string" || typeof metadata?.reason !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(metadata?.expiresOn ?? "")) {
+      violations.push(`${file}: legacy thin-command exception requires owner, reason, and ISO expiresOn metadata`);
     }
   }
 
@@ -609,6 +644,22 @@ export function countLines(content) {
   return content.split("\n").length - (content.endsWith("\n") ? 1 : 0);
 }
 
+function cargoIntegrationTargets(root, trackedFiles) {
+  const targets = new Map([...trackedFiles]
+    .filter((file) => /^apps\/desktop\/src-tauri\/tests\/.+\.rs$/.test(file))
+    .map((file) => [file, file.split("/").at(-1).replace(/\.rs$/, "")]));
+  const manifest = "apps/desktop/src-tauri/Cargo.toml";
+  if (trackedFiles.has(manifest) && existsSync(join(root, manifest))) {
+    const source = readFileSync(join(root, manifest), "utf8");
+    for (const table of source.matchAll(/\[\[test\]\]([\s\S]*?)(?=\n\s*\[|$)/g)) {
+      const name = table[1].match(/^\s*name\s*=\s*["']([^"']+)["']/m)?.[1];
+      const path = table[1].match(/^\s*path\s*=\s*["']([^"']+)["']/m)?.[1];
+      if (name && path) targets.set(`apps/desktop/src-tauri/${path}`, name);
+    }
+  }
+  return targets;
+}
+
 export function collectViolations(root, policy, inventory = {}) {
   const violations = [];
   if (Object.hasOwn(policy, "rustLegacyTransferOwners")) {
@@ -642,7 +693,9 @@ export function collectViolations(root, policy, inventory = {}) {
   const repositoryTestImportAliases = policy.repositoryTestImportAliases ?? {};
   const fileSizeBaselines = policy.fileSizeBaselines ?? {};
 
-  violations.push(...collectRustBackendViolations(root, trackedFiles, policy.rustBackendBoundaries));
+  violations.push(...collectRustBackendViolations(root, trackedFiles, policy.rustBackendBoundaries
+    ? { ...policy.rustBackendBoundaries, today: inventory.today }
+    : undefined));
 
   const frontendBoundaries = policy.frontendBoundaries
     ? {
@@ -776,6 +829,9 @@ export function collectViolations(root, policy, inventory = {}) {
 
     if (extension === ".rs") {
       violations.push(...rustTestInclusionViolations(root, file));
+      if (isUnderRoot(file, "apps/desktop/src-tauri/src") && rustProductionPathAttribute(readFileSync(join(root, file), "utf8"))) {
+        violations.push(`${file}: Rust production modules must use canonical sibling test modules without path attributes`);
+      }
     }
 
     if (
@@ -801,11 +857,9 @@ export function collectViolations(root, policy, inventory = {}) {
     }
   }
 
-  for (const file of trackedFiles) {
-    if (
-      /^apps\/desktop\/src-tauri\/tests\/[^/]+\.rs$/.test(file)
-      && !Object.hasOwn(rustIntegrationTests, file)
-    ) {
+  const integrationTargets = cargoIntegrationTargets(root, trackedFiles);
+  for (const file of integrationTargets.keys()) {
+    if (!Object.hasOwn(rustIntegrationTests, file)) {
       violations.push(`Rust integration test is not classified: ${file}`);
     }
   }
@@ -815,7 +869,7 @@ export function collectViolations(root, policy, inventory = {}) {
     if (!trackedFiles.has(file) || !existsSync(join(root, file))) {
       violations.push(`${file}: rustIntegrationTests entry points to a missing tracked file`);
     }
-    const testName = file.match(/^apps\/desktop\/src-tauri\/tests\/([^/]+)\.rs$/)?.[1];
+    const testName = integrationTargets.get(file);
     const defaultMode = metadata?.defaultMode;
     const expectedRun = testName
       ? `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test ${testName}${defaultMode === "ignored" ? " -- --ignored" : ""}`

@@ -567,6 +567,169 @@ describe("architecture policy", () => {
     }
   });
 
+  it("rejects production path attributes and cfg_attr path inclusions", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-production-paths-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/direct.rs": "#[path = \"../shared/tests.rs\"]\nmod tests;\n",
+        "apps/desktop/src-tauri/src/commands/conditional.rs": "#[cfg_attr(test, path = \"../shared/tests.rs\")]\nmod tests;\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      for (const file of Object.keys(files)) {
+        expect(violations).toContain(`${file}: Rust production modules must use canonical sibling test modules without path attributes`);
+      }
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("resolves brace-group driver aliases and imported Tauri command attributes", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-import-aliases-"));
+
+    try {
+      const files = {
+        "apps/desktop/src-tauri/src/commands/driver.rs": "use crate::{drivers as engines, models};\nfn run() { engines::mysql::connect(); }\n",
+        "apps/desktop/src-tauri/src/infrastructure/command.rs": "use tauri::{command as transport, AppHandle};\n#[transport]\nfn run() {}\n",
+      };
+      for (const [file, content] of Object.entries(files)) writeFixture(tempRoot, file, content);
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: [],
+          legacyTransferOwners: {},
+          frozenSqlOwners: {},
+        },
+      }, {
+        trackedFiles: Object.keys(files),
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toContain("apps/desktop/src-tauri/src/commands/driver.rs: Rust commands may not depend on built-in drivers");
+      expect(violations).toContain("apps/desktop/src-tauri/src/infrastructure/command.rs: Tauri handlers must live under commands or an approved legacy root owner");
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("classifies nested and custom Cargo integration harnesses", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-custom-harnesses-"));
+
+    try {
+      const manifest = "apps/desktop/src-tauri/Cargo.toml";
+      const nested = "apps/desktop/src-tauri/tests/contracts/nested.rs";
+      const custom = "apps/desktop/src-tauri/harness/source_contract.rs";
+      writeFixture(tempRoot, manifest, "[[test]]\nname = \"source_contract\"\npath = \"harness/source_contract.rs\"\nharness = false\n");
+      writeFixture(tempRoot, nested, "#[test]\nfn nested() {}\n");
+      writeFixture(tempRoot, custom, "fn main() {}\n");
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: [],
+        rustIntegrationTests: {},
+      }, {
+        trackedFiles: [manifest, nested, custom],
+        workspacePackageDirectories: [],
+      });
+
+      expect(violations).toContain(`Rust integration test is not classified: ${nested}`);
+      expect(violations).toContain(`Rust integration test is not classified: ${custom}`);
+      expect(collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: [],
+        rustIntegrationTests: {
+          [nested]: {
+            classification: "source-contract",
+            defaultMode: "enabled",
+            explicitRun: "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test nested",
+          },
+          [custom]: {
+            classification: "source-contract",
+            defaultMode: "enabled",
+            explicitRun: "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test source_contract",
+          },
+        },
+      }, {
+        trackedFiles: [manifest, nested, custom],
+        workspacePackageDirectories: [],
+      })).toEqual([]);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects command business logic and expired legacy exceptions", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-thin-commands-"));
+
+    try {
+      const active = "apps/desktop/src-tauri/src/commands/files.rs";
+      const expired = "apps/desktop/src-tauri/src/commands/legacy.rs";
+      writeFixture(tempRoot, active, "fn save() { std::fs::write(\"x\", \"y\").unwrap(); }\n");
+      writeFixture(tempRoot, expired, "fn load() { std::fs::read(\"x\").unwrap(); }\n");
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: [],
+        forbiddenFrontendTestRoots: [],
+        repositoryTestRoots: [],
+        rootTestRoots: [],
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src-tauri/src"],
+        rustBackendBoundaries: {
+          sourceRoot: "apps/desktop/src-tauri/src",
+          pureCompatibilityFacades: [],
+          legacyTransferOwners: {},
+          frozenSqlOwners: {},
+          commandBusinessLogicPatterns: ["std::fs::"],
+          legacyThinCommandExceptions: {
+            [expired]: { owner: "backend", reason: "migration", expiresOn: "2020-01-01" },
+          },
+        },
+      }, {
+        trackedFiles: [active, expired],
+        workspacePackageDirectories: [],
+        today: "2026-07-23",
+      });
+
+      expect(violations).toContain(`${active}: Rust commands must delegate business logic outside the transport layer: std::fs::`);
+      expect(violations).toContain(`${expired}: legacy thin-command exception expired on 2020-01-01`);
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
   it("validates Rust integration classification schema", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "nexora-rust-integration-schema-"));
 

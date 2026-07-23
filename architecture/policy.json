@@ -519,6 +519,84 @@
         "removeAfter": "behavior-approved DatabaseDriver clipboard transfer operations"
       }
     },
+    "commandBusinessLogicPatterns": [
+      "std::fs::",
+      "fs::read",
+      "fs::write",
+      "fs::create_dir",
+      "fs::remove",
+      "fs::rename",
+      "fs::metadata",
+      "serde_json::from_str",
+      "serde_json::to_string"
+    ],
+    "legacyThinCommandExceptions": {
+      "apps/desktop/src-tauri/src/commands/ai.rs": {
+        "owner": "backend architecture",
+        "reason": "AI persistence workflow awaits domain extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/ai_commands.rs": {
+        "owner": "backend architecture",
+        "reason": "AI transport serialization awaits domain extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/connection_appearance.rs": {
+        "owner": "backend architecture",
+        "reason": "icon filesystem workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/connection_transfer.rs": {
+        "owner": "backend architecture",
+        "reason": "connection transfer serialization awaits domain extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/explain_import.rs": {
+        "owner": "backend architecture",
+        "reason": "explain import workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/kubernetes.rs": {
+        "owner": "backend architecture",
+        "reason": "Kubernetes persistence workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/logs.rs": {
+        "owner": "backend architecture",
+        "reason": "log export workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/mcp_install.rs": {
+        "owner": "backend architecture",
+        "reason": "MCP installation workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/query_history.rs": {
+        "owner": "backend architecture",
+        "reason": "query history workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/saved_queries.rs": {
+        "owner": "backend architecture",
+        "reason": "saved query workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/ssh.rs": {
+        "owner": "backend architecture",
+        "reason": "SSH persistence workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/theme.rs": {
+        "owner": "backend architecture",
+        "reason": "theme filesystem workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      },
+      "apps/desktop/src-tauri/src/commands/updater.rs": {
+        "owner": "backend architecture",
+        "reason": "updater cache workflow awaits infrastructure extraction",
+        "expiresOn": "2026-08-15"
+      }
+    },
     "frozenSqlOwners": {
       "apps/desktop/src-tauri/src/count_query_compat.rs": {
         "patterns": [
@@ -582,7 +660,7 @@
   },
   "fileSizeBaselines": {
     "tests/repository/architecturePolicy.test.ts": 619,
-    "apps/desktop/src-tauri/src/commands/ai.rs": 1008,
+    "apps/desktop/src-tauri/src/commands/ai.rs": 1007,
     "apps/desktop/src-tauri/src/ai_activity.rs": 837,
     "apps/desktop/src-tauri/src/ai_activity/tests.rs": 860,
     "apps/desktop/src-tauri/src/commands/tests/compatibility.rs": 983,
@@ -610,7 +688,7 @@
     "apps/desktop/tests/utils/autocomplete.test.ts": 564,
     "apps/desktop/tests/utils/settings.test.ts": 599,
     "apps/desktop/tests/utils/sqlGenerator.test.ts": 571,
-    "tests/repository/architecturePolicyChecker.test.ts": 787,
+    "tests/repository/architecturePolicyChecker.test.ts": 950,
     "apps/desktop/src/features/settings/components/AiTab.tsx": 665,
     "apps/desktop/src/features/settings/components/ai-activity/AiActivityEventsTab.tsx": 530,
     "apps/desktop/tests/features/settings/state/SettingsProvider.test.tsx": 505,
