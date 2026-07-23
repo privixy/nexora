@@ -13,7 +13,6 @@ import { DatabaseContext, type DatabaseContextType } from "../../../../src/featu
 import { EditorContext, type EditorContextType } from "../../../../src/features/editor/state/EditorContext";
 import type { BatchStatementResult, QueryResult, Tab, TableColumn } from "../../../../src/types/editor";
 import type { PluginManifest } from "../../../../src/types/plugins";
-
 vi.mock("../../../../src/platform/tauri", () => ({
   catalogGateway: {
     getColumns: vi.fn(),
@@ -43,7 +42,6 @@ vi.mock("../../../../src/platform/tauri", () => ({
     setWindowTitle: vi.fn(),
   },
 }));
-
 vi.mock("lucide-react", () => {
   const Icon = () => null;
   return {
@@ -111,6 +109,7 @@ vi.mock("../../../../src/features/connections", () => ({
 vi.mock("../../../../src/features/plugins", () => ({
   isMultiDatabaseCapable: () => false,
   useDrivers: () => ({ allDrivers: [{ id: "postgres", name: "PostgreSQL" }] }),
+  SlotAnchor: () => null,
 }));
 
 vi.mock("../../../../src/features/data-grid", () => ({
@@ -390,7 +389,7 @@ function createStatefulEditor(initialTabs: Tab[]) {
         <DatabaseContext.Provider value={database}>
           <EditorContext.Provider value={editor}>
             <Routes>
-              <Route path="/editor" element={<EditorPage notebook={notebookRuntime} />} />
+              <Route path="/editor" element={<EditorPage notebook={notebookRuntime} renderVisualExplain={() => null} />} />
             </Routes>
           </EditorContext.Provider>
         </DatabaseContext.Provider>

@@ -27,7 +27,6 @@ import { buildExportQueryPayload } from "../hooks/useQueryExport";
 import { AiQueryModal } from "../../ai";
 import { AiExplainModal } from "../../ai";
 import { AiDropdownButton } from "../../ai";
-import { VisualExplainModal } from "../../visual-explain";
 import {
   Play,
   Plus,
@@ -148,7 +147,6 @@ import {
   isFocusedPane,
 } from "../lib/tabScroll";
 import clsx from "clsx";
-
 export interface EditorNotebookRuntime {
   render: (props: {
     tab: Tab;
@@ -159,11 +157,16 @@ export interface EditorNotebookRuntime {
   create: (title: string, connectionId: string) => Promise<{ notebookId: string }>;
   rename: (notebookId: string, connectionId: string, title: string) => Promise<void>;
 }
-
 export interface EditorPageProps {
   notebook: EditorNotebookRuntime;
+  renderVisualExplain: (props: {
+    isOpen: boolean;
+    onClose: () => void;
+    query: string;
+    connectionId: string;
+    schema?: string;
+  }) => React.ReactNode;
 }
-
 interface EditorState {
   initialQuery?: string;
   tableName?: string;
@@ -176,18 +179,15 @@ interface EditorState {
   targetConnectionId?: string;
   title?: string;
 }
-
 interface ExportProgress {
   rows_processed: number;
 }
-
 const CHEVRON_SELECT_STYLE: React.CSSProperties = {
   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
   backgroundRepeat: "no-repeat",
   backgroundPosition: "right center",
 };
-
-export const EditorPage = ({ notebook }: EditorPageProps) => {
+export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) => {
   const { t } = useTranslation();
   const {
     activeConnectionId,
@@ -4092,16 +4092,16 @@ export const EditorPage = ({ notebook }: EditorPageProps) => {
         onClose={() => setIsAiExplainModalOpen(false)}
         query={activeTab.query}
       />
-      <VisualExplainModal
-        isOpen={isVisualExplainOpen}
-        onClose={() => {
+      {renderVisualExplain({
+        isOpen: isVisualExplainOpen,
+        onClose: () => {
           setIsVisualExplainOpen(false);
           setVisualExplainQuery(null);
-        }}
-        query={visualExplainQuery ?? activeTab?.query ?? ""}
-        connectionId={activeConnectionId ?? ""}
-        schema={resolveTabSchema(activeTab)}
-      />
+        },
+        query: visualExplainQuery ?? activeTab?.query ?? "",
+        connectionId: activeConnectionId ?? "",
+        schema: resolveTabSchema(activeTab),
+      })}
       <ExplainSelectionModal
         isOpen={isExplainSelectionOpen}
         queries={explainSelectableQueries}

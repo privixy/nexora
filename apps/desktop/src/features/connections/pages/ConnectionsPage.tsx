@@ -12,8 +12,6 @@ import {
 } from "../components/ExportConnectionsModal";
 import { ImportFromAppModal } from "../components/ImportFromAppModal";
 import { connectionGateway } from "../../../platform/tauri";
-
-
 import {
   Database,
   Plus,

@@ -195,7 +195,6 @@ const capabilities: DriverCapabilities = {
     truncate_table: true,
   };
 
-
 function createDatabase(overrides: Partial<DatabaseContextType> = {}): DatabaseContextType {
   return {
     activeConnectionId: "conn-1",

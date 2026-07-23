@@ -87,6 +87,7 @@ export function AppRoutes() {
                   create: createNotebook,
                   rename: renameNotebook,
                 }}
+                renderVisualExplain={(props) => <VisualExplainModal {...props} />}
               />
             </EditorErrorBoundary>
           }

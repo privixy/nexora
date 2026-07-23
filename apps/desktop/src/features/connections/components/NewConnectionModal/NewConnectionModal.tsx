@@ -47,7 +47,6 @@ import {
   parseConnectionString,
   toConnectionParams,
 } from "../../lib/connectionStringParser";
-
 interface SavedConnection {
   id: string;
   name: string;
@@ -55,7 +54,6 @@ interface SavedConnection {
   detect_json_in_text_columns?: boolean;
   appearance?: ConnectionAppearance;
 }
-
 interface NewConnectionModalProps {
   SqlEditor: SqlEditorComponent;
   isOpen: boolean;

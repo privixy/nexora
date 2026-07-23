@@ -121,6 +121,7 @@ describe("AppRoutes", () => {
             create: notebookRuntime.createNotebook,
             rename: notebookRuntime.renameNotebook,
           },
+          renderVisualExplain: expect.any(Function),
         });
       }
       if (path === "/") {

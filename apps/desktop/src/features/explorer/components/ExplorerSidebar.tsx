@@ -107,9 +107,7 @@ import { CreateDatabaseModal } from "./CreateDatabaseModal";
 import { ExplorerModals } from "./ExplorerModals";
 import { ExplorerStructure } from "./ExplorerStructure";
 import { ExplorerTabs, type SidebarTab } from "./ExplorerTabs";
-
 export type { SidebarTab } from "./ExplorerTabs";
-
 interface ExplorerSidebarProps {
   SqlEditor: SqlEditorComponent;
   sidebarWidth: number;
@@ -118,7 +116,6 @@ interface ExplorerSidebarProps {
   sidebarTab: SidebarTab;
   onSidebarTabChange: (tab: SidebarTab) => void;
 }
-
 export const ExplorerSidebar = ({ SqlEditor, sidebarWidth, startResize, onCollapse, sidebarTab, onSidebarTabChange }: ExplorerSidebarProps) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
@@ -164,7 +161,6 @@ export const ExplorerSidebar = ({ SqlEditor, sidebarWidth, startResize, onCollap
   } = useDatabase();
   const { allDrivers } = useDrivers();
   const { tabs, openNotebook, updateTab, closeTab } = useEditor();
-
   // Accent color for a connection, matching the tinted editor tab bar / split
   // panel headers. Falls back to the driver manifest color.
   const accentForConnection = (connId: string) => {
