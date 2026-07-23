@@ -68,14 +68,10 @@ describe("test architecture", () => {
       (line) => !line.startsWith("commands::tests::"),
     );
 
-    expect(commandTests).toHaveLength(109);
+    expect(commandTests).toHaveLength(85);
     expect(exportImportTests).toHaveLength(7);
     expect(groupTreeTests).toHaveLength(17);
     expect(unrelatedTests).toEqual([
-      "connection_import_commands::tests::cache_requires_preview_and_removes_secret_envelope_once: test",
-      "connection_import_commands::tests::foreign_preview_and_apply_preserve_one_shot_secret_cache_workflow: test",
-      "connection_import_commands::tests::nexora_preview_and_apply_preserve_load_transform_apply_order: test",
-      "connection_import_commands::tests::source_listing_preserves_availability_then_count_order_and_fields: test",
       "dump_commands::tests::legacy_dump_import_orchestration_contract_is_preserved: test",
       "dump_commands::tests::test_escape_sql_value: test",
       "dump_commands::tests::test_zip_import_logic: test",
@@ -113,7 +109,7 @@ describe("test architecture", () => {
         "apps/desktop/src/features/connections/hooks/useDatabase.ts",
       ],
       "apps/desktop/tests/utils/minimax.test.ts": [
-        "apps/desktop/src/utils/settings.ts",
+        "apps/desktop/src/features/settings/lib/settings.ts",
         "apps/desktop/src/features/settings/lib/settingsUI.ts",
         "apps/desktop/src/features/settings/state/SettingsContext.ts",
       ],

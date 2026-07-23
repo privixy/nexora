@@ -50,7 +50,7 @@
       "apps/desktop/src/features/editor/hooks/useTableMetadata.ts"
     ],
     "apps/desktop/tests/utils/minimax.test.ts": [
-      "apps/desktop/src/utils/settings.ts",
+      "apps/desktop/src/features/settings/lib/settings.ts",
       "apps/desktop/src/features/settings/lib/settingsUI.ts",
       "apps/desktop/src/features/settings/state/SettingsContext.ts"
     ],
@@ -138,7 +138,7 @@
       "apps/desktop/src/features/plugins/lib/databaseCapabilities.ts"
     ],
     "apps/desktop/tests/utils/foreignKeys.test.ts": [
-      "apps/desktop/src/features/schema/lib/foreignKeys.ts"
+      "apps/desktop/src/shared/lib/foreignKeys.ts"
     ],
     "apps/desktop/tests/features/explorer/components/ExplorerPresentation.test.tsx": [
       "apps/desktop/src/features/explorer/components/ExplorerStructure.tsx",
@@ -146,6 +146,136 @@
     ],
     "apps/desktop/tests/features/visual-explain/lib/isExplainableQuery.test.ts": [
       "apps/desktop/src/features/editor/lib/sqlSplitter/classify.ts"
+    ],
+    "apps/desktop/tests/components/ui/FieldEditor.test.tsx": [
+      "apps/desktop/src/features/data-grid/components/FieldEditor.tsx",
+      "apps/desktop/src/features/data-grid/components/GeometryInput.tsx",
+      "apps/desktop/src/features/data-grid/lib/geometry.ts"
+    ],
+    "apps/desktop/tests/components/ui/JsonCell.test.tsx": [
+      "apps/desktop/src/features/data-grid/components/JsonCell.tsx"
+    ],
+    "apps/desktop/tests/components/ui/SqlPreview.test.tsx": [
+      "apps/desktop/src/shared/ui/SqlPreview.tsx",
+      "apps/desktop/src/features/settings/hooks/useEditorTheme.ts",
+      "apps/desktop/src/features/settings/themes/themeUtils.ts"
+    ],
+    "apps/desktop/tests/components/ui/TableToolbar.test.tsx": [
+      "apps/desktop/src/features/data-grid/components/TableToolbar.tsx",
+      "apps/desktop/src/features/connections/hooks/useDatabase.ts"
+    ],
+    "apps/desktop/tests/hooks/useAutoConnectFromUrl.test.ts": [
+      "apps/desktop/src/features/connections/hooks/useAutoConnectFromUrl.ts",
+      "apps/desktop/src/features/connections/hooks/useConnectionManager.ts"
+    ],
+    "apps/desktop/tests/hooks/useChangelog.test.ts": [
+      "apps/desktop/src/features/settings/hooks/useChangelog.ts"
+    ],
+    "apps/desktop/tests/hooks/useConnectionWindowLifecycle.test.ts": [
+      "apps/desktop/src/features/connections/hooks/useConnectionWindowLifecycle.ts",
+      "apps/desktop/src/features/connections/hooks/useDatabase.ts"
+    ],
+    "apps/desktop/tests/hooks/useSidebarResize.test.ts": [
+      "apps/desktop/src/features/explorer/hooks/useSidebarResize.ts"
+    ],
+    "apps/desktop/tests/hooks/useSshAskpass.test.ts": [
+      "apps/desktop/src/features/connections/hooks/useSshAskpass.ts",
+      "apps/desktop/src/features/connections/contracts/askpass.ts"
+    ],
+    "apps/desktop/tests/shared/ui/JsonExpansionEditor.test.tsx": [
+      "apps/desktop/src/features/data-grid/components/JsonExpansionEditor.tsx",
+      "apps/desktop/src/shared/ui/CellCodeEditor.tsx"
+    ],
+    "apps/desktop/tests/themes/themeRegistry.test.ts": [
+      "apps/desktop/src/features/settings/themes/themeRegistry.ts"
+    ],
+    "apps/desktop/tests/themes/themeUtils.test.ts": [
+      "apps/desktop/src/features/settings/themes/colorUtils.ts",
+      "apps/desktop/src/features/settings/themes/themeUtils.ts"
+    ],
+    "apps/desktop/tests/utils/autocomplete.test.ts": [
+      "apps/desktop/src/features/editor/lib/autocomplete.ts",
+      "apps/desktop/src/features/connections/state/DatabaseContext.ts",
+      "apps/desktop/src/features/editor/lib/sqlAnalysis.ts"
+    ],
+    "apps/desktop/tests/utils/blob.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/blob.ts"
+    ],
+    "apps/desktop/tests/utils/columnTypes.test.ts": [
+      "apps/desktop/src/shared/lib/columnTypes.ts",
+      "apps/desktop/src/features/schema/contracts/dataTypes.ts"
+    ],
+    "apps/desktop/tests/utils/contextMenu.test.ts": [
+      "apps/desktop/src/shared/lib/contextMenu.ts"
+    ],
+    "apps/desktop/tests/utils/dateInput.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/dateInput.ts"
+    ],
+    "apps/desktop/tests/utils/driverCapabilities.test.ts": [
+      "apps/desktop/src/features/plugins/lib/driverCapabilities.ts",
+      "apps/desktop/src/features/plugins/contracts/plugins.ts"
+    ],
+    "apps/desktop/tests/utils/dumpUtils.test.ts": [
+      "apps/desktop/src/features/explorer/lib/dumpUtils.ts"
+    ],
+    "apps/desktop/tests/utils/filterBar.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/filterBar.ts",
+      "apps/desktop/src/features/editor/index.ts"
+    ],
+    "apps/desktop/tests/utils/geometry.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/geometry.ts"
+    ],
+    "apps/desktop/tests/utils/geometryInput.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/geometryInput.ts"
+    ],
+    "apps/desktop/tests/utils/json.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/json.ts"
+    ],
+    "apps/desktop/tests/utils/jsonHighlight.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/jsonHighlight.ts"
+    ],
+    "apps/desktop/tests/utils/jsonTree.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/jsonTree.ts"
+    ],
+    "apps/desktop/tests/utils/keybindings.test.ts": [
+      "apps/desktop/src/features/settings/lib/keybindings.ts"
+    ],
+    "apps/desktop/tests/utils/openSourceLibraries.test.ts": [
+      "apps/desktop/src/features/settings/lib/openSourceLibraries.ts"
+    ],
+    "apps/desktop/tests/utils/queryBuilderLayout.test.ts": [
+      "apps/desktop/src/features/editor/query-builder/queryBuilderLayout.ts",
+      "apps/desktop/src/features/editor/query-builder/TableNode.tsx"
+    ],
+    "apps/desktop/tests/utils/routineCall.test.ts": [
+      "apps/desktop/src/features/schema/lib/routineCall.ts"
+    ],
+    "apps/desktop/tests/utils/routines.test.ts": [
+      "apps/desktop/src/features/schema/lib/routines.ts",
+      "apps/desktop/src/features/connections/state/DatabaseContext.ts"
+    ],
+    "apps/desktop/tests/utils/settings.test.ts": [
+      "apps/desktop/src/features/settings/lib/settings.ts",
+      "apps/desktop/src/features/settings/state/SettingsContext.ts"
+    ],
+    "apps/desktop/tests/utils/sqlAnalysis.test.ts": [
+      "apps/desktop/src/features/editor/lib/sqlAnalysis.ts"
+    ],
+    "apps/desktop/tests/utils/sqlFormat.test.ts": [
+      "apps/desktop/src/shared/lib/sqlFormat.ts"
+    ],
+    "apps/desktop/tests/utils/sqlGenerator.test.ts": [
+      "apps/desktop/src/features/editor/lib/sqlGenerator.ts",
+      "apps/desktop/src/features/plugins/contracts/plugins.ts"
+    ],
+    "apps/desktop/tests/utils/tableToolbar.test.ts": [
+      "apps/desktop/src/features/data-grid/lib/tableToolbar.ts"
+    ],
+    "apps/desktop/tests/utils/windowTitle.test.ts": [
+      "apps/desktop/src/features/connections/lib/windowTitle.ts"
+    ],
+    "apps/desktop/tests/utils/changelog.test.ts": [
+      "apps/desktop/src/features/settings/lib/changelog.ts"
     ]
   },
   "frontendBoundaries": {
@@ -520,6 +650,6 @@
     "apps/desktop/tests/features/editor/lib/sqlSplitter/splitter.test.ts": 629,
     "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 566,
     "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx": 601,
-    "apps/desktop/src/components/ui/TableToolbar.tsx": 684
+    "apps/desktop/src/features/data-grid/components/TableToolbar.tsx": 684
   }
 }

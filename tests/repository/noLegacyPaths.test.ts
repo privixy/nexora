@@ -29,4 +29,9 @@ describe("final workspace path policy", () => {
     const offenders = files.filter((path) => path !== "tests/repository/noLegacyPaths.test.ts" && readFileSync(resolve(root, path), "utf8").includes(legacyPath));
     expect(offenders).toEqual([]);
   });
+
+  it("contains no production files in legacy frontend roots", () => {
+    const offenders = tracked.filter((path) => /^apps\/desktop\/src\/(components|contexts|hooks|types|utils|themes)\//.test(path));
+    expect(offenders).toEqual([]);
+  });
 });
