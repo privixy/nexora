@@ -248,7 +248,7 @@ describe("architecture policy", () => {
       });
 
       for (const file of unsupportedFiles) {
-        expect(violations).toContain(`${file}: unsupported TypeScript source extension; use .ts or .tsx`);
+        expect(violations).toContain(`${file}: unsupported JavaScript-family source extension; use .ts or .tsx`);
       }
     } finally {
       rmSync(tempRoot, { recursive: true, force: true });

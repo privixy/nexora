@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { dirname, extname, join, relative, sep } from "node:path";
+import { dirname, extname, isAbsolute, join, normalize, relative, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 const REPO_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const POLICY_PATH = join(REPO_ROOT, "architecture", "policy.json");
@@ -10,8 +10,19 @@ function toPosixPath(filePath) {
   return filePath.split(sep).join("/");
 }
 
+function canonicalRepositoryPath(filePath) {
+  if (typeof filePath !== "string" || filePath.length === 0 || isAbsolute(filePath) || /^[A-Za-z]:[\\/]/.test(filePath)) return undefined;
+  const normalized = toPosixPath(normalize(filePath));
+  if (normalized === ".." || normalized.startsWith("../")) return undefined;
+  return normalized === "." ? "" : normalized.replace(/^\.\//, "");
+}
+
 function isUnderRoot(filePath, root) {
-  return filePath === root || filePath.startsWith(`${root}/`);
+  const normalizedFile = canonicalRepositoryPath(filePath);
+  const normalizedRoot = canonicalRepositoryPath(root);
+  return normalizedFile !== undefined
+    && normalizedRoot !== undefined
+    && (normalizedFile === normalizedRoot || normalizedFile.startsWith(`${normalizedRoot}/`));
 }
 
 function readJson(filePath) {
@@ -81,13 +92,47 @@ function collectPackageManifests(root, trackedFiles, packageDirectories) {
 
 function hasInlineRustTests(root, file) {
   const content = readFileSync(join(root, file), "utf8");
-  const cfgTest = /#\s*\[\s*cfg\s*\(\s*(?:test\b|all\s*\([^)]*\btest\b[^)]*\))[^)]*\)\s*\]/g;
-  for (const match of content.matchAll(cfgTest)) {
-    const remainder = content.slice(match.index + match[0].length);
-    const module = remainder.match(/^(?:\s*#\s*\[(?:[^\[\]]|\[[^\]]*\])*\])*\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*([;{])/);
-    if (module?.[1] === "{") return true;
+  const tokens = sourceTokens(content);
+  for (const { body, end } of rustAttributes(content)) {
+    if (!attributeContainsTestCfg(body)) continue;
+    let index = end;
+    while (tokens[index]?.value === "#") {
+      index += 2;
+      let depth = 1;
+      while (index < tokens.length && depth > 0) {
+        if (tokens[index].value === "[") depth += 1;
+        if (tokens[index].value === "]") depth -= 1;
+        index += 1;
+      }
+    }
+    if (tokens[index]?.value === "pub") {
+      index += 1;
+      if (tokens[index]?.value === "(") {
+        while (tokens[index] && tokens[index].value !== ")") index += 1;
+        index += 1;
+      }
+    }
+    if (tokens[index]?.value === "mod" && tokens[index + 2]?.value === "{") return true;
   }
   return false;
+}
+
+function hasTestGatedRustInclude(source) {
+  const tokens = sourceTokens(source);
+  return rustAttributes(source).some(({ body, end }) => {
+    if (!attributeContainsTestCfg(body)) return false;
+    let index = end;
+    while (tokens[index]?.value === "#") {
+      index += 2;
+      let depth = 1;
+      while (index < tokens.length && depth > 0) {
+        if (tokens[index].value === "[") depth += 1;
+        if (tokens[index].value === "]") depth -= 1;
+        index += 1;
+      }
+    }
+    return tokens[index]?.value === "include" && tokens[index + 1]?.value === "!";
+  });
 }
 
 function isRustTestSource(file) {
@@ -216,36 +261,61 @@ function sourceTokens(content) {
   return tokens;
 }
 
-function importSpecifiers(content) {
+function importReferences(content) {
   const tokens = sourceTokens(content);
-  const specifiers = [];
+  const references = [];
 
   for (let index = 0; index < tokens.length; index += 1) {
     const token = tokens[index];
-    if (token.type !== "identifier" || (token.value !== "import" && token.value !== "export")) {
-      continue;
-    }
-    if (token.value === "import" && tokens[index + 1]?.value === "(") {
-      if (tokens[index + 2]?.type === "string" && tokens[index + 3]?.value === ")") {
-        specifiers.push(tokens[index + 2].value);
-      } else {
-        specifiers.push(undefined);
+    if (token.type === "identifier" && (token.value === "import" || token.value === "export")) {
+      if (token.value === "import" && tokens[index + 1]?.value === "(") {
+        references.push(tokens[index + 2]?.type === "string" && tokens[index + 3]?.value === ")"
+          ? { kind: "import", specifier: tokens[index + 2].value }
+          : { kind: "import" });
+        continue;
       }
-      continue;
+      if (token.value === "import" && tokens[index + 1]?.type === "string") {
+        references.push({ kind: "import", specifier: tokens[index + 1].value });
+        continue;
+      }
+      for (let cursor = index + 1; cursor < tokens.length && tokens[cursor].value !== ";"; cursor += 1) {
+        if (tokens[cursor].value === "from" && tokens[cursor + 1]?.type === "string") {
+          references.push({ kind: "import", specifier: tokens[cursor + 1].value });
+          break;
+        }
+      }
     }
-    if (token.value === "import" && tokens[index + 1]?.type === "string") {
-      specifiers.push(tokens[index + 1].value);
-      continue;
-    }
-    for (let cursor = index + 1; cursor < tokens.length && tokens[cursor].value !== ";"; cursor += 1) {
-      if (tokens[cursor].value === "from" && tokens[cursor + 1]?.type === "string") {
-        specifiers.push(tokens[cursor + 1].value);
-        break;
+    if (
+      token.value === "import"
+      && tokens[index + 1]?.value === "."
+      && tokens[index + 2]?.value === "meta"
+      && tokens[index + 3]?.value === "."
+      && ["glob", "globEager"].includes(tokens[index + 4]?.value)
+      && tokens[index + 5]?.value === "("
+    ) {
+      const argument = tokens[index + 6];
+      if (argument?.type === "string" && tokens[index + 7]?.value === ")") {
+        references.push({ kind: "glob", specifier: argument.value });
+      } else if (argument?.value === "[") {
+        let cursor = index + 7;
+        let valid = true;
+        while (tokens[cursor] && tokens[cursor].value !== "]") {
+          if (tokens[cursor].type === "string") references.push({ kind: "glob", specifier: tokens[cursor].value });
+          else if (tokens[cursor].value !== ",") valid = false;
+          cursor += 1;
+        }
+        if (!valid || tokens[cursor]?.value !== "]" || tokens[cursor + 1]?.value !== ")") references.push({ kind: "glob" });
+      } else {
+        references.push({ kind: "glob" });
       }
     }
   }
 
-  return specifiers;
+  return references;
+}
+
+function importSpecifiers(content) {
+  return importReferences(content).filter(({ kind }) => kind === "import").map(({ specifier }) => specifier);
 }
 
 function resolveSourceImport(importer, specifier, sourceRoot) {
@@ -473,15 +543,150 @@ function rustDriverAliases(source) {
   return aliases;
 }
 
+function rustUseBindings(source) {
+  const rawTokens = sourceTokens(source);
+  const tokens = [];
+  for (let index = 0; index < rawTokens.length; index += 1) {
+    if (rawTokens[index].value === ":" && rawTokens[index + 1]?.value === ":") {
+      tokens.push({ type: "punctuation", value: "::" });
+      index += 1;
+    } else {
+      tokens.push(rawTokens[index]);
+    }
+  }
+  const bindings = [];
+
+  function parseTree(tree, prefix = []) {
+    let index = 0;
+    while (index < tree.length) {
+      const path = [...prefix];
+      while (tree[index]?.type === "identifier" && tree[index].value !== "as") {
+        path.push(tree[index].value);
+        index += 1;
+        if (tree[index]?.value !== "::") break;
+        index += 1;
+        if (tree[index]?.value === "{") break;
+      }
+      if (tree[index]?.value === "{") {
+        const start = ++index;
+        let depth = 1;
+        while (index < tree.length && depth > 0) {
+          if (tree[index].value === "{") depth += 1;
+          if (tree[index].value === "}") depth -= 1;
+          index += 1;
+        }
+        const inner = tree.slice(start, index - 1);
+        let segmentStart = 0;
+        let nested = 0;
+        for (let cursor = 0; cursor <= inner.length; cursor += 1) {
+          if (inner[cursor]?.value === "{") nested += 1;
+          if (inner[cursor]?.value === "}") nested -= 1;
+          if (cursor === inner.length || (inner[cursor].value === "," && nested === 0)) {
+            parseTree(inner.slice(segmentStart, cursor), path);
+            segmentStart = cursor + 1;
+          }
+        }
+      } else if (path.length > 0) {
+        let alias;
+        if (tree[index]?.value === "as" && tree[index + 1]?.type === "identifier") {
+          alias = tree[index + 1].value;
+          index += 2;
+        }
+        const self = path.at(-1) === "self";
+        const resolvedPath = self ? path.slice(0, -1) : path;
+        bindings.push({ path: resolvedPath, local: alias ?? resolvedPath.at(-1) });
+      }
+      while (index < tree.length && tree[index].value !== ",") index += 1;
+      index += 1;
+    }
+  }
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (tokens[index].value !== "use") continue;
+    let end = index + 1;
+    let depth = 0;
+    while (end < tokens.length) {
+      if (tokens[end].value === "{") depth += 1;
+      if (tokens[end].value === "}") depth -= 1;
+      if (tokens[end].value === ";" && depth === 0) break;
+      end += 1;
+    }
+    parseTree(tokens.slice(index + 1, end));
+    index = end;
+  }
+  return bindings;
+}
+
+function rustAttributes(source) {
+  const tokens = sourceTokens(source);
+  const attributes = [];
+  for (let index = 0; index < tokens.length - 1; index += 1) {
+    if (tokens[index].value !== "#" || tokens[index + 1].value !== "[") continue;
+    const start = index;
+    let depth = 1;
+    index += 2;
+    const body = [];
+    while (index < tokens.length && depth > 0) {
+      if (tokens[index].value === "[") depth += 1;
+      if (tokens[index].value === "]") depth -= 1;
+      if (depth > 0) body.push(tokens[index]);
+      index += 1;
+    }
+    attributes.push({ body, end: index, tokens, start });
+  }
+  return attributes;
+}
+
+function attributeContainsTestCfg(body) {
+  const cfgIndex = body.findIndex((token) => token.value === "cfg" || token.value === "cfg_attr");
+  return cfgIndex !== -1 && body.slice(cfgIndex + 1).some((token) => token.type === "identifier" && token.value === "test");
+}
+
 function tauriCommandAttributes(source) {
   const attributes = new Set(["tauri::command"]);
-  for (const match of source.matchAll(/\buse\s+tauri::command\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) attributes.add(match[1]);
-  for (const match of source.matchAll(/\buse\s+tauri::\{[\s\S]*?\bcommand\s+as\s+([A-Za-z_][A-Za-z0-9_]*)[\s\S]*?};/g)) attributes.add(match[1]);
-  for (const match of source.matchAll(/\buse\s+tauri\s+as\s+([A-Za-z_][A-Za-z0-9_]*)\s*;/g)) attributes.add(`${match[1]}::command`);
-  return [...attributes].some((attribute) => {
-    const escaped = attribute.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`#\\s*\\[\\s*${escaped}\\s*\\]`).test(source);
-  });
+  for (const { path, local } of rustUseBindings(source)) {
+    const qualified = path.join("::");
+    if (qualified === "tauri::command") attributes.add(local);
+    if (qualified === "tauri") attributes.add(`${local}::command`);
+  }
+  return rustAttributes(source).some(({ body }) => attributes.has(body.map(({ value }) => value).join("")));
+}
+
+function usesRustFilesystem(source) {
+  const rawTokens = sourceTokens(source);
+  const tokens = [];
+  for (let index = 0; index < rawTokens.length; index += 1) {
+    if (rawTokens[index].value === ":" && rawTokens[index + 1]?.value === ":") {
+      tokens.push({ type: "punctuation", value: "::" });
+      index += 1;
+    } else {
+      tokens.push(rawTokens[index]);
+    }
+  }
+  const moduleAliases = new Set();
+  const functions = new Set();
+  for (const { path, local } of rustUseBindings(source)) {
+    const qualified = path.join("::");
+    if (qualified === "std::fs") moduleAliases.add(local);
+    if (qualified.startsWith("std::fs::")) functions.add(local);
+  }
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (tokens[index].value === "use") {
+      while (index < tokens.length && tokens[index].value !== ";") index += 1;
+      continue;
+    }
+    if (
+      tokens[index].value === "std" && tokens[index + 1]?.value === "::"
+      && tokens[index + 2]?.value === "fs" && tokens[index + 3]?.value === "::"
+      && tokens[index + 5]?.value === "("
+    ) return true;
+    if (
+      moduleAliases.has(tokens[index].value) && tokens[index + 1]?.value === "::"
+      && tokens[index + 3]?.value === "("
+    ) return true;
+    if (functions.has(tokens[index].value) && tokens[index + 1]?.value === "(") return true;
+  }
+  return false;
 }
 
 function rustProductionPathAttribute(source) {
@@ -565,8 +770,15 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
       const expired = exception && exception.expiresOn < (boundaries.today ?? new Date().toISOString().slice(0, 10));
       if (expired) violations.push(`${file}: legacy thin-command exception expired on ${exception.expiresOn}`);
       if (!exception || expired) {
+        let filesystemReported = false;
         for (const pattern of boundaries.commandBusinessLogicPatterns ?? []) {
-          if (source.includes(pattern)) violations.push(`${file}: Rust commands must delegate business logic outside the transport layer: ${pattern}`);
+          const isFilesystemPattern = pattern.startsWith("std::fs::") || pattern.startsWith("fs::");
+          if (isFilesystemPattern && usesRustFilesystem(source)) {
+            if (!filesystemReported) violations.push(`${file}: Rust commands must delegate business logic outside the transport layer: ${pattern}`);
+            filesystemReported = true;
+          } else if (!isFilesystemPattern && source.includes(pattern)) {
+            violations.push(`${file}: Rust commands must delegate business logic outside the transport layer: ${pattern}`);
+          }
         }
       }
     }
@@ -619,24 +831,28 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
   return violations;
 }
 
+function resolveRepositoryReference(importer, specifier, importAliases) {
+  if (isAbsolute(specifier) || /^[A-Za-z]:[\\/]/.test(specifier)) return { error: "absolute" };
+  const aliases = Object.entries(importAliases)
+    .filter(([alias]) => specifier === alias || specifier.startsWith(`${alias}/`));
+  if (aliases.length > 1) return { error: "ambiguous-alias" };
+  if (aliases.length === 1) {
+    const [alias, target] = aliases[0];
+    const normalizedTarget = canonicalRepositoryPath(target);
+    if (normalizedTarget === undefined) return { error: "escape" };
+    return { path: canonicalRepositoryPath(`${normalizedTarget}${specifier.slice(alias.length)}`) };
+  }
+  if (specifier.startsWith(".")) {
+    const resolved = canonicalRepositoryPath(join(dirname(importer), specifier));
+    return resolved === undefined ? { error: "escape" } : { path: resolved };
+  }
+  return { path: canonicalRepositoryPath(specifier) };
+}
+
 function resolvesToForbiddenRoot(importer, specifier, forbiddenRoot, importAliases) {
-  if (specifier === forbiddenRoot || specifier.startsWith(`${forbiddenRoot}/`)) {
-    return true;
-  }
-
-  for (const [alias, target] of Object.entries(importAliases)) {
-    if ((specifier === alias || specifier.startsWith(`${alias}/`)) && isUnderRoot(target, forbiddenRoot)) {
-      return true;
-    }
-  }
-
-  if (!specifier.startsWith(".")) {
-    return false;
-  }
-
-  const importerDirectory = dirname(importer);
-  const normalized = toPosixPath(relative(".", join(importerDirectory, specifier)));
-  return isUnderRoot(normalized, forbiddenRoot);
+  const resolved = resolveRepositoryReference(importer, specifier, importAliases);
+  const normalizedRoot = canonicalRepositoryPath(forbiddenRoot);
+  return resolved.path !== undefined && normalizedRoot !== undefined && isUnderRoot(resolved.path, normalizedRoot);
 }
 
 export function countLines(content) {
@@ -803,19 +1019,36 @@ export function collectViolations(root, policy, inventory = {}) {
 
     if (repositoryTestRoots.some((root) => isUnderRoot(file, root))) {
       const content = readFileSync(join(root, file), "utf8");
-      for (const specifier of importSpecifiers(content)) {
+      for (const { kind, specifier } of importReferences(content)) {
+        if (specifier === undefined) {
+          if (kind === "glob") violations.push(`${file}: import.meta.glob target must be a static string or string array`);
+          continue;
+        }
+        const resolution = resolveRepositoryReference(file, specifier, repositoryTestImportAliases);
+        if (resolution.error === "absolute") {
+          violations.push(`${file}: absolute repository import path is forbidden: ${specifier}`);
+          continue;
+        }
+        if (resolution.error === "escape") {
+          violations.push(`${file}: repository import path escapes the repository: ${specifier}`);
+          continue;
+        }
+        if (resolution.error === "ambiguous-alias") {
+          violations.push(`${file}: repository import alias is ambiguous: ${specifier}`);
+          continue;
+        }
         const forbiddenRoot = repositoryTestForbiddenImportRoots.find((root) => resolvesToForbiddenRoot(file, specifier, root, repositoryTestImportAliases));
         if (forbiddenRoot) {
-          violations.push(`${file}: repository tests may inspect files but must not import desktop-private modules from ${forbiddenRoot}`);
+          violations.push(`${file}: repository tests may inspect files but must not import desktop-private modules from ${canonicalRepositoryPath(forbiddenRoot)}`);
         }
       }
     }
 
     const extension = extname(file);
-    const isProductionTypeScriptModule = sourceRoots.some((sourceRoot) => isUnderRoot(file, sourceRoot))
-      && (extension === ".mts" || extension === ".cts");
-    if (isProductionTypeScriptModule) {
-      violations.push(`${file}: unsupported TypeScript source extension; use .ts or .tsx`);
+    const isProductionJavaScriptFamilyModule = sourceRoots.some((sourceRoot) => isUnderRoot(file, sourceRoot))
+      && [".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts"].includes(extension);
+    if (isProductionJavaScriptFamilyModule) {
+      violations.push(`${file}: unsupported JavaScript-family source extension; use .ts or .tsx`);
     }
     if (extension === ".ts" || extension === ".tsx" || extension === ".rs") {
       const lineCount = countLines(readFileSync(join(root, file), "utf8"));
@@ -837,8 +1070,14 @@ export function collectViolations(root, policy, inventory = {}) {
 
     if (extension === ".rs") {
       violations.push(...rustTestInclusionViolations(root, file));
-      if (isUnderRoot(file, "apps/desktop/src-tauri/src") && rustProductionPathAttribute(readFileSync(join(root, file), "utf8"))) {
-        violations.push(`${file}: Rust production modules must use canonical sibling test modules without path attributes`);
+      if (isUnderRoot(file, "apps/desktop/src-tauri/src")) {
+        const rustSource = readFileSync(join(root, file), "utf8");
+        if (rustProductionPathAttribute(rustSource)) {
+          violations.push(`${file}: Rust production modules must use canonical sibling test modules without path attributes`);
+        }
+        if (hasTestGatedRustInclude(rustSource)) {
+          violations.push(`${file}: test-gated include! is forbidden in Rust production sources`);
+        }
       }
     }
 
