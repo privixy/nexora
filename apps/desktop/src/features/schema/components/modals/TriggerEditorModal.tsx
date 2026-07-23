@@ -6,11 +6,12 @@ import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 
 import { useAlert } from "../../../../shared/hooks/useAlert";
 import { Modal } from "../../../../shared/ui/Modal";
-import { SqlEditorWrapper } from "../../../editor";
+import type { SqlEditorComponent } from "../../../../shared/types/sqlEditor";
 import { useDatabase } from "../../../connections";
 import { quoteIdentifier } from "../../../../shared/lib/identifiers";
 
 interface TriggerEditorModalProps {
+  SqlEditor: SqlEditorComponent;
   isOpen: boolean;
   onClose: () => void;
   connectionId: string;
@@ -45,6 +46,7 @@ function parseTriggerSql(sql: string): { timing: string | null; events: string[]
 }
 
 export const TriggerEditorModal = ({
+  SqlEditor,
   isOpen,
   onClose,
   connectionId,
@@ -260,7 +262,7 @@ export const TriggerEditorModal = ({
                 {t("triggers.rawSql")}
               </label>
               <div className="border border-strong rounded-lg overflow-hidden h-64">
-                <SqlEditorWrapper
+                <SqlEditor
                   initialValue={rawSql}
                   onChange={setRawSql}
                   height="100%"
@@ -346,7 +348,7 @@ export const TriggerEditorModal = ({
                   {t("triggers.body")}
                 </label>
                 <div className="border border-strong rounded-lg overflow-hidden h-48">
-                  <SqlEditorWrapper
+                  <SqlEditor
                     initialValue={body}
                     onChange={setBody}
                     height="100%"

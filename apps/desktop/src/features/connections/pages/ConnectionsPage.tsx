@@ -46,10 +46,11 @@ import { ConnectionCard } from "../components/list/ConnectionCard";
 import { ConnectionListItem } from "../components/list/ConnectionListItem";
 import { ConnectionErrorBanner } from "../components/ConnectionErrorBanner";
 import { BetaBadge } from "../../../shared/ui/BetaBadge";
+import type { SqlEditorComponent } from "../../../shared/types/sqlEditor";
 
 let autoConnectAttempted = false;
 
-export const Connections = () => {
+export const Connections = ({ SqlEditor }: { SqlEditor: SqlEditorComponent }) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -1248,6 +1249,7 @@ export const Connections = () => {
       </div>
 
       <NewConnectionModal
+        SqlEditor={SqlEditor}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);

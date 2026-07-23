@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
 import { APP_VERSION } from "./config/version";
 import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
-import { EditorErrorBoundary, EditorPage, EditorSchemaDiagramPage, ResultsWindowPage } from "../features/editor";
+import { EditorErrorBoundary, EditorPage, EditorSchemaDiagramPage, ResultsWindowPage, SqlEditorWrapper } from "../features/editor";
 import { JsonViewerPage } from "../features/data-grid";
 import { McpPage } from "../features/mcp";
 import {
@@ -73,7 +73,10 @@ export function AppRoutes() {
           index
           element={<Navigate to="/connections" replace />}
         />
-        <Route path="connections" element={<ConnectionsPage />} />
+        <Route
+        path="connections"
+        element={<ConnectionsPage SqlEditor={SqlEditorWrapper} />}
+      />
         <Route
           path="editor"
           element={

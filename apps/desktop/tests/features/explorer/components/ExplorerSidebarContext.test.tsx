@@ -286,7 +286,7 @@ function renderSidebar(database = createDatabase()) {
 
   const rendered = render(
     <MemoryRouter>
-      <ExplorerSidebar
+      <ExplorerSidebar SqlEditor={() => null}
         sidebarWidth={320}
         startResize={vi.fn()}
         onCollapse={vi.fn()}
@@ -302,7 +302,7 @@ function renderSidebar(database = createDatabase()) {
       vi.mocked(useDatabase).mockReturnValue(nextDatabase);
       rendered.rerender(
         <MemoryRouter>
-          <ExplorerSidebar
+          <ExplorerSidebar SqlEditor={() => null}
             sidebarWidth={320}
             startResize={vi.fn()}
             onCollapse={vi.fn()}

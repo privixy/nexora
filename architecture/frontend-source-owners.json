@@ -1710,6 +1710,12 @@
     "moveTask": 40
   },
   {
+    "source": "apps/desktop/src/features/schema/lib/viewDefinition.ts",
+    "owner": "schema",
+    "destination": "apps/desktop/src/features/schema/lib/viewDefinition.ts",
+    "moveTask": 41
+  },
+  {
     "source": "apps/desktop/src/features/schema/pages/SchemaDiagramPage.tsx",
     "owner": "schema",
     "destination": "apps/desktop/src/features/schema/pages/SchemaDiagramPage.tsx",
@@ -2445,6 +2451,12 @@
     "source": "apps/desktop/src/shared/types/sql.ts",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/types/sql.ts",
+    "moveTask": 41
+  },
+  {
+    "source": "apps/desktop/src/shared/types/sqlEditor.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/types/sqlEditor.ts",
     "moveTask": 41
   },
   {

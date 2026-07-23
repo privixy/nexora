@@ -59,6 +59,7 @@ import { ImportDatabaseModal } from "./ImportDatabaseModal";
 import { ClipboardImportModal } from "../../schema";
 import { ViewEditorModal } from "../../schema";
 import { TriggerEditorModal } from "../../schema";
+import type { SqlEditorComponent } from "../../../shared/types/sqlEditor";
 import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import { RunRoutineModal } from "../../schema";
 import { Accordion } from "./sidebar/Accordion";
@@ -110,6 +111,7 @@ import { ExplorerTabs, type SidebarTab } from "./ExplorerTabs";
 export type { SidebarTab } from "./ExplorerTabs";
 
 interface ExplorerSidebarProps {
+  SqlEditor: SqlEditorComponent;
   sidebarWidth: number;
   startResize: (e: React.MouseEvent) => void;
   onCollapse: () => void;
@@ -117,7 +119,7 @@ interface ExplorerSidebarProps {
   onSidebarTabChange: (tab: SidebarTab) => void;
 }
 
-export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebarTab, onSidebarTabChange }: ExplorerSidebarProps) => {
+export const ExplorerSidebar = ({ SqlEditor, sidebarWidth, startResize, onCollapse, sidebarTab, onSidebarTabChange }: ExplorerSidebarProps) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
   const {
@@ -2858,6 +2860,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
       {viewEditorModal.isOpen && activeConnectionId && (
         <ViewEditorModal
+          SqlEditor={SqlEditor}
           isOpen={viewEditorModal.isOpen}
           onClose={() => setViewEditorModal({ isOpen: false })}
           connectionId={activeConnectionId}
@@ -2873,6 +2876,7 @@ export const ExplorerSidebar = ({ sidebarWidth, startResize, onCollapse, sidebar
 
       {triggerEditorModal.isOpen && activeConnectionId && (
         <TriggerEditorModal
+          SqlEditor={SqlEditor}
           isOpen={triggerEditorModal.isOpen}
           onClose={() => setTriggerEditorModal({ isOpen: false })}
           connectionId={activeConnectionId}

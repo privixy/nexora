@@ -64,6 +64,7 @@ vi.mock("../../src/features/editor", () => ({
   },
   EditorSchemaDiagramPage: page("schema-diagram"),
   ResultsWindowPage: page("results-window"),
+  SqlEditorWrapper: page("sql-editor"),
 }));
 vi.mock("../../src/features/notebooks", () => notebookRuntime);
 vi.mock("../../src/features/mcp", () => ({ McpPage: page("mcp") }));

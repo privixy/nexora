@@ -13,6 +13,7 @@ import {
 } from "../features/connections";
 import { useTheme } from "../features/settings";
 import { SlotAnchor } from "../features/plugins";
+import { SqlEditorWrapper } from "../features/editor";
 
 // Sub-components
 import { NavItem } from "./components/NavItem";
@@ -317,6 +318,7 @@ export const Sidebar = () => {
       {shouldShowExplorer && !isExplorerCollapsed && explorerConnId && (
         <PanelDatabaseProvider connectionId={explorerConnId}>
           <ExplorerSidebar
+            SqlEditor={SqlEditorWrapper}
             sidebarWidth={sidebarWidth}
             startResize={startResize}
             onCollapse={() => setIsExplorerCollapsed(true)}

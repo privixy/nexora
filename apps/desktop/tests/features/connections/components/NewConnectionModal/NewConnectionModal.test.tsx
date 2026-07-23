@@ -112,7 +112,7 @@ type InitialConnection = Parameters<typeof NewConnectionModal>[0]["initialConnec
 
 function renderModal(initialConnection?: InitialConnection) {
   return render(
-    <NewConnectionModal
+    <NewConnectionModal SqlEditor={() => null}
       isOpen={true}
       onClose={vi.fn()}
       onSave={vi.fn()}
@@ -277,7 +277,7 @@ describe("NewConnectionModal imported connection credentials", () => {
   it("keeps an imported single database selected so entering a password can be saved", async () => {
     const onSave = vi.fn();
     render(
-      <NewConnectionModal
+      <NewConnectionModal SqlEditor={() => null}
         isOpen={true}
         onClose={vi.fn()}
         onSave={onSave}
@@ -323,7 +323,7 @@ describe("NewConnectionModal imported connection credentials", () => {
     driverState.schemas = false;
     const onSave = vi.fn();
     render(
-      <NewConnectionModal
+      <NewConnectionModal SqlEditor={() => null}
         isOpen={true}
         onClose={vi.fn()}
         onSave={onSave}

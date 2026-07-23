@@ -222,7 +222,7 @@ describe("schema raw Tauri contracts", () => {
     invokeMock.mockResolvedValueOnce("SELECT 1");
 
     render(
-      <ViewEditorModal
+      <ViewEditorModal SqlEditor={() => null}
         isOpen
         onClose={vi.fn()}
         connectionId="connection"
@@ -246,7 +246,7 @@ describe("schema raw Tauri contracts", () => {
     invokeMock.mockResolvedValueOnce("CREATE TRIGGER update_user BEFORE UPDATE ON users FOR EACH ROW BEGIN END");
 
     render(
-      <TriggerEditorModal
+      <TriggerEditorModal SqlEditor={() => null}
         isOpen
         onClose={vi.fn()}
         connectionId="connection"

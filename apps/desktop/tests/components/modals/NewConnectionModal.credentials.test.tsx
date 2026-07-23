@@ -110,7 +110,7 @@ describe("NewConnectionModal credential import workflow", () => {
   it("covers missing credential input, retry with entered credential, and save payload without unrelated validation blocking", async () => {
     const onSave = vi.fn();
     render(
-      <NewConnectionModal
+      <NewConnectionModal SqlEditor={() => null}
         isOpen={true}
         onClose={vi.fn()}
         onSave={onSave}

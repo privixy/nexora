@@ -21,6 +21,7 @@ export { useSchemaMetadata } from "./hooks/useSchemaMetadata";
 export { DEFAULT_CREATE_TABLE_TARGET, getCreateTableRefreshPlan } from "./lib/createTable";
 export type { CreateTableTarget } from "./lib/createTable";
 export { formatObjectCount } from "./lib/schema";
+export { extractEditableViewDefinition } from "./lib/viewDefinition";
 export { groupIndexes } from "./lib/indexes";
 export type { GroupedIndex } from "./lib/indexes";
 export {

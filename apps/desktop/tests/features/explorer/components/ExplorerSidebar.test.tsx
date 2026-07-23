@@ -321,7 +321,7 @@ function renderSidebar(database = createDatabase()) {
 
   const rendered = render(
     <MemoryRouter>
-      <ExplorerSidebar
+      <ExplorerSidebar SqlEditor={() => null}
         sidebarWidth={320}
         startResize={vi.fn()}
         onCollapse={vi.fn()}
@@ -337,7 +337,7 @@ function renderSidebar(database = createDatabase()) {
       vi.mocked(useDatabase).mockReturnValue(nextDatabase);
       rendered.rerender(
         <MemoryRouter>
-          <ExplorerSidebar
+          <ExplorerSidebar SqlEditor={() => null}
             sidebarWidth={320}
             startResize={vi.fn()}
             onCollapse={vi.fn()}
@@ -468,14 +468,14 @@ describe("ExplorerSidebar", () => {
     vi.mocked(useDatabase).mockReturnValue(createDatabase());
     rerender(
       <MemoryRouter>
-        <ExplorerSidebar sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="history" onSidebarTabChange={vi.fn()} />
+        <ExplorerSidebar SqlEditor={() => null} sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="history" onSidebarTabChange={vi.fn()} />
       </MemoryRouter>,
     );
     expect(screen.getByText("history-section")).toBeInTheDocument();
 
     rerender(
       <MemoryRouter>
-        <ExplorerSidebar sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="notebooks" onSidebarTabChange={vi.fn()} />
+        <ExplorerSidebar SqlEditor={() => null} sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="notebooks" onSidebarTabChange={vi.fn()} />
       </MemoryRouter>,
     );
     expect(screen.getByText("notebooks-section")).toBeInTheDocument();
@@ -483,7 +483,7 @@ describe("ExplorerSidebar", () => {
     vi.mocked(useDatabase).mockReturnValue(createDatabase({ activeCapabilities: { ...capabilities, no_connection_required: true } }));
     rerender(
       <MemoryRouter>
-        <ExplorerSidebar sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="structure" onSidebarTabChange={vi.fn()} />
+        <ExplorerSidebar SqlEditor={() => null} sidebarWidth={320} startResize={vi.fn()} onCollapse={vi.fn()} sidebarTab="structure" onSidebarTabChange={vi.fn()} />
       </MemoryRouter>,
     );
     expect(screen.queryByTitle("dump.importDatabase")).not.toBeInTheDocument();

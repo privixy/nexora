@@ -29,7 +29,7 @@ import { SlotAnchor } from "../../../../features/plugins";
 import { useDrivers } from "../../../plugins";
 import { usePluginSlotRegistry } from "../../../plugins";
 import { Modal } from "../../../../shared/ui/Modal";
-import { SqlEditorWrapper } from "../../../editor";
+import type { SqlEditorComponent } from "../../../../shared/types/sqlEditor";
 import type { PluginManifest } from "../../../../types/plugins";
 import { loadSshConnections, type SshConnection } from "../../lib/ssh";
 import {
@@ -57,6 +57,7 @@ interface SavedConnection {
 }
 
 interface NewConnectionModalProps {
+  SqlEditor: SqlEditorComponent;
   isOpen: boolean;
   onClose: () => void;
   onSave?: () => void;
@@ -64,6 +65,7 @@ interface NewConnectionModalProps {
 }
 
 export const NewConnectionModal = ({
+  SqlEditor,
   isOpen,
   onClose,
   onSave,
@@ -1161,7 +1163,7 @@ export const NewConnectionModal = ({
         })}
       </p>
       <div className="border border-strong rounded-md overflow-hidden h-48">
-        <SqlEditorWrapper
+        <SqlEditor
           editorKey={`startup-script-${initialConnection?.id ?? "new"}`}
           initialValue={formData.startup_script ?? ""}
           onChange={(value) => updateField("startup_script", value)}

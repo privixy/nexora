@@ -143,6 +143,9 @@
     "apps/desktop/tests/features/explorer/components/ExplorerPresentation.test.tsx": [
       "apps/desktop/src/features/explorer/components/ExplorerStructure.tsx",
       "apps/desktop/src/features/explorer/components/ExplorerModals.tsx"
+    ],
+    "apps/desktop/tests/features/visual-explain/lib/isExplainableQuery.test.ts": [
+      "apps/desktop/src/features/editor/lib/sqlSplitter/classify.ts"
     ]
   },
   "frontendBoundaries": {

@@ -6,12 +6,14 @@ import type { OnMount } from "@monaco-editor/react";
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 
 import { useAlert } from "../../../../shared/hooks/useAlert";
-import { extractEditableViewDefinition, SqlEditorWrapper } from "../../../editor";
+import { extractEditableViewDefinition } from "../../lib/viewDefinition";
+import type { SqlEditorComponent } from "../../../../shared/types/sqlEditor";
 import { formatSql } from "../../../../utils/sqlFormat";
 import { useDatabase } from "../../../connections";
 import { Modal } from "../../../../shared/ui/Modal";
 
 interface ViewEditorModalProps {
+  SqlEditor: SqlEditorComponent;
   isOpen: boolean;
   onClose: () => void;
   connectionId: string;
@@ -23,6 +25,7 @@ interface ViewEditorModalProps {
 }
 
 export const ViewEditorModal = ({
+  SqlEditor,
   isOpen,
   onClose,
   connectionId,
@@ -251,7 +254,7 @@ export const ViewEditorModal = ({
               </button>
             </div>
             <div className="border border-strong rounded-lg overflow-hidden h-48">
-              <SqlEditorWrapper
+              <SqlEditor
                 initialValue={definition}
                 onChange={setDefinition}
                 onRun={handlePreview}
