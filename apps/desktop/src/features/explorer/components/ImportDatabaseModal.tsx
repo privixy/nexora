@@ -4,11 +4,11 @@ import { dataTransferGateway } from "../../../platform/tauri/dataTransferGateway
 import { listenTauri } from "../../../platform/tauri/events";
 
 const invoke = dataTransferGateway.invoke;
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import { Loader2, Database, X, CheckCircle2, XCircle } from "lucide-react";
-import { formatElapsedTime } from "../../../utils/formatTime";
+import { formatElapsedTime } from "../../../shared/lib/formatTime";
 import { useDatabase } from "../../connections";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 
 interface ImportProgress {
   statements_executed: number;

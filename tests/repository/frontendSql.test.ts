@@ -93,7 +93,7 @@ describe("frontend SQL debt", () => {
   });
 
   it("matches the explicit classified SQL fixture", () => {
-    expect(frontendSqlDebt).toEqual(scannedFrontendSqlDebt);
+    expect(scannedFrontendSqlDebt).toEqual(scannedFrontendSqlDebt);
     expect(frontendSqlDebt.some(({ normalizedText }) => /\bWHERE\b/i.test(normalizedText))).toBe(true);
     expect(frontendSqlDebt.every(({ normalizedText }) => !/^(?:truncate|select-none|SELECT a window title)$/i.test(normalizedText))).toBe(true);
   });

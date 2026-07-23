@@ -4,7 +4,7 @@ import { X, Save, Loader2, ListTree, AlertTriangle } from 'lucide-react';
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDatabase } from '../../../connections';
-import { Modal } from '../../../../components/ui/Modal';
+import { Modal } from '../../../../shared/ui/Modal';
 
 interface CreateIndexModalProps {
   isOpen: boolean;

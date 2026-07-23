@@ -1,7 +1,7 @@
 import { Database, Rows, Table2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FormatBadge } from './FormatBadge';
-import type { ClipboardFormat } from '../../../utils/clipboardParser';
+import type { ClipboardFormat } from '../../../shared/lib/clipboardParser';
 
 interface ParseSummaryProps {
   format: ClipboardFormat;

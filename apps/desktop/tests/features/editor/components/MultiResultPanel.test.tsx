@@ -9,7 +9,7 @@ vi.mock("../../../../src/features/data-grid", () => ({
 }));
 
 // Mock ErrorDisplay
-vi.mock("../../../../src/components/ui/ErrorDisplay", () => ({
+vi.mock("../../../../src/shared/ui/ErrorDisplay", () => ({
   ErrorDisplay: ({ error }: { error: string }) => (
     <div data-testid="error-display">{error}</div>
   ),

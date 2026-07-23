@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { safeParse, isJsonColumn } from "../../src/utils/jsonTree";
+import { safeParse, isJsonColumn } from "../../../src/shared/lib/jsonTree";
 
 describe("jsonTree", () => {
   describe("safeParse", () => {

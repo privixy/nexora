@@ -41,11 +41,11 @@ vi.mock("../../../../src/features/editor/hooks/useQueryHistory", () => ({
   useQueryHistory: () => ({ entries: [], isLoading: false, deleteEntry: vi.fn(), clearHistory: vi.fn(), recoveryNotice: null, dismissRecoveryNotice: vi.fn() }),
 }));
 
-vi.mock("../../../../src/components/ui/Modal", () => ({
+vi.mock("../../../../src/shared/ui/Modal", () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? <div>{children}</div> : null,
 }));
 
-vi.mock("../../../../src/components/ui/ContextMenu", () => ({
+vi.mock("../../../../src/shared/ui/ContextMenu", () => ({
   ContextMenu: ({ items }: { items: Array<{ label?: string; action?: () => void; separator?: boolean; disabled?: boolean }> }) => (
     <div>
       {items.filter((item) => !item.separator).map((item) => (
@@ -57,7 +57,7 @@ vi.mock("../../../../src/components/ui/ContextMenu", () => ({
   ),
 }));
 
-vi.mock("../../../../src/components/modals/ConfirmModal", () => ({
+vi.mock("../../../../src/shared/ui/ConfirmModal", () => ({
   ConfirmModal: ({ isOpen, title, onConfirm }: { isOpen: boolean; title: string; onConfirm: () => void }) => isOpen ? (
     <div>
       <span>{title}</span>

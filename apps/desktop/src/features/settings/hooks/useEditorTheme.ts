@@ -1,6 +1,6 @@
 import { useTheme } from "./useTheme";
 import { useSettings } from "./useSettings";
-import type { Theme } from "../../../types/theme";
+import type { Theme } from "../../../shared/types/theme";
 
 /**
  * Resolves the effective Monaco editor theme: the dedicated editor theme

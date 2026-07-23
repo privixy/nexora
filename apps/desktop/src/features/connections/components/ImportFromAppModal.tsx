@@ -19,13 +19,13 @@ import { connectionGateway } from "../../../platform/tauri";
 
 
 import clsx from "clsx";
-import { toErrorMessage } from "../../../utils/errors";
+import { toErrorMessage } from "../../../shared/lib/errors";
 import { useDatabase } from "../hooks/useDatabase";
 import type { ConnectionGroup } from "..";
 import { flattenGroupTree } from "../lib/groupTree";
-import { Select } from "../../../components/ui/Select";
-import { PasswordInput } from "../../../components/ui/PasswordInput";
-import { BetaBadge } from "../../../components/ui/BetaBadge";
+import { Select } from "../../../shared/ui/Select";
+import { PasswordInput } from "../../../shared/ui/PasswordInput";
+import { BetaBadge } from "../../../shared/ui/BetaBadge";
 import type {
   ImportSourceInfo,
   ImportPreview,

@@ -15,10 +15,10 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { useSettings } from "../hooks/useSettings";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import type { AiProvider } from "../contracts";
 import { getProviderLabel } from "../lib/settingsUI";
-import { Select } from "../../../components/ui/Select";
+import { Select } from "../../../shared/ui/Select";
 import { SettingSection, SettingRow, SettingToggle } from "./SettingControls";
 import {
   OpenAIIcon,
@@ -26,7 +26,7 @@ import {
   MiniMaxIcon,
   OpenRouterIcon,
   OllamaIcon,
-} from "../../../components/icons/ClientIcons";
+} from "../../../shared/ui/ClientIcons";
 
 interface AiKeyStatus {
   configured: boolean;

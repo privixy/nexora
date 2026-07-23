@@ -7,9 +7,9 @@ import {
   buildSingleFilterClause,
   buildStructuredFilterClause,
   createEmptyFilter,
-} from "../../src/utils/filterBar";
+} from "../../../src/shared/lib/filterBar";
 import type { TableColumn } from "../../src/types/editor";
-import type { StructuredFilter } from "../../src/utils/filterBar";
+import type { StructuredFilter } from "../../../src/shared/lib/filterBar";
 
 const makeColumn = (name: string, data_type: string): TableColumn => ({
   name,

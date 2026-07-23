@@ -7,7 +7,7 @@ import {
   getGeometryHelperText,
   isValidWkt,
   toggleGeometryMode,
-} from '../../src/utils/geometryInput';
+} from '../../../src/shared/lib/geometryInput';
 
 describe('isRawSqlFunction', () => {
   it('should return false for empty string', () => {

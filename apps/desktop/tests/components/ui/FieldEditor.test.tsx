@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { FieldEditor } from "../../../src/components/ui/FieldEditor";
+import { FieldEditor } from "../../../src/shared/ui/FieldEditor";
 
 // Mock GeometryInput component
 interface MockGeometryInputProps {
@@ -10,7 +10,7 @@ interface MockGeometryInputProps {
   placeholder?: string;
 }
 
-vi.mock("../../../src/components/ui/GeometryInput", () => ({
+vi.mock("../../../src/shared/ui/GeometryInput", () => ({
   GeometryInput: ({ value, onChange, placeholder }: MockGeometryInputProps) => (
     <input
       data-testid="geometry-input"
@@ -22,7 +22,7 @@ vi.mock("../../../src/components/ui/GeometryInput", () => ({
 }));
 
 // Mock geometry utilities
-vi.mock("../../../src/utils/geometry", () => ({
+vi.mock("../../../../src/shared/lib/geometry", () => ({
   isGeometricType: (type: string) => type === "geometry" || type === "point",
   formatGeometricValue: (value: unknown) => {
     // Simple mock: if it looks like WKB hex, convert to fake WKT

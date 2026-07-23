@@ -1,4 +1,4 @@
-import type { Theme } from '../types/theme';
+import type { Theme } from '../shared/types/theme';
 import { nexoraDark } from './presets/nexoraDark';
 import { nexoraLight } from './presets/nexoraLight';
 import { monokai } from './presets/monokai';

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, Trash2, Loader2, Database, AlertTriangle, X } from "lucide-react";
-import { groupByDate, formatHistoryTime } from "../../../../utils/dateGroups";
+import { groupByDate, formatHistoryTime } from "../../../../shared/lib/dateGroups";
 import { SqlHighlight } from "../../../../components/ui/SqlHighlight";
 import { formatSqlPreview } from "../../../../utils/sqlHighlight";
 import { useSettings } from "../../../settings";

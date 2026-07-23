@@ -9,7 +9,7 @@ import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import { ThemeContext } from "./ThemeContext";
 import { themeRegistry } from "../../../themes/themeRegistry";
 import { applyThemeToCSS } from "../../../themes/themeUtils";
-import type { Theme, ThemeSettings } from "../../../types/theme";
+import type { Theme, ThemeSettings } from "../../../shared/types/theme";
 
 const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   activeThemeId: "nexora-dark",

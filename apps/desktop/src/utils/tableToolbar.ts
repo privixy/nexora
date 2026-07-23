@@ -3,7 +3,7 @@
  * Pure functions for managing toolbar state and changes
  */
 
-import { formatSqlIdentifier } from "./identifiers";
+import { formatSqlIdentifier } from "../shared/lib/identifiers";
 
 export interface TableToolbarState {
   filterInput: string;

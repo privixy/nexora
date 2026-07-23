@@ -3,7 +3,7 @@ import { X, Sparkles, Loader2 } from "lucide-react";
 import { aiGateway } from "../../../platform/tauri/aiGateway";
 import { useDatabase } from "../../connections";
 import { useSettings } from "../../settings";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 import type { AiQueryModalProps } from '../contracts';
 
 interface SchemaLoadState {

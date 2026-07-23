@@ -17,7 +17,7 @@ import {
   Redo2,
   History,
 } from "lucide-react";
-import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
+import { ContextMenu, type ContextMenuItem } from "../../../shared/ui/ContextMenu";
 
 interface NotebookToolbarProps {
   onAddSqlCell: () => void;

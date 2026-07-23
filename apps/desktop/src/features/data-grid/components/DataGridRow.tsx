@@ -19,16 +19,16 @@ import {
   parseSetValues,
 } from "../../../utils/columnTypes";
 import { isBlobColumn, isBlobWireFormat } from "../../../utils/blob";
-import { isLongTextCellTarget, truncateCellPreview } from "../../../utils/text";
+import { isLongTextCellTarget, truncateCellPreview } from "../../../shared/lib/text";
 import { getForeignKeyForPreview } from "../../schema";
 import { getDateInputMode } from "../../../utils/dateInput";
 import { renderDefaultCellContent } from "../lib/dataGridCell";
 import { GeometryInput } from "../../../components/ui/GeometryInput";
 import { DateInput } from "../../../components/ui/DateInput";
 import { JsonCell } from "../../../components/ui/JsonCell";
-import { JsonExpansionEditor } from "../../../components/ui/JsonExpansionEditor";
-import { TextCell } from "../../../components/ui/TextCell";
-import { TextExpansionEditor } from "../../../components/ui/TextExpansionEditor";
+import { JsonExpansionEditor } from "../../../shared/ui/JsonExpansionEditor";
+import { TextCell } from "../../../shared/ui/TextCell";
+import { TextExpansionEditor } from "../../../shared/ui/TextExpansionEditor";
 import { EnumSetInput } from "../../../components/ui/EnumSetInput";
 import type { ForeignKey } from "../../../types/editor";
 

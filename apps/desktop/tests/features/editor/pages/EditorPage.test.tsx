@@ -143,13 +143,13 @@ vi.mock("../../../../src/components/ui/TableToolbar", () => ({
   ),
 }));
 
-vi.mock("../../../../src/components/ui/RelatedRecordsPanel", () => ({
+vi.mock("../../../../src/shared/ui/RelatedRecordsPanel", () => ({
   RelatedRecordsPanel: ({ connectionId, database, schema }: { connectionId: string; database?: string; schema?: string }) => (
     <div data-testid="related-records-panel">{[connectionId, database, schema].filter(Boolean).join("/")}</div>
   ),
 }));
 
-vi.mock("../../../../src/components/modals/NewRowModal", () => ({
+vi.mock("../../../../src/shared/ui/NewRowModal", () => ({
   NewRowModal: ({ database, schema }: { database?: string; schema?: string }) => <div data-testid="new-row-modal">{[database, schema].filter(Boolean).join("/")}</div>,
 }));
 
@@ -224,11 +224,11 @@ vi.mock("../../../../src/features/ai", () => ({
   AiQueryModal: () => <div />,
   AiExplainModal: () => <div />,
 }));
-vi.mock("../../../../src/components/modals/VisualExplainModal", () => ({ VisualExplainModal: () => <div /> }));
+vi.mock("../../../../src/shared/ui/VisualExplainModal", () => ({ VisualExplainModal: () => <div /> }));
 vi.mock("../../../../src/features/editor/components/ExportProgressModal", () => ({ ExportProgressModal: () => <div /> }));
 vi.mock("../../../../src/features/editor/components/modals/QueryModal", () => ({ QueryModal: () => <div /> }));
 vi.mock("../../../../src/features/editor/components/modals/ErrorModal", () => ({ ErrorModal: () => <div /> }));
-vi.mock("../../../../src/components/modals/ConfirmModal", () => ({ ConfirmModal: () => <div /> }));
+vi.mock("../../../../src/shared/ui/ConfirmModal", () => ({ ConfirmModal: () => <div /> }));
 vi.mock("../../../../src/features/editor/components/modals/QueryParamsModal", () => ({ QueryParamsModal: () => <div /> }));
 vi.mock("../../../../src/features/editor/components/modals/QuerySelectionModal", () => ({ QuerySelectionModal: ({ isOpen, queries, onRunAll }: { isOpen: boolean; queries: string[]; onRunAll: (queries: string[]) => void }) => isOpen ? <button type="button" onClick={() => onRunAll(queries)}>run-all-queries</button> : null }));
 vi.mock("../../../../src/features/editor/components/modals/ExplainSelectionModal", () => ({ ExplainSelectionModal: () => <div /> }));

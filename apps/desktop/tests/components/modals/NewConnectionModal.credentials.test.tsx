@@ -28,12 +28,12 @@ const sshMocks = vi.hoisted(() => ({
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 
-vi.mock("../../../src/components/ui/Modal", () => ({
+vi.mock("../../../src/shared/ui/Modal", () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: ReactNode }) =>
     isOpen ? <div data-testid="modal">{children}</div> : null,
 }));
 
-vi.mock("../../../src/components/ui/Select", () => ({
+vi.mock("../../../src/shared/ui/Select", () => ({
   Select: ({ value, options, onChange, placeholder, labels }: MockSelectProps) => (
     <select aria-label={placeholder ?? "select"} value={value ?? ""} onChange={(e) => onChange(e.target.value)}>
       <option value="">{placeholder ?? "Select option"}</option>
@@ -85,8 +85,8 @@ vi.mock("../../../src/features/connections/lib/ssh", () => ({
   loadSshConnections: sshMocks.loadSshConnections,
 }));
 
-vi.mock("../../../src/components/modals/SshConnectionsModal", () => ({ SshConnectionsModal: () => null }));
-vi.mock("../../../src/components/modals/K8sConnectionsModal", () => ({ K8sConnectionsModal: () => null }));
+vi.mock("../../../src/shared/ui/SshConnectionsModal", () => ({ SshConnectionsModal: () => null }));
+vi.mock("../../../src/shared/ui/K8sConnectionsModal", () => ({ K8sConnectionsModal: () => null }));
 
 beforeEach(() => {
   vi.clearAllMocks();

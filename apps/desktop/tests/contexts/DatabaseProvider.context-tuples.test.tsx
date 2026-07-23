@@ -8,7 +8,7 @@ import type { DatabaseData, SchemaData } from '../../src/features/connections/st
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(() => Promise.resolve(() => {})) }));
-vi.mock('../../src/utils/autocomplete', () => ({ clearAutocompleteCache: vi.fn() }));
+vi.mock('../../../src/shared/lib/autocomplete', () => ({ clearAutocompleteCache: vi.fn() }));
 vi.mock('../../src/features/settings/hooks/useSettings', () => ({
   useSettings: () => ({ settings: { showNativeTitlebar: false, queryTimeout: 30 } }),
 }));

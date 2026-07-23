@@ -1,7 +1,7 @@
 import type { Monaco } from "@monaco-editor/react";
 import { queryGateway } from "../platform/tauri/queryGateway";
 import type { TableInfo } from "../features/connections";
-import { formatSqlIdentifier, getQuoteChar, quoteIdentifier } from "./identifiers";
+import { formatSqlIdentifier, getQuoteChar, quoteIdentifier } from "../shared/lib/identifiers";
 import { getCurrentStatement, parseTablesFromQuery, type ParsedTableRef } from "./sqlAnalysis";
 
 // Lightweight column cache with TTL and size limits

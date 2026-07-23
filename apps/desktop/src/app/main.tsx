@@ -1,11 +1,11 @@
 // Import polyfills first to make Buffer available globally
-import '../polyfills';
+import './polyfills';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
-import '../index.css';
-import '../i18n/config';
+import './index.css';
+import './config';
 import { DatabaseProvider } from '../features/connections';
 import { SettingsProvider, ThemeProvider, UpdateProvider } from '../features/settings';
 

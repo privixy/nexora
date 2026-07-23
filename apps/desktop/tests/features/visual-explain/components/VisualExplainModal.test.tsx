@@ -15,7 +15,7 @@ vi.mock('../../../../src/features/connections', () => ({
 vi.mock('../../../../src/features/plugins/hooks/useDrivers', () => ({
   useDrivers: () => ({ allDrivers: [] }),
 }));
-vi.mock('../../../../src/components/ui/Modal', () => ({
+vi.mock('../../../../src/shared/ui/Modal', () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? <div>{children}</div> : null,
 }));
 vi.mock('../../../../src/features/visual-explain/components/VisualExplainView', () => ({

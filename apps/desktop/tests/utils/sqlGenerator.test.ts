@@ -10,7 +10,7 @@ import {
   type ForeignKey,
   type Index,
   type DatabaseDriver,
-} from '../../src/utils/sqlGenerator';
+} from '../../../src/shared/lib/sqlGenerator';
 import type { DriverCapabilities } from '../../src/types/plugins';
 
 const makeCaps = (overrides: Partial<DriverCapabilities> = {}): DriverCapabilities => ({

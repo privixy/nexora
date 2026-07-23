@@ -18,10 +18,10 @@ import {
   OpenAIIcon,
   OpenCodeIcon,
   WindsurfIcon,
-} from "../../../components/icons/ClientIcons";
+} from "../../../shared/ui/ClientIcons";
 import { AiActivityPanel } from "../../settings";
 import { McpSafetySection } from "../components/McpSafetySection";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import { useEditorTheme } from "../../settings";
 import { loadMonacoTheme } from "../../../themes/themeUtils";
 

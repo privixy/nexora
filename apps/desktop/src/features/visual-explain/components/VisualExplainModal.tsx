@@ -13,7 +13,7 @@ import { useDrivers } from "../../plugins";
 import type { ExplainPlan } from "../contracts";
 import { isDataModifyingQuery } from "../lib/explainPlan";
 import { isExplainableQuery } from "..";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 import { VisualExplainView } from "./VisualExplainView";
 import type { ExplainViewMode } from "./visual-explain/ExplainSummaryBar";
 

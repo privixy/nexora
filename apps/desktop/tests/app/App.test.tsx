@@ -7,7 +7,7 @@ import { useChangelog } from "../../src/hooks/useChangelog";
 import { useResultTypeColors } from "../../src/hooks/useResultTypeColors";
 import { useSettings } from "../../src/features/settings/hooks/useSettings";
 import { useUpdate } from "../../src/features/settings/hooks/useUpdate";
-import { APP_VERSION } from "../../src/version";
+import { APP_VERSION } from "../../src/app/config/version";
 
 const providerNames = [
   "AlertProvider",
@@ -15,6 +15,9 @@ const providerNames = [
   "PluginSlotProvider",
   "PluginModalProvider",
   "ConnectionLayoutProvider",
+  "SavedQueriesProvider",
+  "QueryHistoryProvider",
+  "EditorProvider",
 ] as const;
 
 function provider(name: string) {
@@ -24,27 +27,33 @@ function provider(name: string) {
 }
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
-vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
+vi.mock("../../src/app/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
 vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: provider("KeybindingsProvider") }));
 vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
 vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
-vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
+vi.mock("../../src/app/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
+vi.mock("../../src/features/editor", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../src/features/editor")>()),
+  EditorProvider: provider("EditorProvider"),
+  QueryHistoryProvider: provider("QueryHistoryProvider"),
+  SavedQueriesProvider: provider("SavedQueriesProvider"),
+}));
 vi.mock("../../src/app/routes", () => ({ AppRoutes: () => <div data-testid="app-routes" /> }));
 vi.mock("../../src/features/connections/components/ConnectionHealthMonitor", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,
 }));
-vi.mock("../../src/components/modals/UpdateNotificationModal", () => ({
+vi.mock("../../src/shared/ui/UpdateNotificationModal", () => ({
   UpdateNotificationModal: ({ isOpen, error }: { isOpen: boolean; error: string | null }) => (
     <div data-testid="update-modal" data-open={String(isOpen)} data-error={error ?? ""} />
   ),
 }));
-vi.mock("../../src/components/modals/WhatsNewModal", () => ({
+vi.mock("../../src/shared/ui/WhatsNewModal", () => ({
   WhatsNewModal: ({ isOpen, entries, isLoading }: { isOpen: boolean; entries: Array<{ version: string }>; isLoading: boolean }) => (
     <div data-testid="whats-new-modal" data-open={String(isOpen)} data-entries={entries.map(({ version }) => version).join(",")} data-loading={String(isLoading)} />
   ),
 }));
 vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({ AiApprovalGate: () => <div data-testid="ai-approval-gate" /> }));
-vi.mock("../../src/components/modals/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
+vi.mock("../../src/shared/ui/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
 vi.mock("../../src/features/settings/hooks/useUpdate", () => ({ useUpdate: vi.fn() }));
 vi.mock("../../src/features/settings/hooks/useSettings", () => ({ useSettings: vi.fn() }));
 vi.mock("../../src/hooks/useChangelog", () => ({ useChangelog: vi.fn() }));

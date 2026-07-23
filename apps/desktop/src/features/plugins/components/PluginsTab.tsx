@@ -35,12 +35,12 @@ import { usePluginRegistry } from "../hooks/usePluginRegistry";
 import { findConnectionsForDrivers, useDatabase } from "../../connections";
 import { parseAuthor, versionGte } from "../lib/plugins";
 import { removePluginConfig } from "../lib/pluginConfig";
-import { APP_VERSION } from "../../../version";
+import { APP_VERSION } from "../../../app/config/version";
 import type { PluginManifest } from "../contracts";
 import { PluginInstallErrorModal } from "./modals/PluginInstallErrorModal";
 import { PluginRemoveModal } from "./modals/PluginRemoveModal";
 import { PluginStartErrorModal } from "./modals/PluginStartErrorModal";
-import { SlotAnchor } from "../../../components/ui/SlotAnchor";
+import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
 
 /* ── Types ── */
 

@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { QuerySelectionModal } from "../../../../../src/features/editor/components/modals/QuerySelectionModal";
 
 // Mock the Modal component to just render children
-vi.mock("../../../../../src/components/ui/Modal", () => ({
+vi.mock("../../../../src/shared/ui/Modal", () => ({
   Modal: ({
     isOpen,
     children,

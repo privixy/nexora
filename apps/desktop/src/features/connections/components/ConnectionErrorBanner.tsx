@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, X, ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { splitErrorDetails } from "../../../utils/errors";
+import { splitErrorDetails } from "../../../shared/lib/errors";
 
 interface ConnectionErrorBannerProps {
   /** Composed error message, optionally `${summary}\n\nError: ${detail}`. */

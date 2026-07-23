@@ -1,6 +1,6 @@
 import { X, FileText, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 
 export type ExportStatus = "exporting" | "completed" | "error";
 

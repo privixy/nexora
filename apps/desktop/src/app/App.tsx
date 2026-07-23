@@ -3,8 +3,8 @@ import { settingsGateway } from "../platform/tauri/settingsGateway";
 import { useSettings, useUpdate } from "../features/settings";
 import { useChangelog } from "../hooks/useChangelog";
 import { useResultTypeColors } from "../hooks/useResultTypeColors";
-import { APP_VERSION } from "../version";
-import { isVersionAtMost, isVersionNewer } from "../utils/versionCompare";
+import { APP_VERSION } from "./config/version";
+import { isVersionAtMost, isVersionNewer } from "../shared/lib/versionCompare";
 import { AppProviders } from "./providers";
 import { AppRoutes } from "./routes";
 

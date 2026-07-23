@@ -3,9 +3,9 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Settings, X, FolderOpen, RotateCcw } from "lucide-react";
 
-import { Modal } from "../../../../components/ui/Modal";
-import { Select } from "../../../../components/ui/Select";
-import { SlotAnchor } from "../../../../components/ui/SlotAnchor";
+import { Modal } from "../../../../shared/ui/Modal";
+import { Select } from "../../../../shared/ui/Select";
+import { SlotAnchor } from "../../../../shared/ui/SlotAnchor";
 import { resolvePluginConfig, getDisplayInterpreter, resolveSettingsWithDefaults, validateSettings } from "../../lib/pluginConfig";
 import type { PluginConfig } from "../../../settings";
 import type { PluginManifest, PluginSettingDefinition } from "../../contracts";

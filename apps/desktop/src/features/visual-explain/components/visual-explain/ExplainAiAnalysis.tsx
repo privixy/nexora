@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Loader2, Sparkles } from "lucide-react";
 import { aiGateway } from "../../../../platform/tauri/aiGateway";
 import { useSettings } from "../../../settings";
-import { getAiExplanationLanguage } from "../../../../i18n/language";
+import { getAiExplanationLanguage } from "../../../../app/language";
 import type { ExplainPlan } from "../../contracts";
 
 interface ExplainAiAnalysisProps {

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Play, Variable } from "lucide-react";
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
-import { Modal } from "../../../../components/ui/Modal";
+import { Modal } from "../../../../shared/ui/Modal";
 import type { RoutineInfo } from "../../../connections";
 import {
   buildRoutineCallArgs,

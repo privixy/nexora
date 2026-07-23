@@ -5,11 +5,11 @@ import { EditorProvider, QueryHistoryProvider, SavedQueriesProvider } from "../f
 import { AiApprovalGate } from "../features/settings";
 import { mcpApprovalAttentionAdapter } from '../features/mcp';
 import { ApprovalExplainPlanView } from '../features/visual-explain';
-import { SshAskpassGate } from "../components/modals/SshAskpassGate";
-import { UpdateNotificationModal } from "../components/modals/UpdateNotificationModal";
-import { WhatsNewModal } from "../components/modals/WhatsNewModal";
-import { AlertProvider } from "../contexts/AlertProvider";
-import { ConnectionLayoutProvider } from "../contexts/ConnectionLayoutProvider";
+import { SshAskpassGate } from "../shared/ui/SshAskpassGate";
+import { UpdateNotificationModal } from "../shared/ui/UpdateNotificationModal";
+import { WhatsNewModal } from "../shared/ui/WhatsNewModal";
+import { AlertProvider } from "./AlertProvider";
+import { ConnectionLayoutProvider } from "./ConnectionLayoutProvider";
 import { KeybindingsProvider } from "../contexts/KeybindingsProvider";
 import { PluginModalProvider, PluginSlotProvider } from "../features/plugins";
 import { editorNotebookAdapter } from "../features/notebooks";

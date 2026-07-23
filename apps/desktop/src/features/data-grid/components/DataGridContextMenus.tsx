@@ -13,11 +13,11 @@ import {
   Trash2,
   Undo,
 } from "lucide-react";
-import { ContextMenu, type ContextMenuItem } from "../../../components/ui/ContextMenu";
-import { SlotAnchor } from "../../../components/ui/SlotAnchor";
+import { ContextMenu, type ContextMenuItem } from "../../../shared/ui/ContextMenu";
+import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
 import { getDateInputMode } from "../../../utils/dateInput";
 import { isJsonColumn } from "../../../utils/json";
-import { supportsEmptyString } from "../../../utils/text";
+import { supportsEmptyString } from "../../../shared/lib/text";
 import { getForeignKeyForPreview } from "../../schema";
 import type { ForeignKey } from "../../../types/editor";
 import type { MergedRow } from "../lib/dataGrid";

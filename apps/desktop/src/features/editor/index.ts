@@ -35,6 +35,7 @@ export { SqlEditorWrapper } from "./components/SqlEditorWrapper";
 export { useDangerousQueryGuard, DANGEROUS_QUERY_I18N } from "./hooks/useDangerousQueryGuard";
 export { useSqlAutocompleteRegistration } from "./hooks/useSqlAutocompleteRegistration";
 export { newConsoleForDatabase, newConsoleForTable } from "./lib/newConsole";
+export { EditorErrorBoundary } from "./components/EditorErrorBoundary";
 export { dragState } from "./query-builder/dragState";
 export type { SqlEditorWrapperProps } from "./components/SqlEditorWrapper";
 export { extractEditableViewDefinition, splitQueries, statementLabel } from "./lib/sql";

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, X } from "lucide-react";
-import { Modal } from "../../../../components/ui/Modal";
+import { Modal } from "../../../../shared/ui/Modal";
 
 interface ErrorModalProps {
   isOpen: boolean;

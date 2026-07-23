@@ -5,17 +5,17 @@ import { dialogGateway } from "../../../platform/tauri/dialogGateway";
 
 const invoke = dataTransferGateway.invoke;
 const { save } = dialogGateway;
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import { useDatabase } from "../../connections";
 import { isMultiDatabaseCapable } from "../../plugins";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 import { Loader2, Download, Database, Square, CheckSquare } from "lucide-react";
 import {
   validateDumpOptions,
   toggleTableSelection,
   selectAllTables,
 } from "../../../utils/dumpUtils";
-import { formatElapsedTime } from "../../../utils/formatTime";
+import { formatElapsedTime } from "../../../shared/lib/formatTime";
 
 interface DumpDatabaseModalProps {
   isOpen: boolean;

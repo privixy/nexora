@@ -38,7 +38,7 @@ vi.mock("../../../../src/features/connections/components/ImportFromAppModal", ()
   ImportFromAppModal: () => null,
 }));
 
-vi.mock("../../../../src/components/modals/ConfirmModal", () => ({
+vi.mock("../../../../src/shared/ui/ConfirmModal", () => ({
   ConfirmModal: () => null,
 }));
 

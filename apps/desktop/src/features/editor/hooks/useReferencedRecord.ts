@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { queryGateway } from '../../../platform/tauri';
 import type { ForeignKey, QueryResult } from '../../../types/editor';
-import { quoteTableRef } from '../../../utils/identifiers';
+import { quoteTableRef } from '../../../shared/lib/identifiers';
 import {
   isForeignKeyValueNavigable,
   buildForeignKeyFilterClause,

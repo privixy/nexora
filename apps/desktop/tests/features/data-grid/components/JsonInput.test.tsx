@@ -24,7 +24,7 @@ vi.mock("../../../../src/platform/tauri", () => ({
   },
 }));
 
-vi.mock("../../../../src/components/ui/CellCodeEditor", () => ({
+vi.mock("../../../../src/shared/ui/CellCodeEditor", () => ({
   CellCodeEditor: (props: CodeEditorMockProps) => {
     codeProps.current = props;
     return (

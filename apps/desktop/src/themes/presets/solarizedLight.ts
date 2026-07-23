@@ -1,4 +1,4 @@
-import type { Theme } from '../../types/theme';
+import type { Theme } from '../../shared/types/theme';
 
 export const solarizedLight: Theme = {
   id: 'solarized-light',

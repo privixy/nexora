@@ -6,7 +6,7 @@ import {
   shouldPositionAbove,
   clamp,
   type ViewportConstraints,
-} from '../../src/utils/contextMenu';
+} from '../../../src/shared/lib/contextMenu';
 
 describe('contextMenu utils', () => {
   describe('calculateContextMenuPosition', () => {

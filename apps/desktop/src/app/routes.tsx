@@ -1,9 +1,8 @@
 import type { ComponentProps } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { MainLayout } from "../components/layout/MainLayout";
-import { EditorErrorBoundary } from "../components/ui/EditorErrorBoundary";
+import { MainLayout } from "./MainLayout";
 import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
-import { EditorPage, EditorSchemaDiagramPage, ResultsWindowPage } from "../features/editor";
+import { EditorErrorBoundary, EditorPage, EditorSchemaDiagramPage, ResultsWindowPage } from "../features/editor";
 import { JsonViewerPage } from "../features/data-grid";
 import { McpPage } from "../features/mcp";
 import {

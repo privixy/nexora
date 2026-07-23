@@ -1,4 +1,4 @@
-import { quoteTableRef } from "../../../utils/identifiers";
+import { quoteTableRef } from "../../../shared/lib/identifiers";
 
 export interface NewConsoleSpec {
   sql: string;

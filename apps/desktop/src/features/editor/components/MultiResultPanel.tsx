@@ -26,8 +26,8 @@ import clsx from "clsx";
 import { queryGateway } from "../../../platform/tauri/queryGateway";
 import { ResultEntryContent } from "../../../components/ui/ResultEntryContent";
 import { StackedResultItem } from "../../../components/ui/StackedResultItem";
-import { ContextMenu } from "../../../components/ui/ContextMenu";
-import { formatDuration } from "../../../utils/formatTime";
+import { ContextMenu } from "../../../shared/ui/ContextMenu";
+import { formatDuration } from "../../../shared/lib/formatTime";
 import { getTabScrollState } from "../lib/tabScroll";
 import {
   findActiveEntry,

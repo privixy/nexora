@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "../../data-grid";
-import { ErrorDisplay } from "../../../components/ui/ErrorDisplay";
+import { ErrorDisplay } from "../../../shared/ui/ErrorDisplay";
 import type { QueryResult } from "../../../types/editor";
 import type { CellChartConfig } from "../../../types/notebook";
 import { canRenderChart, buildDefaultChartConfig } from "../lib/notebookChart";

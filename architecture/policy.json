@@ -33,12 +33,11 @@
   ],
   "frontendTestOwners": {
     "apps/desktop/tests/components/SlotAnchor.test.tsx": [
-      "apps/desktop/src/components/ui/SlotAnchor.tsx",
-      "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+      "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+      "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
       "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
       "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
-      "apps/desktop/src/features/settings/state/SettingsContext.ts",
-      "apps/desktop/src/types/pluginSlots.ts"
+      "apps/desktop/src/features/settings/state/SettingsContext.ts"
     ],
     "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
       "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx"
@@ -58,7 +57,6 @@
       "apps/desktop/src/features/editor/hooks/useTableMetadata.ts"
     ],
     "apps/desktop/tests/utils/minimax.test.ts": [
-      "apps/desktop/src/utils/settings.ts",
       "apps/desktop/src/features/settings/lib/settingsUI.ts",
       "apps/desktop/src/features/settings/state/SettingsContext.ts"
     ],
@@ -76,8 +74,7 @@
       "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx",
       "apps/desktop/src/features/schema/components/modals/SchemaModal.tsx",
       "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
-      "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
-      "apps/desktop/src/hooks/useDataTypes.ts"
+      "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx"
     ],
     "apps/desktop/tests/features/settings/publicApi.test.ts": [
       "apps/desktop/src/features/settings/index.ts"
@@ -158,116 +155,228 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../schema",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/settings/hooks/useTheme",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../plugins",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/explorer/components/NavItem",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../connections",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/connections/components/sidebar/OpenConnectionItem",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../visual-explain",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/connections/components/sidebar/ConnectionGroupItem",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../data-grid",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/connections/hooks/useConnectionManager",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/pages/EditorPage.tsx",
-        "importTarget": "../../ai",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/connections/hooks/useOpenConnectionInNewWindow",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/hooks/useReferencedRecord.ts",
-        "importTarget": "../../schema",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/connections/lib/connectionLayout",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/lib/editorContext.ts",
-        "importTarget": "../../plugins",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/Sidebar.tsx",
+        "importTarget": "../features/plugins/hooks/useDrivers",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/lib/sql.ts",
-        "importTarget": "../../visual-explain",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
+        "importTarget": "../features/plugins/hooks/useDrivers",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/hooks/useSqlAutocompleteRegistration.ts",
-        "importTarget": "../../connections",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
+        "importTarget": "../features/connections/lib/driverUI",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/hooks/useSqlAutocompleteRegistration.ts",
-        "importTarget": "../../plugins",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
+        "importTarget": "../features/connections/lib/connectionLayout",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx",
-        "importTarget": "../../connections",
-        "owner": "editor",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/app/shell/PanelDatabaseProvider.tsx",
+        "importTarget": "../../features/connections/state/DatabaseContext",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/plugins/contracts.ts",
-        "importTarget": "../editor",
-        "owner": "plugins-core",
-        "reason": "Existing public-root dependency retained until feature contract extraction",
-        "removeByTask": 40
+        "path": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
+        "importTarget": "../../../app/language",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx",
-        "importTarget": "../../../editor",
-        "owner": "schema",
-        "reason": "Published editor UI dependency retained until runtime editor component injection",
-        "removeByTask": 40
+        "path": "apps/desktop/src/features/plugins/components/PluginsTab.tsx",
+        "importTarget": "../../../app/config/version",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx",
-        "importTarget": "../../../editor",
-        "owner": "schema",
-        "reason": "Published editor UI dependency retained until runtime editor component injection",
-        "removeByTask": 40
+        "path": "apps/desktop/src/features/settings/components/InfoTab.tsx",
+        "importTarget": "../../../app/config/version",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       },
       {
-        "path": "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx",
-        "importTarget": "../../../editor",
-        "owner": "connections",
-        "reason": "Published editor UI dependency retained until runtime editor component injection",
-        "removeByTask": 40
+        "path": "apps/desktop/src/features/settings/components/LocalizationTab.tsx",
+        "importTarget": "../../../app/config",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/features/settings/contracts.ts",
+        "importTarget": "../../app/config",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/features/settings/state/SettingsProvider.tsx",
+        "importTarget": "../../../app/config",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/features/visual-explain/components/visual-explain/ExplainAiAnalysis.tsx",
+        "importTarget": "../../../../app/language",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/hooks/useAlert.ts",
+        "importTarget": "../../app/AlertContext",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/hooks/useConnectionLayout.ts",
+        "importTarget": "../../features/connections/lib/connectionLayout",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/hooks/useConnectionLayoutContext.ts",
+        "importTarget": "../../app/ConnectionLayoutContext",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/lib/clipboard.ts",
+        "importTarget": "../../features/data-grid/lib/dataGrid",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/types/explain.ts",
+        "importTarget": "../../features/visual-explain",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/types/sidebar.ts",
+        "importTarget": "../../features/explorer",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/AlertModal.tsx",
+        "importTarget": "../../app/AlertContext",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/CellCodeEditor.tsx",
+        "importTarget": "../../features/settings/hooks/useEditorTheme",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/CellDiffEditor.tsx",
+        "importTarget": "../../features/settings/hooks/useEditorTheme",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
+        "importTarget": "../../features/settings/hooks/useEditorTheme",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
+        "importTarget": "../../features/connections/lib/k8s",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+        "importTarget": "../../features/plugins/state/PluginSlotContext",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
+      },
+      {
+        "path": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
+        "importTarget": "../../features/connections/components/SshConnectionsManager",
+        "owner": "legacy",
+        "reason": "Existing dependency graph retained after path-only ownership normalization",
+        "removeByTask": 41
       }
     ],
     "directTauriExceptionsFile": "architecture/frontend-tauri-exceptions.json",
@@ -604,7 +713,6 @@
     "apps/desktop/src/features/explorer/components/QuickNavigatorModal.tsx": 530,
     "apps/desktop/src/features/explorer/components/sidebar/SidebarDatabaseItem.tsx": 549,
     "apps/desktop/tests/features/explorer/components/ExplorerSidebar.test.tsx": 603,
-    "apps/desktop/src/components/modals/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/features/plugins/components/PluginsTab.tsx": 1316,
     "apps/desktop/src/features/editor/components/MultiResultPanel.tsx": 599,
     "apps/desktop/src/features/editor/query-builder/VisualQueryBuilder.tsx": 713,
@@ -630,12 +738,13 @@
     "apps/desktop/src/features/data-grid/components/DataGrid.tsx": 1261,
     "apps/desktop/src/features/data-grid/components/DataGridRow.tsx": 770,
     "apps/desktop/tests/features/data-grid/lib/dataGrid.test.ts": 689,
-    "apps/desktop/src/components/ui/TableToolbar.tsx": 684,
     "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx": 664,
     "apps/desktop/tests/features/editor/lib/editor.test.ts": 1019,
     "apps/desktop/tests/features/editor/lib/multiResult.test.ts": 527,
     "apps/desktop/tests/features/editor/query-builder/visualQuery.test.ts": 747,
     "apps/desktop/tests/features/editor/lib/sqlSplitter/splitter.test.ts": 629,
-    "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 566
+    "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 566,
+    "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx": 601,
+    "apps/desktop/src/components/ui/TableToolbar.tsx": 684
   }
 }

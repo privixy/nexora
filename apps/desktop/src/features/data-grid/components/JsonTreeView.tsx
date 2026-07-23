@@ -10,7 +10,7 @@ import {
   type Theme as JerTheme,
 } from "json-edit-react";
 import { ThemeContext } from "../../settings";
-import type { Theme } from "../../../types/theme";
+import type { Theme } from "../../../shared/types/theme";
 
 export interface JsonTreeViewProps {
   value: unknown;

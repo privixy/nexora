@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { settingsGateway } from "../../../platform/tauri/settingsGateway";
 import { listenTauri } from "../../../platform/tauri";
 import { UpdateContext, type UpdateCheckResult } from "./UpdateContext";
-import { toErrorMessage } from "../../../utils/errors";
+import { toErrorMessage } from "../../../shared/lib/errors";
 
 export const UpdateProvider = ({ children }: { children: ReactNode }) => {
   const [updateInfo, setUpdateInfo] = useState<UpdateCheckResult | null>(null);

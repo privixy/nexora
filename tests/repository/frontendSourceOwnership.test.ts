@@ -50,8 +50,8 @@ describe("frontend source ownership", () => {
   });
 
   it("freezes the authoritative source inventory", () => {
-    expect(sourceOwners).toHaveLength(438);
-    expect(hash(sourceOwners)).toBe("476203c2128c4303c0693a327af870cfdd6b32191a41a9dcd3934fc9813b373c");
+    expect(sourceOwners).toHaveLength(501);
+    expect(hash(sourceOwners)).toBe("4eabce7281a98c6857c048f85252ec7e2142a22d3cf8c29c12a691871ce37d94");
   });
 
   it("uses explicit rows instead of generated ownership rules", () => {
@@ -62,27 +62,25 @@ describe("frontend source ownership", () => {
   it.each([
     ["apps/desktop/src/app/providers.tsx", "app", "apps/desktop/src/app/providers.tsx", 4],
     ["apps/desktop/src/app/routes.tsx", "app", "apps/desktop/src/app/routes.tsx", 5],
-    ["apps/desktop/src/components/modals/NewConnectionModal.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx", 11],
-    ["apps/desktop/src/components/modals/NewConnectionModal/AppearanceSection.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx", 11],
-    ["apps/desktop/src/components/modals/TriggerEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx", 10],
-    ["apps/desktop/src/components/modals/ViewEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx", 10],
-    ["apps/desktop/src/components/modals/RunRoutineModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx", 10],
-    ["apps/desktop/src/components/connections/ActionButtons.tsx", "connections", "apps/desktop/src/features/connections/components/list/ActionButtons.tsx", 11],
-    ["apps/desktop/src/components/layout/sidebar/ConnectionGroupFolder.tsx", "connections", "apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx", 11],
-    ["apps/desktop/src/config/links.ts", "app", "apps/desktop/src/app/config/links.ts", 40],
+    ["apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx", 11],
+    ["apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx", "connections", "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx", 11],
+    ["apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/TriggerEditorModal.tsx", 10],
+    ["apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/ViewEditorModal.tsx", 10],
+    ["apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx", 10],
+    ["apps/desktop/src/features/connections/components/list/ActionButtons.tsx", "connections", "apps/desktop/src/features/connections/components/list/ActionButtons.tsx", 11],
+    ["apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx", "connections", "apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx", 11],
+    ["apps/desktop/src/app/config/links.ts", "app", "apps/desktop/src/app/config/links.ts", 40],
   ])("matches plan ownership for %s", (source, owner, destination, moveTask) => {
     expect(sourceOwners.find((row) => row.source === source)).toEqual({ source, owner, destination, moveTask });
   });
 
-  it("resolves a row from source before its move and destination after its move", () => {
-    const row = sourceOwners.find(({ source }) => source === "apps/desktop/src/config/links.ts");
+  it("records completed moves at their final destinations", () => {
+    const row = sourceOwners.find(({ source }) => source === "apps/desktop/src/app/config/links.ts");
     expect(row).toEqual({
-      source: "apps/desktop/src/config/links.ts",
+      source: "apps/desktop/src/app/config/links.ts",
       owner: "app",
       destination: "apps/desktop/src/app/config/links.ts",
       moveTask: 40,
     });
-    expect([row!.source, row!.destination]).toContain(row!.source);
-    expect([row!.source, row!.destination]).toContain(row!.destination);
   });
 });

@@ -18,10 +18,10 @@ import {
   createEmptyFilter,
 } from "../../utils/filterBar";
 import type { StructuredFilter } from "../../utils/filterBar";
-import { formatSqlIdentifier } from "../../utils/identifiers";
+import { formatSqlIdentifier } from "../../shared/lib/identifiers";
 import { formatSortClause } from "../../utils/tableToolbar";
 import { FilterRow } from "./FilterRow";
-import { SlotAnchor } from "./SlotAnchor";
+import { SlotAnchor } from "../../shared/ui/SlotAnchor";
 import { useDatabase } from "../../features/connections";
 
 interface TableToolbarProps {

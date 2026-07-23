@@ -10,7 +10,7 @@ import {
   supportsTruncateTable,
   findDriverManifest,
   getCapabilitiesForDriver,
-} from '../../src/utils/driverCapabilities';
+} from '../../../src/shared/lib/driverCapabilities';
 import type { DriverCapabilities, PluginManifest } from '../../src/types/plugins';
 
 const makeCapabilities = (overrides: Partial<DriverCapabilities> = {}): DriverCapabilities => ({

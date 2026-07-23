@@ -1,4 +1,4 @@
-import type { ClipboardFormat } from '../../../utils/clipboardParser';
+import type { ClipboardFormat } from '../../../shared/lib/clipboardParser';
 
 const FORMAT_LABELS: Record<ClipboardFormat, string> = {
   tsv: 'TSV (Excel/Sheets)',

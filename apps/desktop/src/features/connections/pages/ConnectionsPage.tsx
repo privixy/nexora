@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NewConnectionModal } from "../components/NewConnectionModal/NewConnectionModal";
-import { ConfirmModal } from "../../../components/modals/ConfirmModal";
+import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import {
   ExportConnectionsModal,
   type ExportMode,
@@ -35,17 +35,17 @@ import { useDatabase } from "../hooks/useDatabase";
 import { useDrivers } from "../../plugins";
 import { useSettings } from "../../settings";
 import clsx from "clsx";
-import { ContextMenu } from "../../../components/ui/ContextMenu";
+import { ContextMenu } from "../../../shared/ui/ContextMenu";
 import type { SavedConnection } from "..";
 import { flattenGroupTree } from "../lib/groupTree";
-import { toErrorMessage } from "../../../utils/errors";
-import { fuzzyFilter } from "../../../utils/fuzzy";
+import { toErrorMessage } from "../../../shared/lib/errors";
+import { fuzzyFilter } from "../../../shared/lib/fuzzy";
 import { useOpenConnectionInNewWindow } from "../hooks/useOpenConnectionInNewWindow";
 import { GroupHeader } from "../components/list/GroupHeader";
 import { ConnectionCard } from "../components/list/ConnectionCard";
 import { ConnectionListItem } from "../components/list/ConnectionListItem";
 import { ConnectionErrorBanner } from "../components/ConnectionErrorBanner";
-import { BetaBadge } from "../../../components/ui/BetaBadge";
+import { BetaBadge } from "../../../shared/ui/BetaBadge";
 
 let autoConnectAttempted = false;
 

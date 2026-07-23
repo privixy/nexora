@@ -17,8 +17,8 @@ import { fileGateway } from "../../../../platform/tauri/fileGateway";
 const { save, open } = dialogGateway;
 const { writeTextFile, readTextFile } = fileGateway;
 import { useSettings } from "../../../settings";
-import { useAlert } from "../../../../hooks/useAlert";
-import { formatHistoryTime } from "../../../../utils/dateGroups";
+import { useAlert } from "../../../../shared/hooks/useAlert";
+import { formatHistoryTime } from "../../../../shared/lib/dateGroups";
 import {
   listNotebooks,
   loadNotebook,
@@ -28,8 +28,8 @@ import {
   deserializeNotebook,
   exportNotebookToHtml,
 } from "../../../notebooks";
-import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
-import { ContextMenu, type ContextMenuItem } from "../../../../components/ui/ContextMenu";
+import { ConfirmModal } from "../../../../shared/ui/ConfirmModal";
+import { ContextMenu, type ContextMenuItem } from "../../../../shared/ui/ContextMenu";
 import type { NotebookMetadata } from "../../../../types/notebook";
 
 interface NotebooksSectionProps {

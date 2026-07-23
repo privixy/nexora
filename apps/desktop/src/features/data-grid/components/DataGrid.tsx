@@ -8,7 +8,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { recordGateway } from "../../../platform/tauri/recordGateway";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import {
   USE_DEFAULT_SENTINEL,
   formatCellValue,
@@ -30,7 +30,7 @@ import {
 } from "../../../utils/dateInput";
 import { RowEditorSidebar } from "./RowEditorSidebar";
 import { useDatabase } from "../../connections";
-import { getSelectedRows, copyTextToClipboard } from "../../../utils/clipboard";
+import { getSelectedRows, copyTextToClipboard } from "../../../shared/lib/clipboard";
 import type {
   PendingInsertion,
   TableColumn,

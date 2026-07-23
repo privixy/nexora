@@ -23,9 +23,9 @@ import {
   type SshConnection,
 } from "../lib/ssh";
 import type { SavedConnection } from "..";
-import { toErrorMessage } from "../../../utils/errors";
-import { ConfirmModal } from "../../../components/modals/ConfirmModal";
-import { Select } from "../../../components/ui/Select";
+import { toErrorMessage } from "../../../shared/lib/errors";
+import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
+import { Select } from "../../../shared/ui/Select";
 import clsx from "clsx";
 
 const InputClass =

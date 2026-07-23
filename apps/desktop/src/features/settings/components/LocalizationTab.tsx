@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../hooks/useSettings";
-import { SUPPORTED_LANGUAGES, type AppLanguage } from "../../../i18n/config";
+import { SUPPORTED_LANGUAGES, type AppLanguage } from "../../../app/config";
 import { SettingSection, SettingRow } from "./SettingControls";
-import { Select } from "../../../components/ui/Select";
+import { Select } from "../../../shared/ui/Select";
 
 /** All IANA timezone names supported by the runtime, or [] if unavailable. */
 function supportedTimezones(): string[] {

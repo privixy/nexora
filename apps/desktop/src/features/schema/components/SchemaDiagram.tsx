@@ -17,7 +17,7 @@ import dagre from "dagre";
 import { SchemaTableNodeComponent } from "./SchemaTableNode";
 import { Loader2, ArrowLeftRight, ArrowUpDown, Maximize2, Focus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ContextMenu } from "../../../components/ui/ContextMenu";
+import { ContextMenu } from "../../../shared/ui/ContextMenu";
 import { useSearchParams } from "react-router-dom";
 import { useSettings } from "../../settings";
 import { DEFAULT_SETTINGS } from "../../settings";

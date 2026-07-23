@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { X, Download, Loader2, Lock, EyeOff, FileWarning } from "lucide-react";
-import { PasswordInput } from "../../../components/ui/PasswordInput";
+import { PasswordInput } from "../../../shared/ui/PasswordInput";
 
 export type ExportMode = "encrypted" | "noSecrets" | "plaintext";
 

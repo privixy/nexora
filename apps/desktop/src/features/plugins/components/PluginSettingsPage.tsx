@@ -7,8 +7,8 @@ import { FolderOpen, Check, RotateCcw } from "lucide-react";
 import { SettingSection, SettingRow, useSettings } from "../../settings";
 import { findConnectionsForDrivers, useDatabase } from "../../connections";
 import { useDrivers } from "../hooks/useDrivers";
-import { Select } from "../../../components/ui/Select";
-import { SlotAnchor } from "../../../components/ui/SlotAnchor";
+import { Select } from "../../../shared/ui/Select";
+import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
 import {
   resolvePluginConfig,
   getDisplayInterpreter,

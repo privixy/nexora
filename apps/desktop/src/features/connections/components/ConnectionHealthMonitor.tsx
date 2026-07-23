@@ -2,7 +2,7 @@ import { useEffect, useCallback } from "react";
 import { listenTauri } from "../../../platform/tauri/events";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 
 /**
  * Headless component that listens for backend connection-health-failed events

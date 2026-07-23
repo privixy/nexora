@@ -8,7 +8,7 @@ import {
   clamp,
   type DateInputMode,
   type ParsedDateTime,
-} from '../../src/utils/dateInput';
+} from '../../../src/shared/lib/dateInput';
 
 describe('dateInput utils', () => {
   // ---------------------------------------------------------------------------

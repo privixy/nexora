@@ -5,9 +5,9 @@ import {X, Loader2, Copy, Check, FileCode, List, Table2, PenLine, Trash2, Play} 
 import { queryGateway } from "../../platform/tauri/queryGateway";
 import { useNavigate } from "react-router-dom";
 import { useDatabase } from "../../features/connections";
-import { Modal } from "../ui/Modal";
+import { Modal } from "../../shared/ui/Modal";
 import { SqlPreview } from "../ui/SqlPreview";
-import { useAlert } from "../../hooks/useAlert";
+import { useAlert } from "../../shared/hooks/useAlert";
 import {
   generateCreateTableSQL,
   type TableColumn,

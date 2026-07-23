@@ -4,7 +4,7 @@ import { Check, Plus, Minus } from "lucide-react";
 import type { TableColumn } from "../../types/editor";
 import { getOperatorsForType } from "../../utils/filterBar";
 import type { StructuredFilter, FilterOperator } from "../../utils/filterBar";
-import { StyledSelect } from "./StyledSelect";
+import { StyledSelect } from "../../shared/ui/StyledSelect";
 
 export interface FilterRowProps {
   filter: StructuredFilter;

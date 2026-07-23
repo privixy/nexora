@@ -4,8 +4,8 @@ import MonacoEditor, { type BeforeMount } from '@monaco-editor/react';
 import { useTranslation } from 'react-i18next';
 import { useEditorTheme } from '../../../settings';
 import { loadMonacoTheme } from '../../../../themes/themeUtils';
-import { Modal } from '../../../../components/ui/Modal';
-import { Select } from '../../../../components/ui/Select';
+import { Modal } from '../../../../shared/ui/Modal';
+import { Select } from '../../../../shared/ui/Select';
 
 interface QueryModalProps {
   isOpen: boolean;

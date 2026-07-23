@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import type { ConnectionStatus } from "../../hooks/useConnectionManager";
 import { getStatusDotClass } from "../../lib/connectionManager";
 import { canActivateSplit } from "../../lib/connectionLayout";
-import { ContextMenu } from "../../../../components/ui/ContextMenu";
+import { ContextMenu } from "../../../../shared/ui/ContextMenu";
 import type { PluginManifest } from "../../../../types/plugins";
 import { getConnectionAccent, getConnectionIcon } from "../../lib/driverUI";
 import { useDatabase } from "../../hooks/useDatabase";

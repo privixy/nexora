@@ -19,7 +19,7 @@ vi.mock("../../../../src/features/connections/hooks/useDatabase", () => ({
 
 // The real Select is portal/ref-heavy; these tests drive the modal via the
 // default resolutions, so a no-op stand-in is enough.
-vi.mock("../../../../src/components/ui/Select", () => ({
+vi.mock("../../../../src/shared/ui/Select", () => ({
   Select: () => null,
 }));
 

@@ -63,13 +63,13 @@ import { useDatabase } from "../../connections";
 import { useSqlAutocompleteRegistration } from "../../editor";
 import { isMultiDatabaseCapable } from "../../plugins";
 import { useSettings } from "../../settings";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import {
   useDangerousQueryGuard,
   DANGEROUS_QUERY_I18N,
 } from "../../editor";
-import { ConfirmModal } from "../../../components/modals/ConfirmModal";
+import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import { NotebookToolbar } from "./NotebookToolbar";
 import { NotebookHistoryPanel } from "./NotebookHistoryPanel";
 import { NotebookCellWrapper } from "./NotebookCellWrapper";

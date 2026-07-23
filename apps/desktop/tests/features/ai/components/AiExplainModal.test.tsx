@@ -6,7 +6,7 @@ import { AiExplainModal } from '../../../../src/features/ai/components/AiExplain
 let settings: Record<string, unknown>;
 vi.mock('../../../../src/features/settings/hooks/useSettings', () => ({ useSettings: () => ({ settings }) }));
 vi.mock('../../../../src/features/settings/hooks/useEditorTheme', () => ({ useEditorTheme: () => ({ id: 'dark' }) }));
-vi.mock('../../../../src/components/ui/Modal', () => ({
+vi.mock('../../../../src/shared/ui/Modal', () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? <div>{children}</div> : null,
 }));
 vi.mock('@monaco-editor/react', () => ({ default: () => <div data-testid="editor" /> }));

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
 import clsx from "clsx";
 import type { TriggerInfo } from "../../../connections";
-import type { ContextMenuData } from "../../../../types/sidebar";
+import type { ContextMenuData } from "../../../../shared/types/sidebar";
 
 interface SidebarTriggerItemProps {
   trigger: TriggerInfo;

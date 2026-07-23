@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Database, Unlink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useConnectionLayoutContext } from '../../../../hooks/useConnectionLayoutContext';
-import { ContextMenu } from '../../../../components/ui/ContextMenu';
+import { useConnectionLayoutContext } from '../../../../shared/hooks/useConnectionLayoutContext';
+import { ContextMenu } from '../../../../shared/ui/ContextMenu';
 import type { ConnectionStatus } from '../../hooks/useConnectionManager';
 
 interface Props {

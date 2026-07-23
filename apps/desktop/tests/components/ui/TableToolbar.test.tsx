@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { TableToolbar } from '../../../src/components/ui/TableToolbar';
+import { TableToolbar } from '../../../src/shared/ui/TableToolbar';
 import { useDatabase } from '../../../src/features/connections/hooks/useDatabase';
 
 vi.mock('../../../src/features/connections/hooks/useDatabase', () => ({

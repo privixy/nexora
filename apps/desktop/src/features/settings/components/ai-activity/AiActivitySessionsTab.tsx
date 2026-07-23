@@ -17,7 +17,7 @@ import {
   useAiSessionEvents,
   useAiSessions,
 } from "../../hooks/useAiActivity";
-import { useAlert } from "../../../../hooks/useAlert";
+import { useAlert } from "../../../../shared/hooks/useAlert";
 import { useSettings } from "../../hooks/useSettings";
 import {
   defaultExportFilename,
@@ -33,7 +33,7 @@ import {
 } from "../../lib/aiActivity";
 import type { AiSessionSummary } from "../../contracts/aiActivity";
 import { StatusBadge } from "./StatusBadge";
-import { Select } from "../../../../components/ui/Select";
+import { Select } from "../../../../shared/ui/Select";
 
 export function AiActivitySessionsTab() {
   const { t } = useTranslation();

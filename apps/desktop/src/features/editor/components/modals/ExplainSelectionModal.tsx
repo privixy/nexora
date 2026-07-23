@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Network } from 'lucide-react';
-import { Modal } from '../../../../components/ui/Modal';
+import { Modal } from '../../../../shared/ui/Modal';
 import { statementLabel } from '../../lib/sql';
 
 interface ExplainSelectionModalProps {

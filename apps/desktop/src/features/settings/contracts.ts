@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import type { AppLanguage } from "../../i18n/config";
-import type { ExplainPlan } from "../../types/explain";
+import type { AppLanguage } from "../../app/config";
+import type { ExplainPlan } from "../../shared/types/explain";
 
 export type { AppLanguage };
 export type CopyFormat = "csv" | "json" | "sql-insert";

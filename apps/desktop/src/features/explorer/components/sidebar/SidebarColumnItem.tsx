@@ -5,12 +5,12 @@ import { dialogGateway } from "../../../../platform/tauri/dialogGateway";
 
 const invoke = dataTransferGateway.invoke;
 const { ask } = dialogGateway;
-import { useAlert } from "../../../../hooks/useAlert";
+import { useAlert } from "../../../../shared/hooks/useAlert";
 import { Key, Columns, Edit, Copy, Trash2 } from "lucide-react";
 import clsx from "clsx";
-import { ContextMenu } from "../../../../components/ui/ContextMenu";
+import { ContextMenu } from "../../../../shared/ui/ContextMenu";
 import type { TableColumn } from "../../../../types/schema";
-import { quoteIdentifier, quoteTableRef } from "../../../../utils/identifiers";
+import { quoteIdentifier, quoteTableRef } from "../../../../shared/lib/identifiers";
 
 interface SidebarColumnItemProps {
   column: TableColumn;

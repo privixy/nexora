@@ -8,7 +8,7 @@ import {
   generateWherePlaceholder,
   generateOrderByPlaceholder,
   formatSortClause,
-} from '../../src/utils/tableToolbar';
+} from '../../../src/shared/lib/tableToolbar';
 
 describe('tableToolbar utils', () => {
   describe('haveToolbarValuesChanged', () => {

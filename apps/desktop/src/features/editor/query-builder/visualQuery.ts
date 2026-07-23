@@ -3,7 +3,7 @@
  * Pure functions for generating SQL from visual query state
  */
 
-import { formatSqlIdentifier } from "../../../utils/identifiers";
+import { formatSqlIdentifier } from "../../../shared/lib/identifiers";
 
 export interface TableNodeData {
   label: string;

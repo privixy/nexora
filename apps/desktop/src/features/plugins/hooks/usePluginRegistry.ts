@@ -2,7 +2,7 @@ import { pluginGateway } from "../../../platform/tauri/pluginGateway";
 import { useCallback, useEffect, useState } from "react";
 
 import type { RegistryPluginWithStatus } from "../contracts";
-import { toErrorMessage } from "../../../utils/errors";
+import { toErrorMessage } from "../../../shared/lib/errors";
 
 export function usePluginRegistry(): {
   plugins: RegistryPluginWithStatus[];

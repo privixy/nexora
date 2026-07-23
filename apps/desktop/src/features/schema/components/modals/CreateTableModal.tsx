@@ -5,8 +5,8 @@ import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useDatabase } from '../../../connections';
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDataTypes } from '../../../../hooks/useDataTypes';
-import { Modal } from '../../../../components/ui/Modal';
-import { Select } from '../../../../components/ui/Select';
+import { Modal } from '../../../../shared/ui/Modal';
+import { Select } from '../../../../shared/ui/Select';
 import { getRequiredExtensions } from '../../../../utils/columnTypes';
 import { resolveCreateTableSchema } from '../../lib/createTable';
 

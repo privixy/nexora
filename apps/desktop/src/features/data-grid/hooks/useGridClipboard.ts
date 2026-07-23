@@ -6,7 +6,7 @@ import {
   rowsToCSVWithHeaders,
   rowsToJSON,
   rowsToSqlInsert,
-} from "../../../utils/clipboard";
+} from "../../../shared/lib/clipboard";
 
 interface UseGridClipboardOptions {
   columns: string[];

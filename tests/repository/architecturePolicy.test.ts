@@ -107,12 +107,11 @@ describe("architecture policy", () => {
     ]);
     expect(policy.frontendTestOwners).toMatchObject({
       "apps/desktop/tests/components/SlotAnchor.test.tsx": [
-        "apps/desktop/src/components/ui/SlotAnchor.tsx",
-        "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+        "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+        "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
       "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
       "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
-      "apps/desktop/src/features/settings/state/SettingsContext.ts",
-        "apps/desktop/src/types/pluginSlots.ts",
+        "apps/desktop/src/features/settings/state/SettingsContext.ts",
       ],
       "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
         "apps/desktop/src/features/data-grid/index.ts",
@@ -131,14 +130,13 @@ describe("architecture policy", () => {
         "apps/desktop/src/features/connections/hooks/useDatabase.ts",
       ],
       "apps/desktop/tests/utils/minimax.test.ts": [
-        "apps/desktop/src/utils/settings.ts",
         "apps/desktop/src/features/settings/lib/settingsUI.ts",
         "apps/desktop/src/features/settings/state/SettingsContext.ts",
       ],
       "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
-        "apps/desktop/src/utils/sqlSplitter/index.ts",
-        "apps/desktop/src/utils/sqlSplitter/splitter.ts",
-        "apps/desktop/src/utils/sqlSplitter/tokenizer.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/index.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/splitter.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/tokenizer.ts",
       ],
     });
     expect(policy.repositoryTestImportAliases).toEqual({ "@": "apps/desktop/src" });
@@ -171,7 +169,7 @@ describe("architecture policy", () => {
     });
     expect(policy.allowedWorkspaceDependencies["@nexora/plugin-api"]).toEqual([]);
     expect(
-      policy.fileSizeBaselines["apps/desktop/src/pages/Editor.tsx"],
+      policy.fileSizeBaselines["apps/desktop/src/features/editor/pages/EditorPage.tsx"],
     ).toBeGreaterThan(0);
     expect(policy.sourceRoots).toEqual([
       "apps/desktop/src",
@@ -399,7 +397,7 @@ describe("architecture policy", () => {
 
   it("audits every direct Tauri inventory row against exact characterization and platform staging", () => {
     const inventory = JSON.parse(readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8")) as object[];
-    expect(inventory).toHaveLength(103);
+    expect(inventory).toHaveLength(0);
     expect(inventory.filter((row) => (row as { removeByTask?: number }).removeByTask === 32)).toHaveLength(0);
     expect(inventory.every((row) => Object.keys(row).sort().join(",") === [
       "characterizationTest",
@@ -409,30 +407,14 @@ describe("architecture policy", () => {
       "owner",
       "removeByTask",
     ].join(","))).toBe(true);
-    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(103);
+    expect(new Set(inventory.map((row) => JSON.stringify(row))).size).toBe(0);
   });
 
-  it("keeps exact existing data-grid Tauri debt planned for Task 39", () => {
+  it("has no remaining direct Tauri inventory debt", () => {
     const inventory = JSON.parse(
       readFileSync(resolve(root, "architecture/frontend-tauri-exceptions.json"), "utf8"),
     ) as Array<Record<string, unknown>>;
-    const expectedRows = [
-      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/api/core", "apps/desktop/src/platform/tauri/queryGateway.ts"],
-      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/plugin-dialog", "apps/desktop/src/platform/tauri/dialogGateway.ts"],
-      ["apps/desktop/src/components/ui/BlobInput.tsx", "@tauri-apps/plugin-fs", "apps/desktop/src/platform/tauri/fileGateway.ts"],
-      ["apps/desktop/src/hooks/useReferencedRecord.ts", "@tauri-apps/api/core", "apps/desktop/src/platform/tauri/queryGateway.ts"],
-    ];
-
-    for (const [importer, importTarget, gatewayOrAdapter] of expectedRows) {
-      expect(inventory).toContainEqual({
-        importer,
-        importTarget,
-        owner: "data-grid",
-        characterizationTest: "apps/desktop/tests/features/data-grid/components/DataGrid.test.tsx",
-        gatewayOrAdapter,
-        removeByTask: 39,
-      });
-    }
+    expect(inventory).toEqual([]);
   });
 
   it("requires direct Tauri inventory ownership and removal task to match staging", () => {

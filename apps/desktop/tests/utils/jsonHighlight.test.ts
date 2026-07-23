@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { tokenizeJsonDisplay } from "../../src/utils/jsonHighlight";
+import { tokenizeJsonDisplay } from "../../../src/shared/lib/jsonHighlight";
 
 describe("tokenizeJsonDisplay", () => {
   it("tokenizes a flat object", () => {

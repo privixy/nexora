@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 
 import { PluginModalContext } from "./PluginModalContext";
 import type { PluginModalOptions } from "./PluginModalContext";
-import { Modal } from "../../../components/ui/Modal";
+import { Modal } from "../../../shared/ui/Modal";
 
 const SIZE_CLASSES: Record<string, string> = {
   sm: "w-[500px] h-[50vh]",

@@ -1,5 +1,5 @@
 import type { ForeignKey } from "../../../types/schema";
-import { quoteIdentifier } from "../../../utils/identifiers";
+import { quoteIdentifier } from "../../../shared/lib/identifiers";
 
 const NUMERIC_TYPE_KEYWORDS = [
   "int",

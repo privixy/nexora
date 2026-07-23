@@ -17,13 +17,13 @@ import {
   parseJsonEditorValue,
   validateJson,
 } from "../../../utils/json";
-import { CellCodeEditor } from "../../../components/ui/CellCodeEditor";
-import { CellDiffEditor } from "../../../components/ui/CellDiffEditor";
+import { CellCodeEditor } from "../../../shared/ui/CellCodeEditor";
+import { CellDiffEditor } from "../../../shared/ui/CellDiffEditor";
 import { JsonTreeView } from "./JsonTreeView";
 import {
   MIN_SIDE_BY_SIDE_WIDTH,
   useContainerWidth,
-} from "../../../hooks/useContainerWidth";
+} from "../../../shared/hooks/useContainerWidth";
 
 export type JsonInputMode = "code" | "tree" | "raw";
 

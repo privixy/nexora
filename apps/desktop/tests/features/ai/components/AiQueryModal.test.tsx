@@ -27,7 +27,7 @@ vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   }),
 }));
 
-vi.mock("../../../../src/components/ui/Modal", () => ({
+vi.mock("../../../../src/shared/ui/Modal", () => ({
   Modal: ({
     isOpen,
     children,

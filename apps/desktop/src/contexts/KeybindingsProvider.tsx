@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { settingsGateway } from "../platform/tauri/settingsGateway";
-import shortcutDefs from "../config/shortcuts.json";
+import shortcutDefs from "../app/config/shortcuts.json";
 import {
   mergeShortcuts,
   matchesEvent,

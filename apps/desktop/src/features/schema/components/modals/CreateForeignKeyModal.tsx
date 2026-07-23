@@ -5,7 +5,7 @@ import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { SqlPreview } from '../../../../components/ui/SqlPreview';
 import { useDatabase } from '../../../connections';
 import { useDrivers } from '../../../plugins';
-import { Modal } from '../../../../components/ui/Modal';
+import { Modal } from '../../../../shared/ui/Modal';
 import { supportsCreateForeignKeys, getCapabilitiesForDriver } from '../../../../utils/driverCapabilities';
 
 interface CreateForeignKeyModalProps {

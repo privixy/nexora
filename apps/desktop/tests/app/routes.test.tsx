@@ -42,7 +42,7 @@ function page(name: string): ComponentType {
   };
 }
 
-vi.mock("../../src/components/layout/MainLayout", () => ({
+vi.mock("../../src/app/MainLayout", () => ({
   MainLayout: () => <div data-testid="main-layout"><Outlet /></div>,
 }));
 vi.mock("../../src/features/connections/pages/ConnectionsPage", () => ({ Connections: page("connections") }));
@@ -74,7 +74,7 @@ vi.mock("../../src/features/visual-explain", () => ({
   VisualExplainPage: page("visual-explain"),
 }));
 vi.mock("../../src/features/data-grid", () => ({ JsonViewerPage: page("json-viewer") }));
-vi.mock("../../src/components/ui/EditorErrorBoundary", () => ({
+vi.mock("../../src/features/editor/components/EditorErrorBoundary", () => ({
   EditorErrorBoundary: ({ children }: { children: ReactNode }) => <div data-testid="editor-error-boundary">{children}</div>,
 }));
 

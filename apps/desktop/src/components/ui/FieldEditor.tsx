@@ -5,7 +5,7 @@ import { GeometryInput } from "./GeometryInput";
 import { BlobInput } from "./BlobInput";
 import { DateInput } from "./DateInput";
 import { JsonInput } from "../../features/data-grid/components/JsonInput";
-import { TextInput } from "./TextInput";
+import { TextInput } from "../../shared/ui/TextInput";
 import { isGeometricType, formatGeometricValue } from "../../utils/geometry";
 import {
   isEnumType,
@@ -20,7 +20,7 @@ import {
   isLongTextValue,
   isTextColumn,
   supportsEmptyString,
-} from "../../utils/text";
+} from "../../shared/lib/text";
 import { getDateInputMode } from "../../utils/dateInput";
 import { USE_DEFAULT_SENTINEL } from "../../features/data-grid/lib/dataGrid";
 

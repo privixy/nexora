@@ -19,7 +19,7 @@ import { dragState } from "../../../editor";
 import { areTableItemPropsEqual, getSidebarTableContext } from "../../lib/sidebarTableItem";
 import { groupIndexes } from "../../../schema";
 import type { TableColumn, ForeignKey, Index } from "../../../../types/schema";
-import type { ContextMenuData } from "../../../../types/sidebar";
+import type { ContextMenuData } from "../../../../shared/types/sidebar";
 
 interface SidebarTableItemProps {
   table: { name: string };

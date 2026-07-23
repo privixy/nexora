@@ -42,7 +42,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-vi.mock("../../../../src/components/ui/ContextMenu", () => ({
+vi.mock("../../../../src/shared/ui/ContextMenu", () => ({
   ContextMenu: ({ items }: { items: Array<{ label?: string; action?: () => void; disabled?: boolean; separator?: boolean }> }) => (
     <div data-testid="context-menu">
       {items

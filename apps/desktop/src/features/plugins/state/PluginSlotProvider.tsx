@@ -9,7 +9,7 @@ import type { PluginSlotRegistryType } from "./PluginSlotContext";
 import type { SlotContribution, SlotName, SlotContext } from "../contracts";
 import { VALID_SLOTS } from "../contracts";
 import type { PluginManifest } from "../contracts";
-import * as pluginApi from "../../../pluginApi";
+import * as pluginApi from "../lib/pluginApi";
 import { useSettings } from "../../settings";
 
 interface PluginSlotProviderProps {

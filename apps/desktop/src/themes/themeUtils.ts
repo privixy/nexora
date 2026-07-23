@@ -1,6 +1,6 @@
-import type { Theme, MonacoThemeDefinition } from "../types/theme";
+import type { Theme, MonacoThemeDefinition } from "../shared/types/theme";
 import type * as monaco from "monaco-editor";
-import { lighten } from "./colorUtils";
+import { lighten } from "../features/settings/themes/colorUtils";
 
 // Static imports for monaco-themes (copied locally for Vite compatibility)
 import MonokaiTheme from "./monaco/Monokai.json";

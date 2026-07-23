@@ -5,7 +5,7 @@ import {
   lighten,
   darken,
   generateColorScale,
-} from "../../src/themes/colorUtils";
+} from "../../../../src/features/settings/themes/colorUtils";
 import { generateMonacoTheme, applyThemeToCSS } from "../../src/themes/themeUtils";
 import type { Theme } from "../../src/types/theme";
 

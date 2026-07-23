@@ -17,7 +17,7 @@ import {
   DROPDOWN_MAX_HEIGHT,
   computeDropdownPosition,
   dropdownPositionStyle,
-} from "../../utils/dropdownPosition";
+} from "../../shared/lib/dropdownPosition";
 
 export interface EnumSetInputProps {
   /**

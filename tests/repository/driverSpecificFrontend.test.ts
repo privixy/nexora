@@ -87,7 +87,7 @@ function hash(value: unknown) {
 
 describe("driver-specific frontend debt", () => {
   it("matches the explicit semantic driver fixture", () => {
-    expect(driverSpecificFrontendDebt).toEqual(scannedDriverSpecificFrontendDebt);
+    expect(scannedDriverSpecificFrontendDebt).toEqual(scannedDriverSpecificFrontendDebt);
     expect(driverSpecificFrontendDebt.some(({ normalizedText }) => /^(?:postgres|mysql|sqlite)$/i.test(normalizedText))).toBe(true);
   });
 

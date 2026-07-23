@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowUpDown, Copy, Loader2 } from 'lucide-react';
-import { copyTextToClipboard } from '../../utils/clipboard';
+import { copyTextToClipboard } from '../../shared/lib/clipboard';
 
 interface MiniResultGridProps {
   columns: string[];

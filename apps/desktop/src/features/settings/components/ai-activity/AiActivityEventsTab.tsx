@@ -31,13 +31,13 @@ import {
   type SortDirection,
 } from "../../lib/aiActivity";
 import type { AiActivityEvent, AiEventFilter } from "../../contracts/aiActivity";
-import { useAlert } from "../../../../hooks/useAlert";
+import { useAlert } from "../../../../shared/hooks/useAlert";
 import { useSettings } from "../../hooks/useSettings";
 import { StatusBadge } from "./StatusBadge";
 import { QueryKindBadge } from "./QueryKindBadge";
 import { EventDetailModal } from "./EventDetailModal";
-import { ConfirmModal } from "../../../../components/modals/ConfirmModal";
-import { Select } from "../../../../components/ui/Select";
+import { ConfirmModal } from "../../../../shared/ui/ConfirmModal";
+import { Select } from "../../../../shared/ui/Select";
 
 interface AiActivityEventsTabProps {
   onOpenInVisualExplain?: (event: AiActivityEvent) => void;

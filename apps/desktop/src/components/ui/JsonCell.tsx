@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Braces, ChevronRight } from "lucide-react";
 import { tokenizeJsonDisplay, type JsonToken } from "../../utils/jsonHighlight";
-import { truncateCellPreview } from "../../utils/text";
+import { truncateCellPreview } from "../../shared/lib/text";
 
 interface JsonCellProps {
   value: unknown;

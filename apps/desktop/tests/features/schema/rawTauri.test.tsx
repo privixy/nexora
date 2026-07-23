@@ -47,16 +47,16 @@ vi.mock("../../../src/features/editor/components/SqlEditorWrapper", () => ({
   SqlEditorWrapper: () => null,
 }));
 
-vi.mock("../../../src/components/ui/Modal", () => ({
+vi.mock("../../../src/shared/ui/Modal", () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) =>
     isOpen ? <div>{children}</div> : null,
 }));
 
-vi.mock("../../../src/components/ui/Select", () => ({
+vi.mock("../../../src/shared/ui/Select", () => ({
   Select: () => null,
 }));
 
-vi.mock("../../../src/components/ui/SqlPreview", () => ({
+vi.mock("../../../src/shared/ui/SqlPreview", () => ({
   SqlPreview: () => null,
 }));
 

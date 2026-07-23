@@ -20,8 +20,11 @@ export function loadSourceOwners(root: string): SourceOwner[] {
 
 export function resolveOwner(rows: SourceOwner[], source: string) {
   const row = rows.find(({ source: legacy, destination }) => legacy === source || destination === source);
-  if (!row) throw new Error(`missing source owner: ${source}`);
-  return row;
+  if (row) return row;
+  const fileName = basename(source);
+  const candidates = rows.filter(({ source: current }) => basename(current) === fileName);
+  if (candidates.length === 1) return candidates[0];
+  throw new Error(`missing source owner: ${source}`);
 }
 
 function decodeStringEscapes(text: string) {

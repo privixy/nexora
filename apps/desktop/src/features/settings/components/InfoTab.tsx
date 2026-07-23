@@ -19,11 +19,11 @@ import { useSettings } from "../hooks/useSettings";
 import { useTheme } from "../hooks/useTheme";
 import { useUpdate } from "../hooks/useUpdate";
 import { useChangelog } from "../../../hooks/useChangelog";
-import { APP_VERSION } from "../../../version";
+import { APP_VERSION } from "../../../app/config/version";
 import { ROADMAP } from "../../../utils/settings";
 import { SettingRow, SettingSection, SettingToggle } from "./SettingControls";
-import { WhatsNewModal } from "../../../components/modals/WhatsNewModal";
-import { OpenSourceLibrariesModal } from "../../../components/modals/OpenSourceLibrariesModal";
+import { WhatsNewModal } from "../../../shared/ui/WhatsNewModal";
+import { OpenSourceLibrariesModal } from "../../../shared/ui/OpenSourceLibrariesModal";
 
 export function InfoTab() {
   const { t } = useTranslation();

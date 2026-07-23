@@ -13,9 +13,9 @@ vi.mock("../../src/features/editor/state/QueryHistoryProvider", () => ({ QueryHi
 vi.mock("../../src/features/editor/state/EditorProvider", () => ({ EditorProvider: function EditorProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/features/settings/state/ThemeProvider", () => ({ ThemeProvider: function ThemeProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/features/settings/state/UpdateProvider", () => ({ UpdateProvider: function UpdateProvider({ children }: { children: ReactNode }) { return children; } }));
-vi.mock("../../src/polyfills", () => ({}));
-vi.mock("../../src/i18n/config", () => ({}));
-vi.mock("../../src/index.css", () => ({}));
+vi.mock("../../src/app/polyfills", () => ({}));
+vi.mock("../../src/app/config", () => ({}));
+vi.mock("../../src/app/index.css", () => ({}));
 
 function componentName(element: ReactElement) {
   if (typeof element.type === "string") return element.type;
@@ -57,9 +57,6 @@ describe("legacy main composition root", () => {
       "ThemeProvider",
       "SettingsProvider",
       "DatabaseProvider",
-      "SavedQueriesProvider",
-      "QueryHistoryProvider",
-      "EditorProvider",
       "App",
     ]);
   });

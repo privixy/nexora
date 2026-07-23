@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { CheckCircle2, Monitor } from "lucide-react";
 import clsx from "clsx";
-import type { Theme } from "../../../types/theme";
+import type { Theme } from "../../../shared/types/theme";
 
 interface ThemePickerProps {
   value: string;

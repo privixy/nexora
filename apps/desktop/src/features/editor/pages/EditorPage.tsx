@@ -75,17 +75,17 @@ import {
 } from "../../../platform/tauri";
 import { TableToolbar } from "../../../components/ui/TableToolbar";
 import { MultiResultPanel } from "../components/MultiResultPanel";
-import { ErrorDisplay } from "../../../components/ui/ErrorDisplay";
+import { ErrorDisplay } from "../../../shared/ui/ErrorDisplay";
 import { NewRowModal } from "../../../components/modals/NewRowModal";
 import { QuerySelectionModal } from "../components/modals/QuerySelectionModal";
-import { ConfirmModal } from "../../../components/modals/ConfirmModal";
+import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 import { ExplainSelectionModal } from "../components/modals/ExplainSelectionModal";
 import { TabSwitcherModal } from "../components/modals/TabSwitcherModal";
 import { QueryModal } from "../components/modals/QueryModal";
 import { QueryParamsModal } from "../components/modals/QueryParamsModal";
 import { ErrorModal } from "../components/modals/ErrorModal";
 import { VisualQueryBuilder } from "../query-builder/VisualQueryBuilder";
-import { ContextMenu } from "../../../components/ui/ContextMenu";
+import { ContextMenu } from "../../../shared/ui/ContextMenu";
 import {
   ExportProgressModal,
   type ExportStatus,
@@ -104,7 +104,7 @@ import {
   extractQueryParams,
   interpolateQueryParams,
 } from "../lib/queryParameters";
-import { formatDuration } from "../../../utils/formatTime";
+import { formatDuration } from "../../../shared/lib/formatTime";
 import {
   buildSyncPayload,
   applyAction,
@@ -120,7 +120,7 @@ import {
 import { SqlEditorWrapper } from "../components/SqlEditorWrapper";
 import { useSqlAutocompleteRegistration } from "../hooks/useSqlAutocompleteRegistration";
 import { type OnMount, type Monaco } from "@monaco-editor/react";
-import { useAlert } from "../../../hooks/useAlert";
+import { useAlert } from "../../../shared/hooks/useAlert";
 import { useDatabase } from "../../connections";
 import { useDrivers } from "../../plugins";
 import { getConnectionAccent } from "../../connections";
@@ -128,7 +128,7 @@ import { useSavedQueries } from "..";
 import { useQueryHistory } from "..";
 import { useSettings } from "../../settings";
 import { useEditor } from "..";
-import { useConnectionLayoutContext } from "../../../hooks/useConnectionLayoutContext";
+import { useConnectionLayoutContext } from "../../../shared/hooks/useConnectionLayoutContext";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import type {
   BatchStatementResult,
@@ -139,7 +139,7 @@ import type {
   ForeignKey,
 } from "../../../types/editor";
 import { buildForeignKeyFilterClause } from "../../schema";
-import { formatSqlIdentifier } from "../../../utils/identifiers";
+import { formatSqlIdentifier } from "../../../shared/lib/identifiers";
 import { RelatedRecordsPanel } from "../../../components/ui/RelatedRecordsPanel";
 import {
   getTabScrollState,

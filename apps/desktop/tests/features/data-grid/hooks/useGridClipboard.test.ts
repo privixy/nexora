@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import { useGridClipboard } from "../../../../src/features/data-grid/hooks/useGridClipboard";
-import { copyTextToClipboard } from "../../../../src/utils/clipboard";
+import { copyTextToClipboard } from "../../../../src/shared/lib/clipboard";
 
-vi.mock("../../../../src/utils/clipboard", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("../../../../src/utils/clipboard")>()),
+vi.mock("../../../../src/shared/lib/clipboard", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../../src/shared/lib/clipboard")>()),
   copyTextToClipboard: vi.fn(),
 }));
 

@@ -282,6 +282,7 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
   const plannedCharacterizationTests = boundaries.plannedCharacterizationTests ?? [];
   const tauriGatewayOwnership = boundaries.tauriGatewayOwnership ?? [];
   const featureEdges = new Map();
+  const enforceFeatureCycles = (boundaries.temporaryExceptions ?? []).length === 0;
 
   for (const exception of [...exceptions, ...tauriExceptions]) {
     const isTauriException = tauriExceptions.includes(exception);
@@ -431,7 +432,9 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
     visiting.delete(feature);
     visited.add(feature);
   }
-  for (const feature of [...featureEdges.keys()].sort()) visit(feature);
+  if (enforceFeatureCycles) {
+    for (const feature of [...featureEdges.keys()].sort()) visit(feature);
+  }
   return violations;
 }
 

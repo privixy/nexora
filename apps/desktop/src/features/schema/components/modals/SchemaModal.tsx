@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Loader2, Key, Table2 } from 'lucide-react';
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 import { useDatabase } from '../../../connections';
-import { Modal } from '../../../../components/ui/Modal';
+import { Modal } from '../../../../shared/ui/Modal';
 
 interface TableColumn {
   name: string;

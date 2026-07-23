@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { X, Loader2, Zap, AlertCircle } from "lucide-react";
 import { schemaGateway } from "../../../../platform/tauri/schemaGateway";
 
-import { useAlert } from "../../../../hooks/useAlert";
-import { Modal } from "../../../../components/ui/Modal";
+import { useAlert } from "../../../../shared/hooks/useAlert";
+import { Modal } from "../../../../shared/ui/Modal";
 import { SqlEditorWrapper } from "../../../editor";
 import { useDatabase } from "../../../connections";
-import { quoteIdentifier } from "../../../../utils/identifiers";
+import { quoteIdentifier } from "../../../../shared/lib/identifiers";
 
 interface TriggerEditorModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import type { TableColumn } from "../types/editor";
-import { formatSqlIdentifier } from "./identifiers";
+import { formatSqlIdentifier } from "../shared/lib/identifiers";
 
 
 export type FilterOperator =

@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 import { X, Loader2, Plus } from "lucide-react";
 import { queryGateway } from "../../platform/tauri/queryGateway";
 import { useDatabase } from "../../features/connections";
-import { Modal } from "../ui/Modal";
-import { quoteTableRef } from "../../utils/identifiers";
+import { Modal } from "../../shared/ui/Modal";
+import { quoteTableRef } from "../../shared/lib/identifiers";
 import { isGeometricType } from "../../utils/geometry";
 import { GeometryInput } from "../ui/GeometryInput";
 import type { ForeignKey } from "../../types/schema";
-import { SlotAnchor } from "../ui/SlotAnchor";
+import { SlotAnchor } from "../../shared/ui/SlotAnchor";
 
 interface TableColumn {
   name: string;

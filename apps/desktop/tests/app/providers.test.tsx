@@ -27,11 +27,11 @@ const editorProviderMock = vi.hoisted(() => vi.fn());
 const aiApprovalGateMock = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({ BrowserRouter: provider("BrowserRouter") }));
-vi.mock("../../src/contexts/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
+vi.mock("../../src/app/AlertProvider", () => ({ AlertProvider: provider("AlertProvider") }));
 vi.mock("../../src/contexts/KeybindingsProvider", () => ({ KeybindingsProvider: provider("KeybindingsProvider") }));
 vi.mock("../../src/features/plugins/state/PluginSlotProvider", () => ({ PluginSlotProvider: provider("PluginSlotProvider") }));
 vi.mock("../../src/features/plugins/state/PluginModalProvider", () => ({ PluginModalProvider: provider("PluginModalProvider") }));
-vi.mock("../../src/contexts/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
+vi.mock("../../src/app/ConnectionLayoutProvider", () => ({ ConnectionLayoutProvider: provider("ConnectionLayoutProvider") }));
 vi.mock("../../src/features/editor", () => ({
   EditorProvider: ({ children, notebookAdapter }: { children: ReactNode; notebookAdapter: unknown }) => {
     editorProviderMock(notebookAdapter);
@@ -43,13 +43,13 @@ vi.mock("../../src/features/editor", () => ({
 vi.mock("../../src/features/connections/components/ConnectionHealthMonitor", () => ({
   ConnectionHealthMonitor: () => <div data-testid="connection-health-monitor" />,
 }));
-vi.mock("../../src/components/modals/UpdateNotificationModal", () => ({
+vi.mock("../../src/shared/ui/UpdateNotificationModal", () => ({
   UpdateNotificationModal: (props: ComponentProps<"div">) => {
     updateNotificationModalMock(props);
     return <div data-testid="update-modal" />;
   },
 }));
-vi.mock("../../src/components/modals/WhatsNewModal", () => ({
+vi.mock("../../src/shared/ui/WhatsNewModal", () => ({
   WhatsNewModal: (props: ComponentProps<"div">) => {
     whatsNewModalMock(props);
     return <div data-testid="whats-new-modal" />;
@@ -63,7 +63,7 @@ vi.mock("../../src/features/settings/components/AiApprovalGate", () => ({
 }));
 vi.mock("../../src/features/mcp", () => ({ mcpApprovalAttentionAdapter: { focusWindowForApproval: vi.fn() } }));
 vi.mock("../../src/features/visual-explain", () => ({ ApprovalExplainPlanView: vi.fn() }));
-vi.mock("../../src/components/modals/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
+vi.mock("../../src/shared/ui/SshAskpassGate", () => ({ SshAskpassGate: () => <div data-testid="ssh-askpass-gate" /> }));
 
 describe("AppProviders", () => {
   it("preserves provider order, children placement, global render order, and prop forwarding", () => {

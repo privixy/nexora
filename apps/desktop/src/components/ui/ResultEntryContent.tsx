@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { CheckCircle2 } from "lucide-react";
 import { DataGrid } from "../../features/data-grid";
-import { ErrorDisplay } from "./ErrorDisplay";
+import { ErrorDisplay } from "../../shared/ui/ErrorDisplay";
 import { PaginationControls } from "../../components/ui/PaginationControls";
-import { formatDuration } from "../../utils/formatTime";
+import { formatDuration } from "../../shared/lib/formatTime";
 import { getStackedGridHeight } from "../../features/editor/lib/multiResult";
 import type { QueryResultEntry } from "../../types/editor";
 

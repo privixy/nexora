@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDatabase } from './useDatabase';
 import { buildConnectionStatus, partitionConnections } from '../lib/connectionManager';
-import { toErrorMessage } from '../../../utils/errors';
+import { toErrorMessage } from '../../../shared/lib/errors';
 
 export type { ConnectionStatus } from '../lib/connectionManager';
 

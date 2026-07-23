@@ -1,8 +1,8 @@
 import { useEffect, useState, type SubmitEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Database, Loader2, X } from "lucide-react";
-import { Modal } from "../../../components/ui/Modal";
-import { toErrorMessage } from "../../../utils/errors";
+import { Modal } from "../../../shared/ui/Modal";
+import { toErrorMessage } from "../../../shared/lib/errors";
 
 interface CreateDatabaseModalProps {
   isOpen: boolean;

@@ -14,7 +14,7 @@ import {
   Cable,
 } from "lucide-react";
 import clsx from "clsx";
-import { ConfigJsonModal } from "../../../components/modals/ConfigJsonModal";
+import { ConfigJsonModal } from "../../../shared/ui/ConfigJsonModal";
 import { GeneralTab } from "../components/GeneralTab";
 import { AppearanceTab } from "../components/AppearanceTab";
 import { LocalizationTab } from "../components/LocalizationTab";

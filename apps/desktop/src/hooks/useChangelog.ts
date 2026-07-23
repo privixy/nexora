@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { type ChangelogEntry, parseChangelog } from "../utils/changelog";
-import { changelogMarkdown, versionLinks } from "../data/changelog";
+import { changelogMarkdown, versionLinks } from "../app/config/changelog";
 
 interface UseChangelogResult {
   entries: ChangelogEntry[];

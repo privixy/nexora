@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { JsonCell } from "../../../src/components/ui/JsonCell";
+import { JsonCell } from "../../../src/shared/ui/JsonCell";
 
 const setScrollDims = (scrollWidth: number, clientWidth: number) => {
   Object.defineProperty(HTMLElement.prototype, "scrollWidth", {

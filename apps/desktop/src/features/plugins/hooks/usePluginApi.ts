@@ -9,7 +9,7 @@ import { ThemeContext, SettingsContext } from "../../settings";
 import { DatabaseContext } from "../../connections";
 import { PluginModalContext } from "../state/PluginModalContext";
 import type { PluginModalOptions } from "../state/PluginModalContext";
-import { toErrorMessage } from "../../../utils/errors";
+import { toErrorMessage } from "../../../shared/lib/errors";
 
 /**
  * Hook for plugin components to execute read-only database queries.

@@ -13,7 +13,7 @@ vi.mock('@tauri-apps/api/event', () => ({
   listen: vi.fn(() => Promise.resolve(() => {})),
 }));
 
-vi.mock('../../../../src/utils/autocomplete', () => ({
+vi.mock('../../../../src/shared/lib/autocomplete', () => ({
   clearAutocompleteCache: vi.fn(),
 }));
 

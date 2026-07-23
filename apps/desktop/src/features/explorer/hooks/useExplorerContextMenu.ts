@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ContextMenuData } from "../../../types/sidebar";
+import type { ContextMenuData } from "../../../shared/types/sidebar";
 
 export interface ExplorerContextMenuState {
   x: number;

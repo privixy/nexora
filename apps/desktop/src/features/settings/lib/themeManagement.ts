@@ -1,4 +1,4 @@
-import type { Theme, ThemeSettings } from '../../../types/theme';
+import type { Theme, ThemeSettings } from '../../../shared/types/theme';
 
 export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   activeThemeId: 'nexora-dark',
