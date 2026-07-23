@@ -10,7 +10,8 @@ vi.mock('../../../../src/shared/ui/Modal', () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? <div>{children}</div> : null,
 }));
 vi.mock('@monaco-editor/react', () => ({ default: () => <div data-testid="editor" /> }));
-vi.mock('lucide-react', () => ({
+vi.mock('lucide-react', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('lucide-react')>()),
   X: () => null,
   Loader2: () => null,
   BookOpen: () => null,

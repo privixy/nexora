@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { windowGateway } from "../../../../src/platform/tauri";
+import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 
 interface CodeEditorMockProps {
   value: string;
@@ -18,7 +18,7 @@ interface TreeViewMockProps {
 const codeProps: { current: CodeEditorMockProps | null } = { current: null };
 const treeProps: { current: TreeViewMockProps | null } = { current: null };
 
-vi.mock("../../../../src/platform/tauri", () => ({
+vi.mock("../../../../src/platform/tauri/windowGateway", () => ({
   windowGateway: {
     openJsonViewer: vi.fn(),
   },

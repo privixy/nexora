@@ -22,6 +22,7 @@ const settings = vi.hoisted(() => ({}));
 const translate = vi.hoisted(() => (key: string) => key);
 
 vi.mock("react-i18next", () => ({
+  initReactI18next: { type: "3rdParty", init: vi.fn() },
   useTranslation: () => ({ t: translate }),
 }));
 
@@ -56,7 +57,7 @@ vi.mock("../../../src/shared/ui/Select", () => ({
   Select: () => null,
 }));
 
-vi.mock("../../../src/shared/ui/SqlPreview", () => ({
+vi.mock("../../../src/components/ui/SqlPreview", () => ({
   SqlPreview: () => null,
 }));
 
@@ -76,15 +77,19 @@ vi.mock("lucide-react", () => ({
   Database: () => null,
   ExternalLink: () => null,
   Eye: () => null,
+  Grid3x3: () => null,
+  Image: () => null,
   Key: () => null,
   Link: () => null,
   ListTree: () => null,
   Loader2: () => null,
   Maximize2: () => null,
+  Pipette: () => null,
   Play: () => null,
   Plus: () => null,
   Rows: () => null,
   Save: () => null,
+  Smile: () => null,
   Sparkles: () => null,
   Table2: () => null,
   Trash2: () => null,

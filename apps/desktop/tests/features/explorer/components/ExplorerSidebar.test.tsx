@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { dataTransferGateway, dialogGateway, fileGateway, listenTauri } from "../../../../src/platform/tauri";
+import { dataTransferGateway } from "../../../../src/platform/tauri/dataTransferGateway";
+import { dialogGateway } from "../../../../src/platform/tauri/dialogGateway";
+import { fileGateway } from "../../../../src/platform/tauri/fileGateway"; import { listenTauri } from "../../../../src/platform/tauri/events";
 import { MemoryRouter } from "react-router-dom";
 import { ExplorerSidebar } from "../../../../src/features/explorer/components/ExplorerSidebar";
 import { useDatabase } from "../../../../src/features/connections/hooks/useDatabase";
@@ -29,7 +31,7 @@ vi.mock("../../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../../../src/hooks/useConnectionLayoutContext", () => ({
+vi.mock("../../../../src/shared/hooks/useConnectionLayoutContext", () => ({
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
 }));
 
@@ -117,17 +119,16 @@ vi.mock("../../../../src/features/explorer/components/sidebar/SidebarSchemaItem"
   ),
 }));
 
-vi.mock("../../../../src/platform/tauri", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../../../src/platform/tauri")>();
-  return {
-    ...actual,
-    dataTransferGateway: { invoke: vi.fn() },
-    dialogGateway: { ask: vi.fn(), open: vi.fn(), save: vi.fn() },
-    fileGateway: { readTextFile: vi.fn(), writeTextFile: vi.fn() },
-    listenTauri: vi.fn(),
-  };
-});
-
+vi.mock("../../../../src/platform/tauri/dataTransferGateway", () => ({
+  dataTransferGateway: { invoke: vi.fn() },
+}));
+vi.mock("../../../../src/platform/tauri/dialogGateway", () => ({
+  dialogGateway: { ask: vi.fn(), open: vi.fn(), save: vi.fn() },
+}));
+vi.mock("../../../../src/platform/tauri/fileGateway", () => ({
+  fileGateway: { readTextFile: vi.fn(), writeTextFile: vi.fn() },
+}));
+vi.mock("../../../../src/platform/tauri/events", () => ({ listenTauri: vi.fn() }));
 const invoke = dataTransferGateway.invoke;
 const { ask, open, save } = dialogGateway;
 const { readTextFile, writeTextFile } = fileGateway;

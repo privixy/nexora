@@ -7,6 +7,7 @@ vi.mock('../../../../src/features/settings/hooks/useSettings', () => ({
   useSettings: () => ({ settings: { aiEnabled: false } }),
 }));
 vi.mock('../../../../src/features/connections', () => ({
+  getConnectionIcon: () => () => null,
   useDatabase: () => ({
     getConnectionData: () => null,
     connections: [],

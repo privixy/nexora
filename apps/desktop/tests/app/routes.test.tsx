@@ -57,6 +57,7 @@ vi.mock("../../src/features/settings", () => ({
   SshTab: page("ssh"),
 }));
 vi.mock("../../src/features/editor", () => ({
+  EditorErrorBoundary: ({ children }: { children: ReactNode }) => <div data-testid="editor-error-boundary">{children}</div>,
   EditorPage: (props: unknown) => {
     editorPageMock(props);
     return <div data-testid="selected-page">editor</div>;

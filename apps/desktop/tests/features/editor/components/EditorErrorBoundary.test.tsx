@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { EditorErrorBoundary } from "../../../src/features/editor/components/EditorErrorBoundary";
-import { EditorContext } from "../../../src/features/editor/state/EditorContext";
-import type { EditorContextType } from "../../../src/features/editor/state/EditorContext";
+import { EditorErrorBoundary } from "../../../../src/features/editor/components/EditorErrorBoundary";
+import { EditorContext } from "../../../../src/features/editor/state/EditorContext";
+import type { EditorContextType } from "../../../../src/features/editor/state/EditorContext";
 
 const HappyChild = () => <div data-testid="happy">happy editor</div>;
 

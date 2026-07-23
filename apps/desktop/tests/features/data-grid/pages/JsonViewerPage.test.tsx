@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { windowGateway } from "../../../../src/platform/tauri";
+import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 import { JsonViewerPage } from "../../../../src/features/data-grid/pages/JsonViewerPage";
 
 const close = vi.fn();
@@ -9,7 +9,7 @@ vi.mock("react-router-dom", () => ({
   useSearchParams: () => [new URLSearchParams("session=session-1")],
 }));
 
-vi.mock("../../../../src/platform/tauri", () => ({
+vi.mock("../../../../src/platform/tauri/windowGateway", () => ({
   windowGateway: {
     getCurrentWindow: vi.fn(() => ({ close })),
     getJsonViewerSession: vi.fn(),

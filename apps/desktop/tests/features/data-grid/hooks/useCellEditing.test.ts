@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { recordGateway } from "../../../../src/platform/tauri";
+import { recordGateway } from "../../../../src/platform/tauri/recordGateway";
 import { useCellEditing } from "../../../../src/features/data-grid/hooks/useCellEditing";
 
-vi.mock("../../../../src/platform/tauri", () => ({
+vi.mock("../../../../src/platform/tauri/recordGateway", () => ({
   recordGateway: {
     updateRecord: vi.fn(),
   },

@@ -91,6 +91,7 @@ describe('SchemaDiagram', () => {
     render(
       <SchemaDiagram
         connectionId="conn-1"
+        getSchema={getSchemaMock}
         refreshTrigger={0}
         database="analytics"
       />,
@@ -110,6 +111,7 @@ describe('SchemaDiagram', () => {
     render(
       <SchemaDiagram
         connectionId="conn-1"
+        getSchema={getSchemaMock}
         refreshTrigger={0}
         database="analytics"
         schema="public"
@@ -130,6 +132,7 @@ describe('SchemaDiagram', () => {
     const { rerender } = render(
       <SchemaDiagram
         connectionId="conn-1"
+        getSchema={getSchemaMock}
         refreshTrigger={0}
         database="analytics"
       />,
@@ -142,6 +145,7 @@ describe('SchemaDiagram', () => {
     rerender(
       <SchemaDiagram
         connectionId="conn-1"
+        getSchema={getSchemaMock}
         refreshTrigger={1}
         database="analytics"
       />,

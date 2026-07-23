@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { listenTauri, recordGateway, windowGateway } from "../../../../src/platform/tauri";
+import { listenTauri } from "../../../../src/platform/tauri/events";
+import { recordGateway } from "../../../../src/platform/tauri/recordGateway";
+import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 import { DataGrid } from "../../../../src/features/data-grid/components/DataGrid";
 import { TableToolbar } from "../../../../src/components/ui/TableToolbar";
 import { reconstructTableQuery } from "../../../../src/features/editor/lib/editor";
@@ -18,6 +20,7 @@ globalThis.ResizeObserver = MockResizeObserver;
 vi.mock("lucide-react", () => {
   const Icon = () => null;
   return {
+    Activity: Icon,
     ArrowUp: Icon,
     ArrowDown: Icon,
     ArrowUpDown: Icon,
@@ -34,7 +37,18 @@ vi.mock("lucide-react", () => {
     FileDigit: Icon,
     ExternalLink: Icon,
     PanelBottomOpen: Icon,
+    Settings: Icon,
+    Palette: Icon,
+    Languages: Icon,
+    ScrollText: Icon,
+    Keyboard: Icon,
+    Plug: Icon,
+    Info: Icon,
+    FileJson: Icon,
+    Shield: Icon,
+    Cable: Icon,
     Filter: Icon,
+    Layers: Icon,
     ListFilter: Icon,
     Plus: Icon,
     SlidersHorizontal: Icon,
@@ -78,12 +92,16 @@ vi.mock("../../../../src/features/connections", () => ({
   useDatabase: () => mockDatabaseContext,
 }));
 
-vi.mock("../../../../src/platform/tauri", () => ({
+vi.mock("../../../../src/platform/tauri/events", () => ({
   listenTauri: vi.fn(() => Promise.resolve(vi.fn())),
+}));
+vi.mock("../../../../src/platform/tauri/recordGateway", () => ({
   recordGateway: {
     getServerNow: vi.fn(),
     updateRecord: vi.fn(),
   },
+}));
+vi.mock("../../../../src/platform/tauri/windowGateway", () => ({
   windowGateway: {
     openJsonViewer: vi.fn(),
   },

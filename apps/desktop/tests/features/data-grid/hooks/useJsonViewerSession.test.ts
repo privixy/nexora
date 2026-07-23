@@ -1,10 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { listenTauri, windowGateway } from "../../../../src/platform/tauri";
+import { listenTauri } from "../../../../src/platform/tauri/events";
+import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 import { useJsonViewerSession } from "../../../../src/features/data-grid/hooks/useJsonViewerSession";
 
-vi.mock("../../../../src/platform/tauri", () => ({
+vi.mock("../../../../src/platform/tauri/events", () => ({
   listenTauri: vi.fn(),
+}));
+
+vi.mock("../../../../src/platform/tauri/windowGateway", () => ({
   windowGateway: {
     openJsonViewer: vi.fn(),
   },
