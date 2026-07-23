@@ -365,10 +365,7 @@
   "rustTemplateInlineTestRoots": [
     "packages/create-plugin/templates/rust-driver/src"
   ],
-  "rustTemplateInlineTestAllowlist": [
-    "packages/create-plugin/templates/rust-driver/src/utils/identifiers.rs",
-    "packages/create-plugin/templates/rust-driver/src/utils/pagination.rs"
-  ],
+  "rustTemplateInlineTestAllowlist": [],
   "rustCrateLevelTestAllowlist": [],
   "rustBackendBoundaries": {
     "sourceRoot": "apps/desktop/src-tauri/src",

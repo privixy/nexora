@@ -26,6 +26,18 @@ describe("scaffold matrix", () => {
     });
   }
 
+  it("generates sibling Rust utility tests without inline modules", () => {
+    const root = mkdtempSync(join(tmpdir(), "create-plugin-"));
+    const targetDir = join(root, "fixture-driver");
+    scaffold({ slug: "fixture-driver", displayName: "Fixture Driver", dbType: "network", quote: "\"", withUi: false, targetDir, gitInit: false, pluginApiVersion: "0.1.0", minNexoraVersion: "0.9.20" });
+    for (const utility of ["identifiers", "pagination"]) {
+      const source = readFileSync(join(targetDir, "src", "utils", `${utility}.rs`), "utf8");
+      expect(source).toContain("#[cfg(test)]\nmod tests;");
+      expect(source).not.toMatch(/#\[cfg\(test\)\][\s\S]*mod\s+\w+\s*\{/);
+      expect(readFileSync(join(targetDir, "src", "utils", utility, "tests.rs"), "utf8")).toContain("#[test]");
+    }
+  });
+
   it("preserves non-empty target rejection", () => {
     const root = mkdtempSync(join(tmpdir(), "create-plugin-"));
     writeFileSync(join(root, "occupied"), "x");
