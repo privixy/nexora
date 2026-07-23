@@ -13,10 +13,11 @@ fn rust_files(directory: &Path, files: &mut Vec<PathBuf>) {
 }
 
 #[test]
-fn command_modules_do_not_own_sql_filesystem_keychain_or_builtin_drivers() {
+fn command_modules_are_recursive_thin_adapters() {
     let source_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let commands_root = source_root.join("commands").canonicalize().unwrap();
     let mut files = Vec::new();
-    rust_files(&source_root.join("commands"), &mut files);
+    rust_files(&commands_root, &mut files);
     assert!(!files.is_empty());
 
     for file in files
@@ -24,18 +25,85 @@ fn command_modules_do_not_own_sql_filesystem_keychain_or_builtin_drivers() {
         .filter(|file| !file.to_string_lossy().contains("/commands/tests/"))
     {
         let source = fs::read_to_string(&file).unwrap();
+        let relative = file.strip_prefix(&commands_root).unwrap();
+        assert_ne!(
+            relative,
+            Path::new("shared.rs"),
+            "commands/shared.rs is a forbidden catch-all owner"
+        );
         for forbidden in [
             "sqlx::",
+            "std::fs",
+            "fs::",
+            "keychain_utils",
+            "persistence::",
+            "credential_cache",
             "crate::drivers::mysql",
             "crate::drivers::postgres",
             "crate::drivers::sqlite",
             "get_mysql_pool",
             "get_postgres_pool",
             "get_sqlite_pool",
+            "tokio::spawn",
+            "spawn_blocking",
+            ".execute_query(",
+            ".execute_batch(",
+            "drivers::registry::get_driver",
         ] {
             assert!(
                 !source.contains(forbidden),
                 "{} contains {forbidden}",
+                file.display()
+            );
+        }
+
+        for raw_sql in [
+            "SELECT ",
+            "INSERT ",
+            "UPDATE ",
+            "DELETE ",
+            "CREATE ",
+            "DROP ",
+            "ALTER ",
+            "TRUNCATE ",
+        ] {
+            assert!(
+                !source.contains(raw_sql),
+                "{} contains raw SQL marker {raw_sql}",
+                file.display()
+            );
+        }
+    }
+}
+
+#[test]
+fn command_modules_do_not_process_workflows_directly() {
+    let commands_root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("src/commands")
+        .canonicalize()
+        .unwrap();
+    let mut files = Vec::new();
+    rust_files(&commands_root, &mut files);
+
+    for file in files
+        .into_iter()
+        .filter(|file| !file.to_string_lossy().contains("/commands/tests/"))
+    {
+        let source = fs::read_to_string(&file).unwrap();
+        for forbidden in [
+            "read_to_string(",
+            "write(",
+            "read_dir(",
+            "create_dir_all(",
+            "serde_json::from_str(",
+            "serde_json::to_string_pretty(",
+            "for connection in",
+            "for statement in",
+            "while let Some(",
+        ] {
+            assert!(
+                !source.contains(forbidden),
+                "{} directly processes a workflow via {forbidden}",
                 file.display()
             );
         }
