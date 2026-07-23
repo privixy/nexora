@@ -6,8 +6,7 @@ import { PanelDatabaseProvider } from './shell/PanelDatabaseProvider';
 import { EditorPage, EditorProvider } from '../features/editor';
 import { createNotebook, editorNotebookAdapter, NotebookView, renameNotebook } from '../features/notebooks';
 import { useSplitPaneResize } from '../shared/hooks/useSplitPaneResize';
-import { useConnectionLayoutContext } from '../shared/hooks/useConnectionLayoutContext';
-import { getConnectionAccent, useDatabase, type SplitView } from '../features/connections';
+import { getConnectionAccent, useConnectionLayoutContext, useDatabase, type SplitView } from '../features/connections';
 import { useDrivers } from '../features/plugins';
 
 export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {

@@ -29,7 +29,8 @@ vi.mock("../../../../src/hooks/useAlert", () => ({
   useAlert: () => ({ showAlert: vi.fn() }),
 }));
 
-vi.mock("../../../../src/shared/hooks/useConnectionLayoutContext", () => ({
+vi.mock("../../../../src/features/connections", async (importOriginal) => ({
+  ...await importOriginal<typeof import("../../../../src/features/connections")>(),
   useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
 }));
 

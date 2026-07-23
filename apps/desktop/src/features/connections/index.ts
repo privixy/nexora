@@ -43,3 +43,7 @@ export { isConnectionGrouped } from "./lib/connectionLayout";
 export type { SplitView } from "./lib/connectionLayout";
 export { OpenConnectionItem } from "./components/sidebar/OpenConnectionItem";
 export { ConnectionGroupItem } from "./components/sidebar/ConnectionGroupItem";
+export { ConnectionLayoutContext } from "./state/ConnectionLayoutContext";
+export { useConnectionLayout } from "./hooks/useConnectionLayout";
+export { useConnectionLayoutContext } from "./hooks/useConnectionLayoutContext";
+export type { ConnectionLayoutState } from "./hooks/useConnectionLayout";

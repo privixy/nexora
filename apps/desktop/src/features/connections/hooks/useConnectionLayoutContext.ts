@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ConnectionLayoutContext } from '../../app/ConnectionLayoutContext';
+import { ConnectionLayoutContext } from '../state/ConnectionLayoutContext';
 import type { ConnectionLayoutState } from './useConnectionLayout';
 
 export const useConnectionLayoutContext = (): ConnectionLayoutState => {

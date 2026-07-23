@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { SplitPaneLayout } from './SplitPaneLayout';
-import { useConnectionLayoutContext } from '../shared/hooks/useConnectionLayoutContext';
+import { useConnectionLayoutContext } from '../features/connections';
 import { useGlobalShortcuts } from '../hooks/useGlobalShortcuts';
 import { useAutoConnectFromUrl } from '../hooks/useAutoConnectFromUrl';
 import { useConnectionWindowLifecycle } from '../hooks/useConnectionWindowLifecycle';

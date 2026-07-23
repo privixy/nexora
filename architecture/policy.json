@@ -156,20 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/shared/hooks/useConnectionLayout.ts",
-        "importTarget": "../../features/connections/lib/connectionLayout",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/hooks/useConnectionLayoutContext.ts",
-        "importTarget": "../../app/ConnectionLayoutContext",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/shared/lib/clipboard.ts",
         "importTarget": "../../features/data-grid/lib/dataGrid",
         "owner": "legacy",

@@ -103,6 +103,7 @@ vi.mock("../../../../src/features/editor/components/SqlEditorWrapper", () => ({
 }));
 
 vi.mock("../../../../src/features/connections", () => ({
+  useConnectionLayoutContext: () => ({ explorerConnectionId: "conn-1", splitView: false, isSplitVisible: false }),
   getConnectionAccent: () => "#3b82f6",
   useDatabase: vi.fn(),
 }));

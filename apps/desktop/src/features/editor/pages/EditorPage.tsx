@@ -128,7 +128,7 @@ import { useSavedQueries } from "..";
 import { useQueryHistory } from "..";
 import { useSettings } from "../../settings";
 import { useEditor } from "..";
-import { useConnectionLayoutContext } from "../../../shared/hooks/useConnectionLayoutContext";
+import { useConnectionLayoutContext } from "../../connections";
 import { useKeybindings } from "../../../hooks/useKeybindings";
 import type {
   BatchStatementResult,

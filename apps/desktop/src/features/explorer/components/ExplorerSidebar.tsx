@@ -74,7 +74,7 @@ import { SidebarTriggerItem } from "./sidebar/SidebarTriggerItem";
 import { QueryHistorySection } from "./sidebar/QueryHistorySection";
 import { NotebooksSection } from "./sidebar/NotebooksSection";
 import { renameNotebook, deleteNotebook, listNotebooks, NOTEBOOKS_CHANGED_EVENT } from "../../notebooks";
-import { useConnectionLayoutContext } from "../../../shared/hooks/useConnectionLayoutContext";
+import { useConnectionLayoutContext } from "../../connections";
 import { useDrivers } from "../../plugins";
 import { getConnectionAccent } from "../../connections";
 import type { TableColumn } from "../../../types/schema";

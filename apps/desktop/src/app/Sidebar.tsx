@@ -9,6 +9,7 @@ import {
   useConnectionManager,
   useDatabase,
   useOpenConnectionInNewWindow,
+  useConnectionLayoutContext,
 } from "../features/connections";
 import { useTheme } from "../features/settings";
 import { SlotAnchor } from "../shared/ui/SlotAnchor";
@@ -23,7 +24,6 @@ import { SchemaModal } from "../features/schema";
 
 // Hooks & Utils
 import { useSidebarResize } from "../hooks/useSidebarResize";
-import { useConnectionLayoutContext } from "../shared/hooks/useConnectionLayoutContext";
 import { useDrivers } from "../features/plugins";
 import { useKeybindings } from "../hooks/useKeybindings";
 

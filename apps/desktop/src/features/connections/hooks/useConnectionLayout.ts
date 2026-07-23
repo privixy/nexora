@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { canActivateSplit } from '../../features/connections/lib/connectionLayout';
-import type { SplitView } from '../../features/connections/lib/connectionLayout';
+import { canActivateSplit, type SplitView } from '../lib/connectionLayout';
 
 export interface ConnectionLayoutState {
   selectedConnectionIds: Set<string>;

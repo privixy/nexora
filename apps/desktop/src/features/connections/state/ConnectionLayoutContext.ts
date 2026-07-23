@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { ConnectionLayoutState } from '../shared/hooks/useConnectionLayout';
+import type { ConnectionLayoutState } from '../hooks/useConnectionLayout';
 
 export type { ConnectionLayoutState };
 

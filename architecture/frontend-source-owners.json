@@ -18,12 +18,6 @@
     "moveTask": 3
   },
   {
-    "source": "apps/desktop/src/app/ConnectionLayoutContext.ts",
-    "owner": "app",
-    "destination": "apps/desktop/src/app/ConnectionLayoutContext.ts",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/app/ConnectionLayoutProvider.tsx",
     "owner": "app",
     "destination": "apps/desktop/src/app/ConnectionLayoutProvider.tsx",
@@ -486,6 +480,18 @@
     "moveTask": 6
   },
   {
+    "source": "apps/desktop/src/features/connections/hooks/useConnectionLayout.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useConnectionLayout.ts",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/features/connections/hooks/useConnectionLayoutContext.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/hooks/useConnectionLayoutContext.ts",
+    "moveTask": 40
+  },
+  {
     "source": "apps/desktop/src/features/connections/hooks/useConnectionManager.ts",
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/hooks/useConnectionManager.ts",
@@ -568,6 +574,12 @@
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/pages/ConnectionsPage.tsx",
     "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/features/connections/state/ConnectionLayoutContext.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/state/ConnectionLayoutContext.ts",
+    "moveTask": 40
   },
   {
     "source": "apps/desktop/src/features/connections/state/DatabaseContext.ts",
@@ -2331,18 +2343,6 @@
     "source": "apps/desktop/src/shared/hooks/useAlert.ts",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/hooks/useAlert.ts",
-    "moveTask": 40
-  },
-  {
-    "source": "apps/desktop/src/shared/hooks/useConnectionLayout.ts",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/hooks/useConnectionLayout.ts",
-    "moveTask": 40
-  },
-  {
-    "source": "apps/desktop/src/shared/hooks/useConnectionLayoutContext.ts",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/hooks/useConnectionLayoutContext.ts",
     "moveTask": 40
   },
   {

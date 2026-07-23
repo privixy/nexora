@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { useConnectionLayout } from '../shared/hooks/useConnectionLayout';
-import { ConnectionLayoutContext } from './ConnectionLayoutContext';
+import { ConnectionLayoutContext, useConnectionLayout } from '../features/connections';
 
 export const ConnectionLayoutProvider = ({ children }: { children: ReactNode }) => {
   const layout = useConnectionLayout();
