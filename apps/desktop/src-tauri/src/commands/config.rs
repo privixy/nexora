@@ -1,4 +1,4 @@
-use tauri::{AppHandle, Manager};
+use tauri::AppHandle;
 
 use crate::infrastructure::config::{self, AiKeyStatus, AppConfig};
 
@@ -68,18 +68,12 @@ pub fn set_selected_schemas(
 
 #[tauri::command]
 pub fn set_ai_key(app: AppHandle, provider: String, key: String) -> Result<(), String> {
-    crate::keychain_utils::set_ai_key(&provider, &key)?;
-    let cache = app.state::<std::sync::Arc<crate::credential_cache::CredentialCache>>();
-    crate::credential_cache::set_ai_key_cached(&cache, &provider, &key);
-    Ok(())
+    config::ai_keys::store(&app, &provider, &key)
 }
 
 #[tauri::command]
 pub fn delete_ai_key(app: AppHandle, provider: String) -> Result<(), String> {
-    crate::keychain_utils::delete_ai_key(&provider)?;
-    let cache = app.state::<std::sync::Arc<crate::credential_cache::CredentialCache>>();
-    crate::credential_cache::invalidate_ai_key(&cache, &provider);
-    Ok(())
+    config::ai_keys::delete(&app, &provider)
 }
 
 #[tauri::command]

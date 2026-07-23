@@ -1,6 +1,39 @@
 use super::*;
 
 #[test]
+fn ai_key_workflow_writes_keychain_before_cache_and_deletes_in_the_same_order() {
+    let events = std::sync::Mutex::new(Vec::new());
+    ai_keys::store_with(
+        "openai",
+        "secret",
+        |provider, key| {
+            events.lock().unwrap().push(format!("keychain:{provider}:{key}"));
+            Ok(())
+        },
+        |provider, key| events.lock().unwrap().push(format!("cache:{provider}:{key}")),
+    )
+    .unwrap();
+    ai_keys::delete_with(
+        "openai",
+        |provider| {
+            events.lock().unwrap().push(format!("delete:{provider}"));
+            Ok(())
+        },
+        |provider| events.lock().unwrap().push(format!("invalidate:{provider}")),
+    )
+    .unwrap();
+    assert_eq!(
+        *events.lock().unwrap(),
+        [
+            "keychain:openai:secret",
+            "cache:openai:secret",
+            "delete:openai",
+            "invalidate:openai"
+        ]
+    );
+}
+
+#[test]
 fn selected_schemas_default_is_none() {
     let config = AppConfig::default();
     assert!(config.selected_schemas.is_none());
