@@ -426,7 +426,7 @@ Expected: PASS against the old source paths. A command may reference `apps/deskt
 
 - [ ] **Step 1: Impact-check both entry symbols, then use `git mv`**
 
-Change only paths/import specifiers and the Vite HTML module entry from `/src/main.tsx` to `/src/app/main.tsx`. Do not extract providers/routes, reorder JSX, rename symbols, add exports, change raw Tauri calls, or alter assertions beyond the two test import paths.
+Change only paths/import specifiers and the Vite HTML module entry from `/src/main.tsx` to `/src/app/main.tsx`. Update `apps/desktop/tests/app/App.test.tsx` and `apps/desktop/tests/app/main.test.tsx`, including every `vi.mock` specifier, to import the final `src/app/App.tsx` and `src/app/main.tsx` paths; no old-root app mock may remain after this task. Do not extract providers/routes, reorder JSX, rename symbols, add exports, change raw Tauri calls, or alter assertions beyond those import/mock paths.
 
 ```bash
 pnpm test apps/desktop/tests/app/App.test.tsx apps/desktop/tests/app/main.test.tsx -- --run
@@ -487,7 +487,7 @@ Expected: the new route test FAILS because `app/routes.tsx` does not exist while
 
 - [ ] **Step 2: Extract only route composition**
 
-Move unchanged route JSX into `AppRoutes`. Preserve every path, redirect, fallback, element prop, and ordering. Do not move feature files or publish feature APIs.
+Move unchanged route JSX into `AppRoutes`. Preserve every path, redirect, fallback, element prop, and ordering. Update `apps/desktop/tests/app/App.test.tsx` and `apps/desktop/tests/app/routes.test.tsx`, including every `vi.mock` specifier, to use the final public `src/app/routes.tsx` path and the current page paths for this phase; no inline-App or nonexistent root `src/routes.tsx` mock may remain. Do not move feature files or publish feature APIs.
 
 ```bash
 pnpm test apps/desktop/tests/app/App.test.tsx apps/desktop/tests/app/routes.test.tsx -- --run
@@ -1454,7 +1454,7 @@ Expected: PASS with the same raw Tauri assertions, exact Task 26 cross-feature e
 - Modify: `apps/desktop/src/features/data-grid/contracts.ts`
 - Modify: `apps/desktop/src/features/data-grid/index.ts`
 - Modify: `apps/desktop/src/components/ui/ResultEntryContent.tsx`
-- Modify: `apps/desktop/src/pages/Editor.tsx`
+- Modify: `apps/desktop/src/features/editor/pages/EditorPage.tsx`
 - Modify: `apps/desktop/src/features/notebooks/components/SqlCellResult.tsx`
 - Modify: `apps/desktop/src/app/routes.tsx`
 
@@ -1732,7 +1732,7 @@ Expected: PASS with unchanged raw Tauri assertions, exact Task 36 cross-feature 
 
 - [ ] **Step 1: Publish supported runtime entry points**
 
-Export `EditorPage`, `EditorPageProps` including the notebook renderer/persistence adapter, `ResultsWindowPage`, `MultiResultPanel`, `SqlEditorWrapper`, `SqlEditorWrapperProps`, existing core providers/hooks, and the editor contracts consumed by explorer/data-grid/notebooks. Update app routes, app shell, explorer, connections, schema, and notebooks to use `features/editor`; app supplies notebook runtime composition to `EditorPage`, so editor never imports `features/notebooks`. Remove every exact Task 36 exception, including the literal `ViewEditorModal`, `TriggerEditorModal`, `NewConnectionModal`, and notebook `SqlEditorWrapper` pairs. Keep query-builder internals, execution controllers, and internal sections private because the editor page is their sole owner.
+Export `EditorPage`, `EditorPageProps` including the notebook renderer/persistence adapter, `ResultsWindowPage`, `MultiResultPanel`, `SqlEditorWrapper`, `SqlEditorWrapperProps`, existing core providers/hooks, and the editor contracts consumed by explorer/data-grid/notebooks. Update app routes, app shell, explorer, connections, schema, and notebooks to use `features/editor`; app supplies notebook runtime composition to `EditorPage`, so editor never imports `features/notebooks`. Update app and editor tests, including `vi.mock` specifiers, to consume `features/editor` through its public `index.ts` path; final-stage route mocks must target `src/app/routes.tsx`, never legacy `src/App.tsx`, `src/main.tsx`, `src/pages/Editor.tsx`, or a root `src/routes.tsx`. Remove every exact Task 36 exception, including the literal `ViewEditorModal`, `TriggerEditorModal`, `NewConnectionModal`, and notebook `SqlEditorWrapper` pairs. Keep query-builder internals, execution controllers, and internal sections private because the editor page is their sole owner.
 
 ```bash
 pnpm test apps/desktop/tests/features/editor -- --run
