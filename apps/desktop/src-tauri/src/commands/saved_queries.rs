@@ -233,5 +233,4 @@ pub async fn delete_saved_query<R: Runtime>(app: AppHandle<R>, id: String) -> Re
 }
 
 #[cfg(test)]
-#[path = "../saved_queries/tests.rs"]
 mod tests;

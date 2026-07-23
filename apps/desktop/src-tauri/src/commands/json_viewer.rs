@@ -231,5 +231,4 @@ pub async fn complete_json_viewer_session(
 }
 
 #[cfg(test)]
-#[path = "../json_viewer/tests.rs"]
 mod tests;

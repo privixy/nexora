@@ -1004,5 +1004,4 @@ fn clean_response(text: &str) -> String {
 }
 
 #[cfg(test)]
-#[path = "../ai/tests.rs"]
 mod tests;

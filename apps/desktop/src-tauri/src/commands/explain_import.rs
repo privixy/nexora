@@ -599,5 +599,4 @@ fn apply_text_attribute(node: &mut ExplainNode, content: &str) {
 }
 
 #[cfg(test)]
-#[path = "../explain_import/tests.rs"]
 mod tests;

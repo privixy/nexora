@@ -171,5 +171,4 @@ fn load_existing_groups<R: Runtime>(
 }
 
 #[cfg(test)]
-#[path = "../connection_import_commands/tests.rs"]
 mod tests;

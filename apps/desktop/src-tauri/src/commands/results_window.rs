@@ -121,5 +121,4 @@ pub async fn close_results_window(app: AppHandle, tab_id: String) -> Result<(), 
 }
 
 #[cfg(test)]
-#[path = "../results_window/tests.rs"]
 mod tests;

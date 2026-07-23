@@ -80,5 +80,4 @@ pub async fn open_connection_window(
 }
 
 #[cfg(test)]
-#[path = "../connection_window/tests.rs"]
 mod tests;

@@ -348,5 +348,4 @@ pub async fn install_mcp_config<R: Runtime>(
 }
 
 #[cfg(test)]
-#[path = "../mcp/install/tests.rs"]
 mod tests;

@@ -243,5 +243,4 @@ pub async fn delete_connection_icon(app: AppHandle, relative_path: String) -> Re
 }
 
 #[cfg(test)]
-#[path = "../connection_appearance/tests.rs"]
 mod tests;
