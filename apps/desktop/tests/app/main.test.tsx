@@ -8,6 +8,7 @@ vi.mock("react-dom/client", () => ({ default: { createRoot: createRootMock } }))
 vi.mock("../../src/app/App", () => ({ App: function App() { return null; } }));
 vi.mock("../../src/features/connections", () => ({ DatabaseProvider: function DatabaseProvider({ children }: { children: ReactNode }) { return children; } }));
 vi.mock("../../src/features/settings", () => ({
+  SettingsEditorThemeProvider: function SettingsEditorThemeProvider({ children }: { children: ReactNode }) { return children; },
   SettingsProvider: function SettingsProvider({ children }: { children: ReactNode }) { return children; },
   ThemeProvider: function ThemeProvider({ children }: { children: ReactNode }) { return children; },
   UpdateProvider: function UpdateProvider({ children }: { children: ReactNode }) { return children; },
@@ -58,6 +59,7 @@ describe("legacy main composition root", () => {
       "UpdateProvider",
       "ThemeProvider",
       "SettingsProvider",
+      "SettingsEditorThemeProvider",
       "DatabaseProvider",
       "App",
     ]);

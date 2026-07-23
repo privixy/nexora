@@ -8,6 +8,7 @@ import { createNotebook, editorNotebookAdapter, NotebookView, renameNotebook } f
 import { useSplitPaneResize } from '../shared/hooks/useSplitPaneResize';
 import { getConnectionAccent, useConnectionLayoutContext, useDatabase, type SplitView } from '../features/connections';
 import { useDrivers } from '../features/plugins';
+import { VisualExplainModal } from '../features/visual-explain';
 
 export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,6 +101,7 @@ export const SplitPaneLayout = ({ connectionIds, mode }: SplitView) => {
                       create: createNotebook,
                       rename: renameNotebook,
                     }}
+                    renderVisualExplain={(props) => <VisualExplainModal {...props} />}
                   />
                 </EditorProvider>
               </PanelDatabaseProvider>
