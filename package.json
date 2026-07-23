@@ -18,6 +18,7 @@
     "build": "pnpm --filter @nexora/desktop build",
     "lint": "eslint .",
     "lint:workflows": "node scripts/run-actionlint.mjs",
+    "validate:distribution": "node scripts/validate-distribution.mjs",
     "preview": "pnpm --filter @nexora/desktop preview",
     "test": "vitest --config vitest.config.ts",
     "test:repository": "vitest --config vitest.config.ts --project repository",

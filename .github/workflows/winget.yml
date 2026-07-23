@@ -2,6 +2,11 @@ name: Publish to Winget
 
 on:
   workflow_dispatch:
+    inputs:
+      release-tag:
+        description: Release tag to submit, for example v1.0.3
+        required: true
+        type: string
 
 jobs:
   winget-publish:
@@ -13,4 +18,5 @@ jobs:
         with:
           identifier: Nexora.Nexora
           installers-regex: '_x64-setup\.exe$'
+          release-tag: ${{ inputs.release-tag }}
           token: ${{ secrets.WINGET_TOKEN }}
