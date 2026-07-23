@@ -12,7 +12,7 @@ import {
   useConnectionLayoutContext,
 } from "../features/connections";
 import { useTheme } from "../features/settings";
-import { SlotAnchor } from "../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../features/plugins";
 
 // Sub-components
 import { NavItem } from "./components/NavItem";

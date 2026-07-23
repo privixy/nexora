@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
-import { Modal } from "../ui/Modal";
-import { SshConnectionsManager } from "../../features/connections/components/SshConnectionsManager";
+import { Modal } from "../../../shared/ui/Modal";
+import { SshConnectionsManager } from "./SshConnectionsManager";
 
 interface SshConnectionsModalProps {
   isOpen: boolean;

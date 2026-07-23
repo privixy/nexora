@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { PluginSlotProvider } from "../../src/features/plugins/state/PluginSlotProvider";
-import { PluginSlotContext } from "../../src/features/plugins/state/PluginSlotContext";
-import { SettingsContext, DEFAULT_SETTINGS } from "../../src/features/settings/state/SettingsContext";
-import { SlotAnchor } from "../../src/shared/ui/SlotAnchor";
-import type { SlotComponentProps } from "../../src/types/pluginSlots";
+import { PluginSlotProvider } from "../../../../src/features/plugins/state/PluginSlotProvider";
+import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
+import { SettingsContext, DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
+import { SlotAnchor } from "../../../../src/features/plugins/components/SlotAnchor";
+import type { SlotComponentProps } from "../../../../src/types/pluginSlots";
 
 const settingsValue = {
   settings: DEFAULT_SETTINGS,

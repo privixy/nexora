@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FileJson, X, Loader2, RotateCcw } from "lucide-react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
-import { queryGateway } from "../../platform/tauri/queryGateway";
-import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
-import { loadMonacoTheme } from "../../themes/themeUtils";
-import { Modal } from "../ui/Modal";
-import { ConfirmModal } from "./ConfirmModal";
+import { queryGateway } from "../../../platform/tauri/queryGateway";
+import { useEditorTheme } from "../hooks/useEditorTheme";
+import { loadMonacoTheme } from "../../../themes/themeUtils";
+import { Modal } from "../../../shared/ui/Modal";
+import { ConfirmModal } from "../../../shared/ui/ConfirmModal";
 
 interface ConfigJsonModalProps {
   isOpen: boolean;

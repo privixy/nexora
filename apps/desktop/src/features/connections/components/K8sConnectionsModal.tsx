@@ -23,10 +23,10 @@ import {
   validateK8sConnection,
   type K8sConnection,
   type K8sConnectionInput,
-} from "../../features/connections/lib/k8s";
-import { toErrorMessage } from "../lib/errors";
-import { Modal } from "../ui/Modal";
-import { Select } from "../ui/Select";
+} from "../lib/k8s";
+import { toErrorMessage } from "../../../shared/lib/errors";
+import { Modal } from "../../../shared/ui/Modal";
+import { Select } from "../../../shared/ui/Select";
 import clsx from "clsx";
 
 interface K8sConnectionsModalProps {

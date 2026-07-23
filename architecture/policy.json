@@ -32,13 +32,6 @@
     "tests/repository"
   ],
   "frontendTestOwners": {
-    "apps/desktop/tests/components/SlotAnchor.test.tsx": [
-      "apps/desktop/src/shared/ui/SlotAnchor.tsx",
-      "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
-      "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
-      "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
-      "apps/desktop/src/features/settings/state/SettingsContext.ts"
-    ],
     "apps/desktop/tests/components/modals/NewConnectionModal.credentials.test.tsx": [
       "apps/desktop/src/features/connections/components/NewConnectionModal/NewConnectionModal.tsx"
     ],
@@ -165,34 +158,6 @@
       {
         "path": "apps/desktop/src/shared/ui/CellDiffEditor.tsx",
         "importTarget": "../../features/settings/hooks/useEditorTheme",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
-        "importTarget": "../../features/settings/hooks/useEditorTheme",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
-        "importTarget": "../../features/connections/lib/k8s",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
-        "importTarget": "../../features/plugins/state/PluginSlotContext",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
-        "importTarget": "../../features/connections/components/SshConnectionsManager",
         "owner": "legacy",
         "reason": "Existing dependency graph retained after path-only ownership normalization",
         "removeByTask": 41
@@ -569,7 +534,7 @@
     "apps/desktop/tests/features/editor/query-builder/visualQuery.test.ts": 747,
     "apps/desktop/tests/features/editor/lib/sqlSplitter/splitter.test.ts": 629,
     "apps/desktop/tests/features/editor/pages/EditorPage.test.tsx": 566,
-    "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx": 601,
+    "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx": 601,
     "apps/desktop/src/components/ui/TableToolbar.tsx": 684
   }
 }

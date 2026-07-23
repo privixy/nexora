@@ -21,7 +21,7 @@ import type { StructuredFilter } from "../../utils/filterBar";
 import { formatSqlIdentifier } from "../../shared/lib/identifiers";
 import { formatSortClause } from "../../utils/tableToolbar";
 import { FilterRow } from "./FilterRow";
-import { SlotAnchor } from "../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../features/plugins";
 import { useDatabase } from "../../features/connections";
 
 interface TableToolbarProps {

@@ -17,6 +17,7 @@ export type {
 
 export { PluginModalProvider } from "./state/PluginModalProvider";
 export { PluginSlotProvider } from "./state/PluginSlotProvider";
+export { SlotAnchor } from "./components/SlotAnchor";
 export { useDrivers } from "./hooks/useDrivers";
 export { usePluginRegistry } from "./hooks/usePluginRegistry";
 export { usePluginSlotRegistry } from "./hooks/usePluginSlotRegistry";

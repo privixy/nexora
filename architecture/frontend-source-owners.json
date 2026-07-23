@@ -2497,8 +2497,8 @@
   },
   {
     "source": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/ConfigJsonModal.tsx",
     "moveTask": 40
   },
   {
@@ -2527,8 +2527,8 @@
   },
   {
     "source": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx",
     "moveTask": 40
   },
   {
@@ -2557,14 +2557,14 @@
   },
   {
     "source": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/SlotAnchor.tsx",
     "moveTask": 40
   },
   {
     "source": "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/SlotErrorBoundary.tsx",
     "moveTask": 40
   },
   {
@@ -2581,8 +2581,8 @@
   },
   {
     "source": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/SshConnectionsModal.tsx",
     "moveTask": 40
   },
   {

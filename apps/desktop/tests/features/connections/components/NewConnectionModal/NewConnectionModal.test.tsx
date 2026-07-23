@@ -100,11 +100,11 @@ vi.mock("../../../../../src/features/connections/components/NewConnectionModal/N
   AppearanceSection: () => null,
 }));
 
-vi.mock("../../../../../src/shared/ui/SshConnectionsModal", () => ({
+vi.mock("../../../../../src/features/connections/components/SshConnectionsModal", () => ({
   SshConnectionsModal: () => null,
 }));
 
-vi.mock("../../../../../src/shared/ui/K8sConnectionsModal", () => ({
+vi.mock("../../../../../src/features/connections/components/K8sConnectionsModal", () => ({
   K8sConnectionsModal: () => null,
 }));
 

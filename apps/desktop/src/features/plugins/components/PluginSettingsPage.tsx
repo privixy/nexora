@@ -8,7 +8,7 @@ import { SettingSection, SettingRow, useSettings } from "../../settings";
 import { findConnectionsForDrivers, useDatabase } from "../../connections";
 import { useDrivers } from "../hooks/useDrivers";
 import { Select } from "../../../shared/ui/Select";
-import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../../features/plugins";
 import {
   resolvePluginConfig,
   getDisplayInterpreter,

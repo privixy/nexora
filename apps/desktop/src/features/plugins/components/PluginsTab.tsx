@@ -39,7 +39,7 @@ import type { PluginManifest } from "../contracts";
 import { PluginInstallErrorModal } from "./modals/PluginInstallErrorModal";
 import { PluginRemoveModal } from "./modals/PluginRemoveModal";
 import { PluginStartErrorModal } from "./modals/PluginStartErrorModal";
-import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../../features/plugins";
 
 /* ── Types ── */
 

@@ -5,7 +5,7 @@ import { Settings, X, FolderOpen, RotateCcw } from "lucide-react";
 
 import { Modal } from "../../../../shared/ui/Modal";
 import { Select } from "../../../../shared/ui/Select";
-import { SlotAnchor } from "../../../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../../../features/plugins";
 import { resolvePluginConfig, getDisplayInterpreter, resolveSettingsWithDefaults, validateSettings } from "../../lib/pluginConfig";
 import type { PluginConfig } from "../../../settings";
 import type { PluginManifest, PluginSettingDefinition } from "../../contracts";

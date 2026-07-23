@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import { FieldEditor } from "../../../components/ui/FieldEditor";
-import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../../features/plugins";
 import { useRowEditor } from "../hooks/useRowEditor";
 import { useRowEditorResize } from "../hooks/useRowEditorResize";
 

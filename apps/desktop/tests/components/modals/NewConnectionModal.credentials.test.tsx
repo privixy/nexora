@@ -85,8 +85,8 @@ vi.mock("../../../src/features/connections/lib/ssh", () => ({
   loadSshConnections: sshMocks.loadSshConnections,
 }));
 
-vi.mock("../../../src/shared/ui/SshConnectionsModal", () => ({ SshConnectionsModal: () => null }));
-vi.mock("../../../src/shared/ui/K8sConnectionsModal", () => ({ K8sConnectionsModal: () => null }));
+vi.mock("../../../src/features/connections/components/SshConnectionsModal", () => ({ SshConnectionsModal: () => null }));
+vi.mock("../../../src/features/connections/components/K8sConnectionsModal", () => ({ K8sConnectionsModal: () => null }));
 
 beforeEach(() => {
   vi.clearAllMocks();

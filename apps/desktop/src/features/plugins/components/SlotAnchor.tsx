@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
 
-import { PluginSlotContext } from "../../features/plugins/state/PluginSlotContext";
+import { PluginSlotContext } from "../state/PluginSlotContext";
 import { SlotErrorBoundary } from "./SlotErrorBoundary";
-import type { SlotName, SlotContext } from "../../types/pluginSlots";
+import type { SlotName, SlotContext } from "../../../types/pluginSlots";
 
 interface SlotAnchorProps {
   /** The slot location name */

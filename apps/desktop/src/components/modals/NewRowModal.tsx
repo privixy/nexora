@@ -8,7 +8,7 @@ import { quoteTableRef } from "../../shared/lib/identifiers";
 import { isGeometricType } from "../../utils/geometry";
 import { GeometryInput } from "../ui/GeometryInput";
 import type { ForeignKey } from "../../types/schema";
-import { SlotAnchor } from "../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../features/plugins";
 
 interface TableColumn {
   name: string;

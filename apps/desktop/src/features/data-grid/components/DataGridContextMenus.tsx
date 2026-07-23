@@ -14,7 +14,7 @@ import {
   Undo,
 } from "lucide-react";
 import { ContextMenu, type ContextMenuItem } from "../../../shared/ui/ContextMenu";
-import { SlotAnchor } from "../../../shared/ui/SlotAnchor";
+import { SlotAnchor } from "../../../features/plugins";
 import { getDateInputMode } from "../../../utils/dateInput";
 import { isJsonColumn } from "../../../utils/json";
 import { supportsEmptyString } from "../../../shared/lib/text";

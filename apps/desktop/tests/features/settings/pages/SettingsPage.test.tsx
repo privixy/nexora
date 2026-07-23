@@ -8,7 +8,7 @@ vi.mock("../../../../src/features/settings/hooks/useSettings", () => ({
   useSettings: vi.fn(),
 }));
 
-vi.mock("../../../../src/shared/ui/ConfigJsonModal", () => ({
+vi.mock("../../../../src/features/settings/components/ConfigJsonModal", () => ({
   ConfigJsonModal: () => null,
 }));
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { K8sConnectionsModal } from "../../../src/shared/ui/K8sConnectionsModal";
+import { K8sConnectionsModal } from "../../../../src/features/connections/components/K8sConnectionsModal";
 
 interface MockSelectProps {
   value: string | null;
@@ -33,12 +33,12 @@ const k8sMocks = vi.hoisted(() => ({
   validateK8sConnection: vi.fn(),
 }));
 
-vi.mock("../../../src/shared/ui/Modal", () => ({
+vi.mock("../../../../src/shared/ui/Modal", () => ({
   Modal: ({ isOpen, children }: { isOpen: boolean; children: ReactNode }) =>
     isOpen ? <div data-testid="modal">{children}</div> : null,
 }));
 
-vi.mock("../../../src/shared/ui/Select", () => ({
+vi.mock("../../../../src/shared/ui/Select", () => ({
   Select: ({ value, options, onChange, placeholder, labels }: MockSelectProps) => (
     <select
       aria-label={placeholder ?? "select"}
@@ -55,7 +55,7 @@ vi.mock("../../../src/shared/ui/Select", () => ({
   ),
 }));
 
-vi.mock("../../../src/features/connections/lib/k8s", () => ({
+vi.mock("../../../../src/features/connections/lib/k8s", () => ({
   loadK8sConnections: k8sMocks.loadK8sConnections,
   saveK8sConnection: k8sMocks.saveK8sConnection,
   updateK8sConnection: k8sMocks.updateK8sConnection,
