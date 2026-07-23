@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { MainLayout } from "./MainLayout";
+import { APP_VERSION } from "./config/version";
 import { ConnectionsPage, SshConnectionsManager } from "../features/connections";
 import { EditorErrorBoundary, EditorPage, EditorSchemaDiagramPage, ResultsWindowPage } from "../features/editor";
 import { JsonViewerPage } from "../features/data-grid";
@@ -50,10 +51,11 @@ export function AppRoutes() {
   }
 
   const pluginSettingsComposition = {
+    appVersion: APP_VERSION,
     pluginTabs: Array.from(pluginTabs.values()),
     onPluginsChanged: refresh,
-    renderPluginTab: (props: ComponentProps<typeof PluginsTab>) => (
-      <PluginsTab {...props} />
+    renderPluginTab: (props: Omit<ComponentProps<typeof PluginsTab>, "appVersion">) => (
+      <PluginsTab {...props} appVersion={APP_VERSION} />
     ),
     renderPluginSettings: (pluginId: string) => (
       <PluginSettingsPage key={pluginId} pluginId={pluginId} />

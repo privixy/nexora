@@ -35,7 +35,6 @@ import { usePluginRegistry } from "../hooks/usePluginRegistry";
 import { findConnectionsForDrivers, useDatabase } from "../../connections";
 import { parseAuthor, versionGte } from "../lib/plugins";
 import { removePluginConfig } from "../lib/pluginConfig";
-import { APP_VERSION } from "../../../app/config/version";
 import type { PluginManifest } from "../contracts";
 import { PluginInstallErrorModal } from "./modals/PluginInstallErrorModal";
 import { PluginRemoveModal } from "./modals/PluginRemoveModal";
@@ -455,6 +454,7 @@ function StatCard({
 /* ── Main tab ── */
 
 interface PluginsTabProps {
+  appVersion: string;
   onOpenPluginSettings?: (pluginId: string) => void;
   onPluginsChanged?: (change: PluginSidebarChange) => void;
 }
@@ -466,6 +466,7 @@ interface PluginSidebarChange {
 }
 
 export function PluginsTab({
+  appVersion,
   onOpenPluginSettings,
   onPluginsChanged,
 }: PluginsTabProps) {
@@ -1103,7 +1104,7 @@ export function PluginsTab({
                   const minVersion =
                     selectedRelease?.min_nexora_version ?? null;
                   const isCompatible =
-                    !minVersion || versionGte(APP_VERSION, minVersion);
+                    !minVersion || versionGte(appVersion, minVersion);
                   const isUpdate =
                     !!plugin.installed_version && !isSelectedInstalled;
                   const isDowngrade =

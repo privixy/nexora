@@ -19,13 +19,12 @@ import { useSettings } from "../hooks/useSettings";
 import { useTheme } from "../hooks/useTheme";
 import { useUpdate } from "../hooks/useUpdate";
 import { useChangelog } from "../../../hooks/useChangelog";
-import { APP_VERSION } from "../../../app/config/version";
 import { ROADMAP } from "../../../utils/settings";
 import { SettingRow, SettingSection, SettingToggle } from "./SettingControls";
 import { WhatsNewModal } from "../../../shared/ui/WhatsNewModal";
 import { OpenSourceLibrariesModal } from "../../../shared/ui/OpenSourceLibrariesModal";
 
-export function InfoTab() {
+export function InfoTab({ appVersion }: { appVersion: string }) {
   const { t } = useTranslation();
   const { settings, updateSetting } = useSettings();
   const { currentTheme } = useTheme();
@@ -79,7 +78,7 @@ export function InfoTab() {
               {t("settings.version")}
             </span>
             <span className="font-mono font-bold">
-              {APP_VERSION} (Beta)
+              {appVersion} (Beta)
             </span>
           </div>
           <button
@@ -110,7 +109,7 @@ export function InfoTab() {
               {t("settings.currentVersion")}
             </div>
             <div className="text-lg font-mono text-primary mt-1">
-              v{APP_VERSION}
+              v{appVersion}
             </div>
           </div>
 

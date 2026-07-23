@@ -92,7 +92,7 @@ vi.mock("../../../../src/components/settings/PluginSettingsPage", () => ({
 
 describe("Settings page", () => {
   it("renders the injected SSH settings composition", async () => {
-    render(<SettingsPage renderSshTab={() => <div>ssh composition</div>} />);
+    render(<SettingsPage appVersion="1.0.3" renderSshTab={() => <div>ssh composition</div>} />);
 
     fireEvent.click(screen.getByText("sshConnections.title"));
 
@@ -112,7 +112,7 @@ describe("Settings page", () => {
   });
 
   it("keeps the page wrapper fixed and scrolls only internal settings panes", () => {
-    render(<SettingsPage />);
+    render(<SettingsPage appVersion="1.0.3" />);
 
     const root = screen.getByText("settings.title").closest(".h-full");
     const panes = root?.querySelectorAll(".custom-scrollbar");
@@ -126,7 +126,7 @@ describe("Settings page", () => {
 
   it("opens a plugin settings page from the plugin tab", () => {
     render(
-      <SettingsPage
+      <SettingsPage appVersion="1.0.3"
         pluginTabs={[{ id: "plugin-b", name: "Bravo Plugin" }]}
         renderPluginTab={(props) => (
           <button onClick={() => props.onOpenPluginSettings("plugin-b")}>
@@ -159,7 +159,7 @@ describe("Settings page", () => {
 
     const onPluginsChanged = vi.fn();
     render(
-      <SettingsPage
+      <SettingsPage appVersion="1.0.3"
         pluginTabs={[{ id: "plugin-b", name: "Bravo Plugin" }]}
         onPluginsChanged={onPluginsChanged}
         renderPluginTab={(props) => (

@@ -156,20 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/features/plugins/components/PluginsTab.tsx",
-        "importTarget": "../../../app/config/version",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/features/settings/components/InfoTab.tsx",
-        "importTarget": "../../../app/config/version",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/shared/hooks/useAlert.ts",
         "importTarget": "../../app/AlertContext",
         "owner": "legacy",

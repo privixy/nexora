@@ -50,6 +50,7 @@ interface PluginTab {
 }
 
 interface SettingsPageProps {
+  appVersion: string;
   pluginTabs?: PluginTab[];
   onPluginsChanged?: (change: PluginSidebarChange) => void;
   renderPluginTab?: (props: {
@@ -86,10 +87,10 @@ const TAB_COMPONENTS: Partial<Record<SettingsTab, React.ComponentType>> = {
   "ai-activity": AiActivityPanel,
   logs: LogsTab,
   shortcuts: ShortcutsTab,
-  info: InfoTab,
 };
 
 export const SettingsPage = ({
+  appVersion,
   pluginTabs: suppliedPluginTabs = [],
   onPluginsChanged,
   renderPluginTab,
@@ -254,7 +255,7 @@ export const SettingsPage = ({
            ) : activeComposition !== undefined ? (
              activeComposition
            ) : (
-             ActiveComponent && <ActiveComponent />
+             activeTab === "info" ? <InfoTab appVersion={appVersion} /> : ActiveComponent && <ActiveComponent />
            )}
 
             </div>

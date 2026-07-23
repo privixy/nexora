@@ -43,7 +43,7 @@ vi.mock("../../../../src/features/plugins/hooks/usePluginRegistry", () => ({
 describe("PluginsTab", () => {
   it("renders plugin management content", () => {
     vi.mocked(invoke).mockResolvedValueOnce([]);
-    render(<PluginsTab onPluginsChanged={vi.fn()} />);
+    render(<PluginsTab appVersion="1.0.3" onPluginsChanged={vi.fn()} />);
     expect(screen.getAllByText(/plugins/i).length).toBeGreaterThan(0);
   });
 });
