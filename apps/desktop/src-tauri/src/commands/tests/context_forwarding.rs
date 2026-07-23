@@ -135,7 +135,15 @@ fn command_owners_route_exact_context_through_shared_resolver() {
             ],
         ),
     ] {
-        let source = std::fs::read_to_string(source_root.join(file)).unwrap();
+        let path = source_root.join(file);
+        let source = std::fs::read_to_string(&path).unwrap();
+        let source = if source.starts_with("pub use crate::infrastructure::command_services::") {
+            let owner = file.strip_prefix("commands/").unwrap();
+            std::fs::read_to_string(source_root.join("infrastructure/command_services").join(owner))
+                .unwrap()
+        } else {
+            source
+        };
         assert!(source.contains("TauriConnectionContextResolver"), "{file}");
         if file != "commands/connection_lifecycle.rs" {
             assert!(
