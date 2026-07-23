@@ -200,46 +200,6 @@
     "normalizedText": "sqlite"
   },
   {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:mssql:1",
-    "owner": "editor",
-    "normalizedText": "mssql"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:mysql:1",
-    "owner": "editor",
-    "normalizedText": "mysql"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:mysql:2",
-    "owner": "editor",
-    "normalizedText": "mysql"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:oracle:1",
-    "owner": "editor",
-    "normalizedText": "oracle"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:postgres:1",
-    "owner": "editor",
-    "normalizedText": "postgres"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:postgresql:1",
-    "owner": "editor",
-    "normalizedText": "postgresql"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:sqlite:1",
-    "owner": "editor",
-    "normalizedText": "sqlite"
-  },
-  {
-    "symbol": "editor:sqlFormat:toFormatterLanguage:sqlite:2",
-    "owner": "editor",
-    "normalizedText": "sqlite"
-  },
-  {
     "symbol": "editor:sqlGenerator:getIdentifierQuote:mariadb:1",
     "owner": "editor",
     "normalizedText": "mariadb"
@@ -293,6 +253,46 @@
     "symbol": "shared:identifiers:shouldQuoteIdentifiers:postgres:1",
     "owner": "shared",
     "normalizedText": "postgres"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:mssql:1",
+    "owner": "shared",
+    "normalizedText": "mssql"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:mysql:1",
+    "owner": "shared",
+    "normalizedText": "mysql"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:mysql:2",
+    "owner": "shared",
+    "normalizedText": "mysql"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:oracle:1",
+    "owner": "shared",
+    "normalizedText": "oracle"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:postgres:1",
+    "owner": "shared",
+    "normalizedText": "postgres"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:postgresql:1",
+    "owner": "shared",
+    "normalizedText": "postgresql"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:sqlite:1",
+    "owner": "shared",
+    "normalizedText": "sqlite"
+  },
+  {
+    "symbol": "shared:sqlFormat:toFormatterLanguage:sqlite:2",
+    "owner": "shared",
+    "normalizedText": "sqlite"
   },
   {
     "symbol": "visual-explain:explainPlan:getExplainDriverLegend:mysql:1",

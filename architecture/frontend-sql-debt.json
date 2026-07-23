@@ -95,21 +95,6 @@
     "normalizedText": "SELECT * FROM ${quotedTable}"
   },
   {
-    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:2",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedTable}"
-  },
-  {
-    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:3",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedTable}"
-  },
-  {
-    "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT * FROM ${quotedTable}:4",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedTable}"
-  },
-  {
     "symbol": "explorer:ExplorerSidebar:quotedTable:SELECT COUNT(*) as count FROM ${quotedTable}:1",
     "owner": "explorer",
     "normalizedText": "SELECT COUNT(*) as count FROM ${quotedTable}"
@@ -121,21 +106,6 @@
   },
   {
     "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:2",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedView}"
-  },
-  {
-    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:3",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedView}"
-  },
-  {
-    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:4",
-    "owner": "explorer",
-    "normalizedText": "SELECT * FROM ${quotedView}"
-  },
-  {
-    "symbol": "explorer:ExplorerSidebar:quotedView:SELECT * FROM ${quotedView}:5",
     "owner": "explorer",
     "normalizedText": "SELECT * FROM ${quotedView}"
   },
@@ -178,6 +148,16 @@
     "symbol": "explorer:SidebarColumnItem:query:ALTER TABLE ${quotedTable} DROP COLUMN ${quotedColumn}:1",
     "owner": "explorer",
     "normalizedText": "ALTER TABLE ${quotedTable} DROP COLUMN ${quotedColumn}"
+  },
+  {
+    "symbol": "explorer:useExplorerActions:quotedTable:SELECT * FROM ${quotedTable}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedTable}"
+  },
+  {
+    "symbol": "explorer:useExplorerActions:quotedView:SELECT * FROM ${quotedView}:1",
+    "owner": "explorer",
+    "normalizedText": "SELECT * FROM ${quotedView}"
   },
   {
     "symbol": "schema:CreateForeignKeyModal:ON_ACTIONS:SET DEFAULT:1",

@@ -9,7 +9,7 @@ import { debtEntries, loadSourceOwners, stringLiterals, type DebtEntry } from ".
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sourceOwners = loadSourceOwners(root);
 const engine = /^(?:postgres|postgresql|mysql|mariadb|sqlite|mssql|duckdb|oracle|mongodb|redis|cassandra|clickhouse|snowflake|bigquery|cockroachdb|sqlserver)$/i;
-const protocolAliasSource = "apps/desktop/src/utils/connectionStringParser.ts";
+const protocolAliasSource = "apps/desktop/src/features/connections/lib/connectionStringParser.ts";
 const files = execFileSync("git", ["ls-files", "apps/desktop/src/**/*.ts", "apps/desktop/src/**/*.tsx"], { cwd: root, encoding: "utf8" })
   .split("\n")
   .filter(Boolean);
@@ -87,7 +87,7 @@ function hash(value: unknown) {
 
 describe("driver-specific frontend debt", () => {
   it("matches the explicit semantic driver fixture", () => {
-    expect(scannedDriverSpecificFrontendDebt).toEqual(scannedDriverSpecificFrontendDebt);
+    expect(driverSpecificFrontendDebt).toEqual(scannedDriverSpecificFrontendDebt);
     expect(driverSpecificFrontendDebt.some(({ normalizedText }) => /^(?:postgres|mysql|sqlite)$/i.test(normalizedText))).toBe(true);
   });
 
@@ -182,6 +182,6 @@ describe("driver-specific frontend debt", () => {
 
   it("freezes the semantic driver baseline", () => {
     expect(driverSpecificFrontendDebt).toHaveLength(62);
-    expect(hash(driverSpecificFrontendDebt)).toBe("c416ed0bd7c7859ef27b083f99168f14e41b897e0651856dbe190b18c1e30bad");
+    expect(hash(driverSpecificFrontendDebt)).toBe("f86f170711b4f5ed98a38fe17a7bfb362a2bf4fd59abd74ff66e6068d6957a69");
   });
 });

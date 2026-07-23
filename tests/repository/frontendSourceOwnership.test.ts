@@ -50,8 +50,8 @@ describe("frontend source ownership", () => {
   });
 
   it("freezes the authoritative source inventory", () => {
-    expect(sourceOwners).toHaveLength(505);
-    expect(hash(sourceOwners)).toBe("97121551f2f624c17ee6ddef5f0387624b0c88127ad80a69bad26a2eda32f384");
+    expect(sourceOwners).toHaveLength(506);
+    expect(hash(sourceOwners)).toBe("56c8a889a6c6482154db05c17371e889c267a4034d0f45d1b22db71278ecba8b");
   });
 
   it("uses explicit rows instead of generated ownership rules", () => {
@@ -69,6 +69,7 @@ describe("frontend source ownership", () => {
     ["apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx", "schema", "apps/desktop/src/features/schema/components/modals/RunRoutineModal.tsx", 10],
     ["apps/desktop/src/features/connections/components/list/ActionButtons.tsx", "connections", "apps/desktop/src/features/connections/components/list/ActionButtons.tsx", 11],
     ["apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx", "connections", "apps/desktop/src/features/connections/components/sidebar/ConnectionGroupFolder.tsx", 11],
+    ["apps/desktop/src/features/connections/lib/tableContext.ts", "connections", "apps/desktop/src/features/connections/lib/tableContext.ts", 40],
     ["apps/desktop/src/app/config/links.ts", "app", "apps/desktop/src/app/config/links.ts", 40],
   ])("matches plan ownership for %s", (source, owner, destination, moveTask) => {
     expect(sourceOwners.find((row) => row.source === source)).toEqual({ source, owner, destination, moveTask });

@@ -474,6 +474,12 @@
     "moveTask": 40
   },
   {
+    "source": "apps/desktop/src/features/connections/lib/tableContext.ts",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/lib/tableContext.ts",
+    "moveTask": 40
+  },
+  {
     "source": "apps/desktop/src/features/connections/lib/windowTitle.ts",
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/lib/windowTitle.ts",

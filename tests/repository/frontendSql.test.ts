@@ -93,7 +93,7 @@ describe("frontend SQL debt", () => {
   });
 
   it("matches the explicit classified SQL fixture", () => {
-    expect(scannedFrontendSqlDebt).toEqual(scannedFrontendSqlDebt);
+    expect(frontendSqlDebt).toEqual(scannedFrontendSqlDebt);
     expect(frontendSqlDebt.some(({ normalizedText }) => /\bWHERE\b/i.test(normalizedText))).toBe(true);
     expect(frontendSqlDebt.every(({ normalizedText }) => !/^(?:truncate|select-none|SELECT a window title)$/i.test(normalizedText))).toBe(true);
   });
@@ -116,7 +116,7 @@ describe("frontend SQL debt", () => {
   });
 
   it("freezes the classified SQL baseline", () => {
-    expect(frontendSqlDebt).toHaveLength(42);
-    expect(hash(frontendSqlDebt)).toBe("72d61c76dab54d94932cae3ba27721a9bbbe072d58a9bcc31d0cb2f92798af58");
+    expect(frontendSqlDebt).toHaveLength(38);
+    expect(hash(frontendSqlDebt)).toBe("204df9752a1c1393f0049566c567bc26287c8c7aca9827b575a4e7cc22f4e7c0");
   });
 });
