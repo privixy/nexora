@@ -36,19 +36,22 @@ describe("architecture policy bypass hardening", () => {
     const root = mkdtempSync(join(tmpdir(), "nexora-path-normalization-"));
     try {
       const file = "tests/repository/paths.test.ts";
-      writeFixture(root, file, ['import "../../apps/desktop/src/../src/private";', 'import "../../../outside";', 'import "/apps/desktop/src/private";', 'import "@desktop/private";'].join("\n"));
+      writeFixture(root, file, ['import "../../apps/desktop/src/../src/private";', 'import "../../../outside";', 'import "/apps/desktop/src/private";', 'import "file:///apps/desktop/src/private";', 'import "@desktop/private";', 'import "@desktop/../../../../outside";', 'import "@escape/private";'].join("\n"));
       const violations = collectViolations(root, {
         ...basePolicy,
         frontendTestRoots: ["tests/repository"],
         repositoryTestRoots: ["tests/repository"],
         rootTestRoots: ["tests/repository"],
         repositoryTestForbiddenImportRoots: ["apps/desktop/src/../src"],
-        repositoryTestImportAliases: { "@desktop": "apps/desktop/src/../src", "@desktop/private": "packages/private" },
+        repositoryTestImportAliases: { "@desktop": "apps/desktop/src/../src", "@desktop/private": "packages/private", "@escape": "../outside" },
         sourceRoots: [],
       }, { trackedFiles: [file], workspacePackageDirectories: [] });
       expect(violations).toContain(`${file}: repository import path escapes the repository: ../../../outside`);
       expect(violations).toContain(`${file}: absolute repository import path is forbidden: /apps/desktop/src/private`);
+      expect(violations).toContain(`${file}: absolute repository import path is forbidden: file:///apps/desktop/src/private`);
       expect(violations).toContain(`${file}: repository import alias is ambiguous: @desktop/private`);
+      expect(violations).toContain(`${file}: repository import path escapes the repository: @desktop/../../../../outside`);
+      expect(violations).toContain(`${file}: repository import path escapes the repository: @escape/private`);
       expect(violations.filter((violation) => violation.includes("must not import desktop-private modules"))).toHaveLength(1);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -59,7 +62,7 @@ describe("architecture policy bypass hardening", () => {
     const root = mkdtempSync(join(tmpdir(), "nexora-meta-glob-"));
     try {
       const file = "tests/repository/globs.test.ts";
-      writeFixture(root, file, ['import.meta.glob("../../apps/desktop/src/**/*.ts");', 'import.meta.globEager(["@/features/*.ts", "./safe/*.ts"]);', "import.meta.glob(`@/features/${name}.ts`);", 'const text = "import.meta.glob(\\"@/ignored/*.ts\\")";', '// import.meta.glob("@/ignored/*.ts");'].join("\n"));
+      writeFixture(root, file, ['import.meta.glob("../../apps/desktop/src/**/*.ts", { eager: true });', 'import.meta.globEager(["@/features/*.ts", "./safe/*.ts"], { import: "default" });', "import.meta.glob(`@/features/${name}.ts`);", 'const text = "import.meta.glob(\\"@/ignored/*.ts\\")";', '// import.meta.glob("@/ignored/*.ts");'].join("\n"));
       const violations = collectViolations(root, {
         ...basePolicy,
         frontendTestRoots: ["tests/repository"],
@@ -70,7 +73,7 @@ describe("architecture policy bypass hardening", () => {
         sourceRoots: [],
       }, { trackedFiles: [file], workspacePackageDirectories: [] });
       expect(violations.filter((violation) => violation.includes("must not import desktop-private modules"))).toHaveLength(2);
-      expect(violations).toContain(`${file}: import.meta.glob target must be a static string or string array`);
+      expect(violations.filter((violation) => violation.includes("target must be a static string or string array"))).toHaveLength(1);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -81,11 +84,14 @@ describe("architecture policy bypass hardening", () => {
     try {
       const inline = "apps/desktop/src-tauri/src/nested.rs";
       const included = "apps/desktop/src-tauri/src/included.rs";
+      const nestedIncluded = "apps/desktop/src-tauri/src/nested_included.rs";
       writeFixture(root, inline, "#[cfg(any(unix, all(feature = \"x\", not(not(test)))))]\nmod hidden { fn test() {} }\n");
       writeFixture(root, included, "#[cfg_attr(feature = \"x\", cfg(any(unix, test)))]\ninclude!(\"tests.rs\");\n");
-      const violations = collectViolations(root, { ...basePolicy, sourceRoots: ["apps/desktop/src-tauri/src"] }, { trackedFiles: [inline, included], workspacePackageDirectories: [] });
+      writeFixture(root, nestedIncluded, "#[cfg(test)]\nmod hidden { include!(\"tests.rs\"); }\n");
+      const violations = collectViolations(root, { ...basePolicy, sourceRoots: ["apps/desktop/src-tauri/src"] }, { trackedFiles: [inline, included, nestedIncluded], workspacePackageDirectories: [] });
       expect(violations).toContain(`inline Rust test module is forbidden: ${inline}`);
       expect(violations).toContain(`${included}: test-gated include! is forbidden in Rust production sources`);
+      expect(violations).toContain(`${nestedIncluded}: test-gated include! is forbidden in Rust production sources`);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -100,6 +106,8 @@ describe("architecture policy bypass hardening", () => {
         "grouped.rs": "use tauri::{command, Manager};\n#[command]\nfn bypass() {}\n",
         "grouped_alias.rs": "use tauri::{command as handler, Manager};\n#[handler]\nfn bypass() {}\n",
         "crate_alias.rs": "use tauri as shell;\n#[shell::command]\nfn bypass() {}\n",
+        "parameterized_alias.rs": "use tauri::command as handler;\n#[handler(rename_all = \"snake_case\")]\nfn bypass() {}\n",
+        "parameterized_crate_alias.rs": "use tauri as shell;\n#[shell::command(async)]\nfn bypass() {}\n",
       };
       const files = Object.keys(cases).map((name) => `apps/desktop/src-tauri/src/domains/${name}`);
       Object.entries(cases).forEach(([name, source]) => writeFixture(root, `apps/desktop/src-tauri/src/domains/${name}`, source));
@@ -122,6 +130,9 @@ describe("architecture policy bypass hardening", () => {
         "alias.rs": "use std::fs as disk;\nfn run() { disk::write(\"x\", \"y\").unwrap(); }\n",
         "grouped.rs": "use std::{fs::{self as disk, rename}, path::Path};\nfn run() { disk::read(\"x\").unwrap(); rename(\"x\", \"y\").unwrap(); }\n",
         "function.rs": "use std::fs::remove_file as erase;\nfn run() { erase(\"x\").unwrap(); }\n",
+        "glob.rs": "use std::fs::*;\nfn run() { read(\"x\").unwrap(); }\n",
+        "grouped_glob.rs": "use std::{fs::*, path::Path};\nfn run() { remove_file(\"x\").unwrap(); }\n",
+        "absolute_glob.rs": "use ::std::fs::*;\nfn run() { copy(\"x\", \"y\").unwrap(); }\n",
       };
       const safe = "apps/desktop/src-tauri/src/commands/safe.rs";
       const excepted = "apps/desktop/src-tauri/src/commands/excepted.rs";

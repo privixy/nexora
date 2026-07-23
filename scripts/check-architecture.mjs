@@ -131,7 +131,23 @@ function hasTestGatedRustInclude(source) {
         index += 1;
       }
     }
-    return tokens[index]?.value === "include" && tokens[index + 1]?.value === "!";
+    if (tokens[index]?.value === "include" && tokens[index + 1]?.value === "!") return true;
+    let openBrace = -1;
+    for (let cursor = index; cursor < tokens.length; cursor += 1) {
+      if (tokens[cursor].value === ";") return false;
+      if (tokens[cursor].value === "{") {
+        openBrace = cursor;
+        break;
+      }
+    }
+    if (openBrace === -1) return false;
+    let depth = 1;
+    for (let cursor = openBrace + 1; cursor < tokens.length && depth > 0; cursor += 1) {
+      if (tokens[cursor].value === "{") depth += 1;
+      if (tokens[cursor].value === "}") depth -= 1;
+      if (depth > 0 && tokens[cursor].value === "include" && tokens[cursor + 1]?.value === "!") return true;
+    }
+    return false;
   });
 }
 
@@ -294,7 +310,7 @@ function importReferences(content) {
       && tokens[index + 5]?.value === "("
     ) {
       const argument = tokens[index + 6];
-      if (argument?.type === "string" && tokens[index + 7]?.value === ")") {
+      if (argument?.type === "string" && [")", ","].includes(tokens[index + 7]?.value)) {
         references.push({ kind: "glob", specifier: argument.value });
       } else if (argument?.value === "[") {
         let cursor = index + 7;
@@ -304,7 +320,7 @@ function importReferences(content) {
           else if (tokens[cursor].value !== ",") valid = false;
           cursor += 1;
         }
-        if (!valid || tokens[cursor]?.value !== "]" || tokens[cursor + 1]?.value !== ")") references.push({ kind: "glob" });
+        if (!valid || tokens[cursor]?.value !== "]" || ![")", ","].includes(tokens[cursor + 1]?.value)) references.push({ kind: "glob" });
       } else {
         references.push({ kind: "glob" });
       }
@@ -649,7 +665,11 @@ function tauriCommandAttributes(source) {
     if (qualified === "tauri::command") attributes.add(local);
     if (qualified === "tauri") attributes.add(`${local}::command`);
   }
-  return rustAttributes(source).some(({ body }) => attributes.has(body.map(({ value }) => value).join("")));
+  return rustAttributes(source).some(({ body }) => {
+    const parameterIndex = body.findIndex(({ value }) => value === "(");
+    const path = body.slice(0, parameterIndex === -1 ? body.length : parameterIndex).map(({ value }) => value).join("");
+    return attributes.has(path);
+  });
 }
 
 function usesRustFilesystem(source) {
@@ -665,10 +685,18 @@ function usesRustFilesystem(source) {
   }
   const moduleAliases = new Set();
   const functions = new Set();
+  let importsFilesystemGlob = false;
   for (const { path, local } of rustUseBindings(source)) {
     const qualified = path.join("::");
     if (qualified === "std::fs") moduleAliases.add(local);
     if (qualified.startsWith("std::fs::")) functions.add(local);
+  }
+  for (let index = 0; index < tokens.length - 3; index += 1) {
+    if (tokens[index].value !== "use") continue;
+    let end = index + 1;
+    while (end < tokens.length && tokens[end].value !== ";") end += 1;
+    const useTree = tokens.slice(index + 1, end).map(({ value }) => value).join("");
+    if (/^(?:::)?std::(?:fs::\*|\{fs::\*)/.test(useTree)) importsFilesystemGlob = true;
   }
   for (let index = 0; index < tokens.length; index += 1) {
     if (tokens[index].value === "use") {
@@ -685,6 +713,7 @@ function usesRustFilesystem(source) {
       && tokens[index + 3]?.value === "("
     ) return true;
     if (functions.has(tokens[index].value) && tokens[index + 1]?.value === "(") return true;
+    if (importsFilesystemGlob && tokens[index].type === "identifier" && tokens[index + 1]?.value === "(") return true;
   }
   return false;
 }
@@ -832,7 +861,7 @@ function collectRustBackendViolations(root, trackedFiles, boundaries) {
 }
 
 function resolveRepositoryReference(importer, specifier, importAliases) {
-  if (isAbsolute(specifier) || /^[A-Za-z]:[\\/]/.test(specifier)) return { error: "absolute" };
+  if (isAbsolute(specifier) || /^[A-Za-z]:[\\/]/.test(specifier) || /^file:/i.test(specifier)) return { error: "absolute" };
   const aliases = Object.entries(importAliases)
     .filter(([alias]) => specifier === alias || specifier.startsWith(`${alias}/`));
   if (aliases.length > 1) return { error: "ambiguous-alias" };
@@ -840,7 +869,8 @@ function resolveRepositoryReference(importer, specifier, importAliases) {
     const [alias, target] = aliases[0];
     const normalizedTarget = canonicalRepositoryPath(target);
     if (normalizedTarget === undefined) return { error: "escape" };
-    return { path: canonicalRepositoryPath(`${normalizedTarget}${specifier.slice(alias.length)}`) };
+    const resolved = canonicalRepositoryPath(`${normalizedTarget}${specifier.slice(alias.length)}`);
+    return resolved === undefined ? { error: "escape" } : { path: resolved };
   }
   if (specifier.startsWith(".")) {
     const resolved = canonicalRepositoryPath(join(dirname(importer), specifier));
