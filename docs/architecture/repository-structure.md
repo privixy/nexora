@@ -64,7 +64,7 @@ No frontend compatibility or direct-Tauri exceptions remain. Oversized files lis
 
 ## CI and release workflow ownership
 
-CI and release commands run from the repository root and delegate through root scripts. Cargo caches resolve `apps/desktop/src-tauri`, and Tauri build actions set `projectPath: apps/desktop`. The release dry run owns triggers for moved desktop version manifests, Vite configuration, Tauri manifests, and icons while preserving its unsigned bundle arguments and artifact names. Root-owned `aur/` and `snap/` metadata consume released desktop artifacts by their unchanged names and do not own desktop source. Workflow YAML is validated through `pnpm lint:workflows`, a checksum-verified launcher pinned to actionlint v1.7.7.
+CI diagnoses repository, desktop, plugin API, create-plugin, and Rust gates independently. npm publication validates canonical package tarballs and SHA256 sidecars, preflights exact public-registry versions, and publishes those same immutable paths without rebuilding or repacking. Cargo caches resolve `apps/desktop/src-tauri`, and Tauri build actions set `projectPath: apps/desktop` with the desktop-owned Tauri CLI. The release dry run owns broad moved desktop source/config/version triggers while preserving its unsigned bundle arguments and artifact names. Root-owned `aur/` and `snap/` metadata consume exact-cased `Nexora_<version>_amd64.deb` and `Nexora_<version>_x64-setup.exe` release artifacts; `pnpm validate:distribution` performs non-publishing static validation. Workflow YAML is validated through `pnpm lint:workflows`, a checksum-verified launcher pinned to actionlint v1.7.7.
 
 ## Required verification
 
@@ -75,4 +75,5 @@ Run the narrowest relevant checks first, then run required affected checks from 
 - `pnpm typecheck` after TypeScript changes
 - `pnpm lint` after TypeScript/React changes
 - `pnpm test:rust` or the relevant `cargo test` command against `apps/desktop/src-tauri/Cargo.toml` after Rust/backend changes
-- Before pushing, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm build:plugin-api`, `pnpm check:plugin-api`, `pnpm build:create-plugin`, `pnpm smoke:create-plugin`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed
+- Package and tooling changes: `pnpm test:plugin-api`, `pnpm typecheck:plugin-api`, `pnpm pack:plugin-api`, `pnpm test:create-plugin`, `pnpm typecheck:create-plugin`, `pnpm smoke:create-plugin`, `pnpm pack:create-plugin`, `pnpm check:packages`, `node scripts/sync-version.js --check`, `pnpm validate:distribution`, and `pnpm lint:workflows`
+- Before pushing, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm check:packages`, `pnpm validate:distribution`, `pnpm lint:workflows`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed
