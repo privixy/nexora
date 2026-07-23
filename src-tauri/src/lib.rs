@@ -80,6 +80,8 @@ pub mod updater;
 pub mod window_title;
 #[cfg(test)]
 pub mod window_title_tests;
+#[cfg(test)]
+mod updater_tests;
 pub mod drivers {
     pub mod common;
     pub mod driver_trait;
@@ -188,6 +190,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(commands::QueryCancellationState::default())
         .manage(export::ExportCancellationState::default())
         .manage(dump_commands::DumpCancellationState::default())

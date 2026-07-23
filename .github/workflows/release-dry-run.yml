@@ -24,16 +24,22 @@ concurrency:
 
 jobs:
   build-tauri:
-    name: Dry run ${{ matrix.platform }}
+    name: Dry run ${{ matrix.platform }} ${{ matrix.architecture }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: macos-latest
-            args: '--target universal-apple-darwin --bundles dmg --config {"bundle":{"createUpdaterArtifacts":false}}'
+            architecture: aarch64
+            args: '--target aarch64-apple-darwin --bundles dmg --config {"bundle":{"createUpdaterArtifacts":false}}'
+          - platform: macos-latest
+            architecture: x86_64
+            args: '--target x86_64-apple-darwin --bundles dmg --config {"bundle":{"createUpdaterArtifacts":false}}'
           - platform: ubuntu-latest
+            architecture: x86_64
             args: '--bundles deb --config {"bundle":{"createUpdaterArtifacts":false}}'
           - platform: windows-latest
+            architecture: x86_64
             args: '--bundles nsis --config {"bundle":{"createUpdaterArtifacts":false}}'
     runs-on: ${{ matrix.platform }}
     steps:
