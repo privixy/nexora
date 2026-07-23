@@ -393,7 +393,7 @@ describe("architecture policy", () => {
       "'@/features/' + feature",
       "resolveFeature(feature)",
       "`@/features/${feature}`",
-      "'@/features/editor', options",
+      "'@/features/editor' + suffix, options",
     ]) {
       expect(boundaryViolations({ [file]: "unused" }, [], [], [], {
         [file]: `import(${target});\n`,

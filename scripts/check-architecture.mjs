@@ -158,12 +158,21 @@ function isRustTestSource(file) {
 function rustTestInclusionViolations(root, file) {
   if (!isRustTestSource(file)) return [];
   const source = readFileSync(join(root, file), "utf8");
+  const tokens = normalizedSourceTokens(source);
   const violations = [];
-  if (/\binclude\s*!\s*[({\[]/m.test(source)) {
+  if (tokens.some((token, index) => token.value === "include" && tokens[index + 1]?.value === "!" && ["(", "{", "["].includes(tokens[index + 2]?.value))) {
     violations.push(`${file}: include! is forbidden in Rust test sources`);
   }
-  for (const match of source.matchAll(/#\s*\[\s*path\s*=\s*(?:r#*)?"([^"]+)"#*\s*\]\s*(?:pub(?:\s*\([^)]*\))?\s+)?mod\s+[A-Za-z_][A-Za-z0-9_]*\s*;/gm)) {
-    violations.push(`${file}: test-to-test #[path] module inclusion is forbidden: ${match[1]}`);
+  for (const { body, end } of rustAttributes(source)) {
+    if (body[0]?.value !== "path" || body[1]?.value !== "=" || body[2]?.type !== "string") continue;
+    let index = end;
+    if (tokens[index]?.value === "pub") {
+      index += 1;
+      if (tokens[index]?.value === "(") index = tokenGroupEnd(tokens, index) + 1;
+    }
+    if (tokens[index]?.value === "mod" && tokens[index + 1]?.type === "identifier" && tokens[index + 2]?.value === ";") {
+      violations.push(`${file}: test-to-test #[path] module inclusion is forbidden: ${body[2].value}`);
+    }
   }
   return violations;
 }
@@ -218,6 +227,21 @@ function sourceTokens(content) {
         }
       }
       continue;
+    }
+    if (character === "r" && ["#", '"'].includes(next)) {
+      let hashes = "";
+      let cursor = index + 1;
+      while (content[cursor] === "#") {
+        hashes += "#";
+        cursor += 1;
+      }
+      if (content[cursor] === '"') {
+        const endMarker = `"${hashes}`;
+        const end = content.indexOf(endMarker, cursor + 1);
+        tokens.push({ type: "string", value: content.slice(cursor + 1, end === -1 ? content.length : end) });
+        index = end === -1 ? content.length : end + endMarker.length;
+        continue;
+      }
     }
     if (character === '"' || character === "'") {
       const quote = character;
@@ -277,6 +301,35 @@ function sourceTokens(content) {
   return tokens;
 }
 
+function tokenGroupEnd(tokens, start) {
+  const pairs = { "(": ")", "[": "]", "{": "}", "<": ">" };
+  const stack = [pairs[tokens[start]?.value]];
+  if (!stack[0]) return -1;
+  for (let index = start + 1; index < tokens.length; index += 1) {
+    const closing = pairs[tokens[index].value];
+    if (closing) stack.push(closing);
+    else if (tokens[index].value === stack.at(-1)) {
+      stack.pop();
+      if (stack.length === 0) return index;
+    }
+  }
+  return -1;
+}
+
+function normalizedSourceTokens(content) {
+  const rawTokens = sourceTokens(content);
+  const tokens = [];
+  for (let index = 0; index < rawTokens.length; index += 1) {
+    if (rawTokens[index].value === ":" && rawTokens[index + 1]?.value === ":") {
+      tokens.push({ type: "punctuation", value: "::" });
+      index += 1;
+    } else {
+      tokens.push(rawTokens[index]);
+    }
+  }
+  return tokens;
+}
+
 function importReferences(content) {
   const tokens = sourceTokens(content);
   const references = [];
@@ -285,8 +338,24 @@ function importReferences(content) {
     const token = tokens[index];
     if (token.type === "identifier" && (token.value === "import" || token.value === "export")) {
       if (token.value === "import" && tokens[index + 1]?.value === "(") {
-        references.push(tokens[index + 2]?.type === "string" && tokens[index + 3]?.value === ")"
+        const close = tokenGroupEnd(tokens, index + 1);
+        const hasStaticSpecifier = tokens[index + 2]?.type === "string";
+        const hasValidRemainder = tokens[index + 3]?.value === ")"
+          || (tokens[index + 3]?.value === "," && close > index + 3);
+        references.push(hasStaticSpecifier && hasValidRemainder
           ? { kind: "import", specifier: tokens[index + 2].value }
+          : { kind: "import" });
+        continue;
+      }
+      if (
+        token.value === "import"
+        && tokens[index + 1]?.type === "identifier"
+        && tokens[index + 2]?.value === "="
+        && tokens[index + 3]?.value === "require"
+        && tokens[index + 4]?.value === "("
+      ) {
+        references.push(tokens[index + 5]?.type === "string" && tokens[index + 6]?.value === ")"
+          ? { kind: "import", specifier: tokens[index + 5].value }
           : { kind: "import" });
         continue;
       }
@@ -307,13 +376,15 @@ function importReferences(content) {
       && tokens[index + 2]?.value === "meta"
       && tokens[index + 3]?.value === "."
       && ["glob", "globEager"].includes(tokens[index + 4]?.value)
-      && tokens[index + 5]?.value === "("
     ) {
-      const argument = tokens[index + 6];
-      if (argument?.type === "string" && [")", ","].includes(tokens[index + 7]?.value)) {
+      let open = index + 5;
+      if (tokens[open]?.value === "<") open = tokenGroupEnd(tokens, open) + 1;
+      if (tokens[open]?.value !== "(") continue;
+      const argument = tokens[open + 1];
+      if (argument?.type === "string" && [")", ","].includes(tokens[open + 2]?.value)) {
         references.push({ kind: "glob", specifier: argument.value });
       } else if (argument?.value === "[") {
-        let cursor = index + 7;
+        let cursor = open + 2;
         let valid = true;
         while (tokens[cursor] && tokens[cursor].value !== "]") {
           if (tokens[cursor].type === "string") references.push({ kind: "glob", specifier: tokens[cursor].value });
@@ -560,16 +631,7 @@ function rustDriverAliases(source) {
 }
 
 function rustUseBindings(source) {
-  const rawTokens = sourceTokens(source);
-  const tokens = [];
-  for (let index = 0; index < rawTokens.length; index += 1) {
-    if (rawTokens[index].value === ":" && rawTokens[index + 1]?.value === ":") {
-      tokens.push({ type: "punctuation", value: "::" });
-      index += 1;
-    } else {
-      tokens.push(rawTokens[index]);
-    }
-  }
+  const tokens = normalizedSourceTokens(source);
   const bindings = [];
 
   function parseTree(tree, prefix = []) {
@@ -654,16 +716,54 @@ function rustAttributes(source) {
 }
 
 function attributeContainsTestCfg(body) {
-  const cfgIndex = body.findIndex((token) => token.value === "cfg" || token.value === "cfg_attr");
-  return cfgIndex !== -1 && body.slice(cfgIndex + 1).some((token) => token.type === "identifier" && token.value === "test");
+  function cfgPredicateContainsTest(tokens) {
+    for (let index = 0; index < tokens.length; index += 1) {
+      if (tokens[index].value === "test") return true;
+      if (["all", "any", "not"].includes(tokens[index].value) && tokens[index + 1]?.value === "(") {
+        const end = tokenGroupEnd(tokens, index + 1);
+        if (end !== -1 && cfgPredicateContainsTest(tokens.slice(index + 2, end))) return true;
+        index = end;
+      }
+    }
+    return false;
+  }
+
+  if (body[0]?.value === "cfg" && body[1]?.value === "(") {
+    const end = tokenGroupEnd(body, 1);
+    return end !== -1 && cfgPredicateContainsTest(body.slice(2, end));
+  }
+  if (body[0]?.value !== "cfg_attr" || body[1]?.value !== "(") return false;
+  const end = tokenGroupEnd(body, 1);
+  if (end === -1) return false;
+  let depth = 0;
+  for (let index = 2; index < end; index += 1) {
+    if (["(", "[", "{"].includes(body[index].value)) depth += 1;
+    else if ([")", "]", "}"].includes(body[index].value)) depth -= 1;
+    else if (body[index].value === "," && depth === 0) {
+      return body[index + 1]?.value === "cfg"
+        && body[index + 2]?.value === "("
+        && cfgPredicateContainsTest(body.slice(index + 3, tokenGroupEnd(body, index + 2)));
+    }
+  }
+  return false;
 }
 
 function tauriCommandAttributes(source) {
-  const attributes = new Set(["tauri::command"]);
+  const attributes = new Set(["tauri::command", "::tauri::command"]);
   for (const { path, local } of rustUseBindings(source)) {
     const qualified = path.join("::");
     if (qualified === "tauri::command") attributes.add(local);
     if (qualified === "tauri") attributes.add(`${local}::command`);
+  }
+  const tokens = normalizedSourceTokens(source);
+  for (let index = 0; index < tokens.length - 4; index += 1) {
+    if (
+      tokens[index].value === "extern"
+      && tokens[index + 1]?.value === "crate"
+      && tokens[index + 2]?.value === "tauri"
+      && tokens[index + 3]?.value === "as"
+      && tokens[index + 4]?.type === "identifier"
+    ) attributes.add(`${tokens[index + 4].value}::command`);
   }
   return rustAttributes(source).some(({ body }) => {
     const parameterIndex = body.findIndex(({ value }) => value === "(");
@@ -673,23 +773,18 @@ function tauriCommandAttributes(source) {
 }
 
 function usesRustFilesystem(source) {
-  const rawTokens = sourceTokens(source);
-  const tokens = [];
-  for (let index = 0; index < rawTokens.length; index += 1) {
-    if (rawTokens[index].value === ":" && rawTokens[index + 1]?.value === ":") {
-      tokens.push({ type: "punctuation", value: "::" });
-      index += 1;
-    } else {
-      tokens.push(rawTokens[index]);
-    }
-  }
+  const tokens = normalizedSourceTokens(source);
+  const standardAliases = new Set(["std"]);
   const moduleAliases = new Set();
   const functions = new Set();
+  const fileTypes = new Set();
   let importsFilesystemGlob = false;
   for (const { path, local } of rustUseBindings(source)) {
     const qualified = path.join("::");
+    if (qualified === "std") standardAliases.add(local);
     if (qualified === "std::fs") moduleAliases.add(local);
-    if (qualified.startsWith("std::fs::")) functions.add(local);
+    if (qualified === "std::fs::File") fileTypes.add(local);
+    else if (qualified.startsWith("std::fs::")) functions.add(local);
   }
   for (let index = 0; index < tokens.length - 3; index += 1) {
     if (tokens[index].value !== "use") continue;
@@ -703,24 +798,29 @@ function usesRustFilesystem(source) {
       while (index < tokens.length && tokens[index].value !== ";") index += 1;
       continue;
     }
+    const absoluteOffset = tokens[index].value === "::" ? 1 : 0;
     if (
-      tokens[index].value === "std" && tokens[index + 1]?.value === "::"
-      && tokens[index + 2]?.value === "fs" && tokens[index + 3]?.value === "::"
-      && tokens[index + 5]?.value === "("
+      standardAliases.has(tokens[index + absoluteOffset]?.value) && tokens[index + absoluteOffset + 1]?.value === "::"
+      && tokens[index + absoluteOffset + 2]?.value === "fs" && tokens[index + absoluteOffset + 3]?.value === "::"
+      && tokens[index + absoluteOffset + 4]?.type === "identifier"
     ) return true;
     if (
       moduleAliases.has(tokens[index].value) && tokens[index + 1]?.value === "::"
-      && tokens[index + 3]?.value === "("
+      && tokens[index + 2]?.type === "identifier"
     ) return true;
-    if (functions.has(tokens[index].value) && tokens[index + 1]?.value === "(") return true;
+    if (functions.has(tokens[index].value) && ["(", "::"].includes(tokens[index + 1]?.value)) return true;
+    if (fileTypes.has(tokens[index].value) && tokens[index + 1]?.value === "::" && tokens[index + 2]?.type === "identifier") return true;
     if (importsFilesystemGlob && tokens[index].type === "identifier" && tokens[index + 1]?.value === "(") return true;
   }
   return false;
 }
 
 function rustProductionPathAttribute(source) {
-  return /#\s*\[\s*path\s*=/.test(source)
-    || /#\s*\[\s*cfg_attr\s*\([^\]]*\bpath\s*=/.test(source);
+  return rustAttributes(source).some(({ body }) => {
+    if (body[0]?.value === "path" && body[1]?.value === "=") return true;
+    if (body[0]?.value !== "cfg_attr" || body[1]?.value !== "(") return false;
+    return body.some((token, index) => token.value === "path" && body[index + 1]?.value === "=");
+  });
 }
 
 function usesBuiltInRustDriver(source) {
