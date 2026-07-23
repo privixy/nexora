@@ -16,8 +16,8 @@ interface UseCellEditingOptions {
   pkColumns?: string[] | null;
   pkIndexMaps: number[];
   connectionId?: string | null;
-  database?: string;
-  schema?: string;
+  database?: string | null;
+  schema?: string | null;
   activeDatabase?: string | null;
   activeSchema?: string | null;
   onRefresh?: () => void;
@@ -43,8 +43,6 @@ export function useCellEditing({
   connectionId,
   database,
   schema,
-  activeDatabase,
-  activeSchema,
   onRefresh,
   onPendingChange,
   onPendingInsertionChange,
@@ -111,19 +109,17 @@ export function useCellEditing({
         setEditingCell(null);
         return;
       }
-      if (!connectionId) return;
+      if (!connectionId || !database || !schema) return;
 
       try {
         await recordGateway.updateRecord({
           connectionId,
+          database,
+          schema,
           table: tableName,
           pkMap: pkMapVal,
           colName,
           newVal: value,
-          ...(database ?? activeDatabase
-            ? { database: database ?? activeDatabase }
-            : {}),
-          ...(schema ?? activeSchema ? { schema: schema ?? activeSchema } : {}),
         });
         if (onRefresh) onRefresh();
       } catch (e) {
@@ -148,8 +144,6 @@ export function useCellEditing({
     connectionId,
     database,
     schema,
-    activeDatabase,
-    activeSchema,
     onRefresh,
     showAlert,
     t,

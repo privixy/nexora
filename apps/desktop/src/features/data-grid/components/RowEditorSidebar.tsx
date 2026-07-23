@@ -159,6 +159,7 @@ export const RowEditorSidebar = ({
                   hasDefault={defaultValueColumns?.includes(column.name)}
                   isNullable={nullableColumns?.includes(column.name)}
                   connectionId={connectionId}
+                  database={database}
                   tableName={tableName}
                   pkMap={pkMap}
                   schema={schema}

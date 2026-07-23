@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { recordGateway } from "../../../../src/platform/tauri/recordGateway";
 import { useCellEditing } from "../../../../src/features/data-grid/hooks/useCellEditing";
@@ -10,6 +10,10 @@ vi.mock("../../../../src/platform/tauri/recordGateway", () => ({
 }));
 
 describe("useCellEditing", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("forwards the explicit database and schema instead of stale active context", async () => {
     const onRefresh = vi.fn();
     vi.mocked(recordGateway.updateRecord).mockResolvedValue(undefined);
@@ -46,16 +50,23 @@ describe("useCellEditing", () => {
     expect(onRefresh).toHaveBeenCalledOnce();
   });
 
-  it("omits unavailable database and schema fields", async () => {
+  it("blocks direct mutations with incomplete explicit context instead of using stale active context", async () => {
+    const loadedRows = [
+      { type: "existing" as const, rowData: [1, "Alice"], displayIndex: 0 },
+    ];
+    const onRefresh = vi.fn();
     vi.mocked(recordGateway.updateRecord).mockResolvedValue(undefined);
     const { result } = renderHook(() =>
       useCellEditing({
         columns: ["id", "name"],
-        mergedRows: [{ type: "existing", rowData: [1, "Alice"], displayIndex: 0 }],
+        mergedRows: loadedRows,
         tableName: "users",
         pkColumns: ["id"],
         pkIndexMaps: [0],
         connectionId: "conn-1",
+        activeDatabase: "stale_database",
+        activeSchema: "stale_schema",
+        onRefresh,
         showAlert: vi.fn(),
         t: (key) => key,
       }),
@@ -64,13 +75,9 @@ describe("useCellEditing", () => {
     act(() => result.current.setEditingCell({ rowIndex: 0, colIndex: 1, value: "Alicia" }));
     await act(() => result.current.handleEditCommit());
 
-    expect(recordGateway.updateRecord).toHaveBeenCalledWith({
-      connectionId: "conn-1",
-      table: "users",
-      pkMap: { id: 1 },
-      colName: "name",
-      newVal: "Alicia",
-    });
+    expect(recordGateway.updateRecord).not.toHaveBeenCalled();
+    expect(onRefresh).not.toHaveBeenCalled();
+    expect(loadedRows[0].rowData).toEqual([1, "Alice"]);
   });
 
   it("commits the picker value without waiting for state synchronization", async () => {

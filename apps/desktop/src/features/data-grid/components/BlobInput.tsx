@@ -31,6 +31,7 @@ export interface BlobInputProps {
   placeholder?: string;
   className?: string;
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   pkMap?: Record<string, unknown> | null;
   colName?: string | null;
@@ -50,6 +51,7 @@ export const BlobInput = ({
   placeholder,
   className = "",
   connectionId,
+  database,
   tableName,
   pkMap,
   colName,
@@ -68,6 +70,8 @@ export const BlobInput = ({
   const canFetchFull =
     metadata?.isTruncated &&
     connectionId &&
+    database &&
+    schema &&
     tableName &&
     pkMap &&
     Object.keys(pkMap).length > 0 &&
@@ -120,10 +124,11 @@ export const BlobInput = ({
     let cancelled = false;
     queryGateway.invoke<string>("fetch_blob_as_data_url", {
       connectionId,
+      database,
+      schema,
       table: tableName,
       colName,
       pkMap,
-      ...(schema ? { schema } : {}),
     })
       .then((dataUrl) => {
         if (!cancelled) setDbPreviewUrl(dataUrl);
@@ -134,7 +139,7 @@ export const BlobInput = ({
     return () => {
       cancelled = true;
     };
-  }, [isImage, canFetchFull, connectionId, tableName, colName, pkMap, schema]);
+  }, [isImage, canFetchFull, connectionId, database, tableName, colName, pkMap, schema]);
 
   const effectiveImageDataUrl =
     imageDataUrl ?? fileRefPreviewUrl ?? dbPreviewUrl;
@@ -188,11 +193,12 @@ export const BlobInput = ({
       try {
         await queryGateway.invoke("save_blob_to_file", {
           connectionId,
+          database,
+          schema,
           table: tableName,
           colName,
           pkMap,
           filePath,
-          ...(schema ? { schema } : {}),
         });
       } catch (error) {
         console.error("Failed to save BLOB:", error);

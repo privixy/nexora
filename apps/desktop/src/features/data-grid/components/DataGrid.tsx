@@ -84,7 +84,7 @@ export const DataGrid = React.memo(
     readonly: readonlyProp,
   }: DataGridProps) => {
     const { t } = useTranslation();
-    const { activeDatabase, activeSchema, connections } = useDatabase();
+    const { connections } = useDatabase();
     const { showAlert } = useAlert();
     const { settings } = useSettings();
     const colorByType = settings.resultColorByType ?? false;
@@ -326,8 +326,6 @@ export const DataGrid = React.memo(
       connectionId,
       database,
       schema,
-      activeDatabase,
-      activeSchema,
       onRefresh,
       onPendingChange,
       onPendingInsertionChange,

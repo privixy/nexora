@@ -703,7 +703,7 @@
     "apps/desktop/tests/features/connections/state/DatabaseProvider.test.tsx": 951,
     "apps/desktop/tests/features/editor/state/EditorProvider.test.tsx": 792,
     "apps/desktop/src/features/notebooks/components/NotebookView.tsx": 952,
-    "apps/desktop/src/features/data-grid/components/DataGrid.tsx": 1214,
+    "apps/desktop/src/features/data-grid/components/DataGrid.tsx": 1212,
     "apps/desktop/src/features/data-grid/components/DataGridRow.tsx": 770,
     "apps/desktop/tests/features/data-grid/lib/dataGrid.test.ts": 689,
     "apps/desktop/src/features/tasks/pages/TaskManagerPage.tsx": 664,

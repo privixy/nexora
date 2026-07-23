@@ -39,6 +39,7 @@ export interface FieldEditorProps {
   originalValue?: unknown;
   detectJsonInTextColumns?: boolean;
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   pkMap?: Record<string, unknown> | null;
   schema?: string | null;
@@ -63,6 +64,7 @@ export const FieldEditor = ({
   originalValue,
   detectJsonInTextColumns = false,
   connectionId,
+  database,
   tableName,
   pkMap,
   schema,
@@ -122,6 +124,7 @@ export const FieldEditor = ({
         onChange={(newValue) => onChange(newValue)}
         placeholder={defaultPlaceholder}
         connectionId={connectionId}
+        database={database}
         tableName={tableName}
         pkMap={pkMap}
         colName={name}
