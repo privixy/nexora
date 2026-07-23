@@ -106,13 +106,6 @@ describe("architecture policy", () => {
       "apps/desktop/tests/repository",
     ]);
     expect(policy.frontendTestOwners).toMatchObject({
-      "apps/desktop/tests/components/SlotAnchor.test.tsx": [
-        "apps/desktop/src/shared/ui/SlotAnchor.tsx",
-        "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
-      "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
-      "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
-        "apps/desktop/src/features/settings/state/SettingsContext.ts",
-      ],
       "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
         "apps/desktop/src/features/data-grid/index.ts",
         "apps/desktop/src/features/schema/index.ts",

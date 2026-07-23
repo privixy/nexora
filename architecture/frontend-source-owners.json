@@ -396,6 +396,12 @@
     "moveTask": 11
   },
   {
+    "source": "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx",
+    "moveTask": 40
+  },
+  {
     "source": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/components/NewConnectionModal/AppearanceSection.tsx",
@@ -418,6 +424,12 @@
     "owner": "connections",
     "destination": "apps/desktop/src/features/connections/components/SshConnectionsManager.tsx",
     "moveTask": 11
+  },
+  {
+    "source": "apps/desktop/src/features/connections/components/SshConnectionsModal.tsx",
+    "owner": "connections",
+    "destination": "apps/desktop/src/features/connections/components/SshConnectionsModal.tsx",
+    "moveTask": 40
   },
   {
     "source": "apps/desktop/src/features/connections/components/list/ActionButtons.tsx",
@@ -1476,6 +1488,18 @@
     "moveTask": 12
   },
   {
+    "source": "apps/desktop/src/features/plugins/components/SlotAnchor.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/SlotAnchor.tsx",
+    "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/features/plugins/components/SlotErrorBoundary.tsx",
+    "owner": "plugins",
+    "destination": "apps/desktop/src/features/plugins/components/SlotErrorBoundary.tsx",
+    "moveTask": 40
+  },
+  {
     "source": "apps/desktop/src/features/plugins/components/modals/PluginInstallErrorModal.tsx",
     "owner": "plugins",
     "destination": "apps/desktop/src/features/plugins/components/modals/PluginInstallErrorModal.tsx",
@@ -1750,6 +1774,12 @@
     "owner": "settings",
     "destination": "apps/desktop/src/features/settings/components/AppearanceTab.tsx",
     "moveTask": 7
+  },
+  {
+    "source": "apps/desktop/src/features/settings/components/ConfigJsonModal.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/ConfigJsonModal.tsx",
+    "moveTask": 40
   },
   {
     "source": "apps/desktop/src/features/settings/components/FontPicker.tsx",
@@ -2514,12 +2544,6 @@
     "moveTask": 40
   },
   {
-    "source": "apps/desktop/src/shared/ui/ConfigJsonModal.tsx",
-    "owner": "settings",
-    "destination": "apps/desktop/src/features/settings/components/ConfigJsonModal.tsx",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/shared/ui/ConfirmModal.tsx",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/ConfirmModal.tsx",
@@ -2556,12 +2580,6 @@
     "moveTask": 40
   },
   {
-    "source": "apps/desktop/src/shared/ui/K8sConnectionsModal.tsx",
-    "owner": "connections",
-    "destination": "apps/desktop/src/features/connections/components/K8sConnectionsModal.tsx",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/shared/ui/Modal.tsx",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/Modal.tsx",
@@ -2586,18 +2604,6 @@
     "moveTask": 40
   },
   {
-    "source": "apps/desktop/src/shared/ui/SlotAnchor.tsx",
-    "owner": "plugins",
-    "destination": "apps/desktop/src/features/plugins/components/SlotAnchor.tsx",
-    "moveTask": 40
-  },
-  {
-    "source": "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
-    "owner": "plugins",
-    "destination": "apps/desktop/src/features/plugins/components/SlotErrorBoundary.tsx",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/shared/ui/SshAskpassGate.tsx",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/SshAskpassGate.tsx",
@@ -2607,12 +2613,6 @@
     "source": "apps/desktop/src/shared/ui/SshAskpassModal.tsx",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/SshAskpassModal.tsx",
-    "moveTask": 40
-  },
-  {
-    "source": "apps/desktop/src/shared/ui/SshConnectionsModal.tsx",
-    "owner": "connections",
-    "destination": "apps/desktop/src/features/connections/components/SshConnectionsModal.tsx",
     "moveTask": 40
   },
   {

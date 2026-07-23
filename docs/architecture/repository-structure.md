@@ -6,14 +6,15 @@ Foundation architecture guards are current and enforced through `pnpm check:arch
 
 ## Target state
 
-The frontend modularization target is the current enforced structure. App shell, configuration, localization, and styles live under `app`; domain code lives under named `features`; reusable presentation and utilities live under `shared`; Tauri transport and adapters live under `platform/tauri`. Feature public entry points remain the supported cross-feature API, and the ownership manifest inventories every production source at its final path.in named compatibility re-exports only. `tests/repository/frontendSourceOwnership.test.ts` authoritatively assigns every current source to its final owner, destination, and one Tasks 2-40 move task; SQL and driver-specific frontend canaries freeze existing debt. Later tasks perform the remaining manifest-driven moves, gateway migrations, and decomposition without behavior changes.
+The frontend modularization target is the current enforced structure. App shell, configuration, localization, styles, and cross-feature dependency injection live under `app`; domain code lives under named `features`; reusable presentation, contracts, and utilities live under `shared`; Tauri transport and adapters live under `platform/tauri`. Feature public entry points are the supported cross-feature API, the feature dependency graph is acyclic, and `architecture/frontend-source-owners.json` inventories every production source at its final path. `tests/repository/frontendSourceOwnership.test.ts` authoritatively assigns every current source to its final owner and destination; SQL and driver-specific frontend canaries freeze existing debt.
 
 ## Dependency direction
 
 - Desktop may import package public entry points.
 - Packages may not import desktop internals.
 - Features may import `shared` and `platform`; shared modules may not import features.
-- Cross-feature imports use explicit feature public entry points.
+- Cross-feature imports use explicit feature public entry points and must preserve an acyclic feature graph.
+- App composition injects implementations for reverse dependencies such as editor UI used by connections/schema and visual explain UI used by editor.
 - Rust commands under `apps/desktop/src-tauri/src/commands/` are transport adapters and may depend on domains, models, and infrastructure adapter constructors, but not `sqlx`, built-in driver implementations, or pool constructors.
 - Tauri-independent domains own workflows and explicit database context; domains do not import Tauri, direct pools, or built-in drivers. Drivers own database semantics and do not import commands or domains. Infrastructure owns engine-neutral mechanisms and does not import commands.
 - Plugin process transport and the `RpcDriver` adapter are separate. Compatibility facades contain re-exports only and remain stable public entry points.
