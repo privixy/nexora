@@ -13,8 +13,15 @@ fn target_plugin_transport_and_adapter_are_separate() {
     let adapter = std::fs::read_to_string(root.join("rpc_driver.rs")).unwrap();
     assert!(facade.contains("pub use super::process::PluginProcess;"));
     assert!(facade.contains("pub use super::rpc_driver::RpcDriver;"));
+    assert!(!process.contains("crate::commands"));
+    assert!(!adapter.contains("crate::commands"));
     assert!(process.contains("pub struct PluginProcess"));
     assert!(!process.contains("impl DatabaseDriver for RpcDriver"));
     assert!(adapter.contains("impl DatabaseDriver for RpcDriver"));
     assert!(!adapter.contains("tokio::process::Command"));
+
+    let manager = std::fs::read_to_string(root.join("manager.rs")).unwrap();
+    let service = std::fs::read_to_string(root.join("service.rs")).unwrap();
+    assert!(!manager.contains("crate::commands"));
+    assert!(!service.contains("crate::commands"));
 }

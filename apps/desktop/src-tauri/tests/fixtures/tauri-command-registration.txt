@@ -216,7 +216,7 @@ plugins::commands::enable_plugin
 plugins::commands::get_plugin_manifest
 plugins::commands::get_plugin_dir
 plugins::commands::read_plugin_file
-plugins::manager::get_plugin_startup_errors
+commands::plugin_manager::get_plugin_startup_errors
 json_viewer::open_json_viewer_window
 json_viewer::get_json_viewer_session
 json_viewer::complete_json_viewer_session

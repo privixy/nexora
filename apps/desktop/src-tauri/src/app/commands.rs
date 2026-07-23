@@ -220,7 +220,7 @@ pub(crate) fn register_commands(builder: tauri::Builder<tauri::Wry>) -> tauri::B
         crate::plugins::commands::get_plugin_manifest,
         crate::plugins::commands::get_plugin_dir,
         crate::plugins::commands::read_plugin_file,
-        crate::plugins::manager::get_plugin_startup_errors,
+        crate::commands::plugin_manager::get_plugin_startup_errors,
         crate::json_viewer::open_json_viewer_window,
         crate::json_viewer::get_json_viewer_session,
         crate::json_viewer::complete_json_viewer_session,
