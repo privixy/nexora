@@ -23,7 +23,7 @@ import { SidebarTriggerItem } from "./SidebarTriggerItem";
 import { SidebarSchemaItem } from "./SidebarSchemaItem";
 import type { DatabaseData, RoutineInfo, TriggerInfo } from "../../../connections";
 import type { TableColumn } from "../../../../types/schema";
-import type { ContextMenuData } from "../../../../shared/types/sidebar";
+import type { ContextMenuData } from "../../contracts";
 import type { DriverCapabilities } from "../../../../types/plugins";
 import { groupRoutinesByType } from "../../../../utils/routines";
 import { formatObjectCount } from "../../../schema";

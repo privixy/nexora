@@ -18,7 +18,7 @@ import { SidebarRoutineGroupHeader } from "./SidebarRoutineGroupHeader";
 import { SidebarTriggerItem } from "./SidebarTriggerItem";
 import type { SchemaData, RoutineInfo, TriggerInfo } from "../../../connections";
 import type { TableColumn } from "../../../../types/schema";
-import type { ContextMenuData } from "../../../../shared/types/sidebar";
+import type { ContextMenuData } from "../../contracts";
 import { groupRoutinesByType } from "../../../../utils/routines";
 import { formatObjectCount } from "../../../schema";
 import { fuzzyFilter } from "../../../../shared/lib/fuzzy";

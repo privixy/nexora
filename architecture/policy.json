@@ -156,20 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/shared/types/explain.ts",
-        "importTarget": "../../features/visual-explain",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/types/sidebar.ts",
-        "importTarget": "../../features/explorer",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/shared/ui/CellCodeEditor.tsx",
         "importTarget": "../../features/settings/hooks/useEditorTheme",
         "owner": "legacy",

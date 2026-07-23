@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import type { RoutineInfo } from "../../../connections";
-import type { ContextMenuData } from "../../../../shared/types/sidebar";
+import type { ContextMenuData } from "../../contracts";
 
 interface RoutineParameter {
   name: string;

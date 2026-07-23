@@ -16,7 +16,7 @@ import { SidebarColumnItem } from "./SidebarColumnItem";
 import { SidebarIndexList } from "./SidebarIndexList";
 import { groupIndexes } from "../../../schema";
 import type { TableColumn, Index } from "../../../../types/schema";
-import type { ContextMenuData } from "../../../../shared/types/sidebar";
+import type { ContextMenuData } from "../../contracts";
 
 interface SidebarViewItemProps {
   view: { name: string };

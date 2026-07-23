@@ -2442,12 +2442,6 @@
     "moveTask": 40
   },
   {
-    "source": "apps/desktop/src/shared/types/sidebar.ts",
-    "owner": "shared",
-    "destination": "apps/desktop/src/shared/types/sidebar.ts",
-    "moveTask": 40
-  },
-  {
     "source": "apps/desktop/src/shared/types/theme.ts",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/types/theme.ts",

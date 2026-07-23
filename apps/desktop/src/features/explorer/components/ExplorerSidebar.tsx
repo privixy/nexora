@@ -78,7 +78,7 @@ import { useConnectionLayoutContext } from "../../connections";
 import { useDrivers } from "../../plugins";
 import { getConnectionAccent } from "../../connections";
 import type { TableColumn } from "../../../types/schema";
-import type { ContextMenuData } from "../../../shared/types/sidebar";
+import type { ContextMenuData } from "../contracts";
 import type { RoutineInfo, TriggerInfo } from "../../connections";
 import { groupRoutinesByType } from "../../../utils/routines";
 import { formatObjectCount } from "../../schema";

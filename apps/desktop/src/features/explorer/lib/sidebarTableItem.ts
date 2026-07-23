@@ -10,7 +10,7 @@
  */
 
 /** Subset of the table item props that actually affect its rendered output. */
-import type { ContextMenuData } from "../../../shared/types/sidebar";
+import type { ContextMenuData } from "../contracts";
 
 export interface TableItemComparableProps {
   table: { name: string };
