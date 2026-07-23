@@ -24,10 +24,11 @@ describe('release dry run workflow', () => {
   it("triggers and builds from moved desktop paths", () => {
     for (const path of [
       "apps/desktop/package.json",
-      "apps/desktop/src/version.ts",
-      "apps/desktop/src-tauri/Cargo.toml",
-      "apps/desktop/src-tauri/Cargo.lock",
-      "apps/desktop/src-tauri/tauri.conf.json",
+      "apps/desktop/src/**",
+      "apps/desktop/src-tauri/**",
+      "apps/desktop/index.html",
+      "scripts/sync-version.js",
+      "scripts/version-sync.js",
     ]) {
       expect(workflow).toContain(`- ${path}`);
     }
