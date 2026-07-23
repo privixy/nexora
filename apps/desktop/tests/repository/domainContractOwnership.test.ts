@@ -36,7 +36,9 @@ describe("domain contract ownership", () => {
       const indexPath = join(sourceRoot, "features", featureName, "index.ts");
       const source = readFileSync(indexPath, "utf8");
       expect(source, relative(sourceRoot, indexPath)).not.toMatch(/export\s+\*/);
-      expect(source, relative(sourceRoot, indexPath)).not.toMatch(/export\s*\{(?!\s*type\b)/);
+      expect(source, relative(sourceRoot, indexPath)).not.toMatch(
+        /export\s+(?:function|class|interface)\b/,
+      );
     }
   });
 

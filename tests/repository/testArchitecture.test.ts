@@ -91,12 +91,11 @@ describe("test architecture", () => {
   it("classifies every non-mirroring desktop frontend suite with exact owners", () => {
     expect(policy.frontendTestOwners).toMatchObject({
       "apps/desktop/tests/components/SlotAnchor.test.tsx": [
-        "apps/desktop/src/components/ui/SlotAnchor.tsx",
-        "apps/desktop/src/components/ui/SlotErrorBoundary.tsx",
+        "apps/desktop/src/shared/ui/SlotAnchor.tsx",
+        "apps/desktop/src/shared/ui/SlotErrorBoundary.tsx",
         "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx",
         "apps/desktop/src/features/plugins/state/PluginSlotContext.ts",
         "apps/desktop/src/features/settings/state/SettingsContext.ts",
-        "apps/desktop/src/types/pluginSlots.ts",
       ],
       "apps/desktop/tests/features/data-grid/publicApi.test.ts": [
         "apps/desktop/src/features/data-grid/index.ts",
@@ -126,9 +125,9 @@ describe("test architecture", () => {
         "apps/desktop/src/features/settings/state/SettingsContext.ts",
       ],
       "apps/desktop/tests/utils/sqlSplitter/dialects.test.ts": [
-        "apps/desktop/src/utils/sqlSplitter/index.ts",
-        "apps/desktop/src/utils/sqlSplitter/splitter.ts",
-        "apps/desktop/src/utils/sqlSplitter/tokenizer.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/index.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/splitter.ts",
+        "apps/desktop/src/features/editor/lib/sqlSplitter/tokenizer.ts",
       ],
     });
     for (const sameNameSuite of ["classify", "splitter", "tokenizer"]) {

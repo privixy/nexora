@@ -11,7 +11,7 @@ const source = readFileSync(
 
 describe("plugin API host synchronization", () => {
   it("reads the host barrel from the desktop workspace", () => {
-    expect(source).toContain('"apps/desktop/src/pluginApi.ts"');
+    expect(source).toContain('"apps/desktop/src/features/plugins/lib/pluginApi.ts"');
     expect(source).not.toContain('resolve(REPO_ROOT, "src/pluginApi.ts")');
   });
 });

@@ -7,7 +7,7 @@ const desktopRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 describe("root layout overflow", () => {
   it("locks document-level scrolling so app pages own their scroll areas", () => {
-    const css = readFileSync(resolve(desktopRoot, "src/index.css"), "utf8");
+    const css = readFileSync(resolve(desktopRoot, "src/app/index.css"), "utf8");
     const html = readFileSync(resolve(desktopRoot, "index.html"), "utf8");
 
     expect(css).toContain("html,\nbody,\n#root {");

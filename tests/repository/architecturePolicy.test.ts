@@ -130,6 +130,7 @@ describe("architecture policy", () => {
         "apps/desktop/src/features/connections/hooks/useDatabase.ts",
       ],
       "apps/desktop/tests/utils/minimax.test.ts": [
+        "apps/desktop/src/utils/settings.ts",
         "apps/desktop/src/features/settings/lib/settingsUI.ts",
         "apps/desktop/src/features/settings/state/SettingsContext.ts",
       ],
