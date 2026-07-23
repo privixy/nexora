@@ -2,7 +2,7 @@ use tauri::{AppHandle, Runtime};
 
 use crate::models::ColumnDefinition;
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_create_table_sql<R: Runtime>(

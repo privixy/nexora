@@ -1,4 +1,4 @@
-use crate::commands::shared::*;
+use crate::infrastructure::connections::workflows::*;
 use crate::commands::*;
 use crate::models::*;
 

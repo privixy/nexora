@@ -6,7 +6,7 @@ use crate::models::{
     K8sConnection, K8sConnectionInput,
 };
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_k8s_connections<R: Runtime>(

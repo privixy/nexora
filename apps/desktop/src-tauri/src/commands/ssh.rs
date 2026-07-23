@@ -9,7 +9,7 @@ use crate::models::{
     SshTestParams,
 };
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_ssh_connections<R: Runtime>(

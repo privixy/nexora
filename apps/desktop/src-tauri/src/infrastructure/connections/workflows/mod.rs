@@ -9,7 +9,8 @@ use uuid::Uuid;
 use crate::credential_cache;
 pub use crate::infrastructure::connections::{
     expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
-    get_config_path, get_ssh_config_path, resolve_connection_params, resolve_connection_params_with_id,
+    get_config_path, get_ssh_config_path, resolve_connection_params,
+    resolve_connection_params_with_id,
 };
 use crate::keychain_utils;
 use crate::models::{

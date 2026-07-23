@@ -8,7 +8,7 @@ use crate::models::{
 };
 use crate::persistence;
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_connection_by_id<R: Runtime>(

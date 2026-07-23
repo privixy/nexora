@@ -3,7 +3,7 @@ use tauri::{AppHandle, Runtime};
 use crate::keychain_utils;
 use crate::models::TestConnectionRequest;
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn test_connection<R: Runtime>(

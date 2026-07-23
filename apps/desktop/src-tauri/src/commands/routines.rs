@@ -4,7 +4,7 @@ use crate::models::{
     RoutineInfo, RoutineParameter,
 };
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_routines<R: Runtime>(

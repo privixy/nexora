@@ -7,7 +7,7 @@ use crate::models::{
 };
 use crate::persistence;
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn export_connections_payload<R: Runtime>(

@@ -1,5 +1,3 @@
-pub(crate) mod shared;
-
 pub use crate::infrastructure::connections::{
     expand_k8s_connection_params, expand_ssh_connection_params, find_connection_by_id,
     get_config_path, get_ssh_config_path, resolve_connection_params,
@@ -46,7 +44,7 @@ pub use windows::*;
 pub(crate) use crate::infrastructure::cancellation::{
     register_abort_handle, unregister_abort_handle, AbortHandleMap,
 };
-pub use shared::*;
+pub use crate::infrastructure::connections::workflows::*;
 
 #[cfg(test)]
 mod tests;

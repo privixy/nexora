@@ -1,5 +1,6 @@
 pub mod repository;
 pub mod resolution;
+pub mod workflows;
 
 pub use repository::{find_connection_by_id, get_config_path, get_ssh_config_path};
 pub use resolution::{

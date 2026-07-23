@@ -1,6 +1,6 @@
 
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 
 #[tauri::command]
 pub async fn get_data_types(driver: String) -> Result<crate::models::DataTypeRegistry, String> {

@@ -6,7 +6,7 @@ use crate::models::{
     ExplainPlan, QueryResult,
 };
 
-use super::shared::*;
+use crate::infrastructure::connections::workflows::*;
 use crate::infrastructure::cancellation::{register_abort_handle, unregister_abort_handle};
 
 #[tauri::command]
