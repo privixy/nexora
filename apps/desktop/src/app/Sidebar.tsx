@@ -2,14 +2,19 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plug2, Settings, Cpu, PanelLeft, Layers, Star, Clock, BookOpen } from "lucide-react";
-import { useDatabase } from "../features/connections";
-import { useTheme } from "../features/settings/hooks/useTheme";
+import {
+  ConnectionGroupItem,
+  isConnectionGrouped,
+  OpenConnectionItem,
+  useConnectionManager,
+  useDatabase,
+  useOpenConnectionInNewWindow,
+} from "../features/connections";
+import { useTheme } from "../features/settings";
 import { SlotAnchor } from "../shared/ui/SlotAnchor";
 
 // Sub-components
-import { NavItem } from "../features/explorer/components/NavItem";
-import { OpenConnectionItem } from "../features/connections/components/sidebar/OpenConnectionItem";
-import { ConnectionGroupItem } from "../features/connections/components/sidebar/ConnectionGroupItem";
+import { NavItem } from "./components/NavItem";
 import { ExplorerSidebar, type SidebarTab } from "../features/explorer";
 import { PanelDatabaseProvider } from "./shell/PanelDatabaseProvider";
 import { QuickNavigatorModal } from "../features/explorer";
@@ -18,11 +23,8 @@ import { SchemaModal } from "../features/schema";
 
 // Hooks & Utils
 import { useSidebarResize } from "../hooks/useSidebarResize";
-import { useConnectionManager } from "../features/connections/hooks/useConnectionManager";
-import { useOpenConnectionInNewWindow } from "../features/connections/hooks/useOpenConnectionInNewWindow";
 import { useConnectionLayoutContext } from "../shared/hooks/useConnectionLayoutContext";
-import { isConnectionGrouped } from "../features/connections/lib/connectionLayout";
-import { useDrivers } from "../features/plugins/hooks/useDrivers";
+import { useDrivers } from "../features/plugins";
 import { useKeybindings } from "../hooks/useKeybindings";
 
 export const Sidebar = () => {

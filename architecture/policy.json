@@ -156,90 +156,6 @@
     "sourceRoot": "apps/desktop/src",
     "temporaryExceptions": [
       {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/settings/hooks/useTheme",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/explorer/components/NavItem",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/connections/components/sidebar/OpenConnectionItem",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/connections/components/sidebar/ConnectionGroupItem",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/connections/hooks/useConnectionManager",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/connections/hooks/useOpenConnectionInNewWindow",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/connections/lib/connectionLayout",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/Sidebar.tsx",
-        "importTarget": "../features/plugins/hooks/useDrivers",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
-        "importTarget": "../features/plugins/hooks/useDrivers",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
-        "importTarget": "../features/connections/lib/driverUI",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/SplitPaneLayout.tsx",
-        "importTarget": "../features/connections/lib/connectionLayout",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/app/shell/PanelDatabaseProvider.tsx",
-        "importTarget": "../../features/connections/state/DatabaseContext",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
         "path": "apps/desktop/src/features/ai/components/AiExplainModal.tsx",
         "importTarget": "../../../app/language",
         "owner": "legacy",
@@ -623,12 +539,17 @@
     },
     "frozenSqlOwners": {
       "apps/desktop/src-tauri/src/count_query_compat.rs": {
-        "patterns": ["SELECT COUNT(*) FROM ({}) as count_wrapper"],
+        "patterns": [
+          "SELECT COUNT(*) FROM ({}) as count_wrapper"
+        ],
         "owner": "future backend behavior program",
         "removeAfter": "behavior-approved DatabaseDriver operation replaces this workflow"
       },
       "apps/desktop/src-tauri/src/server_time_compat.rs": {
-        "patterns": ["SELECT datetime('now', 'localtime')", "SELECT NOW()"],
+        "patterns": [
+          "SELECT datetime('now', 'localtime')",
+          "SELECT NOW()"
+        ],
         "owner": "future backend behavior program",
         "removeAfter": "behavior-approved DatabaseDriver operation replaces this workflow"
       }
@@ -692,7 +613,7 @@
     "@nexora/create-plugin": []
   },
   "fileSizeBaselines": {
-    "tests/repository/architecturePolicy.test.ts": 520,
+    "tests/repository/architecturePolicy.test.ts": 555,
     "apps/desktop/src-tauri/src/ai.rs": 1007,
     "apps/desktop/src-tauri/src/ai_activity.rs": 837,
     "apps/desktop/src-tauri/src/ai_activity/tests.rs": 862,

@@ -1098,9 +1098,9 @@
     "moveTask": 30
   },
   {
-    "source": "apps/desktop/src/features/explorer/components/NavItem.tsx",
-    "owner": "explorer",
-    "destination": "apps/desktop/src/features/explorer/components/NavItem.tsx",
+    "source": "apps/desktop/src/app/components/NavItem.tsx",
+    "owner": "app",
+    "destination": "apps/desktop/src/app/components/NavItem.tsx",
     "moveTask": 40
   },
   {

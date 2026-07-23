@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import { NavItem } from "../../../../src/features/explorer/components/NavItem";
+import { NavItem } from "../../../src/app/components/NavItem";
 import { Database } from "lucide-react";
 
 describe("NavItem", () => {
