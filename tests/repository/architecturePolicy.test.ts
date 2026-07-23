@@ -267,6 +267,41 @@ describe("architecture policy", () => {
     ]));
   });
 
+  it("detects feature cycles while unrelated temporary exceptions remain", () => {
+    const exception = {
+      path: "apps/desktop/src/app/routes.tsx",
+      importTarget: "../features/editor/pages/EditorPage",
+      owner: "app",
+      reason: "Unrelated deep import debt",
+      removeByTask: 41,
+    };
+
+    expect(boundaryViolations({
+      "apps/desktop/src/app/routes.tsx": "../features/editor/pages/EditorPage",
+      "apps/desktop/src/features/a/index.ts": "../b",
+      "apps/desktop/src/features/b/index.ts": "../a",
+    }, [exception])).toEqual(expect.arrayContaining([
+      expect.stringContaining("feature dependency cycle"),
+    ]));
+  });
+
+  it("includes excepted cross-feature imports in cycle detection", () => {
+    const exception = {
+      path: "apps/desktop/src/features/a/index.ts",
+      importTarget: "../b/private",
+      owner: "a",
+      reason: "Temporary deep import debt",
+      removeByTask: 41,
+    };
+
+    expect(boundaryViolations({
+      "apps/desktop/src/features/a/index.ts": "../b/private",
+      "apps/desktop/src/features/b/index.ts": "../a",
+    }, [exception])).toEqual(expect.arrayContaining([
+      expect.stringContaining("feature dependency cycle"),
+    ]));
+  });
+
   it("allows app composition of feature public roots, platform, and shared", () => {
     expect(boundaryViolations({
       "apps/desktop/src/app/routes.tsx": "@/features/editor",

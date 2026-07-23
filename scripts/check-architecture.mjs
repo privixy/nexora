@@ -282,7 +282,6 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
   const plannedCharacterizationTests = boundaries.plannedCharacterizationTests ?? [];
   const tauriGatewayOwnership = boundaries.tauriGatewayOwnership ?? [];
   const featureEdges = new Map();
-  const enforceFeatureCycles = (boundaries.temporaryExceptions ?? []).length === 0;
 
   for (const exception of [...exceptions, ...tauriExceptions]) {
     const isTauriException = tauriExceptions.includes(exception);
@@ -404,10 +403,8 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
         if (!importsFeaturePublicRoot && !isExcepted) {
           violations.push(`${file}: cross-feature imports must use the public feature root: ${importTarget}`);
         }
-        if (!isExcepted) {
-          if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
-          featureEdges.get(importerLayer).add(importedLayer);
-        }
+        if (!featureEdges.has(importerLayer)) featureEdges.set(importerLayer, new Set());
+        featureEdges.get(importerLayer).add(importedLayer);
       }
       if (isExcepted) {
         console.warn(`[architecture] frontend boundary debt: ${file} -> ${importTarget}`);
@@ -432,9 +429,7 @@ function collectFrontendBoundaryViolations(root, trackedFiles, boundaries) {
     visiting.delete(feature);
     visited.add(feature);
   }
-  if (enforceFeatureCycles) {
-    for (const feature of [...featureEdges.keys()].sort()) visit(feature);
-  }
+  for (const feature of [...featureEdges.keys()].sort()) visit(feature);
   return violations;
 }
 
