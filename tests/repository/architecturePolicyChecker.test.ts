@@ -205,6 +205,56 @@ describe("architecture policy", () => {
     }
   });
 
+  it("rejects unsupported TypeScript module extensions across governed architecture roots", () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), "nexora-source-extensions-"));
+
+    try {
+      const unsupportedFiles = [
+        "apps/desktop/src/RootBypass.test.mts",
+        "apps/desktop/src/features/editor/CycleBypass.cts",
+        "apps/desktop/src/features/schema/TauriBypass.mts",
+        "packages/plugin-api/src/SizeBypass.cts",
+      ];
+      writeFixture(tempRoot, unsupportedFiles[0], "test(\"bypass\", () => undefined);\n");
+      writeFixture(tempRoot, unsupportedFiles[1], 'import "@/features/schema";\n');
+      writeFixture(tempRoot, unsupportedFiles[2], 'import "@/features/editor";\nimport { invoke } from "@tauri-apps/api/core";\n');
+      writeFixture(tempRoot, unsupportedFiles[3], "line\n".repeat(501));
+
+      const violations = collectViolations(tempRoot, {
+        frontendTestRoots: ["apps/desktop/tests", "tests/repository"],
+        forbiddenFrontendTestRoots: ["apps/desktop/src"],
+        frontendTestAllowlist: [],
+        repositoryTestRoots: [],
+        frontendTestOwners: {},
+        rootTestRoots: [],
+        repositoryTestForbiddenImportRoots: [],
+        rustInlineTestAllowlist: [],
+        rustCrateLevelTestAllowlist: [],
+        rustIntegrationTests: {},
+        allowedWorkspaceDependencies: {},
+        fileSizeBaselines: {},
+        sourceRoots: ["apps/desktop/src", "packages/plugin-api/src"],
+        frontendBoundaries: {
+          sourceRoot: "apps/desktop/src",
+          temporaryExceptions: [],
+          directTauriExceptions: [],
+          sourceOwners: [],
+          plannedCharacterizationTests: [],
+          tauriGatewayOwnership: [],
+        },
+      }, {
+        trackedFiles: unsupportedFiles,
+        workspacePackageDirectories: [],
+      });
+
+      for (const file of unsupportedFiles) {
+        expect(violations).toContain(`${file}: unsupported TypeScript source extension; use .ts or .tsx`);
+      }
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+  });
+
   it("rejects unsupported frontend and repository test extensions", () => {
     const tempRoot = mkdtempSync(join(tmpdir(), "nexora-test-extensions-"));
 
@@ -217,6 +267,7 @@ describe("architecture policy", () => {
       const unsupportedFiles = [
         "apps/desktop/tests/components/Hidden.test.js",
         "apps/desktop/tests/components/HiddenView.test.jsx",
+        "apps/desktop/tests/components/HiddenModule.test.mts",
         "tests/repository/hidden.test.mjs",
         "tests/repository/hidden.test.cts",
       ];

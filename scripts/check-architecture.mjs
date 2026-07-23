@@ -809,6 +809,11 @@ export function collectViolations(root, policy, inventory = {}) {
     }
 
     const extension = extname(file);
+    const isProductionTypeScriptModule = sourceRoots.some((sourceRoot) => isUnderRoot(file, sourceRoot))
+      && (extension === ".mts" || extension === ".cts");
+    if (isProductionTypeScriptModule) {
+      violations.push(`${file}: unsupported TypeScript source extension; use .ts or .tsx`);
+    }
     if (extension === ".ts" || extension === ".tsx" || extension === ".rs") {
       const lineCount = countLines(readFileSync(join(root, file), "utf8"));
       const baseline = fileSizeBaselines[file];
