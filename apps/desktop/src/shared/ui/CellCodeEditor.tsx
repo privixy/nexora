@@ -4,8 +4,8 @@ import MonacoEditor, {
   type OnValidate,
 } from "@monaco-editor/react";
 import type * as MonacoTypes from "monaco-editor";
-import { useEditorTheme } from "../../features/settings/hooks/useEditorTheme";
 import { loadMonacoTheme } from "../../themes/themeUtils";
+import { useInjectedEditorTheme } from "./useInjectedEditorTheme";
 
 interface CellCodeEditorProps {
   value: string;
@@ -24,7 +24,7 @@ export const CellCodeEditor = ({
   readOnly = false,
   language = "json",
 }: CellCodeEditorProps) => {
-  const editorTheme = useEditorTheme();
+  const editorTheme = useInjectedEditorTheme();
   const monacoRef = useRef<typeof MonacoTypes | null>(null);
 
   useEffect(() => {

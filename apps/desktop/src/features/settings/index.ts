@@ -46,5 +46,6 @@ export {
   SettingToggle,
 } from "./components/SettingControls";
 export { AiApprovalGate } from "./components/AiApprovalGate";
+export { SettingsEditorThemeProvider } from "./components/SettingsEditorThemeProvider";
 export type { ApprovalAttentionAdapter } from './components/AiApprovalGate';
 export { getAiExplanationLanguage, SUPPORTED_LANGUAGES } from "./lib/languages";

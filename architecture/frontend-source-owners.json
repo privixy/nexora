@@ -1788,6 +1788,12 @@
     "moveTask": 7
   },
   {
+    "source": "apps/desktop/src/features/settings/components/SettingsEditorThemeProvider.tsx",
+    "owner": "settings",
+    "destination": "apps/desktop/src/features/settings/components/SettingsEditorThemeProvider.tsx",
+    "moveTask": 41
+  },
+  {
     "source": "apps/desktop/src/features/settings/components/ShortcutsTab.tsx",
     "owner": "settings",
     "destination": "apps/desktop/src/features/settings/components/ShortcutsTab.tsx",
@@ -2514,6 +2520,18 @@
     "moveTask": 40
   },
   {
+    "source": "apps/desktop/src/shared/ui/EditorThemeContext.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/EditorThemeContext.ts",
+    "moveTask": 41
+  },
+  {
+    "source": "apps/desktop/src/shared/ui/EditorThemeProvider.tsx",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/EditorThemeProvider.tsx",
+    "moveTask": 41
+  },
+  {
     "source": "apps/desktop/src/shared/ui/ErrorDisplay.tsx",
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/ErrorDisplay.tsx",
@@ -2620,6 +2638,12 @@
     "owner": "shared",
     "destination": "apps/desktop/src/shared/ui/WhatsNewModal.tsx",
     "moveTask": 40
+  },
+  {
+    "source": "apps/desktop/src/shared/ui/useInjectedEditorTheme.ts",
+    "owner": "shared",
+    "destination": "apps/desktop/src/shared/ui/useInjectedEditorTheme.ts",
+    "moveTask": 41
   },
   {
     "source": "apps/desktop/src/shared/workers/layoutWorker.ts",

@@ -1,6 +1,8 @@
+import type { ReactElement } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render as testingRender, screen, fireEvent } from "@testing-library/react";
 import { CellCodeEditor } from "../../../src/shared/ui/CellCodeEditor";
+import { EditorThemeProvider } from "../../../src/shared/ui/EditorThemeProvider";
 import type { Theme } from "../../../src/types/theme";
 
 interface MonacoMockProps {
@@ -51,9 +53,13 @@ const mockEditorTheme: { current: Theme } = {
   current: makeTheme("nexora-dark"),
 };
 
-vi.mock("../../../src/features/settings/hooks/useEditorTheme", () => ({
-  useEditorTheme: () => mockEditorTheme.current,
-}));
+function render(ui: ReactElement) {
+  return testingRender(
+    <EditorThemeProvider theme={mockEditorTheme.current}>
+      {ui}
+    </EditorThemeProvider>,
+  );
+}
 
 describe("CellCodeEditor", () => {
   beforeEach(() => {

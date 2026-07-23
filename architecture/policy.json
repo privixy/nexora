@@ -147,22 +147,7 @@
   },
   "frontendBoundaries": {
     "sourceRoot": "apps/desktop/src",
-    "temporaryExceptions": [
-      {
-        "path": "apps/desktop/src/shared/ui/CellCodeEditor.tsx",
-        "importTarget": "../../features/settings/hooks/useEditorTheme",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      },
-      {
-        "path": "apps/desktop/src/shared/ui/CellDiffEditor.tsx",
-        "importTarget": "../../features/settings/hooks/useEditorTheme",
-        "owner": "legacy",
-        "reason": "Existing dependency graph retained after path-only ownership normalization",
-        "removeByTask": 41
-      }
-    ],
+    "temporaryExceptions": [],
     "directTauriExceptionsFile": "architecture/frontend-tauri-exceptions.json",
     "sourceOwnersFile": "architecture/frontend-source-owners.json",
     "plannedCharacterizationTests": [
