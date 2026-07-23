@@ -1,0 +1,321 @@
+{
+  "pluginPackageVersion": "0.1.0",
+  "pluginApiVersion": "0.1.0",
+  "hostApiVersion": "0.1.0",
+  "registryVersion": null,
+  "emittedContract": null,
+  "publishedContract": null,
+  "differences": [
+    {
+      "key": "API_VERSION",
+      "expected": null,
+      "actual": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "MIN_HOST_VERSION",
+      "expected": null,
+      "actual": {
+        "kind": "value",
+        "declaration": "\"0.1.0\""
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "NexoraHostApi",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "PluginConfig",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "PluginQueryResult",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "PluginTranslator",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "SlotContextMap",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "ThemeColors",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "TypedSlotProps",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UIExtensionDeclaration",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginConnectionReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginModalReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginQueryReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginSettingReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginThemeReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "UsePluginToastReturn",
+      "expected": null,
+      "actual": {
+        "kind": "type",
+        "declaration": "any"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "assertHostCompat",
+      "expected": null,
+      "actual": {
+        "kind": "value",
+        "declaration": "(min?:string):void"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "defineSlot",
+      "expected": {
+        "kind": "value",
+        "declaration": "(slot:string,component:unknown):{readonly __slot:string;readonly component:unknown;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "<S extends SlotName>(slot:S,component:ComponentType<TypedSlotProps<S>>):{readonly __slot:S;readonly component:ComponentType<TypedSlotProps<S>>;}"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "getHost",
+      "expected": null,
+      "actual": {
+        "kind": "value",
+        "declaration": "():NexoraHostApi"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginConnection",
+      "expected": {
+        "kind": "value",
+        "declaration": "():{connectionId:string;driver:string;schema:string;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "():UsePluginConnectionReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginModal",
+      "expected": {
+        "kind": "value",
+        "declaration": "():{openModal:(options:PluginModalOptions)=>void;closeModal:()=>void;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "():UsePluginModalReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginQuery",
+      "expected": {
+        "kind": "value",
+        "declaration": "():{executeQuery:(query:string)=>Promise<{columns:string[];rows:unknown[][];}>;loading:boolean;error:string;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "():UsePluginQueryReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginSetting",
+      "expected": {
+        "kind": "value",
+        "declaration": "(pluginId:string):{getSetting:<T = unknown>(key:string,defaultValue?:T)=>T;setSetting:(key:string,value:unknown)=>void;setSettings:(updates:Record<string,unknown>)=>void;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "(pluginId:string):UsePluginSettingReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginTheme",
+      "expected": {
+        "kind": "value",
+        "declaration": "():{themeId:string;themeName:string;isDark:boolean;colors:import(\"/home/louis/workspace/nexora-packages/apps/desktop/src/shared/types/theme\").ThemeColors;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "():UsePluginThemeReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginToast",
+      "expected": {
+        "kind": "value",
+        "declaration": "():{showInfo:(text:string)=>Promise<void>;showError:(text:string)=>Promise<void>;showWarning:(text:string)=>Promise<void>;}"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "():UsePluginToastReturn"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    },
+    {
+      "key": "usePluginTranslation",
+      "expected": {
+        "kind": "value",
+        "declaration": "(pluginId:string):import(\"/home/louis/workspace/nexora-packages/node_modules/.pnpm/i18next@26.3.6_typescript@5.9.3/node_modules/i18next/index\").TFunction<string,undefined>"
+      },
+      "actual": {
+        "kind": "value",
+        "declaration": "(pluginId:string):PluginTranslator"
+      },
+      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
+      "owner": "plugin-api maintainers",
+      "removeWhen": "A separately versioned plugin API change aligns this symbol"
+    }
+  ],
+  "allowlist": []
+}

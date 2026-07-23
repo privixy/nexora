@@ -34,15 +34,22 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.contract.json",
+    "build": "tsup --out-dir .tmp/build",
     "check:sync": "tsx scripts/check-sync.ts",
-    "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run check:sync"
+    "pack:stage": "tsx scripts/stage-package.ts",
+    "pack:check": "tsx scripts/check-package.ts",
+    "check": "pnpm test && pnpm typecheck && pnpm build && pnpm check:sync && pnpm pack:stage && pnpm pack:check",
+    "clean": "rm -rf .tmp/build",
+    "prepack": "pnpm check",
+    "prepublishOnly": "pnpm check"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "@types/react": "^19.2.17",
     "react": "^19.2.7",
     "tsup": "^8.3.5",
