@@ -25,7 +25,8 @@ describe("final workspace path policy", () => {
 
   it("contains no stale moved version path in active tooling", () => {
     const files = tracked.filter((path) => !excluded(path) && (/^(scripts|tests\/repository|\.github|package\.json)/.test(path)));
-    const offenders = files.filter((path) => readFileSync(resolve(root, path), "utf8").includes("apps/desktop/src/version.ts"));
+    const legacyPath = ["apps/desktop", "src", "version.ts"].join("/");
+    const offenders = files.filter((path) => path !== "tests/repository/noLegacyPaths.test.ts" && readFileSync(resolve(root, path), "utf8").includes(legacyPath));
     expect(offenders).toEqual([]);
   });
 });

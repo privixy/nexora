@@ -10,9 +10,9 @@ describe("desktop packaging paths", () => {
   it("keeps AUR packaging on the released deb artifact", () => {
     const workflow = read(".github/workflows/aur.yml");
     const pkgbuild = read("aur/PKGBUILD");
-    expect(workflow).toContain("nexora_${{ steps.version.outputs.version }}_amd64.deb");
+    expect(workflow).toContain("Nexora_${{ steps.version.outputs.version }}_amd64.deb");
     expect(workflow).toContain("pkgbuild: ./aur/PKGBUILD");
-    expect(pkgbuild).toMatch(/^source=\("\$\{_pkgname}_\$\{pkgver}_amd64\.deb"\)$/m);
+    expect(pkgbuild).toMatch(/^source=\("https:\/\/github\.com\/privixy\/nexora\/releases\/download\/v\$\{pkgver}\/Nexora_\$\{pkgver}_amd64\.deb"\)$/m);
     expect(workflow).not.toContain("src-tauri/");
   });
 
