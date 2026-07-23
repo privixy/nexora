@@ -24,7 +24,7 @@
     "test:repository": "vitest --config vitest.config.ts --project repository",
     "test:desktop": "vitest --config vitest.config.ts --project desktop",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "test:plugin-contract": "pnpm exec vitest run --project repository tests/repository/pluginManifestSchema.test.ts && pnpm --filter @nexora/desktop typecheck:plugin-contract && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml plugins::tests::manifest",
+    "test:plugin-contract": "pnpm test tests/repository/pluginManifestSchema.test.ts -- --run && pnpm --filter @nexora/desktop typecheck:plugin-contract && pnpm --filter @nexora/desktop test tests/features/plugins/lib/pluginModuleLoader.test.ts tests/features/plugins/state/PluginSlotProvider.test.tsx -- --run && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml plugins::tests",
     "typecheck": "pnpm --filter @nexora/desktop typecheck",
     "test:coverage": "pnpm --filter @nexora/desktop test:coverage",
     "test:rust": "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
