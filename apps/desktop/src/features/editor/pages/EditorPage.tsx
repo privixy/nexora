@@ -628,6 +628,24 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
     activeTab?.pendingDeletions,
     activeTab?.pendingInsertions,
   ]);
+  const mutationContext = useMemo(() => {
+    if (
+      !activeTab?.connectionId ||
+      activeTab.connectionId !== activeConnectionId ||
+      !activeTab.database ||
+      !activeTab.schema ||
+      !activeTab.activeTable
+    ) {
+      return null;
+    }
+
+    return {
+      connectionId: activeTab.connectionId,
+      database: activeTab.database,
+      schema: activeTab.schema,
+      table: activeTab.activeTable,
+    };
+  }, [activeConnectionId, activeTab]);
 
   useEffect(() => {
     tabsRef.current = tabs;
@@ -2205,7 +2223,14 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
   ]);
 
   const handleSubmitChanges = useCallback(async () => {
-    if (!activeTab || !activeTab.activeTable || !activeConnectionId) return;
+    if (!activeTab || !mutationContext) return;
+
+    const {
+      connectionId,
+      database,
+      schema,
+      table: activeTable,
+    } = mutationContext;
 
     // pkColumns is required for updates/deletions but not for insertions-only
     const hasPkColumns = !!(activeTab.pkColumns && activeTab.pkColumns.length > 0);
@@ -2214,14 +2239,11 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
       pendingChanges,
       pendingDeletions,
       pendingInsertions,
-      activeTable,
       pkColumns,
       selectedRows,
     } = activeTab;
-    const database = resolveTabDatabase(activeTab);
-    const schema = resolveTabSchema(activeTab);
-    const databaseParam = database ? { database } : {};
-    const schemaParam = schema ? { schema } : {};
+    const databaseParam = { database };
+    const schemaParam = { schema };
     const updates: { pkVal: Record<string, unknown>; colName: string; newVal: unknown }[] = [];
     const deletions: Record<string, unknown>[] = [];
     const insertions: { tempId: string; data: Record<string, unknown> }[] = [];
@@ -2265,7 +2287,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
       try {
         // Fetch columns for validation
         const columns = await catalogGateway.getColumns<TableColumn[]>({
-          connectionId: activeConnectionId,
+          connectionId,
           tableName: activeTable,
           ...databaseParam,
           ...schemaParam,
@@ -2338,7 +2360,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
         promises.push(
           ...deletions.map((pkMap) =>
             recordGateway.deleteRecord({
-              connectionId: activeConnectionId,
+              connectionId,
               table: activeTable,
               pkMap,
               ...databaseParam,
@@ -2353,7 +2375,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
         promises.push(
           ...updates.map((u) =>
             recordGateway.updateRecord({
-              connectionId: activeConnectionId,
+              connectionId,
               table: activeTable,
               pkMap: u.pkVal,
               colName: u.colName,
@@ -2370,7 +2392,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
         promises.push(
           ...insertions.map((insertion) =>
             recordGateway.insertRecord({
-              connectionId: activeConnectionId,
+              connectionId,
               table: activeTable,
               data: insertion.data,
               ...databaseParam,
@@ -2436,13 +2458,11 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
     }
   }, [
     activeTab,
-    activeConnectionId,
+    mutationContext,
     updateActiveTab,
     runQuery,
     t,
     applyToAll,
-    resolveTabDatabase,
-    resolveTabSchema,
     showAlert,
   ]);
 
@@ -2453,7 +2473,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
       if (!focused) return;
       if (matchesShortcut(e, "save_grid_changes")) {
         e.preventDefault();
-        if (hasPendingChanges) handleSubmitChanges();
+        if (hasPendingChanges && mutationContext) handleSubmitChanges();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -2463,6 +2483,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
     activeConnectionId,
     matchesShortcut,
     hasPendingChanges,
+    mutationContext,
     handleSubmitChanges,
   ]);
 
@@ -3898,7 +3919,7 @@ export const EditorPage = ({ notebook, renderVisualExplain }: EditorPageProps) =
                         <div className="w-px self-stretch bg-default"></div>
                         <button
                           onClick={handleSubmitChanges}
-                          disabled={!applyToAll && !selectionHasPending}
+                          disabled={!mutationContext || (!applyToAll && !selectionHasPending)}
                           className="flex items-center gap-1.5 px-4 py-2 text-accent-success hover:bg-surface-secondary transition-colors text-sm font-medium disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed cursor-pointer"
                           title={t("editor.submitChanges")}
                         >
