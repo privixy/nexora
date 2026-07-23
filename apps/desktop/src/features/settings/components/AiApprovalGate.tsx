@@ -32,13 +32,18 @@ export function AiApprovalGate({
   const current = pending[0];
   const currentApprovalId = current?.id ?? null;
   const attentionApprovalIdRef = useRef<string | null>(null);
+  const attentionAdapterRef = useRef(attentionAdapter);
   const notifiedApprovalIdRef = useRef<string | null>(null);
   const approvalRunIdRef = useRef(0);
 
-  const restoreWindowState = useCallback(async () => {
-    await attentionAdapter.restoreWindowAlwaysOnTop(attentionApprovalIdRef.current);
-    attentionApprovalIdRef.current = null;
+  useEffect(() => {
+    attentionAdapterRef.current = attentionAdapter;
   }, [attentionAdapter]);
+
+  const restoreWindowState = useCallback(async () => {
+    await attentionAdapterRef.current.restoreWindowAlwaysOnTop(attentionApprovalIdRef.current);
+    attentionApprovalIdRef.current = null;
+  }, []);
 
   useEffect(() => {
     const runId = ++approvalRunIdRef.current;
@@ -73,7 +78,7 @@ export function AiApprovalGate({
         await attentionAdapter.notifyApprovalRequest({ title, body });
       }
     })();
-  }, [currentApprovalId, isSettingsLoading, restoreWindowState, settings.mcpApprovalAlwaysOnTop, settings.mcpApprovalNotifySound, t]);
+  }, [attentionAdapter, currentApprovalId, isSettingsLoading, restoreWindowState, settings.mcpApprovalAlwaysOnTop, settings.mcpApprovalNotifySound, t]);
 
   useEffect(() => {
     return () => {

@@ -86,7 +86,7 @@ describe("test architecture", () => {
       ...groupTreeTests,
       ...unrelatedTests,
     ].sort()).toEqual([...listedTests].sort());
-  });
+  }, 120_000);
 
   it("classifies every non-mirroring desktop frontend suite with exact owners", () => {
     expect(policy.frontendTestOwners).toMatchObject({

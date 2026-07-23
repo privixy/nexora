@@ -142,6 +142,74 @@ describe("AiApprovalGate", () => {
     });
   });
 
+  it("does not repeat attention when the adapter identity changes for the same approval", async () => {
+    vi.mocked(useSettings).mockReturnValue({
+      settings: {
+        mcpApprovalAlwaysOnTop: true,
+        mcpApprovalNotifySound: true,
+      },
+      isLoading: false,
+      isLanguageReady: true,
+      isLanguageSettled: true,
+      updateSetting: vi.fn(),
+    } as never);
+
+    const firstAdapter = {
+      focusWindowForApproval: vi.fn().mockResolvedValue(undefined),
+      notifyApprovalRequest: vi.fn().mockResolvedValue(undefined),
+      restoreWindowAlwaysOnTop: vi.fn().mockResolvedValue(undefined),
+    };
+    const secondAdapter = {
+      focusWindowForApproval: vi.fn().mockResolvedValue(undefined),
+      notifyApprovalRequest: vi.fn().mockResolvedValue(undefined),
+      restoreWindowAlwaysOnTop: vi.fn().mockResolvedValue(undefined),
+    };
+    const { rerender } = render(
+      <AiApprovalGate
+        attentionAdapter={firstAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(firstAdapter.focusWindowForApproval).toHaveBeenCalledWith("approval-1");
+      expect(firstAdapter.notifyApprovalRequest).toHaveBeenCalledOnce();
+    });
+
+    rerender(
+      <AiApprovalGate
+        attentionAdapter={secondAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("approval-modal")).toBeInTheDocument();
+    });
+    expect(firstAdapter.restoreWindowAlwaysOnTop).not.toHaveBeenCalled();
+    expect(secondAdapter.focusWindowForApproval).not.toHaveBeenCalled();
+    expect(secondAdapter.notifyApprovalRequest).not.toHaveBeenCalled();
+
+    vi.mocked(usePendingApprovals).mockReturnValue({
+      pending: [] as never[],
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+      decide,
+    });
+    rerender(
+      <AiApprovalGate
+        attentionAdapter={secondAdapter}
+        renderExplainPlan={() => null}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(secondAdapter.restoreWindowAlwaysOnTop).toHaveBeenCalledWith("approval-1");
+    });
+    expect(firstAdapter.restoreWindowAlwaysOnTop).not.toHaveBeenCalled();
+  });
+
   it("does not steal focus when always-on-top attention is disabled", async () => {
     vi.mocked(useSettings).mockReturnValue({
       settings: {
