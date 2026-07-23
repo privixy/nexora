@@ -10,6 +10,7 @@ export { usePluginQuery, usePluginConnection, usePluginToast, usePluginSetting, 
 
 // Types
 export type { SlotComponentProps, SlotContext, SlotName } from "../../../types/pluginSlots";
+export type { PluginTranslator, UsePluginThemeReturn } from "../contracts";
 export type { PluginModalOptions } from "../state/PluginModalContext";
 
 // Slot registration helper exposed through the Nexora plugin API global.

@@ -10,6 +10,7 @@ import { DatabaseContext } from "../../connections";
 import { PluginModalContext } from "../state/PluginModalContext";
 import type { PluginModalOptions } from "../state/PluginModalContext";
 import { toErrorMessage } from "../../../shared/lib/errors";
+import type { PluginTranslator, UsePluginThemeReturn } from "../contracts";
 
 /**
  * Hook for plugin components to execute read-only database queries.
@@ -147,9 +148,9 @@ export function usePluginSetting(pluginId: string) {
  * Uses the plugin ID as the i18next namespace, which must be pre-loaded
  * by the Nexora plugin loader before the component mounts.
  */
-export function usePluginTranslation(pluginId: string) {
+export function usePluginTranslation(pluginId: string): PluginTranslator {
   const { t } = useTranslation(pluginId);
-  return t;
+  return (key, options) => t(key, options);
 }
 
 /**
@@ -183,7 +184,7 @@ export function usePluginModal() {
 /**
  * Hook for plugin components to access theme information.
  */
-export function usePluginTheme() {
+export function usePluginTheme(): UsePluginThemeReturn {
   const themeCtx = useContext(ThemeContext);
 
   return useMemo(

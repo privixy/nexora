@@ -1,6 +1,8 @@
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   comparePublicContracts,
+  extractPublicContract,
   formatSyncFailure,
   type ContractBaseline,
   type PublicContract,
@@ -34,6 +36,13 @@ describe("public contract comparison", () => {
       staleAllowlistEntries: ["gone"],
       versionMismatches: ["hostApiVersion=0.2.0 does not match pluginApiVersion=0.1.0"],
     });
+  });
+
+  it("extracts stable named host hook return types", () => {
+    const host = extractPublicContract(fileURLToPath(new URL("../../../apps/desktop/src/features/plugins/lib/pluginApi.ts", import.meta.url)));
+
+    expect(host.symbols.usePluginTheme?.declaration).toBe("():UsePluginThemeReturn");
+    expect(host.symbols.usePluginTranslation?.declaration).toBe("(pluginId:string):PluginTranslator");
   });
 
   it("formats actionable diagnostics", () => {

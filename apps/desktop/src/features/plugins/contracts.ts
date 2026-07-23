@@ -1,5 +1,15 @@
 import type { ComponentType } from "react";
 import type { SqlDialect } from "../../shared/types/sql";
+import type { ThemeColors } from "../../shared/types/theme";
+
+export interface UsePluginThemeReturn {
+  themeId: string | null;
+  themeName: string | null;
+  isDark: boolean;
+  colors: ThemeColors | null;
+}
+
+export type PluginTranslator = (key: string, options?: Record<string, unknown>) => string;
 
 export interface DriverCapabilities {
   schemas: boolean;

@@ -62,17 +62,6 @@
       "removeWhen": "A separately versioned plugin API change aligns this symbol"
     },
     {
-      "key": "PluginTranslator",
-      "expected": null,
-      "actual": {
-        "kind": "type",
-        "declaration": "any"
-      },
-      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
-      "owner": "plugin-api maintainers",
-      "removeWhen": "A separately versioned plugin API change aligns this symbol"
-    },
-    {
       "key": "SlotContextMap",
       "expected": null,
       "actual": {
@@ -151,17 +140,6 @@
     },
     {
       "key": "UsePluginSettingReturn",
-      "expected": null,
-      "actual": {
-        "kind": "type",
-        "declaration": "any"
-      },
-      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
-      "owner": "plugin-api maintainers",
-      "removeWhen": "A separately versioned plugin API change aligns this symbol"
-    },
-    {
-      "key": "UsePluginThemeReturn",
       "expected": null,
       "actual": {
         "kind": "type",
@@ -275,20 +253,6 @@
       "removeWhen": "A separately versioned plugin API change aligns this symbol"
     },
     {
-      "key": "usePluginTheme",
-      "expected": {
-        "kind": "value",
-        "declaration": "():{themeId:string;themeName:string;isDark:boolean;colors:import(\"/home/louis/workspace/nexora-packages/apps/desktop/src/shared/types/theme\").ThemeColors;}"
-      },
-      "actual": {
-        "kind": "value",
-        "declaration": "():UsePluginThemeReturn"
-      },
-      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
-      "owner": "plugin-api maintainers",
-      "removeWhen": "A separately versioned plugin API change aligns this symbol"
-    },
-    {
       "key": "usePluginToast",
       "expected": {
         "kind": "value",
@@ -297,20 +261,6 @@
       "actual": {
         "kind": "value",
         "declaration": "():UsePluginToastReturn"
-      },
-      "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
-      "owner": "plugin-api maintainers",
-      "removeWhen": "A separately versioned plugin API change aligns this symbol"
-    },
-    {
-      "key": "usePluginTranslation",
-      "expected": {
-        "kind": "value",
-        "declaration": "(pluginId:string):import(\"/home/louis/workspace/nexora-packages/node_modules/.pnpm/i18next@26.3.6_typescript@5.9.3/node_modules/i18next/index\").TFunction<string,undefined>"
-      },
-      "actual": {
-        "kind": "value",
-        "declaration": "(pluginId:string):PluginTranslator"
       },
       "reason": "Existing host/package public contract difference captured before structural tooling cleanup",
       "owner": "plugin-api maintainers",
