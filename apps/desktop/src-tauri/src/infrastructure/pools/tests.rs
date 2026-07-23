@@ -318,7 +318,6 @@ fn detects_pipes_as_concat_unsupported_error() {
     ));
 }
 
-#[cfg(test)]
 mod postgres_ssl_config_tests {
     use crate::models::{ConnectionParams, DatabaseSelection};
     use crate::pool_manager::build_postgres_configurations;
@@ -422,7 +421,6 @@ mod postgres_ssl_config_tests {
     }
 }
 
-#[cfg(test)]
 mod postgres_tls_connector_tests {
     use crate::models::{ConnectionParams, DatabaseSelection};
     use crate::pool_manager::build_postgres_tls_connector;
@@ -554,7 +552,6 @@ mod postgres_tls_connector_tests {
     }
 }
 
-#[cfg(test)]
 mod startup_script_tests {
     use crate::models::{ConnectionParams, DatabaseSelection};
     use crate::pool_manager::{close_pool_with_id, get_sqlite_pool_with_id};
