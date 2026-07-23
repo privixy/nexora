@@ -1,12 +1,7 @@
+import type { SqlDialect } from "../../../../shared/types/sql";
 import { splitInto } from './splitter';
 
-export type Dialect =
-  | 'postgres'
-  | 'mysql'
-  | 'mssql'
-  | 'sqlite'
-  | 'oracle'
-  | 'generic';
+export type Dialect = SqlDialect;
 
 /**
  * String-index span (JavaScript UTF-16 code unit offsets) of a

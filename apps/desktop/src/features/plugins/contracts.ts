@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { Dialect } from "../editor";
+import type { SqlDialect } from "../../shared/types/sql";
 
 export interface DriverCapabilities {
   schemas: boolean;
@@ -31,7 +31,7 @@ export interface DriverCapabilities {
   routine_management?: boolean;
   materialized_views?: boolean;
   supports_ssl?: boolean;
-  sql_dialect?: Dialect;
+  sql_dialect?: SqlDialect;
 }
 
 export type PluginSettingType = "string" | "boolean" | "number" | "select";
