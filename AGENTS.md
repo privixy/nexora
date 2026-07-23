@@ -20,8 +20,8 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - Pure compatibility facades contain re-exports only and externally public facades must not be removed from repository-local zero-consumer evidence.
 - Root `export.rs`, `dump_commands.rs`, and `clipboard_import.rs` are frozen exact-path legacy transfer owners until approved `DatabaseDriver` semantics replace them. `count_query_compat.rs` and `server_time_compat.rs` are crate-private exact-path owners that must not gain commands, public re-exports, or additional SQL.
 - Do not increase file-size baselines. Reduce or remove baselines when files shrink or split.
-- One-owner desktop frontend tests mirror `apps/desktop/src/` under `apps/desktop/tests/`. Non-mirroring multi-source/contract suites require exact existing-source `frontendTestOwners` metadata; `apps/desktop/tests/repository/` is the desktop-wide contract namespace, and root tests exist only in `tests/repository/` without desktop-private imports. Package tests live under `packages/<package>/tests/`.
-- Desktop Rust tests use module-local `tests.rs`/`tests/` loaded by `#[cfg(test)] mod tests;`; peer `*_tests.rs`, non-trivial inline suites, and unclassified `apps/desktop/src-tauri/tests/*.rs` are forbidden. Checked-in create-plugin Rust templates retain two exact package-owned inline suites under `rustTemplateInlineTestAllowlist`, restricted to `rustTemplateInlineTestRoots`, until the package/tooling plan changes generated output.
+- Desktop frontend tests live under `apps/desktop/tests/` and are assigned to their source or contract owner by `architecture/policy.json`; root tests exist only in `tests/repository/` without desktop-private imports. Package tests live under `packages/<package>/tests/`.
+- Desktop Rust tests use module-local `tests.rs`/`tests/` loaded by `#[cfg(test)] mod tests;`; peer `*_tests.rs`, non-trivial inline suites, and unclassified `apps/desktop/src-tauri/tests/*.rs` are forbidden. Create-plugin generated Rust test layouts are package-owned and verified from the packed templates.
 - Suite splitting is deferred to the frontend and backend modularization plans.
 - Frontend feature boundaries are enforced by `pnpm check:architecture`: cross-feature consumers use feature roots, platform/shared cannot import features, features cannot import app, direct Tauri imports remain exact reported migration debt, and feature cycles are forbidden.
 - `tests/repository/frontendSourceOwnership.test.ts` is the authoritative one-row-per-source ownership manifest for frontend Tasks 2-40; SQL and driver-specific frontend debt are frozen by repository canaries.
@@ -30,7 +30,7 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - CI and release commands run from the repository root. Rust caches use `apps/desktop/src-tauri`, Tauri actions set `projectPath: apps/desktop`, and release dry-run triggers own moved desktop version, build, configuration, and icon paths.
 - Validate workflow YAML with the checksum-verified, pinned actionlint v1.7.7 launcher through `pnpm lint:workflows`.
 - Root owns `package.json`, `eslint.config.js`, `vitest.config.ts`, `pnpm-workspace.yaml`, `pnpm lint`, the six ESLint runtime packages, Vitest orchestration, and `tests/repository/`; the desktop workspace owns its Vitest project, setup, coverage, source, assets, tests, manifests, dependencies, remaining app-local configuration, and Tauri crate.
-- `apps/desktop/src/pluginApi.ts` is the canonical host-side mirror for `@nexora/plugin-api`; root `package.json` is the release version source and synchronizes the desktop package, app source, and Tauri manifests.
+- `apps/desktop/src/features/plugins/lib/pluginApi.ts` is the canonical host-side plugin contract owner. `@nexora/plugin-api` verifies source, checked-in emitted declarations, and the canonical packed/public contract against a reasoned drift baseline. Root `package.json` is the release version source and synchronizes the desktop package, app source, and Tauri manifests.
 - Contributors must continue running supported commands from the repository root.
 - Do not describe unwired target paths as usable until the migration that creates and wires them lands.
 - Update the architecture document in the same PR when repository paths, dependency rules, test ownership, or compatibility exceptions change.
@@ -57,19 +57,19 @@ Nexora is a desktop DBMS/database management tool built with React/TypeScript an
 - For async loading changes, tests must cover the loading path and the already-loaded path.
 
 ## Required Verification Before Reporting Done
-- Run the narrowest relevant test files first with `pnpm exec vitest run --project repository tests/repository/<file>.test.ts` or `pnpm exec vitest run --project desktop apps/desktop/tests/<mirror>.test.tsx`.
+- Run the narrowest relevant test files first with `pnpm exec vitest run --project repository tests/repository/<file>.test.ts`, `pnpm exec vitest run --project desktop apps/desktop/tests/<file>.test.tsx`, or the package-local test command.
 - Root test commands are `pnpm test -- --run`, `pnpm test:repository -- --run`, `pnpm test:desktop -- --run`, and desktop-owned coverage via `pnpm test:coverage`.
 - Run `pnpm check:architecture` after repository structure, test placement, workspace dependency, or large-file changes.
 - Run `pnpm typecheck` after TypeScript changes.
 - Run `pnpm lint` after TypeScript/React changes.
 - Run Rust tests for Rust/backend changes: `pnpm test:rust` or the relevant `cargo test` command against `apps/desktop/src-tauri/Cargo.toml`.
-- MUST run the full CI-equivalent local checks before pushing a branch, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm build:plugin-api`, `pnpm check:plugin-api`, `pnpm build:create-plugin`, `pnpm smoke:create-plugin`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed.
+- MUST run the full CI-equivalent local checks before pushing a branch, creating/updating a PR, merging, tagging, or releasing: `pnpm test -- --run`, `pnpm typecheck`, `pnpm lint`, `pnpm test:plugin-api`, `pnpm typecheck:plugin-api`, `pnpm build:plugin-api`, `pnpm check:plugin-api`, `pnpm pack:plugin-api`, `pnpm test:create-plugin`, `pnpm typecheck:create-plugin`, `pnpm build:create-plugin`, `pnpm smoke:create-plugin`, `pnpm pack:create-plugin`, `pnpm check:packages`, `pnpm build`, and `pnpm test:rust` when Rust/Tauri files changed.
 - MUST NOT push, merge, tag, release, or report completion if any required local check fails. Fix the failure, rerun the failed command, then rerun the full affected check set.
 - If a command fails, fix the issue and rerun it. Do not report a task as done with failing checks.
 - Final response must list the exact test/check commands run.
 
 ## Test Placement Rules
-- Desktop tests must live under `apps/desktop/tests/` mirroring `apps/desktop/src/`; root `tests/repository/` contains non-desktop repository contracts only.
+- Desktop tests must live under `apps/desktop/tests/` with ownership recorded by the architecture policy; root `tests/repository/` contains non-desktop repository contracts only.
 - Utility logic in `apps/desktop/src/utils/foo.ts` must have tests in `apps/desktop/tests/utils/foo.test.ts`.
 - Hooks in `apps/desktop/src/hooks/useFoo.ts` must have tests in `apps/desktop/tests/hooks/useFoo.test.ts` when behavior changes.
 - Context changes in `apps/desktop/src/contexts/FooProvider.tsx` must have tests in `apps/desktop/tests/contexts/FooProvider.test.tsx`.
