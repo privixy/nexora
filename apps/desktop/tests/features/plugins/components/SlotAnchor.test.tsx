@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { PluginSlotProvider } from "../../../../src/features/plugins/state/PluginSlotProvider";
 import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
@@ -21,6 +21,10 @@ const CrashingPlugin = () => {
 };
 
 describe("SlotAnchor", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("should render nothing when no contributions exist", () => {
     const { container } = render(
       <SettingsContext.Provider value={settingsValue}>
@@ -66,6 +70,7 @@ describe("SlotAnchor", () => {
   });
 
   it("should isolate plugin crashes with ErrorBoundary", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const mockRegistry = {
       contributions: [],
       register: () => () => {},
@@ -82,10 +87,13 @@ describe("SlotAnchor", () => {
       </PluginSlotContext.Provider>,
     );
 
-    // The crashing plugin should show an error message
     expect(screen.getByText("Plugin error: crashing-plugin")).toBeInTheDocument();
-    // The good plugin should still render
     expect(screen.getByTestId("good-plugin")).toBeInTheDocument();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      '[PluginSlot] Plugin "crashing-plugin" crashed in slot "sidebar.footer.actions":',
+      expect.objectContaining({ message: "Plugin crash!" }),
+      expect.any(String),
+    );
   });
 
   it("should set data-slot attribute on wrapper", () => {

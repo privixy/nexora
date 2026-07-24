@@ -1,5 +1,5 @@
-import type { DriverCapabilities } from "../../plugins";
-import { isMultiDatabaseCapable } from "../../plugins";
+import type { DriverCapabilities } from "../../plugins/contracts";
+import { isMultiDatabaseCapable } from "../../plugins/lib/databaseCapabilities";
 import type { TableContextTuple } from "../contracts";
 
 export interface ExplicitTableContextInput {

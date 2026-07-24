@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { getConnectionAccent, getConnectionIcon } from "@/features/connections/lib/driverUI";
 import { camelToKebab, getLucideIconComponent, CONNECTION_ICON_PACK } from "@/features/connections/lib/connectionIconPack";
 import type { SavedConnection } from "@/contexts/DatabaseContext";
@@ -67,10 +67,11 @@ describe("camelToKebab / getLucideIconComponent — legacy id normalization", ()
     expect(getLucideIconComponent(camelToKebab("shieldCheck"))).not.toBeNull();
   });
 
-  it("getConnectionIcon with camelCase pack id still renders without throwing", () => {
+  it("getConnectionIcon with camelCase pack id still renders without throwing", async () => {
     // { type: "pack", id: "shieldCheck" } — legacy camelCase id
     const c = { id: "1", appearance: { icon: { type: "pack", id: "shieldCheck" } } } as SavedConnection;
     expect(() => render(<>{getConnectionIcon(c, manifest, 16)}</>)).not.toThrow();
+    await act(async () => undefined);
   });
 
   it("getConnectionIcon with kebab-case pack id still renders without throwing", () => {

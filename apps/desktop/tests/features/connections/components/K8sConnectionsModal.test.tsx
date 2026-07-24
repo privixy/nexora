@@ -134,8 +134,10 @@ describe("K8sConnectionsModal port defaults", () => {
     );
   });
 
-  it("does not fall back to MySQL port when the driver has no default port", () => {
+  it("does not fall back to MySQL port when the driver has no default port", async () => {
     renderModal(null);
+
+    await waitFor(() => expect(k8sMocks.loadK8sConnections).toHaveBeenCalled());
 
     fireEvent.click(screen.getByText("k8sConnections.add"));
 
@@ -144,11 +146,13 @@ describe("K8sConnectionsModal port defaults", () => {
     expect(portInput).not.toHaveAttribute("placeholder", "3306");
   });
 
-  it("tracks the current driver default port while the field is not overridden", () => {
+  it("tracks the current driver default port while the field is not overridden", async () => {
     const onClose = vi.fn();
     const { rerender } = render(
       <K8sConnectionsModal isOpen={true} onClose={onClose} defaultPort={3306} />,
     );
+
+    await waitFor(() => expect(k8sMocks.loadK8sConnections).toHaveBeenCalled());
 
     fireEvent.click(screen.getByText("k8sConnections.add"));
     const portInput = screen.getByRole("spinbutton") as HTMLInputElement;

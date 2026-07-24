@@ -43,9 +43,12 @@ describe('DatabaseProvider context tuples', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(DatabaseProvider, null, children);
     const { result } = renderHook(() => useDatabase(), { wrapper });
 
+    let connectPromise: Promise<void>;
+    act(() => {
+      connectPromise = result.current.connect('conn-pg');
+    });
+    await waitFor(() => expect(pendingLoads).toHaveLength(5));
     await act(async () => {
-      const connectPromise = result.current.connect('conn-pg');
-      await waitFor(() => expect(pendingLoads).toHaveLength(5));
       pendingLoads.splice(0).forEach((load) => load.resolve(load.command === 'get_tables' ? [{ name: 'users' }] : []));
       await connectPromise;
     });

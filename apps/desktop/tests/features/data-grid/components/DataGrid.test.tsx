@@ -18,6 +18,9 @@ class MockResizeObserver {
 }
 
 globalThis.ResizeObserver = MockResizeObserver;
+vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({
+  measureText: (text: string) => ({ width: text.length * 8 }),
+} as CanvasRenderingContext2D);
 
 vi.mock("lucide-react", () => {
   const Icon = () => null;

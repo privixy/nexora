@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   isWkbHexString,
   isGeometricType,
@@ -156,8 +156,15 @@ describe("geometry utils", () => {
     it("should handle conversion errors gracefully", () => {
       // Invalid WKB should return the original string
       const invalidWkb = "0x00";
+      const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
       const result = formatGeometricValue(invalidWkb);
+      expect(consoleWarn).toHaveBeenCalledWith(
+        "Failed to parse WKB hex string:",
+        invalidWkb,
+        expect.any(RangeError),
+      );
       expect(result).toBe(invalidWkb);
+      consoleWarn.mockRestore();
     });
 
     it("should return non-geometric strings as-is", () => {

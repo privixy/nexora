@@ -68,7 +68,7 @@
 | `pnpm smoke:create-plugin` | PASS | Network, file, and network-with-UI templates passed clean `cargo check`; smoke result was OK. |
 | `pnpm build` | PASS | `tsc -b && vite build` completed; Vite reported `build ok`. |
 | `pnpm test:rust` | PASS | Main suite: 943 passed, 0 failed, 1 ignored; integration suite: 9 ignored; zero-test suites passed. Total observed: 943 passed, 10 ignored. |
-| `pnpm check:architecture` | PASS | Printed `[architecture] OK`. |
+| Architecture checker (removed) | PASS | The then-current architecture checker completed successfully. |
 
 ### GitNexus MCP status
 
@@ -114,7 +114,7 @@
 |---|---|---|
 | `pnpm test tests/repository -- --run` | PASS | 10 files and 55 tests passed. |
 | `pnpm test apps/desktop/tests/version.test.ts apps/desktop/tests/layout/rootOverflow.test.ts tests/repository/releaseWorkflow.test.ts tests/repository/releaseDryRunWorkflow.test.ts -- --run` | PASS | 4 files and 10 tests passed. |
-| `pnpm check:architecture` | PASS | Printed `[architecture] OK`. |
+| Architecture checker (removed) | PASS | The then-current architecture checker completed successfully. |
 | `pnpm test -- --run` | PASS | Final post-documentation rerun: 181 files and 2,965 tests passed. The earlier pre-documentation run passed 181 files and 2,952 tests; the count difference is due to environment-dependent create-plugin smoke fixtures discovered by the desktop test orchestrator, with zero failures in both runs. |
 | `pnpm typecheck` | PASS | Desktop application and Node configuration TypeScript checks exited 0. |
 | `pnpm lint` | PASS | Root-owned `eslint .` exited 0. |

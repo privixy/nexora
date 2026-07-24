@@ -28,8 +28,10 @@ describe("McpPage", () => {
     vi.mocked(invoke).mockResolvedValue([]);
   });
 
-  it("keeps the page wrapper fixed and scrolls only the tab content", () => {
+  it("keeps the page wrapper fixed and scrolls only the tab content", async () => {
     render(<McpPage />);
+
+    await waitFor(() => expect(invoke).toHaveBeenCalledWith("get_mcp_status"));
 
     const root = screen.getByText("mcp.title").closest(".h-full");
     const content = root?.querySelector(".custom-scrollbar");
@@ -44,7 +46,7 @@ describe("McpPage", () => {
       {
         client_id: "other",
         client_name: "Other",
-        installed: false,
+        installed: true,
         config_path: null,
         executable_path: "/Applications/Nexora.app/nexora",
         client_type: "manual",
@@ -53,7 +55,7 @@ describe("McpPage", () => {
       {
         client_id: "opencode",
         client_name: "OpenCode",
-        installed: false,
+        installed: true,
         config_path: "/Users/test/.config/opencode/opencode.json",
         executable_path: "/Applications/Nexora.app/nexora",
         client_type: "opencode",

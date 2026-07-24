@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { SidebarSchemaItem } from "../../../../../src/features/explorer/components/sidebar/SidebarSchemaItem";
@@ -78,7 +78,7 @@ describe("SidebarSchemaItem — materialized view double-click", () => {
 
     fireEvent.click(screen.getByLabelText("sidebar.expandTable"));
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(invoke).toHaveBeenCalledWith("get_columns", {
         connectionId: "conn-123",
         tableName: "users",

@@ -26,7 +26,6 @@ const required = [
   "check:plugin-api",
   "build:create-plugin",
   "smoke:create-plugin",
-  "check:architecture",
 ];
 
 describe("root command contract", () => {

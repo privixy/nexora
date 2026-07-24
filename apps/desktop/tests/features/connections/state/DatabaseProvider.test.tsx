@@ -137,7 +137,9 @@ describe('DatabaseProvider', () => {
   });
 
   it('should handle connection failure', async () => {
-    vi.mocked(invoke).mockRejectedValue(new Error('Connection failed'));
+    const connectionError = new Error('Connection failed');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(invoke).mockRejectedValue(connectionError);
 
     const wrapper = ({ children }: { children: React.ReactNode }) =>
       React.createElement(DatabaseProvider, null, children);
@@ -153,6 +155,7 @@ describe('DatabaseProvider', () => {
       expect(result.current.activeDriver).toBeNull();
       expect(result.current.isLoadingTables).toBe(false);
     });
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to connect:', connectionError);
   });
 
   it('should disconnect and reset state', async () => {

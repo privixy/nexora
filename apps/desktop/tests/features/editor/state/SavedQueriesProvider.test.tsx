@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { SavedQueriesProvider } from '../../../../src/features/editor/state/SavedQueriesProvider';
 import { useSavedQueries } from '../../../../src/features/editor/hooks/useSavedQueries';
 import { useDatabase } from '../../../../src/features/connections/hooks/useDatabase';
@@ -28,7 +28,7 @@ describe('SavedQueriesProvider', () => {
     } as ReturnType<typeof useDatabase>);
   });
 
-  it('should provide initial empty state', () => {
+  it('should provide initial empty state', async () => {
     vi.mocked(invoke).mockResolvedValue([]);
 
     const wrapper = ({ children }: { children: React.ReactNode }) =>
@@ -38,6 +38,8 @@ describe('SavedQueriesProvider', () => {
 
     expect(result.current.queries).toHaveLength(0);
     expect(result.current.isLoading).toBe(true);
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
   });
 
   it('should load saved queries on mount', async () => {
@@ -88,7 +90,7 @@ describe('SavedQueriesProvider', () => {
 
     await waitFor(() => expect(result.current.queries).toHaveLength(2));
 
-    await result.current.saveQuery('New Query', 'SELECT 1');
+    await act(() => result.current.saveQuery('New Query', 'SELECT 1'));
 
     expect(invoke).toHaveBeenCalledWith('save_query', {
       connectionId: 'conn-123',
@@ -112,7 +114,7 @@ describe('SavedQueriesProvider', () => {
 
     const { result } = renderHook(() => useSavedQueries(), { wrapper });
 
-    await result.current.saveQuery('New Query', 'SELECT 1');
+    await act(() => result.current.saveQuery('New Query', 'SELECT 1'));
 
     expect(invoke).not.toHaveBeenCalledWith('save_query', expect.anything());
   });
@@ -133,7 +135,7 @@ describe('SavedQueriesProvider', () => {
 
     await waitFor(() => expect(result.current.queries).toHaveLength(2));
 
-    await result.current.updateQuery('query-1', 'Updated Users', 'SELECT id, name FROM users');
+    await act(() => result.current.updateQuery('query-1', 'Updated Users', 'SELECT id, name FROM users'));
 
     expect(invoke).toHaveBeenCalledWith('update_saved_query', {
       id: 'query-1',
@@ -160,7 +162,7 @@ describe('SavedQueriesProvider', () => {
 
     await waitFor(() => expect(result.current.queries).toHaveLength(2));
 
-    await result.current.deleteQuery('query-1');
+    await act(() => result.current.deleteQuery('query-1'));
 
     expect(invoke).toHaveBeenCalledWith('delete_saved_query', { id: 'query-1' });
 
@@ -171,6 +173,7 @@ describe('SavedQueriesProvider', () => {
   });
 
   it('should handle save error', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     vi.mocked(invoke)
       .mockResolvedValueOnce(mockQueries)
       .mockRejectedValueOnce(new Error('Save failed'));
@@ -182,7 +185,11 @@ describe('SavedQueriesProvider', () => {
 
     await waitFor(() => expect(result.current.queries).toHaveLength(2));
 
-    await expect(result.current.saveQuery('New Query', 'SELECT 1')).rejects.toThrow('Save failed');
+    await act(async () => {
+      await expect(result.current.saveQuery('New Query', 'SELECT 1')).rejects.toThrow('Save failed');
+    });
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to save query:', expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it('should refresh queries manually', async () => {
@@ -197,7 +204,7 @@ describe('SavedQueriesProvider', () => {
 
     await waitFor(() => expect(result.current.queries).toHaveLength(2));
 
-    await result.current.refreshQueries();
+    await act(() => result.current.refreshQueries());
 
     await waitFor(() => {
       expect(result.current.queries).toHaveLength(3);

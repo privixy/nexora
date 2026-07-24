@@ -1,24 +1,23 @@
 # Testing Conventions
 
-This document defines the testing conventions and directory structure for the Nexora project. See `docs/architecture/repository-structure.md` for the canonical current and target repository structure.
+This document defines the testing conventions and directory structure for the Nexora project. See `docs/architecture/repository-structure.md` for a description of the current repository structure.
 
 ## Directory Structure
 
 ### Source Files
-All utility functions and testable logic must be placed in `apps/desktop/src/utils/` with simple, descriptive names **without the "Utils" suffix**.
+Keep testable logic with its owning `app`, `features`, `shared`, or `platform` module. Move a utility into `apps/desktop/src/shared/` only when it is genuinely reusable across feature boundaries; feature-specific helpers remain with their feature. Use simple, descriptive names without an unnecessary "Utils" suffix.
 
 **Correct:**
-- `apps/desktop/src/utils/dataGrid.ts`
-- `apps/desktop/src/utils/contextMenu.ts`
-- `apps/desktop/src/utils/sqlGenerator.ts`
-- `apps/desktop/src/utils/sql.ts`
+- `apps/desktop/src/features/data-grid/lib/dataGrid.ts`
+- `apps/desktop/src/features/connections/lib/tableContext.ts`
+- `apps/desktop/src/shared/lib/sql.ts`
 
 **Incorrect:**
-- ~~`apps/desktop/src/components/ui/dataGridUtils.ts`~~ (wrong location)
-- ~~`apps/desktop/src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
+- ~~`apps/desktop/src/shared/lib/dataGridUtils.ts`~~ when only data-grid uses it
+- ~~`apps/desktop/src/features/data-grid/lib/dataGridUtils.ts`~~ when `dataGrid.ts` is sufficiently descriptive
 
 ### Test Files
-Desktop TypeScript tests must be placed in `apps/desktop/tests/` and assigned to existing source or contract owners by `architecture/policy.json`. Desktop-wide contracts belong in `apps/desktop/tests/repository/`; root `tests/repository/` owns non-desktop workspace and release contracts and may not import desktop-private modules. Package tests live under `packages/<package>/tests/`. Desktop Rust unit tests are module-local with no peer or inline-test exceptions, and every crate integration test under `apps/desktop/src-tauri/tests/` requires exact policy classification. Create-plugin generated Rust test layouts are package-owned and verified from the packed templates. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/` and mirror their source or contract owner. Desktop-wide contracts belong in `apps/desktop/tests/repository/`; root `tests/repository/` owns non-desktop workspace, package, release, and workflow contracts and may not import desktop-private modules. Package tests live under `packages/<package>/tests/`. Desktop Rust unit tests are module-local; use sibling `tests.rs` or `tests/` modules loaded by private `#[cfg(test)] mod tests;` declarations rather than peer `*_tests.rs` or non-trivial inline suites. Crate integration tests live under `apps/desktop/src-tauri/tests/`; preserve compile/public-contract, behavior, and database integration coverage. Create-plugin generated Rust test layouts are package-owned and verified from the packed templates. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
 
 Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
 
@@ -169,9 +168,9 @@ Root `vitest.config.ts` is the repository-owned aggregator with named `repositor
 Use these commands from the repository root:
 
 ```bash
-pnpm test -- --run
-pnpm test:repository -- --run
-pnpm test:desktop -- --run
+pnpm test --run
+pnpm test:repository --run
+pnpm test:desktop --run
 pnpm test:coverage
 pnpm lint
 pnpm exec vitest run --project repository tests/repository/<file>.test.ts

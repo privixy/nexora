@@ -124,13 +124,21 @@ describe("EditorProvider", () => {
     vi.restoreAllMocks();
   });
 
-  it("should provide initial state with no tabs", () => {
+  const settleEditor = async (result: { current: ReturnType<typeof useEditor> }) => {
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+    act(() => result.current.closeAllTabs());
+    expect(result.current.tabs).toHaveLength(0);
+  };
+
+  it("should provide initial state with no tabs", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
 
     expect(result.current.tabs).toHaveLength(0);
     expect(result.current.activeTabId).toBeNull();
     expect(result.current.activeTab).toBeNull();
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
   });
 
   it("should ignore persisted active tab on connection startup", async () => {
@@ -298,9 +306,11 @@ describe("EditorProvider", () => {
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
-  it("should add a new console tab", () => {
+  it("should add a new console tab", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -312,9 +322,11 @@ describe("EditorProvider", () => {
     expect(result.current.activeTabId).toBe(result.current.tabs[0].id);
   });
 
-  it("should add multiple console tabs with numbered titles", () => {
+  it("should add multiple console tabs with numbered titles", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -332,9 +344,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[2].title).toBe("Console 3");
   });
 
-  it("should add a table tab with table name as title", () => {
+  it("should add a table tab with table name as title", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "table", activeTable: "users" });
@@ -347,9 +361,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[0].isEditorOpen).toBe(false);
   });
 
-  it("should focus existing table tab instead of creating duplicate", () => {
+  it("should focus existing table tab instead of creating duplicate", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "table", activeTable: "users" });
@@ -371,9 +387,11 @@ describe("EditorProvider", () => {
     expect(result.current.activeTabId).toBe(firstTabId); // Should focus existing
   });
 
-  it("should add a query builder tab", () => {
+  it("should add a query builder tab", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "query_builder" });
@@ -384,9 +402,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[0].type).toBe("query_builder");
   });
 
-  it("should close a tab", () => {
+  it("should close a tab", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -405,9 +425,11 @@ describe("EditorProvider", () => {
     expect(result.current.activeTabId).not.toBe(tabId);
   });
 
-  it("should return empty tabs when closing last tab", () => {
+  it("should return empty tabs when closing last tab", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -422,9 +444,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs).toHaveLength(0);
   });
 
-  it("should keep same table names in different databases as separate tabs", () => {
+  it("should keep same table names in different databases as separate tabs", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({
@@ -445,9 +469,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs.map((tab) => tab.database)).toEqual(["app", "analytics"]);
   });
 
-  it("should focus existing table tab only within the same database", () => {
+  it("should focus existing table tab only within the same database", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({
@@ -470,9 +496,11 @@ describe("EditorProvider", () => {
     expect(result.current.activeTabId).toBe(firstTabId);
   });
 
-  it("should close all tabs for connection", () => {
+  it("should close all tabs for connection", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -493,9 +521,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs).toHaveLength(0);
   });
 
-  it("should close other tabs", () => {
+  it("should close other tabs", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -518,9 +548,11 @@ describe("EditorProvider", () => {
     expect(result.current.activeTabId).toBe(keepTabId);
   });
 
-  it("should close tabs to the left", () => {
+  it("should close tabs to the left", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -546,9 +578,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[0].id).toBe(targetId);
   });
 
-  it("should close tabs to the right", () => {
+  it("should close tabs to the right", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -576,9 +610,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[1].type).toBe("table");
   });
 
-  it("should update tab properties", () => {
+  it("should update tab properties", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -597,9 +633,11 @@ describe("EditorProvider", () => {
     expect(result.current.tabs[0].query).toBe("SELECT * FROM users");
   });
 
-  it("should set active tab", () => {
+  it("should set active tab", async () => {
     const wrapper = createWrapper("conn-1");
     const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
 
     act(() => {
       result.current.addTab({ type: "console" });
@@ -763,12 +801,14 @@ describe("EditorProvider", () => {
     expect(tabId).toBe("");
   });
 
-  it("should only show tabs for active connection", () => {
+  it("should only show tabs for active connection", async () => {
     // Create wrapper with conn-1 as active
     const wrapperConn1 = createWrapper("conn-1");
     const { result: resultConn1 } = renderHook(() => useEditor(), {
       wrapper: wrapperConn1,
     });
+
+    await settleEditor(resultConn1);
 
     // Add tabs for conn-1
     act(() => {
@@ -786,7 +826,9 @@ describe("EditorProvider", () => {
       wrapper: wrapperConn2,
     });
 
-    // Should show no tabs for conn-2
-    expect(resultConn2.current.tabs).toHaveLength(0);
+    await waitFor(() => expect(resultConn2.current.tabs).toHaveLength(1));
+
+    // Should show an initial tab for conn-2 after its preferences load
+    expect(resultConn2.current.tabs).toHaveLength(1);
   });
 });

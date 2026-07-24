@@ -9,8 +9,8 @@ const workflow = readFileSync(resolve(repoRoot, ".github/workflows/ci.yml"), "ut
 describe("CI desktop workspace paths", () => {
   it("keeps root commands and caches the moved Rust crate", () => {
     for (const command of [
-      "pnpm test:repository -- --run",
-      "pnpm test:desktop -- --run",
+      "pnpm test:repository --run",
+      "pnpm test:desktop --run",
       "pnpm typecheck",
       "pnpm lint",
       "pnpm --filter @nexora/plugin-api check",

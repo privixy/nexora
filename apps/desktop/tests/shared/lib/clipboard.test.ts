@@ -256,21 +256,27 @@ describe('clipboard utils', () => {
 
     it('should call error handler on failure', async () => {
       const error = new Error('Clipboard error');
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
       const mockWriteText = vi.fn().mockRejectedValue(error);
       Object.assign(navigator.clipboard, { writeText: mockWriteText });
 
       const onError = vi.fn();
       await copyTextToClipboard('test', onError);
 
+      expect(consoleError).toHaveBeenCalledWith('Copy failed:', error);
       expect(onError).toHaveBeenCalledWith(error);
+      consoleError.mockRestore();
     });
 
     it('should throw error if no error handler provided', async () => {
       const error = new Error('Clipboard error');
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
       const mockWriteText = vi.fn().mockRejectedValue(error);
       Object.assign(navigator.clipboard, { writeText: mockWriteText });
 
       await expect(copyTextToClipboard('test')).rejects.toThrow('Clipboard error');
+      expect(consoleError).toHaveBeenCalledWith('Copy failed:', error);
+      consoleError.mockRestore();
     });
 
     it('should handle empty string', async () => {

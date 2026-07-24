@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { act, render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { AppearanceSection } from "@/features/connections/components/NewConnectionModal/AppearanceSection";
 
 // Mock react-i18next so the section renders predictably regardless of locale files
@@ -50,7 +50,7 @@ describe("AppearanceSection — color", () => {
     expect(onChange).toHaveBeenCalledWith({});
   });
 
-  it("keeps icon when only color is reset", () => {
+  it("keeps icon when only color is reset", async () => {
     const onChange = vi.fn();
     render(
       <AppearanceSection
@@ -61,6 +61,7 @@ describe("AppearanceSection — color", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: /reset color/i }));
     expect(onChange).toHaveBeenCalledWith({ icon: { type: "pack", id: "server" } });
+    await act(async () => undefined);
   });
 
   it("opens the custom panel with hex input + picker", () => {

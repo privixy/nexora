@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { act, render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { windowGateway } from "../../../../src/platform/tauri/windowGateway";
 
 interface CodeEditorMockProps {
@@ -156,7 +156,7 @@ describe("JsonInput", () => {
     render(<JsonInput value={{ a: 1 }} onChange={onChange} />);
 
     fireEvent.click(getTab("tree"));
-    treeProps.current?.onChange?.({ a: 99 });
+    act(() => treeProps.current?.onChange?.({ a: 99 }));
 
     expect(onChange).toHaveBeenCalledWith({ a: 99 });
   });

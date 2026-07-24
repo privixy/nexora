@@ -33,12 +33,12 @@ describe("workspace package workflows", () => {
   it("runs the complete plugin contract in package-plan lifecycle order", () => {
     const rootPackage = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
     expect(rootPackage.scripts["test:plugin-contract"]).toBe(
-      "pnpm test tests/repository/pluginManifestSchema.test.ts -- --run && pnpm --filter @nexora/desktop typecheck:plugin-contract && pnpm --filter @nexora/desktop test tests/features/plugins/lib/pluginModuleLoader.test.ts tests/features/plugins/state/PluginSlotProvider.test.tsx -- --run && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml plugins::tests",
+      "pnpm test tests/repository/pluginManifestSchema.test.ts --run && pnpm --filter @nexora/desktop typecheck:plugin-contract && pnpm --filter @nexora/desktop test tests/features/plugins/lib/pluginModuleLoader.test.ts tests/features/plugins/state/PluginSlotProvider.test.tsx --run && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml plugins::tests",
     );
 
     const workflow = read(".github/workflows/ci.yml");
     const desktopJob = workflow.slice(workflow.indexOf("  desktop:"), workflow.indexOf("  plugin-api:"));
-    expect(desktopJob.indexOf("run: pnpm test:desktop -- --run")).toBeLessThan(
+    expect(desktopJob.indexOf("run: pnpm test:desktop --run")).toBeLessThan(
       desktopJob.indexOf("run: pnpm --filter @nexora/desktop typecheck:plugin-contract"),
     );
     expect(desktopJob.indexOf("run: pnpm --filter @nexora/desktop typecheck:plugin-contract")).toBeLessThan(

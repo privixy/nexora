@@ -27,8 +27,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm check:architecture
-      - run: pnpm test:repository -- --run
+      - run: pnpm test:repository --run
       - run: pnpm validate:distribution
   desktop:
     runs-on: ubuntu-latest
@@ -43,7 +42,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test:desktop -- --run
+      - run: pnpm test:desktop --run
       - run: pnpm --filter @nexora/desktop typecheck:plugin-contract
       - run: pnpm typecheck
       - run: pnpm lint

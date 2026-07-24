@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { loadUIExtensionModule, loadPluginUIExtensions } from "../../../../src/features/plugins/lib/pluginModuleLoader";
 import type { PluginManifest } from "../../../../src/features/plugins/contracts/plugins";
 import type { SlotComponentProps } from "../../../../src/features/plugins/contracts/pluginSlots";
@@ -6,6 +6,10 @@ import type { SlotComponentProps } from "../../../../src/features/plugins/contra
 const DummyComponent = (() => null) as React.FC<SlotComponentProps>;
 
 describe("pluginModuleLoader", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe("loadUIExtensionModule", () => {
     it("should load a valid module for a known slot", async () => {
       const loader = vi.fn().mockResolvedValue({ default: DummyComponent });
@@ -48,7 +52,9 @@ describe("pluginModuleLoader", () => {
     });
 
     it("should return null when module loading throws", async () => {
-      const loader = vi.fn().mockRejectedValue(new Error("Module not found"));
+      const moduleError = new Error("Module not found");
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const loader = vi.fn().mockRejectedValue(moduleError);
 
       const result = await loadUIExtensionModule("test-plugin", {
         slot: "sidebar.footer.actions",
@@ -56,6 +62,10 @@ describe("pluginModuleLoader", () => {
       }, loader);
 
       expect(result).toBeNull();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[PluginSlot] Failed to load UI extension module "./ui/Missing.tsx" for plugin "test-plugin":',
+        moduleError,
+      );
     });
   });
 
@@ -120,6 +130,8 @@ describe("pluginModuleLoader", () => {
     });
 
     it("should handle module loading failures gracefully", async () => {
+      const networkError = new Error("Network error");
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       const manifest: PluginManifest = {
         id: "fail-plugin",
         name: "Fail Plugin",
@@ -143,12 +155,16 @@ describe("pluginModuleLoader", () => {
 
       const loader = vi.fn()
         .mockResolvedValueOnce({ default: DummyComponent })
-        .mockRejectedValueOnce(new Error("Network error"));
+        .mockRejectedValueOnce(networkError);
 
       const result = await loadPluginUIExtensions(manifest, loader);
 
       expect(result).toHaveLength(1);
       expect(result[0]?.pluginId).toBe("fail-plugin");
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[PluginSlot] Failed to load UI extension module "./ui/Broken.tsx" for plugin "fail-plugin":',
+        networkError,
+      );
     });
   });
 });

@@ -33,7 +33,9 @@ describe("useGridClipboard", () => {
 
   it("shows the existing error alert when clipboard writing fails", async () => {
     const showAlert = vi.fn();
-    vi.mocked(copyTextToClipboard).mockRejectedValueOnce(new Error("denied"));
+    const error = new Error("denied");
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(copyTextToClipboard).mockRejectedValueOnce(error);
     const { result } = renderHook(() =>
       useGridClipboard({
         columns: ["id"],
@@ -48,9 +50,11 @@ describe("useGridClipboard", () => {
 
     await act(() => result.current.copySelectedCells());
 
+    expect(consoleError).toHaveBeenCalledWith("Copy failed:", error);
     expect(showAlert).toHaveBeenCalledWith("common.error: Error: denied", {
       title: "common.error",
       kind: "error",
     });
+    consoleError.mockRestore();
   });
 });

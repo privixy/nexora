@@ -57,7 +57,7 @@ describe('autocomplete', () => {
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('clearAutocompleteCache', () => {
@@ -424,8 +424,10 @@ describe('autocomplete', () => {
     });
 
     it('should handle get_columns errors gracefully', async () => {
+      const databaseError = new Error('Database error');
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const mockInvoke = invoke as unknown as ReturnType<typeof vi.fn>;
-      mockInvoke.mockRejectedValue(new Error('Database error'));
+      mockInvoke.mockRejectedValue(databaseError);
 
       const monaco = createMockMonaco();
       const tables: TableInfo[] = [{ name: 'users' }];
@@ -440,9 +442,12 @@ describe('autocomplete', () => {
       const model = createMockModel('SELECT * FROM users');
       const position = { lineNumber: 1, column: 20 };
 
-      // Should not throw
       const result = await provider.provideCompletionItems(model, position);
       expect(result).toHaveProperty('suggestions');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Failed to fetch columns for autocomplete: users',
+        databaseError,
+      );
     });
   });
 

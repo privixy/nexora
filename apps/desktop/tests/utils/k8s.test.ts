@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   validateK8sConnection,
   formatK8sConnectionString,
@@ -23,6 +23,10 @@ vi.mock("@tauri-apps/api/core", () => ({
 describe("k8s", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe("validateK8sConnection", () => {
@@ -266,11 +270,17 @@ describe("k8s", () => {
 
   describe("loadK8sConnections", () => {
     it("should return empty array on error", async () => {
+      const fileError = new Error("File not found");
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       const { invoke } = await import("@tauri-apps/api/core");
-      vi.mocked(invoke).mockRejectedValue(new Error("File not found"));
+      vi.mocked(invoke).mockRejectedValue(fileError);
 
       const result = await loadK8sConnections();
       expect(result).toEqual([]);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Failed to load K8s connections:",
+        fileError,
+      );
     });
   });
 

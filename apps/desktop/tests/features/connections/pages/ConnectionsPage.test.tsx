@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { Connections } from "../../../../src/features/connections/pages/ConnectionsPage";
@@ -128,8 +128,10 @@ describe("Connections page", () => {
     } as unknown as ReturnType<typeof useDatabase>);
   });
 
-  it("keeps the page wrapper fixed and scrolls only the connections content", () => {
+  it("keeps the page wrapper fixed and scrolls only the connections content", async () => {
     const root = renderConnections();
+
+    await waitFor(() => expect(vi.mocked(useDatabase).mock.results[0]?.value.loadConnections).toHaveBeenCalled());
     const content = root?.querySelector(".custom-scrollbar");
 
     expect(root).toHaveClass("overflow-hidden");
