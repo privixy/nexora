@@ -26,7 +26,7 @@ pub async fn explain_query(params: &ConnectionParams, query: &str) -> Result<Exp
         let id: i32 = row.try_get("id").unwrap_or(0);
         let parent: i32 = row.try_get("parent").unwrap_or(0);
         let detail: String = row.try_get("detail").unwrap_or_default();
-        raw_lines.push(format!("{}|{}|{}", id, parent, &detail));
+        raw_lines.push(format!("{}|{}|{}", id, parent, detail));
         entries.push((id as i64, parent as i64, detail));
     }
 
