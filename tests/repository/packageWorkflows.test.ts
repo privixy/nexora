@@ -54,15 +54,34 @@ describe("workspace package workflows", () => {
     );
   });
 
-  it("publishes only canonical validated tarballs", () => {
+  it("uses the root packageManager version across Node workflows", () => {
+    const rootPackage = JSON.parse(read("package.json")) as { packageManager: string };
+    expect(rootPackage.packageManager).toMatch(/^pnpm@\d+\.\d+\.\d+$/);
+
+    for (const path of [
+      ".github/workflows/ci.yml",
+      ".github/workflows/npm-publish.yml",
+      ".github/workflows/release-dry-run.yml",
+      ".github/workflows/release.yml",
+    ]) {
+      const workflow = read(path);
+      expect(workflow).toContain("uses: pnpm/action-setup@");
+      expect(workflow).not.toMatch(/pnpm\/action-setup@[\s\S]{0,80}\n\s+with:\n\s+version:/);
+    }
+  });
+
+  it("publishes only canonical validated tarballs using package-owned versions", () => {
     const workflow = read(".github/workflows/npm-publish.yml");
-    const plugin = "packages/plugin-api/.tmp/package/nexora-plugin-api-0.1.0.tgz";
-    const creator = "packages/create-plugin/.tmp/package/nexora-create-plugin-0.1.1.tgz";
+    const plugin = "packages/plugin-api/.tmp/package/nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz";
+    const creator = "packages/create-plugin/.tmp/package/nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz";
+    expect(workflow).toContain("require('./packages/plugin-api/package.json').version");
+    expect(workflow).toContain("require('./packages/create-plugin/package.json').version");
     expect(workflow).toContain(plugin);
     expect(workflow).toContain(creator);
     expect(workflow).toContain("sha256sum --check");
     expect(workflow).toContain(`pnpm publish "${plugin}"`);
     expect(workflow).toContain(`pnpm publish "${creator}"`);
+    expect(workflow).not.toMatch(/nexora-(plugin-api|create-plugin)-\d+\.\d+\.\d+\.tgz/);
     expect(workflow).not.toContain("pnpm pack");
     expect(workflow).toContain("ENABLE_STORE_PUBLISH == 'true'");
   });

@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6.0.9
-        with:
-          version: 10.30.3
       - uses: actions/setup-node@v7
         with:
           node-version: '24.x'
@@ -25,17 +23,24 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @nexora/plugin-api check
       - run: pnpm --filter @nexora/create-plugin check
+      - name: Extract package versions
+        id: versions
+        run: |
+          PLUGIN_API_VERSION=$(node -p "require('./packages/plugin-api/package.json').version")
+          CREATE_PLUGIN_VERSION=$(node -p "require('./packages/create-plugin/package.json').version")
+          echo "plugin_api=$PLUGIN_API_VERSION" >> $GITHUB_OUTPUT
+          echo "create_plugin=$CREATE_PLUGIN_VERSION" >> $GITHUB_OUTPUT
       - name: Validate canonical package artifacts
         run: |
-          cd packages/plugin-api/.tmp/package && sha256sum --check nexora-plugin-api-0.1.0.tgz.sha256 && tar -tzf nexora-plugin-api-0.1.0.tgz && cd ../../../../
-          cd packages/create-plugin/.tmp/package && sha256sum --check nexora-create-plugin-0.1.1.tgz.sha256 && tar -tzf nexora-create-plugin-0.1.1.tgz && cd ../../../../
-          node scripts/npm-registry-preflight.mjs --package '@nexora/plugin-api@0.1.0'
-          node scripts/npm-registry-preflight.mjs --package '@nexora/create-plugin@0.1.1'
+          cd packages/plugin-api/.tmp/package && sha256sum --check nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz.sha256 && tar -tzf nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz && cd ../../../../
+          cd packages/create-plugin/.tmp/package && sha256sum --check nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz.sha256 && tar -tzf nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz && cd ../../../../
+          node scripts/npm-registry-preflight.mjs --package '@nexora/plugin-api@${{ steps.versions.outputs.plugin_api }}'
+          node scripts/npm-registry-preflight.mjs --package '@nexora/create-plugin@${{ steps.versions.outputs.create_plugin }}'
       - name: Publish plugin API
-        run: pnpm publish "packages/plugin-api/.tmp/package/nexora-plugin-api-0.1.0.tgz" --provenance --access public --no-git-checks
+        run: pnpm publish "packages/plugin-api/.tmp/package/nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz" --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish create-plugin
-        run: pnpm publish "packages/create-plugin/.tmp/package/nexora-create-plugin-0.1.1.tgz" --provenance --access public --no-git-checks
+        run: pnpm publish "packages/create-plugin/.tmp/package/nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz" --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

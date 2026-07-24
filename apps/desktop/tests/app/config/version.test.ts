@@ -3,7 +3,7 @@ import { APP_VERSION } from '@/app/config/version';
 
 describe('version', () => {
   it('should export the release version', () => {
-    expect(APP_VERSION).toBe('1.0.3');
+    expect(APP_VERSION).toBe('1.1.0');
   });
 
   it('should follow semantic versioning format', () => {

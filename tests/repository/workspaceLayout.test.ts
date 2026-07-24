@@ -123,7 +123,7 @@ describe("desktop workspace migration", () => {
     expect(desktopPackage).toMatchObject({
       name: "@nexora/desktop",
       private: true,
-      version: "1.0.3",
+      version: "1.1.0",
     });
     expect(rootPackage.private).toBe(true);
   });

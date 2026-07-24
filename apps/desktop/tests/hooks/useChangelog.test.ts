@@ -10,8 +10,8 @@ describe("useChangelog", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(result.current.entries[0]).toMatchObject({
-      version: "1.0.3",
-      bugFixes: expect.arrayContaining(["Initialize updater plugin"]),
+      version: "1.1.0",
+      features: expect.arrayContaining(["Add frontend Tauri platform gateways"]),
     });
     expect(result.current.entries).toEqual(
       expect.arrayContaining([
