@@ -12,10 +12,10 @@ describe('release workflow', () => {
     expect(workflow).not.toContain("core.getInput('tag'");
   });
 
-  it('checks out and releases the exact requested tag instead of the dispatch commit', () => {
+  it('checks out and releases an existing exact tag instead of the dispatch commit', () => {
     expect(workflow).toContain("ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}");
-    expect(workflow).toContain('target_commitish: tag');
-    expect(workflow).not.toContain('target_commitish: context.sha');
+    expect(workflow).toContain("git.getRef({ owner, repo, ref: `tags/${tag}` })");
+    expect(workflow).not.toContain('target_commitish:');
   });
 
   it('does not pass empty Apple signing secrets to unsigned macOS builds', () => {

@@ -41,11 +41,11 @@ jobs:
             } catch (error) {
               if (error.status !== 404) throw error
             }
+            await github.rest.git.getRef({ owner, repo, ref: `tags/${tag}` })
             const { data } = await github.rest.repos.createRelease({
               owner,
               repo,
               tag_name: tag,
-              target_commitish: tag,
               name: tag,
               generate_release_notes: true,
               draft: true,
