@@ -10,9 +10,6 @@ use tokio::sync::{mpsc, oneshot};
 
 use crate::plugins::rpc::{JsonRpcRequest, JsonRpcResponse};
 
-#[cfg(windows)]
-use std::os::windows::process::CommandExt;
-
 pub(crate) const PLUGIN_CALL_TIMEOUT: Duration = Duration::from_secs(120);
 pub(crate) const PLUGIN_INIT_TIMEOUT: Duration = Duration::from_secs(15);
 #[cfg(windows)]
