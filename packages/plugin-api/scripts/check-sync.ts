@@ -1,106 +1,50 @@
-/**
- * Sync check: assert the public API surface declared by this package
- * mirrors the host barrel at `src/pluginApi.ts`.
- *
- * Catches the one drift scenario that matters: someone adds a hook or type
- * to the host without publishing it from `@nexora/plugin-api`.
- *
- * Exits 1 on mismatch, 0 otherwise. Run via `pnpm --filter @nexora/plugin-api check:sync`.
- */
-
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  comparePublicContracts,
+  extractPublicContract,
+  formatSyncFailure,
+  type ContractBaseline,
+} from "./public-contract";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(__dirname, "../../..");
-
-const HOST_BARREL = resolve(REPO_ROOT, "src/pluginApi.ts");
-const PACKAGE_BARREL = resolve(__dirname, "../src/index.ts");
-
-function extractExports(source: string): { values: Set<string>; types: Set<string> } {
-  const values = new Set<string>();
-  const types = new Set<string>();
-
-  // Match `export { a, b, c } from "..."` and `export type { X, Y } from "..."`
-  const exportBlock = /export\s+(type\s+)?\{\s*([^}]+)\s*\}/g;
-  let match: RegExpExecArray | null;
-  while ((match = exportBlock.exec(source)) !== null) {
-    const isType = Boolean(match[1]);
-    const names = match[2]
-      .split(",")
-      .map((n) => n.trim())
-      .filter(Boolean)
-      .map((n) => {
-        const aliasMatch = /([A-Za-z0-9_$]+)(?:\s+as\s+([A-Za-z0-9_$]+))?/.exec(n);
-        return aliasMatch ? (aliasMatch[2] ?? aliasMatch[1]) : n;
-      });
-    for (const n of names) {
-      (isType ? types : values).add(n);
-    }
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repositoryRoot = resolve(packageRoot, "../..");
+const packageJson = JSON.parse(readFileSync(resolve(packageRoot, "package.json"), "utf8")) as { version: string };
+const baseline = JSON.parse(readFileSync(resolve(packageRoot, "contracts/public-contract-baseline.json"), "utf8")) as ContractBaseline & {
+  pluginPackageVersion: string;
+  pluginApiVersion: string;
+  hostApiVersion: string;
+  emittedContract: ReturnType<typeof extractPublicContract> | null;
+  publishedContract: ReturnType<typeof extractPublicContract> | null;
+};
+const host = extractPublicContract(
+  resolve(repositoryRoot, "apps/desktop/src/features/plugins/lib/pluginApi.ts"),
+  resolve(repositoryRoot, "apps/desktop/src/features/plugins/state/PluginSlotProvider.tsx"),
+);
+const pkg = extractPublicContract(resolve(packageRoot, "src/index.ts"), resolve(packageRoot, "src/version.ts"));
+const emitted = extractPublicContract(resolve(packageRoot, ".tmp/build/index.d.ts"));
+const comparison = comparePublicContracts(host, pkg, baseline);
+for (const [key, expected, actual] of [
+  ["emittedContract", baseline.emittedContract, emitted],
+  ["publishedContract", baseline.publishedContract, emitted],
+] as const) {
+  if (expected === null || JSON.stringify(expected) !== JSON.stringify(actual)) {
+    comparison.versionMismatches.push(`${key} expected=${JSON.stringify(expected)} actual=${JSON.stringify(actual)}`);
   }
-
-  return { values, types };
 }
-
-function main(): void {
-  const hostSource = readFileSync(HOST_BARREL, "utf8");
-  const pkgSource = readFileSync(PACKAGE_BARREL, "utf8");
-
-  const host = extractExports(hostSource);
-  const pkg = extractExports(pkgSource);
-
-  const missingValues: string[] = [];
-  const missingTypes: string[] = [];
-
-  for (const name of host.values) {
-    // The host may export either as value or type — tolerate either form in the package.
-    if (!pkg.values.has(name) && !pkg.types.has(name)) {
-      missingValues.push(name);
-    }
-  }
-  for (const name of host.types) {
-    if (!pkg.types.has(name) && !pkg.values.has(name)) {
-      missingTypes.push(name);
-    }
-  }
-
-  if (missingValues.length === 0 && missingTypes.length === 0) {
-    console.log(
-      "[plugin-api check:sync] OK — host barrel and package barrel are in sync.",
-    );
-    console.log(
-      `  host: ${host.values.size} values / ${host.types.size} types`,
-    );
-    console.log(
-      `  pkg : ${pkg.values.size} values / ${pkg.types.size} types`,
-    );
-    return;
-  }
-
-  console.error("[plugin-api check:sync] FAIL — drift detected.");
-  if (missingValues.length > 0) {
-    console.error(
-      `  Missing value exports in @nexora/plugin-api (present in host):`,
-    );
-    for (const n of missingValues) console.error(`    - ${n}`);
-  }
-  if (missingTypes.length > 0) {
-    console.error(
-      `  Missing type exports in @nexora/plugin-api (present in host):`,
-    );
-    for (const n of missingTypes) console.error(`    - ${n}`);
-  }
-  console.error(
-    `\n  Host barrel : ${HOST_BARREL}`,
-  );
-  console.error(
-    `  Pkg  barrel : ${PACKAGE_BARREL}`,
-  );
-  console.error(
-    "\n  Either re-export the missing names from the package or mark the host export @internal.",
-  );
+if (packageJson.version !== baseline.pluginPackageVersion) {
+  comparison.versionMismatches.push(`pluginPackageVersion=${packageJson.version} expected=${baseline.pluginPackageVersion}`);
+}
+if (pkg.version !== baseline.pluginApiVersion) {
+  comparison.versionMismatches.push(`pluginApiVersion=${pkg.version ?? "missing"} expected=${baseline.pluginApiVersion}`);
+}
+if (host.version !== baseline.hostApiVersion) {
+  comparison.versionMismatches.push(`hostApiVersion=${host.version ?? "missing"} expected=${baseline.hostApiVersion}`);
+}
+const failed = comparison.newDrift.length > 0 || comparison.changedDrift.length > 0 || comparison.resolvedDrift.length > 0 || comparison.staleAllowlistEntries.length > 0 || comparison.versionMismatches.length > 0;
+if (failed) {
+  console.error(formatSyncFailure(comparison));
   process.exit(1);
 }
-
-main();
+console.log("[plugin-api check:sync] normalized host and package contracts match the reasoned baseline");

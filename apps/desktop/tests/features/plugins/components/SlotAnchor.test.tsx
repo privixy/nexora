@@ -1,0 +1,119 @@
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { PluginSlotProvider } from "../../../../src/features/plugins/state/PluginSlotProvider";
+import { PluginSlotContext } from "../../../../src/features/plugins/state/PluginSlotContext";
+import { SettingsContext, DEFAULT_SETTINGS } from "../../../../src/features/settings/state/SettingsContext";
+import { SlotAnchor } from "../../../../src/features/plugins/components/SlotAnchor";
+import type { SlotComponentProps } from "../../../../src/features/plugins/contracts/pluginSlots";
+
+const settingsValue = {
+  settings: DEFAULT_SETTINGS,
+  updateSetting: () => {},
+  isLoading: false,
+};
+
+const GoodPlugin = ({ pluginId }: SlotComponentProps) => (
+  <span data-testid="good-plugin">{pluginId}</span>
+);
+
+const CrashingPlugin = () => {
+  throw new Error("Plugin crash!");
+};
+
+describe("SlotAnchor", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("should render nothing when no contributions exist", () => {
+    const { container } = render(
+      <SettingsContext.Provider value={settingsValue}>
+        <PluginSlotProvider>
+          <SlotAnchor name="sidebar.footer.actions" context={{}} />
+        </PluginSlotProvider>
+      </SettingsContext.Provider>,
+    );
+
+    expect(container.innerHTML).toBe("");
+  });
+
+  it("should render nothing when outside provider", () => {
+    const { container } = render(
+      <SlotAnchor name="sidebar.footer.actions" context={{}} />,
+    );
+
+    expect(container.innerHTML).toBe("");
+  });
+
+  it("should render contributions for the matching slot", () => {
+    const mockRegistry = {
+      contributions: [],
+      register: () => () => {},
+      registerAll: () => () => {},
+      getSlotContributions: (slot: string) => {
+        if (slot === "sidebar.footer.actions") {
+          return [
+            { pluginId: "test-plugin", slot: "sidebar.footer.actions" as const, component: GoodPlugin },
+          ];
+        }
+        return [];
+      },
+    };
+
+    render(
+      <PluginSlotContext.Provider value={mockRegistry}>
+        <SlotAnchor name="sidebar.footer.actions" context={{}} />
+      </PluginSlotContext.Provider>,
+    );
+
+    expect(screen.getByTestId("good-plugin")).toHaveTextContent("test-plugin");
+  });
+
+  it("should isolate plugin crashes with ErrorBoundary", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const mockRegistry = {
+      contributions: [],
+      register: () => () => {},
+      registerAll: () => () => {},
+      getSlotContributions: () => [
+        { pluginId: "crashing-plugin", slot: "sidebar.footer.actions" as const, component: CrashingPlugin },
+        { pluginId: "good-plugin", slot: "sidebar.footer.actions" as const, component: GoodPlugin },
+      ],
+    };
+
+    render(
+      <PluginSlotContext.Provider value={mockRegistry}>
+        <SlotAnchor name="sidebar.footer.actions" context={{}} />
+      </PluginSlotContext.Provider>,
+    );
+
+    expect(screen.getByText("Plugin error: crashing-plugin")).toBeInTheDocument();
+    expect(screen.getByTestId("good-plugin")).toBeInTheDocument();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      '[PluginSlot] Plugin "crashing-plugin" crashed in slot "sidebar.footer.actions":',
+      expect.objectContaining({ message: "Plugin crash!" }),
+      expect.any(String),
+    );
+  });
+
+  it("should set data-slot attribute on wrapper", () => {
+    const mockRegistry = {
+      contributions: [],
+      register: () => () => {},
+      registerAll: () => () => {},
+      getSlotContributions: () => [
+        { pluginId: "p1", slot: "data-grid.toolbar.actions" as const, component: GoodPlugin },
+      ],
+    };
+
+    render(
+      <PluginSlotContext.Provider value={mockRegistry}>
+        <SlotAnchor name="data-grid.toolbar.actions" context={{}} className="test-class" />
+      </PluginSlotContext.Provider>,
+    );
+
+    const wrapper = screen.getByTestId("good-plugin").parentElement;
+    expect(wrapper?.getAttribute("data-slot")).toBe("data-grid.toolbar.actions");
+    expect(wrapper?.className).toContain("test-class");
+  });
+});

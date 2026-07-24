@@ -1,11 +1,28 @@
+import { readFileSync } from "node:fs";
+import { dirname, parse, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { resolve } from "node:path";
 
 import { printCreated, printError, printHelp } from "./print";
 import { scaffold } from "./scaffold";
 import { titleCase, validateDbType, validateName, validateQuote } from "./validate";
 
-const PACKAGE_VERSION = "0.1.0";
+function findPackageVersion(from: string): string {
+  let directory = dirname(from);
+  while (directory !== parse(directory).root) {
+    const packagePath = resolve(directory, "package.json");
+    try {
+      const pkg = JSON.parse(readFileSync(packagePath, "utf8")) as { name?: string; version?: string };
+      if (pkg.name === "@nexora/create-plugin" && pkg.version) return pkg.version;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+    directory = dirname(directory);
+  }
+  throw new Error("Unable to locate @nexora/create-plugin package.json");
+}
+
+const PACKAGE_VERSION = findPackageVersion(fileURLToPath(import.meta.url));
 const PLUGIN_API_VERSION = "0.1.0";
 const MIN_NEXORA_VERSION = "0.9.20";
 
@@ -63,6 +80,11 @@ function main(argv: string[]): number {
     quote = validateQuote(parsed.values.quote as string | undefined);
   } catch (err) {
     printError(err instanceof Error ? err.message : String(err));
+    return 1;
+  }
+
+  if (parsed.values["with-ui"] && dbType !== "network") {
+    printError("--with-ui requires --db-type=network");
     return 1;
   }
 

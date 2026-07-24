@@ -25,7 +25,7 @@ jobs:
 
       - name: Download .deb Artifact
         run: |
-          wget "https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.version }}/nexora_${{ steps.version.outputs.version }}_amd64.deb" -O app.deb
+          wget "https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.version }}/Nexora_${{ steps.version.outputs.version }}_amd64.deb" -O app.deb
 
       - name: Calculate SHA256
         id: shasum
@@ -47,4 +47,3 @@ jobs:
           commit_email: ${{ secrets.AUR_EMAIL }}
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: "Update to v${{ steps.version.outputs.version }}"
-          force_push: true

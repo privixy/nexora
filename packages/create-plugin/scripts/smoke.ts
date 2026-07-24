@@ -1,77 +1,92 @@
-/**
- * End-to-end smoke test.
- *
- * 1. Scaffold a plugin into a temporary directory (network, file, and
- *    --with-ui variants).
- * 2. Run `cargo check` on each — must exit 0.
- * 3. For --with-ui, also verify the ui/ directory has the expected files.
- *
- * Intended to be run via `pnpm --filter @nexora/create-plugin smoke`.
- * Requires cargo on PATH.
- */
-
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
+import { copyFileSync, existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const CLI = resolve(__dirname, "../dist/cli.js");
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const cli = resolve(root, ".tmp/build/cli.js");
+const args = new Set(process.argv.slice(2));
+const skipCargo = args.has("--skip-cargo");
+const keepTemp = args.has("--keep-temp");
+const unknown = [...args].filter((arg) => arg !== "--skip-cargo" && arg !== "--keep-temp");
+if (unknown.length > 0) throw new Error(`Unknown smoke option: ${unknown.join(", ")}`);
 
-function step(label: string): void {
-  console.log(`\n▶ ${label}`);
+function run(command: string, commandArgs: string[], cwd: string): void {
+  execFileSync(command, commandArgs, { cwd, stdio: "inherit" });
 }
 
-function run(cmd: string, args: string[], cwd: string): void {
-  execFileSync(cmd, args, { cwd, stdio: "inherit" });
+function runCargo(cwd: string): void {
+  const rustc = execFileSync("rustup", ["which", "--toolchain", "stable", "rustc"], { encoding: "utf8" }).trim();
+  execFileSync("rustup", ["run", "stable", "cargo", "check", "--quiet"], { cwd, env: { ...process.env, RUSTC: rustc }, stdio: "inherit" });
 }
 
-function scaffoldOne(kind: "network" | "file", withUi: boolean): void {
-  const label = `${kind}${withUi ? "+ui" : ""}`;
-  step(`scaffold ${label}`);
-  const dir = mkdtempSync(join(tmpdir(), `ctp-smoke-${kind}-`));
-  const target = join(dir, "plugin");
-
-  const args = ["my-driver", "--db-type=" + kind, "--no-git", "--dir=" + target];
-  if (withUi) args.push("--with-ui");
-  run(process.execPath, [CLI, ...args], dir);
-
-  for (const expected of ["Cargo.toml", "manifest.json", "src/main.rs", "justfile"]) {
-    const p = join(target, expected);
-    if (!existsSync(p) || statSync(p).size === 0) {
-      throw new Error(`missing or empty: ${p}`);
-    }
+function requireFiles(target: string, paths: string[]): void {
+  for (const path of paths) {
+    const absolute = join(target, path);
+    if (!existsSync(absolute) || statSync(absolute).size === 0) throw new Error(`missing or empty: ${absolute}`);
   }
+}
 
-  if (withUi) {
-    for (const expected of ["ui/package.json", "ui/vite.config.ts", "ui/src/index.tsx"]) {
-      const p = join(target, expected);
-      if (!existsSync(p) || statSync(p).size === 0) {
-        throw new Error(`missing or empty: ${p}`);
-      }
-    }
+function validateUi(target: string): void {
+  requireFiles(target, ["ui/package.json", "ui/vite.config.ts", "ui/tsconfig.json", "ui/src/index.tsx", "ui/README.md"]);
+  const packageJson = JSON.parse(readFileSync(join(target, "ui/package.json"), "utf8")) as {
+    dependencies?: Record<string, string>;
+    scripts?: Record<string, string>;
+  };
+  if (packageJson.dependencies?.["@nexora/plugin-api"] !== "^0.1.0" || packageJson.scripts?.build !== "vite build") {
+    throw new Error("UI static validation failed");
   }
+  const vite = readFileSync(join(target, "ui/vite.config.ts"), "utf8");
+  const source = readFileSync(join(target, "ui/src/index.tsx"), "utf8");
+  if (!vite.includes('__nexora_plugin__') || !vite.includes('fileName: () => "index.js"') || !source.includes('defineSlot("data-grid.toolbar.actions"')) {
+    throw new Error("UI static validation failed");
+  }
+}
 
-  step(`cargo check ${label}`);
-  run("cargo", ["check", "--quiet"], target);
-
-  rmSync(dir, { recursive: true, force: true });
-  console.log(`  ✓ ${label} — cargo check clean`);
+function scaffold(smokeRoot: string, kind: "network" | "file" | "folder" | "api", withUi: boolean): string {
+  const target = join(smokeRoot, `${kind}${withUi ? "-ui" : ""}`);
+  run(process.execPath, [cli, `${kind}-driver`, `--db-type=${kind}`, "--no-git", `--dir=${target}`, ...(withUi ? ["--with-ui"] : [])], smokeRoot);
+  requireFiles(target, ["Cargo.toml", "manifest.json", "src/main.rs", "justfile"]);
+  if (withUi) validateUi(target);
+  if (!skipCargo) runCargo(target);
+  console.log(`${kind}${withUi ? "+ui" : ""} validated`);
+  return target;
 }
 
 function main(): void {
-  if (!existsSync(CLI)) {
-    throw new Error(
-      `CLI not built at ${CLI}. Run \`pnpm --filter @nexora/create-plugin build\` first.`,
-    );
+  if (!existsSync(cli)) throw new Error(`CLI not built at ${cli}`);
+  const smokeRoot = mkdtempSync(join(tmpdir(), "create-plugin-smoke-"));
+  console.log(`Temporary smoke root: ${smokeRoot}`);
+  try {
+    for (const kind of ["network", "file", "folder", "api"] as const) scaffold(smokeRoot, kind, false);
+    const uiTarget = scaffold(smokeRoot, "network", true);
+    console.log("UI static validation passed");
+    if (!skipCargo) {
+      const pluginApiTarball = resolve(root, "../plugin-api/.tmp/package/nexora-plugin-api-0.1.0.tgz");
+      if (!existsSync(pluginApiTarball)) throw new Error(`Canonical plugin API tarball required for UI build: ${pluginApiTarball}`);
+      const localTarball = join(uiTarget, "ui", "nexora-plugin-api.tgz");
+      copyFileSync(pluginApiTarball, localTarball);
+      const uiPackagePath = join(uiTarget, "ui", "package.json");
+      const uiPackage = JSON.parse(readFileSync(uiPackagePath, "utf8")) as { dependencies: Record<string, string> };
+      uiPackage.dependencies["@nexora/plugin-api"] = "file:./nexora-plugin-api.tgz";
+      writeFileSync(uiPackagePath, `${JSON.stringify(uiPackage, null, 2)}\n`);
+      run("pnpm", ["install", "--ignore-workspace", "--frozen-lockfile=false"], join(uiTarget, "ui"));
+      run("pnpm", ["run", "build"], join(uiTarget, "ui"));
+    }
+    for (const kind of ["file", "folder", "api"] as const) {
+      try {
+        run(process.execPath, [cli, `${kind}-ui-driver`, `--db-type=${kind}`, "--with-ui", "--no-git", `--dir=${join(smokeRoot, `${kind}-ui-rejected`)}`], smokeRoot);
+        throw new Error(`non-network UI was accepted for ${kind}`);
+      } catch (error) {
+        const status = (error as { status?: number }).status;
+        if (status === undefined || status === 0) throw error;
+      }
+    }
+    console.log("non-network UI rejection validated");
+  } finally {
+    if (!keepTemp) rmSync(smokeRoot, { recursive: true, force: true });
   }
-
-  scaffoldOne("network", false);
-  scaffoldOne("file", false);
-  scaffoldOne("network", true);
-
-  console.log("\n✓ smoke OK");
 }
 
 main();

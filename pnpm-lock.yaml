@@ -10,6 +10,39 @@ overrides:
 importers:
 
   .:
+    devDependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.7.0(jiti@2.7.0))
+      ajv:
+        specifier: ^8.17.1
+        version: 8.20.0
+      conventional-changelog:
+        specifier: ^8.1.0
+        version: 8.1.0(conventional-commits-filter@6.0.1)
+      conventional-changelog-angular:
+        specifier: ^9.2.1
+        version: 9.2.1
+      eslint:
+        specifier: ^10.7.0
+        version: 10.7.0(jiti@2.7.0)
+      eslint-plugin-react-hooks:
+        specifier: ^7.1.1
+        version: 7.1.1(eslint@10.7.0(jiti@2.7.0))
+      eslint-plugin-react-refresh:
+        specifier: ^0.5.3
+        version: 0.5.3(eslint@10.7.0(jiti@2.7.0))
+      globals:
+        specifier: ^17.7.0
+        version: 17.7.0
+      typescript-eslint:
+        specifier: ^8.64.0
+        version: 8.64.0(eslint@10.7.0(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@26.1.1)(@vitest/coverage-v8@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1))
+
+  apps/desktop:
     dependencies:
       '@monaco-editor/react':
         specifier: ^4.7.0
@@ -114,9 +147,6 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
     devDependencies:
-      '@eslint/js':
-        specifier: ^10.0.1
-        version: 10.0.1(eslint@10.7.0(jiti@2.7.0))
       '@tauri-apps/cli':
         specifier: ~2.10.0
         version: 2.10.1
@@ -147,24 +177,6 @@ importers:
       autoprefixer:
         specifier: ^10.5.4
         version: 10.5.4(postcss@8.5.19)
-      conventional-changelog:
-        specifier: ^8.1.0
-        version: 8.1.0(conventional-commits-filter@6.0.1)
-      conventional-changelog-angular:
-        specifier: ^9.2.1
-        version: 9.2.1
-      eslint:
-        specifier: ^10.7.0
-        version: 10.7.0(jiti@2.7.0)
-      eslint-plugin-react-hooks:
-        specifier: ^7.1.1
-        version: 7.1.1(eslint@10.7.0(jiti@2.7.0))
-      eslint-plugin-react-refresh:
-        specifier: ^0.5.3
-        version: 0.5.3(eslint@10.7.0(jiti@2.7.0))
-      globals:
-        specifier: ^17.7.0
-        version: 17.7.0
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1
@@ -177,9 +189,6 @@ importers:
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
-      typescript-eslint:
-        specifier: ^8.64.0
-        version: 8.64.0(eslint@10.7.0(jiti@2.7.0))(typescript@5.9.3)
       vite:
         specifier: ^8.1.5
         version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)
@@ -211,6 +220,9 @@ importers:
 
   packages/plugin-api:
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.1.1
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
@@ -1566,6 +1578,9 @@ packages:
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
+  ajv@8.20.0:
+    resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
+
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
@@ -2015,6 +2030,9 @@ packages:
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
 
+  fast-uri@3.1.4:
+    resolution: {integrity: sha512-8JnbkQ4juDyvYs4mgFGQqg4yCYtFDtUtmp2QIQq11ZZe5CFQ5wcqm1rqDgAh/QdMySuBnPzMUiJUNZG5N/AiQw==}
+
   fd-package-json@2.0.0:
     resolution: {integrity: sha512-jKmm9YtsNXN789RS/0mSzOC1NUq9mkVd65vbSSVsKdjGvYXBuE4oWe2QOEoFeRmJg+lPuZxpmrfFclNhoRMneQ==}
 
@@ -2288,6 +2306,9 @@ packages:
 
   json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
+
+  json-schema-traverse@1.0.0:
+    resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -4310,6 +4331,13 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
+  ajv@8.20.0:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-uri: 3.1.4
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+
   ansi-regex@5.0.1: {}
 
   ansi-styles@5.2.0: {}
@@ -4792,6 +4820,8 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
+  fast-uri@3.1.4: {}
+
   fd-package-json@2.0.0:
     dependencies:
       walk-up-path: 4.0.0
@@ -5064,6 +5094,8 @@ snapshots:
       react: 19.2.7
 
   json-schema-traverse@0.4.1: {}
+
+  json-schema-traverse@1.0.0: {}
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 

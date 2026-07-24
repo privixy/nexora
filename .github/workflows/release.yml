@@ -45,7 +45,7 @@ jobs:
               owner,
               repo,
               tag_name: tag,
-              target_commitish: context.sha,
+              target_commitish: tag,
               name: tag,
               generate_release_notes: true,
               draft: true,
@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
@@ -86,8 +88,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.0.9
-        with:
-          version: 10.30.3
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -109,7 +109,7 @@ jobs:
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2.9.1
         with:
-          workspaces: src-tauri
+          workspaces: apps/desktop/src-tauri
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -121,6 +121,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
+          projectPath: apps/desktop
+          tauriScript: pnpm tauri
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: ${{ matrix.args }}
 

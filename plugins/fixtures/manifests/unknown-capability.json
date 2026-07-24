@@ -1,0 +1,17 @@
+{
+  "id": "unknown-capability",
+  "name": "Unknown Capability",
+  "version": "1.0.0",
+  "description": "Unknown capability fixture",
+  "executable": "unknown-capability",
+  "capabilities": {
+    "schemas": false,
+    "views": false,
+    "routines": false,
+    "file_based": false,
+    "identifier_quote": "\"",
+    "alter_primary_key": false,
+    "unknown_capability": true
+  },
+  "data_types": []
+}

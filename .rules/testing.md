@@ -1,36 +1,42 @@
 # Testing Conventions
 
-This document defines the testing conventions and directory structure for the Nexora project.
+This document defines the testing conventions and directory structure for the Nexora project. See `docs/architecture/repository-structure.md` for a description of the current repository structure.
 
 ## Directory Structure
 
 ### Source Files
-All utility functions and testable logic must be placed in `src/utils/` with simple, descriptive names **without the "Utils" suffix**.
+Keep testable logic with its owning `app`, `features`, `shared`, or `platform` module. Move a utility into `apps/desktop/src/shared/` only when it is genuinely reusable across feature boundaries; feature-specific helpers remain with their feature. Use simple, descriptive names without an unnecessary "Utils" suffix.
 
 **Correct:**
-- `src/utils/dataGrid.ts`
-- `src/utils/contextMenu.ts`
-- `src/utils/sqlGenerator.ts`
-- `src/utils/sql.ts`
+- `apps/desktop/src/features/data-grid/lib/dataGrid.ts`
+- `apps/desktop/src/features/connections/lib/tableContext.ts`
+- `apps/desktop/src/shared/lib/sql.ts`
 
 **Incorrect:**
-- ~~`src/components/ui/dataGridUtils.ts`~~ (wrong location)
-- ~~`src/utils/dataGridUtils.ts`~~ (wrong naming - no Utils suffix)
+- ~~`apps/desktop/src/shared/lib/dataGridUtils.ts`~~ when only data-grid uses it
+- ~~`apps/desktop/src/features/data-grid/lib/dataGridUtils.ts`~~ when `dataGrid.ts` is sufficiently descriptive
 
 ### Test Files
-All test files must be placed in a parallel `tests/` directory that mirrors the structure of `src/`.
+Desktop TypeScript tests must be placed in `apps/desktop/tests/` and mirror their source or contract owner. Desktop-wide contracts belong in `apps/desktop/tests/repository/`; root `tests/repository/` owns non-desktop workspace, package, release, and workflow contracts and may not import desktop-private modules. Package tests live under `packages/<package>/tests/`. Desktop Rust unit tests are module-local; use sibling `tests.rs` or `tests/` modules loaded by private `#[cfg(test)] mod tests;` declarations rather than peer `*_tests.rs` or non-trivial inline suites. Crate integration tests live under `apps/desktop/src-tauri/tests/`; preserve compile/public-contract, behavior, and database integration coverage. Create-plugin generated Rust test layouts are package-owned and verified from the packed templates. Do not reintroduce desktop tests or configuration at root, and do not introduce new legacy exceptions.
+
+Default: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`
+
+Explicit external integration run: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --test database_integration -- --ignored`
+
+Required services: MySQL on `127.0.0.1:33060` and PostgreSQL on `127.0.0.1:54320` with the existing test credentials and database. An explicit run must fail with the required-service precondition when either service is absent; it must not succeed as a no-op.
 
 ```
 project-root/
-├── src/
-│   ├── utils/
+├── apps/desktop/
+│   ├── src/
+│   │   ├── utils/
 │   │   ├── dataGrid.ts
 │   │   ├── contextMenu.ts
 │   │   └── sqlGenerator.ts
 │   └── themes/
 │       ├── colorUtils.ts
 │       └── themeRegistry.ts
-├── tests/
+├── apps/desktop/tests/
 │   ├── setup.ts              # Test setup file
 │   ├── utils/
 │   │   ├── dataGrid.test.ts
@@ -58,13 +64,13 @@ import { splitQueries } from "@/utils/sql";
 ```
 
 ### In Test Files
-Always use relative imports from `tests/` to `src/`:
+Always use relative imports from `apps/desktop/tests/` to `apps/desktop/src/`:
 
 ```typescript
-// Correct - from tests/utils/dataGrid.test.ts
+// Correct - from apps/desktop/tests/utils/dataGrid.test.ts
 import { formatCellValue } from "../../src/utils/dataGrid";
 
-// Correct - from tests/themes/colorUtils.test.ts  
+// Correct - from apps/desktop/tests/themes/colorUtils.test.ts
 import { hexToRgb } from "../../src/themes/colorUtils";
 
 // Incorrect - relative to same directory (would fail after move)
@@ -78,9 +84,9 @@ Test files must follow the pattern: `[filename].test.ts`
 - `dataGrid.ts` → `dataGrid.test.ts`
 - `sqlGenerator.ts` → `sqlGenerator.test.ts`
 
-## What Belongs in `src/utils/`
+## What Belongs in `apps/desktop/src/utils/`
 
-Extract pure, testable logic from components into `src/utils/`:
+Extract pure, testable logic from components into `apps/desktop/src/utils/`:
 
 1. **Data transformation functions** - formatters, parsers, converters
 2. **Calculation functions** - positioning, sorting, filtering logic
@@ -149,7 +155,7 @@ pnpm test
 pnpm test --watch
 
 # Run specific test file
-pnpm test tests/utils/dataGrid.test.ts
+pnpm test apps/desktop/tests/utils/dataGrid.test.ts
 
 # Run with coverage
 pnpm test --coverage
@@ -157,7 +163,20 @@ pnpm test --coverage
 
 ## Configuration
 
-Tests are configured in `vitest.config.ts`:
-- Test files are discovered in `tests/` directory
-- Setup file: `./tests/setup.ts`
-- Environment: `jsdom` for DOM-related tests
+Root `vitest.config.ts` is the repository-owned aggregator with named `repository` and `desktop` projects. The repository project discovers only `tests/repository/**/*.test.ts` in Node. `apps/desktop/vitest.config.ts` owns the desktop project, React plugin, alias, JSDOM environment, `apps/desktop/tests/setup.ts`, desktop-only discovery, and coverage of `apps/desktop/src`.
+
+Use these commands from the repository root:
+
+```bash
+pnpm test --run
+pnpm test:repository --run
+pnpm test:desktop --run
+pnpm test:coverage
+pnpm lint
+pnpm exec vitest run --project repository tests/repository/<file>.test.ts
+pnpm exec vitest run --project desktop apps/desktop/tests/<file>.test.tsx
+```
+
+## Workflow Contracts
+
+Root `tests/repository/` owns CI and release workflow contracts. Workflow commands remain rooted at the repository, Rust caches use `apps/desktop/src-tauri`, Tauri actions use `projectPath: apps/desktop`, and release dry-run triggers cover moved desktop version, build, configuration, and icon paths. Validate workflow YAML through the checksum-verified actionlint v1.7.7 launcher with `pnpm lint:workflows`. Package contracts run through `pnpm check:packages`; plugin manifest layers run through `pnpm test:plugin-contract`; release-store metadata runs through `pnpm validate:distribution`. Package artifact checks inspect canonical `.tmp/package` tarballs and SHA256 sidecars without repacking. Stage scripts reject missing or stale/backdated `.tmp/build`, never fall back to checked-in `dist`, and package checks fail on hash mutation. Plugin API checks compare source, declarations emitted into `.tmp/build`, and canonical packed/public contract evidence against a non-null reasoned drift baseline. Create-plugin smoke covers network/file/folder/api, `--skip-cargo`, `--keep-temp`, non-network UI rejection, static/full UI validation, stable-toolchain `cargo check`, and `finally` cleanup.

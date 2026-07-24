@@ -1,0 +1,8 @@
+{
+  "id": "unknown-slot",
+  "name": "Unknown Slot",
+  "version": "1.0.0",
+  "description": "Unknown slot fixture",
+  "capabilities": {},
+  "ui_extensions": [{ "slot": "unknown.slot", "module": "ui/index.js" }]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "aliases",
+  "name": "Alias Driver",
+  "version": "1.0.0",
+  "description": "Capability alias fixture",
+  "executable": "aliases",
+  "capabilities": {
+    "schemas": false,
+    "views": false,
+    "routines": false,
+    "file_based": false,
+    "connectionString": false,
+    "connectionStringExample": "alias://example",
+    "identifier_quote": "\"",
+    "alter_primary_key": false,
+    "createDatabase": true,
+    "dropDatabase": true,
+    "renameDatabase": true,
+    "createSchema": true,
+    "truncateTable": true,
+    "routineManagement": true,
+    "supportsSsl": true
+  },
+  "data_types": []
+}

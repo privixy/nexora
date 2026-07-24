@@ -1,0 +1,834 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { renderHook, waitFor, act } from "@testing-library/react";
+import { EditorProvider } from "../../../../src/features/editor/state/EditorProvider";
+import { useEditor } from "../../../../src/features/editor/hooks/useEditor";
+import { DatabaseContext, type DatabaseContextType } from "../../../../src/features/connections/state/DatabaseContext";
+import { invoke } from "@tauri-apps/api/core";
+import React from "react";
+import type { EditorNotebookAdapter, TableSchema } from "../../../../src/features/editor";
+
+const notebookStoreMocks = vi.hoisted(() => ({
+  createNotebookFromState: vi.fn(),
+  evictFromCache: vi.fn(),
+  flushAllPendingSaves: vi.fn(),
+  listNotebooks: vi.fn(),
+  loadNotebook: vi.fn(),
+}));
+const editorUtilsMocks = vi.hoisted(() => ({
+  loadEditorPreferences: vi.fn(),
+}));
+
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(),
+}));
+
+vi.mock("../../../../src/features/notebooks/lib/notebookStore", () => notebookStoreMocks);
+vi.mock("../../../../src/features/editor/lib/editor", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../../src/features/editor/lib/editor")>()),
+  loadEditorPreferences: editorUtilsMocks.loadEditorPreferences,
+}));
+
+describe("EditorProvider", () => {
+  const localStorageMock = {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  };
+
+  const mockSchema: TableSchema[] = [
+    {
+      name: "users",
+      columns: [
+        { name: "id", data_type: "INT", is_pk: true, is_nullable: false },
+        { name: "name", data_type: "VARCHAR", is_pk: false, is_nullable: true },
+      ],
+      foreign_keys: [],
+    },
+  ];
+
+  beforeEach(() => {
+    Object.defineProperty(window, "localStorage", {
+      value: localStorageMock,
+      writable: true,
+    });
+    localStorageMock.getItem.mockReturnValue(null);
+
+    // Mock invoke to return null for load_editor_preferences by default
+    (invoke as ReturnType<typeof vi.fn>).mockImplementation(
+      (command: string) => {
+        if (command === "load_editor_preferences") {
+          return Promise.resolve(null);
+        }
+        if (command === "get_schema_snapshot") {
+          return Promise.resolve(mockSchema);
+        }
+        return Promise.resolve(null);
+      },
+    );
+  });
+
+  const createNotebookAdapter = (): EditorNotebookAdapter => ({
+    loadNotebooks: vi.fn().mockResolvedValue([]),
+    openNotebook: vi.fn().mockResolvedValue(undefined),
+    migrateLegacyNotebook: notebookStoreMocks.createNotebookFromState,
+    flush: notebookStoreMocks.flushAllPendingSaves,
+  });
+
+  const createWrapper = (
+    activeConnectionId: string | null = "conn-1",
+    overrides: Partial<DatabaseContextType> = {},
+    notebookAdapter = createNotebookAdapter(),
+  ) => {
+    return ({ children }: { children: React.ReactNode }) =>
+      React.createElement(
+        DatabaseContext.Provider,
+        {
+          value: {
+            activeConnectionId,
+            activeDriver: "mysql",
+            activeTable: null,
+            activeConnectionName: "Test Connection",
+            activeDatabaseName: "testdb",
+            tables: [],
+            isLoadingTables: false,
+            connect: vi.fn(),
+            disconnect: vi.fn(),
+            setActiveTable: vi.fn(),
+            setActiveTableContext: vi.fn(),
+            setActiveDatabaseContext: vi.fn(),
+            setActiveSchema: vi.fn(),
+            refreshTables: vi.fn(),
+            ...overrides,
+          },
+        },
+        React.createElement(EditorProvider, { notebookAdapter }, children),
+      );
+  };
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+    notebookStoreMocks.createNotebookFromState.mockResolvedValue({ notebookId: "migrated-notebook" });
+    notebookStoreMocks.evictFromCache.mockResolvedValue(undefined);
+    notebookStoreMocks.flushAllPendingSaves.mockResolvedValue(undefined);
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({ tabs: [], activeTabId: null });
+    vi.mocked(invoke).mockImplementation((cmd: string) => {
+      if (cmd === "load_editor_preferences") return Promise.resolve(null);
+      if (cmd === "save_editor_preferences") return Promise.resolve(null);
+      if (cmd === "get_schema_snapshot") return Promise.resolve(mockSchema);
+      return Promise.reject(new Error(`Unexpected command: ${cmd}`));
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const settleEditor = async (result: { current: ReturnType<typeof useEditor> }) => {
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+    act(() => result.current.closeAllTabs());
+    expect(result.current.tabs).toHaveLength(0);
+  };
+
+  it("should provide initial state with no tabs", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    expect(result.current.tabs).toHaveLength(0);
+    expect(result.current.activeTabId).toBeNull();
+    expect(result.current.activeTab).toBeNull();
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+  });
+
+  it("should ignore persisted active tab on connection startup", async () => {
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({
+      activeTabId: "old-tab",
+      tabs: [
+        {
+          id: "old-tab",
+          type: "console",
+          title: "Old Console",
+          query: "select 1",
+          result: null,
+          error: "",
+          executionTime: null,
+          page: 1,
+          activeTable: null,
+          pkColumns: null,
+          connectionId: "conn-1",
+          database: "analytics",
+        },
+      ],
+    });
+
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.tabs).toHaveLength(2);
+    });
+    expect(result.current.activeTab?.database).toBeUndefined();
+    expect(result.current.activeTab?.title).toBe("Console");
+  });
+
+  it("loads, migrates, and persists notebook tabs in order", async () => {
+    const legacyState = { cells: [], stopOnError: true };
+    const notebookAdapter = createNotebookAdapter();
+    vi.mocked(notebookAdapter.migrateLegacyNotebook).mockResolvedValue({
+      id: "migrated-notebook",
+      title: "Legacy notebook",
+    });
+    editorUtilsMocks.loadEditorPreferences.mockResolvedValue({
+      tabs: [
+        {
+          id: "legacy-notebook-tab",
+          title: "Legacy notebook",
+          type: "notebook",
+          query: "",
+          result: null,
+          error: "",
+          executionTime: null,
+          page: 1,
+          activeTable: null,
+          pkColumns: null,
+          connectionId: "conn-1",
+          notebookState: legacyState,
+        },
+      ],
+      activeTabId: "legacy-notebook-tab",
+    });
+
+    const wrapper = createWrapper(
+      "conn-1",
+      { activeDatabase: "analytics", activeSchema: "public" },
+      notebookAdapter,
+    );
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(2));
+
+    expect(notebookAdapter.migrateLegacyNotebook).toHaveBeenCalledWith(legacyState, {
+      connectionId: "conn-1",
+      database: "analytics",
+      schema: "public",
+    });
+    expect(result.current.tabs[1]).toMatchObject({
+      id: "legacy-notebook-tab",
+      notebookId: "migrated-notebook",
+      notebookState: undefined,
+    });
+
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "save_editor_preferences")).toBe(true);
+    });
+    expect(vi.mocked(notebookAdapter.migrateLegacyNotebook).mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(invoke).mock.invocationCallOrder[
+        vi.mocked(invoke).mock.calls.findIndex(([command]) => command === "save_editor_preferences")
+      ],
+    );
+  });
+
+  it("opens or focuses notebook tabs after the active connection finishes loading", async () => {
+    const notebookAdapter = createNotebookAdapter();
+    const wrapper = createWrapper(
+      "conn-1",
+      { activeDatabase: "analytics", activeSchema: "public" },
+      notebookAdapter,
+    );
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+
+    act(() => result.current.openNotebook("conn-1", "notebook-1", "Notebook one"));
+    await waitFor(() => expect(result.current.tabs).toHaveLength(2));
+    const notebookTabId = result.current.activeTabId;
+
+    act(() => result.current.openNotebook("conn-1", "notebook-1", "Renamed elsewhere"));
+
+    expect(result.current.tabs).toHaveLength(2);
+    expect(result.current.activeTabId).toBe(notebookTabId);
+    expect(result.current.activeTab).toMatchObject({ notebookId: "notebook-1", title: "Notebook one" });
+    expect(notebookAdapter.openNotebook).toHaveBeenCalledTimes(2);
+    expect(notebookAdapter.openNotebook).toHaveBeenNthCalledWith(1, "notebook-1", {
+      connectionId: "conn-1",
+      database: "analytics",
+      schema: "public",
+    });
+  });
+
+  it("flushes pending notebook saves on beforeunload and removes the listener on unmount", () => {
+    const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
+    const notebookAdapter = createNotebookAdapter();
+    const wrapper = createWrapper("conn-1", {}, notebookAdapter);
+    const { unmount } = renderHook(() => useEditor(), { wrapper });
+
+    window.dispatchEvent(new Event("beforeunload"));
+    expect(notebookAdapter.flush).toHaveBeenCalledWith("conn-1");
+
+    unmount();
+    expect(removeEventListenerSpy).toHaveBeenCalledWith("beforeunload", expect.any(Function));
+
+    window.dispatchEvent(new Event("beforeunload"));
+    expect(notebookAdapter.flush).toHaveBeenCalledOnce();
+  });
+
+  it("does not persist tabs until preference loading has completed", async () => {
+    let resolvePreferences: (value: { tabs: []; activeTabId: null }) => void = () => undefined;
+    const preferences = new Promise<{ tabs: []; activeTabId: null }>((resolve) => {
+      resolvePreferences = resolve;
+    });
+    editorUtilsMocks.loadEditorPreferences.mockReturnValue(preferences);
+
+    const wrapper = createWrapper("conn-1");
+    renderHook(() => useEditor(), { wrapper });
+
+    expect(vi.mocked(invoke).mock.calls.filter(([command]) => command === "save_editor_preferences")).toHaveLength(0);
+
+    await act(async () => resolvePreferences({ tabs: [], activeTabId: null }));
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.filter(([command]) => command === "save_editor_preferences")).toHaveLength(1);
+    });
+  });
+
+  it("falls back to an initial tab and persists it after preference loading fails", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    editorUtilsMocks.loadEditorPreferences.mockRejectedValue(new Error("storage unavailable"));
+
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await waitFor(() => expect(result.current.tabs).toHaveLength(1));
+    expect(result.current.activeTab).toMatchObject({ type: "console", connectionId: "conn-1" });
+    await waitFor(() => {
+      expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "save_editor_preferences")).toBe(true);
+    });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+  });
+
+  it("should add a new console tab", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.tabs[0].title).toBe("Console");
+    expect(result.current.tabs[0].type).toBe("console");
+    expect(result.current.activeTabId).toBe(result.current.tabs[0].id);
+  });
+
+  it("should add multiple console tabs with numbered titles", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    expect(result.current.tabs).toHaveLength(3);
+    expect(result.current.tabs[0].title).toBe("Console");
+    expect(result.current.tabs[1].title).toBe("Console 2");
+    expect(result.current.tabs[2].title).toBe("Console 3");
+  });
+
+  it("should add a table tab with table name as title", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.tabs[0].title).toBe("users");
+    expect(result.current.tabs[0].type).toBe("table");
+    expect(result.current.tabs[0].activeTable).toBe("users");
+    expect(result.current.tabs[0].isEditorOpen).toBe(false);
+  });
+
+  it("should focus existing table tab instead of creating duplicate", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+
+    const firstTabId = result.current.tabs[0].id;
+
+    // Add another tab first
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    // Try to add same table again
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+
+    expect(result.current.tabs).toHaveLength(2); // Should not create third tab
+    expect(result.current.activeTabId).toBe(firstTabId); // Should focus existing
+  });
+
+  it("should add a query builder tab", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "query_builder" });
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.tabs[0].title).toBe("Visual Query");
+    expect(result.current.tabs[0].type).toBe("query_builder");
+  });
+
+  it("should close a tab", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    const tabId = result.current.tabs[0].id;
+
+    act(() => {
+      result.current.closeTab(tabId);
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.activeTabId).not.toBe(tabId);
+  });
+
+  it("should return empty tabs when closing last tab", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    const tabId = result.current.tabs[0].id;
+
+    act(() => {
+      result.current.closeTab(tabId);
+    });
+
+    expect(result.current.tabs).toHaveLength(0);
+  });
+
+  it("should keep same table names in different databases as separate tabs", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({
+        type: "table",
+        activeTable: "users",
+        database: "app",
+      });
+    });
+    act(() => {
+      result.current.addTab({
+        type: "table",
+        activeTable: "users",
+        database: "analytics",
+      });
+    });
+
+    expect(result.current.tabs).toHaveLength(2);
+    expect(result.current.tabs.map((tab) => tab.database)).toEqual(["app", "analytics"]);
+  });
+
+  it("should focus existing table tab only within the same database", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({
+        type: "table",
+        activeTable: "users",
+        database: "app",
+      });
+    });
+    const firstTabId = result.current.tabs[0].id;
+
+    act(() => {
+      result.current.addTab({
+        type: "table",
+        activeTable: "users",
+        database: "app",
+      });
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.activeTabId).toBe(firstTabId);
+  });
+
+  it("should close all tabs for connection", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+    act(() => {
+      result.current.addTab({ type: "query_builder" });
+    });
+
+    expect(result.current.tabs).toHaveLength(3);
+
+    act(() => {
+      result.current.closeAllTabs();
+    });
+
+    expect(result.current.tabs).toHaveLength(0);
+  });
+
+  it("should close other tabs", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+    act(() => {
+      result.current.addTab({ type: "query_builder" });
+    });
+
+    const keepTabId = result.current.tabs[1].id;
+
+    act(() => {
+      result.current.closeOtherTabs(keepTabId);
+    });
+
+    expect(result.current.tabs).toHaveLength(1);
+    expect(result.current.tabs[0].id).toBe(keepTabId);
+    expect(result.current.activeTabId).toBe(keepTabId);
+  });
+
+  it("should close tabs to the left", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+    act(() => {
+      result.current.addTab({ type: "query_builder" });
+    });
+
+    const targetId = result.current.tabs[1].id;
+
+    act(() => {
+      result.current.setActiveTabId(targetId);
+    });
+
+    act(() => {
+      result.current.closeTabsToLeft(targetId);
+    });
+
+    expect(result.current.tabs).toHaveLength(2);
+    expect(result.current.tabs[0].id).toBe(targetId);
+  });
+
+  it("should close tabs to the right", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+    act(() => {
+      result.current.addTab({ type: "query_builder" });
+    });
+
+    const targetId = result.current.tabs[1].id;
+
+    act(() => {
+      result.current.setActiveTabId(targetId);
+    });
+
+    act(() => {
+      result.current.closeTabsToRight(targetId);
+    });
+
+    expect(result.current.tabs).toHaveLength(2);
+    // After closing tabs to the right of the table tab, we should have console and table
+    expect(result.current.tabs[0].type).toBe("console");
+    expect(result.current.tabs[1].type).toBe("table");
+  });
+
+  it("should update tab properties", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+
+    const tabId = result.current.tabs[0].id;
+
+    act(() => {
+      result.current.updateTab(tabId, {
+        title: "Updated Title",
+        query: "SELECT * FROM users",
+      });
+    });
+
+    expect(result.current.tabs[0].title).toBe("Updated Title");
+    expect(result.current.tabs[0].query).toBe("SELECT * FROM users");
+  });
+
+  it("should set active tab", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await settleEditor(result);
+
+    act(() => {
+      result.current.addTab({ type: "console" });
+    });
+    act(() => {
+      result.current.addTab({ type: "table", activeTable: "users" });
+    });
+
+    const firstTabId = result.current.tabs[0].id;
+
+    act(() => {
+      result.current.setActiveTabId(firstTabId);
+    });
+
+    expect(result.current.activeTabId).toBe(firstTabId);
+    expect(result.current.activeTab?.id).toBe(firstTabId);
+  });
+
+  it("should get schema from backend on cache miss", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    let schema: TableSchema[] = [];
+    await act(async () => {
+      schema = await result.current.getSchema("conn-1");
+    });
+
+    expect(schema).toEqual(mockSchema);
+    expect(invoke).toHaveBeenCalledWith("get_schema_snapshot", {
+      connectionId: "conn-1",
+    });
+  });
+
+  it("should scope schema snapshots and cache entries by database", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await act(async () => {
+      await result.current.getSchema("conn-1", 1, undefined, "app");
+      await result.current.getSchema("conn-1", 1, undefined, "analytics");
+      await result.current.getSchema("conn-1", 1, undefined, "app");
+    });
+
+    const schemaCalls = vi.mocked(invoke).mock.calls.filter(
+      (call) => call[0] === "get_schema_snapshot",
+    );
+    expect(schemaCalls).toEqual([
+      ["get_schema_snapshot", { connectionId: "conn-1", database: "app" }],
+      ["get_schema_snapshot", { connectionId: "conn-1", database: "analytics" }],
+    ]);
+  });
+
+  it("should keep database and schema separate for PostgreSQL snapshots", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    await act(async () => {
+      await result.current.getSchema("conn-1", 1, "public", "analytics");
+    });
+
+    expect(invoke).toHaveBeenCalledWith("get_schema_snapshot", {
+      connectionId: "conn-1",
+      database: "analytics",
+      schema: "public",
+    });
+  });
+
+  it("should use cached schema on subsequent calls", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    // First call - should hit backend
+    await act(async () => {
+      await result.current.getSchema("conn-1", 1);
+    });
+
+    const schemaCallsAfterFirst = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterFirst).toBe(1);
+
+    // Second call - should use cache
+    let schema: TableSchema[] = [];
+    await act(async () => {
+      schema = await result.current.getSchema("conn-1", 1);
+    });
+
+    const schemaCallsAfterSecond = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterSecond).toBe(1); // No additional backend call
+    expect(schema).toEqual(mockSchema);
+  });
+
+  it("should refetch schema when version changes", async () => {
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    // First call
+    await act(async () => {
+      await result.current.getSchema("conn-1", 1);
+    });
+
+    const schemaCallsAfterFirst = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterFirst).toBe(1);
+
+    // Second call with different version
+    await act(async () => {
+      await result.current.getSchema("conn-1", 2);
+    });
+
+    const schemaCallsAfterSecond = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterSecond).toBe(2);
+  });
+
+  it("should refetch schema when cache is stale", async () => {
+    vi.useFakeTimers();
+    const wrapper = createWrapper("conn-1");
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    // First call
+    await act(async () => {
+      await result.current.getSchema("conn-1");
+    });
+
+    const schemaCallsAfterFirst = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterFirst).toBe(1);
+
+    // Advance time by 6 minutes (cache expires at 5 minutes)
+    vi.advanceTimersByTime(6 * 60 * 1000);
+
+    // Second call - cache should be stale
+    await act(async () => {
+      await result.current.getSchema("conn-1");
+    });
+
+    const schemaCallsAfterSecond = (
+      invoke as ReturnType<typeof vi.fn>
+    ).mock.calls.filter((call) => call[0] === "get_schema_snapshot").length;
+    expect(schemaCallsAfterSecond).toBe(2);
+
+    vi.useRealTimers();
+  });
+
+  it("should not add tabs when not connected", () => {
+    const wrapper = createWrapper(null);
+    const { result } = renderHook(() => useEditor(), { wrapper });
+
+    let tabId = "";
+    act(() => {
+      tabId = result.current.addTab({ type: "console" });
+    });
+
+    expect(result.current.tabs).toHaveLength(0);
+    expect(tabId).toBe("");
+  });
+
+  it("should only show tabs for active connection", async () => {
+    // Create wrapper with conn-1 as active
+    const wrapperConn1 = createWrapper("conn-1");
+    const { result: resultConn1 } = renderHook(() => useEditor(), {
+      wrapper: wrapperConn1,
+    });
+
+    await settleEditor(resultConn1);
+
+    // Add tabs for conn-1
+    act(() => {
+      resultConn1.current.addTab({ type: "console" });
+    });
+    act(() => {
+      resultConn1.current.addTab({ type: "table", activeTable: "users" });
+    });
+
+    expect(resultConn1.current.tabs).toHaveLength(2);
+
+    // Now switch to different connection
+    const wrapperConn2 = createWrapper("conn-2");
+    const { result: resultConn2 } = renderHook(() => useEditor(), {
+      wrapper: wrapperConn2,
+    });
+
+    await waitFor(() => expect(resultConn2.current.tabs).toHaveLength(1));
+
+    // Should show an initial tab for conn-2 after its preferences load
+    expect(resultConn2.current.tabs).toHaveLength(1);
+  });
+});

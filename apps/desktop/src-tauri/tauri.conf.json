@@ -1,0 +1,75 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Nexora",
+  "version": "1.1.0",
+  "identifier": "dev.nexora.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "pnpm run dev",
+    "beforeBuildCommand": "pnpm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Nexora",
+        "width": 1280,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "backgroundColor": "#020617"
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/connection-icons/**"
+        ]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDVGQThDQzFEQTY5RENFNzAKUldSd3pwMm1IY3lvWDFwNnduZm1ZNHliQld0MUlZazE2K0RMdHB4WG5vM2E3NGJ4MnNuZks2Y0gK",
+      "endpoints": [
+        "https://github.com/privixy/nexora/releases/latest/download/latest.json"
+      ]
+    }
+  },
+  "bundle": {
+    "createUpdaterArtifacts": true,
+    "active": true,
+    "targets": [
+      "deb",
+      "dmg",
+      "nsis"
+    ],
+    "publisher": "Privixy",
+    "homepage": "https://github.com/privixy/nexora",
+    "license": "Apache-2.0",
+    "category": "DeveloperTool",
+    "shortDescription": "Open-source desktop SQL workspace",
+    "icon": [
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "linux": {
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libsecret-1-0"
+        ]
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    }
+  }
+}

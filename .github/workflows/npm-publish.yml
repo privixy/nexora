@@ -7,53 +7,40 @@ permissions:
   contents: read
   id-token: write
 
-concurrency:
-  group: npm-publish-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   publish:
     if: ${{ vars.ENABLE_STORE_PUBLISH == 'true' }}
-    name: Publish npm packages
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.9
-        with:
-          version: 10.30.3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6.0.9
+      - uses: actions/setup-node@v7
         with:
           node-version: '24.x'
-          check-latest: true
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
           registry-url: https://registry.npmjs.org
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build plugin API
-        run: pnpm build:plugin-api
-
-      - name: Check plugin API sync
-        run: pnpm check:plugin-api
-
-      - name: Build create-plugin
-        run: pnpm build:create-plugin
-
-      - name: Smoke create-plugin
-        run: pnpm smoke:create-plugin
-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @nexora/plugin-api check
+      - run: pnpm --filter @nexora/create-plugin check
+      - name: Extract package versions
+        id: versions
+        run: |
+          PLUGIN_API_VERSION=$(node -p "require('./packages/plugin-api/package.json').version")
+          CREATE_PLUGIN_VERSION=$(node -p "require('./packages/create-plugin/package.json').version")
+          echo "plugin_api=$PLUGIN_API_VERSION" >> $GITHUB_OUTPUT
+          echo "create_plugin=$CREATE_PLUGIN_VERSION" >> $GITHUB_OUTPUT
+      - name: Validate canonical package artifacts
+        run: |
+          cd packages/plugin-api/.tmp/package && sha256sum --check nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz.sha256 && tar -tzf nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz && cd ../../../../
+          cd packages/create-plugin/.tmp/package && sha256sum --check nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz.sha256 && tar -tzf nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz && cd ../../../../
+          node scripts/npm-registry-preflight.mjs --package '@nexora/plugin-api@${{ steps.versions.outputs.plugin_api }}'
+          node scripts/npm-registry-preflight.mjs --package '@nexora/create-plugin@${{ steps.versions.outputs.create_plugin }}'
       - name: Publish plugin API
-        run: pnpm --filter @nexora/plugin-api publish --access public --no-git-checks
+        run: pnpm publish "packages/plugin-api/.tmp/package/nexora-plugin-api-${{ steps.versions.outputs.plugin_api }}.tgz" --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish create-plugin
-        run: pnpm --filter @nexora/create-plugin publish --access public --no-git-checks
+        run: pnpm publish "packages/create-plugin/.tmp/package/nexora-create-plugin-${{ steps.versions.outputs.create_plugin }}.tgz" --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

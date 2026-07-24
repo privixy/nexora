@@ -31,11 +31,17 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup",
-    "clean": "rm -rf dist",
-    "test": "vitest run",
+    "test": "vitest run --exclude tests/package-lifecycle.test.ts --exclude tests/smoke.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "build": "mkdir -p .tmp && rm -rf .tmp/templates-stage && cp -R templates .tmp/templates-stage && rm -rf .tmp/templates && mv .tmp/templates-stage .tmp/templates && tsup --out-dir .tmp/build",
+    "clean": "rm -rf .tmp/build .tmp/templates",
     "smoke": "tsx scripts/smoke.ts",
-    "prepublishOnly": "pnpm run clean && pnpm run build"
+    "smoke:static": "tsx scripts/smoke.ts --skip-cargo",
+    "pack:stage": "tsx scripts/stage-package.ts",
+    "pack:check": "tsx scripts/check-package.ts",
+    "check": "pnpm test && pnpm typecheck && pnpm build && pnpm smoke:static && pnpm smoke && pnpm pack:stage && pnpm pack:check",
+    "prepack": "pnpm check",
+    "prepublishOnly": "pnpm check"
   },
   "dependencies": {
     "kleur": "^4.1.5"

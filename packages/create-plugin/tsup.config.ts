@@ -10,6 +10,7 @@ export default defineConfig({
   clean: true,
   minify: false,
   splitting: false,
+  noExternal: ["kleur"],
   shims: false,
   banner: { js: "#!/usr/bin/env node" },
 });

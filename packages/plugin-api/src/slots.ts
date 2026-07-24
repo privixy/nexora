@@ -9,7 +9,7 @@ import type { ComponentType } from "react";
  * mounted (no more `context.columnName!` sprinkled everywhere).
  *
  * Keep this map aligned with the host-side slot providers in
- * `src/contexts/PluginSlotProvider.tsx` and related renderers.
+ * `apps/desktop/src/contexts/PluginSlotProvider.tsx` and related renderers.
  */
 export type SlotContextMap = {
   "row-edit-modal.field.after": {
@@ -31,6 +31,7 @@ export type SlotContextMap = {
   };
   "row-editor-sidebar.field.after": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -40,6 +41,7 @@ export type SlotContextMap = {
   };
   "row-editor-sidebar.header.actions": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -54,6 +56,7 @@ export type SlotContextMap = {
   };
   "data-grid.context-menu.items": {
     connectionId: string;
+    database: string | null;
     tableName: string;
     schema: string | null;
     driver: string;
@@ -78,7 +81,7 @@ export type SlotContextMap = {
 
 /**
  * Union of all valid slot names. Source of truth for host-side validation
- * is `src/types/pluginSlots.ts`; this type must stay in sync.
+ * is `apps/desktop/src/types/pluginSlots.ts`; this type must stay in sync.
  */
 export type SlotName = keyof SlotContextMap;
 
@@ -96,6 +99,7 @@ export interface TypedSlotProps<S extends SlotName> {
  */
 export interface SlotContext {
   connectionId?: string | null;
+  database?: string | null;
   tableName?: string | null;
   schema?: string | null;
   driver?: string | null;

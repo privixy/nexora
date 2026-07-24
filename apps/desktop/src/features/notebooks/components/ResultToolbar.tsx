@@ -1,0 +1,76 @@
+import { dialogGateway } from "../../../platform/tauri/dialogGateway";
+import { fileGateway } from "../../../platform/tauri/fileGateway";
+import { useTranslation } from "react-i18next";
+
+
+import { Download } from "lucide-react";
+import type { QueryResult } from "../../editor";
+import { resultToCsv, resultToJson } from "../../notebooks/lib/notebookExport";
+
+interface ResultToolbarProps {
+  result: QueryResult;
+  executionTime?: number | null;
+}
+
+/**
+ * Row-count / timing summary plus CSV/JSON export buttons, rendered inside the
+ * result section header.
+ */
+export function ResultToolbar({ result, executionTime }: ResultToolbarProps) {
+  const { t } = useTranslation();
+
+  const handleExportCsv = async () => {
+    const filePath = await dialogGateway.save({
+      defaultPath: "result.csv",
+      filters: [{ name: "CSV", extensions: ["csv"] }],
+    });
+    if (!filePath) return;
+    const csv = resultToCsv(result);
+    await fileGateway.writeTextFile(filePath, csv);
+  };
+
+  const handleExportJson = async () => {
+    const filePath = await dialogGateway.save({
+      defaultPath: "result.json",
+      filters: [{ name: "JSON", extensions: ["json"] }],
+    });
+    if (!filePath) return;
+    const json = resultToJson(result);
+    await fileGateway.writeTextFile(filePath, json);
+  };
+
+  return (
+    <>
+      <span>
+        {t("editor.notebook.cellResult", {
+          count: result.rows.length,
+          time: executionTime != null ? Math.round(executionTime) : "—",
+        })}
+      </span>
+      <div className="flex items-center gap-0.5">
+        <button
+          type="button"
+          onClick={handleExportCsv}
+          className="p-1 text-muted hover:text-secondary hover:bg-surface-secondary rounded transition-colors"
+          title={t("editor.notebook.exportCsv")}
+        >
+          <span className="flex items-center gap-0.5">
+            <Download size={12} />
+            <span className="text-[9px]">CSV</span>
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={handleExportJson}
+          className="p-1 text-muted hover:text-secondary hover:bg-surface-secondary rounded transition-colors"
+          title={t("editor.notebook.exportJson")}
+        >
+          <span className="flex items-center gap-0.5">
+            <Download size={12} />
+            <span className="text-[9px]">JSON</span>
+          </span>
+        </button>
+      </div>
+    </>
+  );
+}

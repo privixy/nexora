@@ -1,0 +1,28 @@
+{
+  "$schema": "plugin-manifest.schema.json",
+  "id": "fixture-driver",
+  "name": "Fixture Driver",
+  "version": "0.1.0",
+  "description": "Minimal network driver fixture",
+  "default_port": 9000,
+  "default_username": "",
+  "executable": "fixture-driver",
+  "capabilities": {
+    "schemas": false,
+    "views": false,
+    "routines": false,
+    "file_based": false,
+    "folder_based": false,
+    "no_connection_required": false,
+    "identifier_quote": "\"",
+    "alter_primary_key": false,
+    "alter_column": false,
+    "create_foreign_keys": false,
+    "manage_tables": false,
+    "readonly": true
+  },
+  "data_types": [
+    { "name": "INTEGER", "category": "numeric", "requires_length": false, "requires_precision": false },
+    { "name": "TEXT", "category": "string", "requires_length": false, "requires_precision": false }
+  ]
+}
